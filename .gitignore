@@ -1,0 +1,7 @@
+node_modules
+
+#擺放建置成品的位置
+/dist
+
+#打包完成的 wordpress 場景檔案
+/wp-*.zip

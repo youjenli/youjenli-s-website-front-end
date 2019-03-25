@@ -1,0 +1,32 @@
+{
+  "name": "personal-website-of-youjenli",
+  "version": "0.1.0",
+  "description": "The front end of you-jen li's personal website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youjenli/youjenli-s-website-front-end.git"
+  },
+  "author": "youjenli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/youjenli/youjenli-s-website-front-end/issues"
+  },
+  "homepage": "https://github.com/youjenli/youjenli-s-website-front-end#readme",
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "del": "^4.0.0",
+    "event-stream": "^4.0.1",
+    "gulp": "^4.0.0",
+    "gulp-connect": "^5.7.0",
+    "gulp-print": "^5.0.2",
+    "gulp-rename": "^1.4.0",
+    "rename": "^1.0.4",
+    "tsify": "^4.0.1",
+    "typescript": "^3.3.4000",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
