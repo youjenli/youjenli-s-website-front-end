@@ -17,17 +17,17 @@
   },
   "homepage": "https://github.com/youjenli/youjenli-s-website-front-end#readme",
   "dependencies": {
-    "browserify": "^16.2.3",
+    "dateformat": "^3.0.3",
     "del": "^4.0.0",
-    "event-stream": "^4.0.1",
     "gulp": "^4.0.0",
     "gulp-concat-css": "^3.1.0",
     "gulp-connect": "^5.7.0",
     "gulp-print": "^5.0.2",
     "gulp-rename": "^1.4.0",
     "gulp-sourcemaps": "^2.6.5",
+    "gulp-typescript": "^5.0.1",
+    "gulp-zip": "^4.2.0",
     "rename": "^1.0.4",
-    "tsify": "^4.0.1",
     "typescript": "^3.3.4000",
     "vinyl-source-stream": "^2.0.0"
   }
