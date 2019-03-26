@@ -4,10 +4,13 @@ const tsify = require('tsify');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream'); // 將 browserify 處理好的檔案轉換回 gulp 接受的 vinyl 檔案格式
 const es = require('event-stream');
+const concat = require('gulp-concat-css');
+const sourcemaps = require('gulp-sourcemaps');
 const rename = require("gulp-rename");
 const print = require('gulp-print').default;
 // gulp-webserver 已經四年沒有更新了，現在 jetbrains 好像接手開發這專案，最後更新時間是四個月前。
 const connect = require('gulp-connect');
+const path = require('path');
 
 const srcRoot = './src';
 const distRoot = './dist'; //輸出建置成品的路徑
@@ -70,6 +73,23 @@ function bundleJS(done) {
 const prepareJSTask = 'prepareJS';
 gulp.task(prepareJSTask, gulp.series(cleanTask, bundleJS));
 
+function concateCSSFiles(done) {
+    /*
+        此建置流程的設計是只讀取 ./src/css/style.css
+        若開發時引入其他 css 檔案，則從 style.css 透過 css import 語法載入進來。
+        這樣建置時 gulp-concat-css 就會按照 import 語法依我們要的順序整合 css 檔案。
+    */
+    gulp.src('./src/css/style.css')
+        .pipe(sourcemaps.init())
+        .pipe(concat('style.css'))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest(distRoot));
+    done();
+}
+
+const prepareCSSTask = 'prepareCSS';
+gulp.task(prepareCSSTask, gulp.series(cleanTask, concateCSSFiles));
+
 const prepareHtmlTask = 'prepareHTML';
 function copyHTMLFiles() {
     return gulp.src(srcRoot + '/html/**/*.html')
@@ -79,7 +99,7 @@ function copyHTMLFiles() {
 gulp.task(prepareHtmlTask, gulp.series(cleanTask, copyHTMLFiles));
 
 const defaultTasks = gulp.series(
-    cleanTask, gulp.parallel(bundleJS, copyHTMLFiles)
+    cleanTask, gulp.parallel(bundleJS, concateCSSFiles, copyHTMLFiles)
 );
 gulp.task('default', defaultTasks);
 
