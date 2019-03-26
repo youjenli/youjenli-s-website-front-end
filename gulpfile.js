@@ -1,44 +1,60 @@
 const gulp = require('gulp');
 const del = require('del');
-/*
-    20190326 之後改用 gulp-typescript 串接 gulp 和 typescript。
-    原因是原本使用 browserify 加上 tsify，最後再用 event-stream 合併結果的做法太難懂，
-    而且會有難以釐清又沒有合適位置可以呼叫 done 以結束的非同步問題，這會導致最後要打包成 wordpress 套件時，經常沒包到 js 檔案。
-
-    欲了解 gulp 整合 typescript 的方法可以參閱 typescript 官方文件
-    https://www.typescriptlang.org/docs/handbook/integrating-with-build-tools.html
-*/
-const ts = require('gulp-typescript');
+const browserify = require("browserify");
+const source = require('vinyl-source-stream');
+const tsify = require("tsify");
 const concat = require('gulp-concat-css');
 const sourcemaps = require('gulp-sourcemaps');
-const rename = require("gulp-rename");
 const print = require('gulp-print').default;
-// gulp-webserver 已經四年沒有更新了，現在 jetbrains 好像接手開發這專案，最後更新時間是四個月前。
+//註: gulp-webserver 已經四年沒有更新了，現在 jetbrains 好像接手開發這專案並改名為 gulp-connect，最後更新時間是四個月前。
 const connect = require('gulp-connect');
 const dateFormat = require('dateformat');
 const zip = require('gulp-zip');
 
-const srcRoot = './src';
+const srcRoot = './src';//原始碼來源路徑
 const distRoot = './dist'; //輸出建置成品的路徑
 
 //清空輸出打包成品的資料夾
-const cleanTask = gulp.series(function clean() {
+const cleanTask = function() {
         return del(distRoot);
-    });
-gulp.task('clean', cleanTask);
+    };
+gulp.task('clean', gulp.series(cleanTask));
+
+const tsEntryFiles = ['src/ts/index.tsx'];
+const tsConfig = require('./tsconfig.json');
+/*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
+    所以下面要把 tsconfig 的 compilerOptions 往外提出來
+*/
+const transpileConfig = {};
+if (tsConfig.hasOwnProperty('compilerOptions')) {
+    Object.assign(transpileConfig, tsConfig.compilerOptions);
+    delete transpileConfig.compilerOptions;
+}
+//提出 compilterOption 之後就是複製其他欄位
+Object.assign(transpileConfig, tsConfig);
 
 function prepareJSTask() {
-    const config = {
-        out: "index.js"
-    };
-    const tsConfig = require('./tsconfig.json');
-    if (tsConfig.hasOwnProperty('compilerOptions')) {
-        Object.assign(config, tsConfig.compilerOptions);
-    }
+    /*
+        先前改用 gulp-typescript 的原因是原本使用的 browserify 的方法在 gulp 4.0 沒辦法正常使用。
+        但是後來發現 gulp-typescript 沒辦法解決 js 檔案的整併問題，那得引入其他擴充套件來解決。
+        後來還是回頭研究 browserify ，這才發現搭配 gulp 3.0 使用的 event-stream 已停止維護，
+        而且 browserify 根本不需要透過 event-stream 整併所有 js 檔案的內容，只要照下面的方式設定並調用對應的擴充套件即可。
+        欲了解詳情可參閱以下使用說明
+        https://github.com/browserify/browserify#usage
+    */
+    return browserify(tsEntryFiles, { //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
+            basedir: '.',
+            debug: true //是否包含 sourcemap
+    }).plugin(tsify, //使用 tsify 呼叫 typescript 轉譯器轉譯 typescript 原始碼
+        transpileConfig
+    ).bundle()
+    //必須要使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
+    //source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
+    .pipe(source('index.js')) // 透過 vinyl-source-stream 轉換前面的建置成果為 gulp 可輸出的串流
+    .pipe(gulp.dest(distRoot)); 
 
-    const result = gulp.src("src/**/*.ts").pipe(ts(config));
-    return result.js.pipe(gulp.dest("dist"));
-};
+    /* gulp 4.0 的任務函式仍支持兩種結束方式: 1. 回傳 gulp 串流 2. 呼叫 gulp 注入給任務函式的 done 函式。*/
+}
 
 gulp.task('prepareJS', gulp.series(cleanTask, prepareJSTask));
 
@@ -48,23 +64,19 @@ function concateCSSTask(done) {
         若開發時引入其他 css 檔案，則從 style.css 透過 css import 語法載入進來。
         這樣建置時 gulp-concat-css 就會按照 import 語法依我們要的順序整合 css 檔案。
     */
-    gulp.src('./src/css/style.css')
+    return gulp.src('./src/css/style.css')
         .pipe(sourcemaps.init())
         .pipe(concat('style.css'))
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(distRoot));
-    done();
 }
-
 gulp.task('prepareCSS', gulp.series(cleanTask, concateCSSTask));
 
-const prepareHtmlTask = 'prepareHTML';
-function copyHTMLTask() {
+const prepareHtmlTask = function() {
     return gulp.src(srcRoot + '/html/**/*.html')
-        .pipe(print(filePath => `Copy html file ${filePath} to distribution folder.`))
         .pipe(gulp.dest(distRoot));
 }
-gulp.task('prepareHTML', gulp.series(cleanTask, copyHTMLTask));
+gulp.task('prepareHTML', gulp.series(cleanTask, prepareHtmlTask));
 
 const defaultTask = gulp.series(
     cleanTask, gulp.parallel(prepareJSTask, concateCSSTask, prepareHtmlTask)
@@ -99,11 +111,12 @@ gulp.task(runDevServerTask, gulp.series(defaultTask, function (done) {
     }
 ));
 
-const archiveTask = 'archive';
-gulp.task(archiveTask, gulp.series(defaultTask, function archive(){
-        const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
-        return gulp.src('./dist/*')
-                .pipe(zip('wp-youjenli-website-' + createDate + '.zip'))
-                .pipe(gulp.dest(distRoot));
-    })
-);
+const archiveTask = gulp.series(cleanTask, gulp.parallel(prepareJSTask, concateCSSTask, prepareHtmlTask), 
+function(){
+    const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
+    return gulp.src('./dist/*')
+            .pipe(print(filePath => `Packing file ${filePath} to wordpress theme.`))
+            .pipe(zip('wp-youjenli-website-' + createDate + '.zip'))
+            .pipe(gulp.dest(distRoot));
+});
+gulp.task('archive', archiveTask);
