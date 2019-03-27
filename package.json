@@ -33,6 +33,7 @@
     "gulp-print": "^5.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-zip": "^4.2.0",
+    "normalize.css": "^8.0.1",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "tsify": "^4.0.1",
