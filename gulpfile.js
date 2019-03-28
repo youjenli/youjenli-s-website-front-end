@@ -15,11 +15,9 @@ const path = require('path');
 const srcRoot = './src';//原始碼來源路徑
 const distRoot = './dist'; //輸出建置成品的路徑
 
-const tsEntryFiles = ['src/ts/index.tsx'];
+
 const jsArtifact = 'index.js';
-const cssEntryFiles = ['src/css/style.css'];
 const cssArtifact = 'style.css';
-const htmlSrcFiles = ['src/html/**/*.html'];
 const htmlArtifact = '*.html';
 
 function removeHtmlArtifact(done) {
@@ -45,6 +43,7 @@ function removeCSSArtifact(done) {
 const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeJSArtifact);
 gulp.task('clean', cleanTask);
 
+const tsEntryFiles = ['src/ts/index.tsx'];
 const tsConfig = require('./tsconfig.json');
 /*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
     所以下面要把 tsconfig 的 compilerOptions 往外提出來
@@ -56,7 +55,6 @@ if (tsConfig.hasOwnProperty('compilerOptions')) {
 }
 //提出 compilterOption 之後就是複製其他欄位
 Object.assign(transpileConfig, tsConfig);
-
 
 function prepareJSTask() {
     /*
@@ -83,7 +81,7 @@ function prepareJSTask() {
 
 gulp.task('prepareJS', gulp.series(cleanTask, prepareJSTask));
 
-
+const cssEntryFiles = ['src/css/style.css'];
 function concateCSSTask(done) {
     /*
         此建置流程的設計是只讀取 ./src/css/style.css
@@ -98,6 +96,7 @@ function concateCSSTask(done) {
 }
 gulp.task('prepareCSS', gulp.series(cleanTask, concateCSSTask));
 
+const htmlSrcFiles = ['src/html/**/*.html'];
 const prepareHtmlTask = function() {
     return gulp.src(htmlSrcFiles)
         .pipe(gulp.dest(distRoot));
@@ -109,10 +108,12 @@ const defaultTask = gulp.series(
 );
 gulp.task('default', defaultTask);
 
+const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
+const cssSrcFiles = ['src/css/**/*.css'];
 const watchTask = function() {
             gulp.watch(htmlSrcFiles, gulp.series(removeHtmlArtifact, prepareHtmlTask)),
-            gulp.watch(cssEntryFiles, gulp.series(removeCSSArtifact, concateCSSTask)),
-            gulp.watch(tsEntryFiles, gulp.series(removeJSArtifact, prepareJSTask))
+            gulp.watch(cssSrcFiles, gulp.series(removeCSSArtifact, concateCSSTask)),
+            gulp.watch(tsSrcFiles, gulp.series(removeJSArtifact, prepareJSTask))
 };
 gulp.task('watch', watchTask);
 /*
