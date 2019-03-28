@@ -115,6 +115,13 @@ const watchTask = function() {
             gulp.watch(tsEntryFiles, gulp.series(removeJSArtifact, prepareJSTask))
 };
 gulp.task('watch', watchTask);
+/*
+    註: 以上寫法是參考自下面網址中的範例
+    https://gist.github.com/demisx/beef93591edc1521330a
+    官網提供的方法--也就是先產生 watcher 再綁定事件--經實際採用後，發現在非同步的 gulp 任務之中會不如預期運作，
+    檔案變動後不會觸發重新編譯，因此最後決定不再用。
+    試來試去，最後發現 gulp 3 之前的做法才能滿足目前的需求。
+*/
 
 const runDevServerTask = gulp.series(defaultTask, gulp.parallel(watchTask ,function runDevServer(done) {
         /*return gulp.src(distRoot)
