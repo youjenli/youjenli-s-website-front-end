@@ -109,31 +109,39 @@ const defaultTask = gulp.series(
 );
 gulp.task('default', defaultTask);
 
-const runDevServerTask = gulp.series(defaultTask, function (done) {
-    /*return gulp.src(distRoot)
-        .pipe(webserver({
+const watchTask = function() {
+            gulp.watch(htmlSrcFiles, gulp.series(removeHtmlArtifact, prepareHtmlTask)),
+            gulp.watch(cssEntryFiles, gulp.series(removeCSSArtifact, concateCSSTask)),
+            gulp.watch(tsEntryFiles, gulp.series(removeJSArtifact, prepareJSTask))
+};
+gulp.task('watch', watchTask);
+
+const runDevServerTask = gulp.series(defaultTask, gulp.parallel(watchTask ,function runDevServer(done) {
+        /*return gulp.src(distRoot)
+            .pipe(webserver({
+                "livereload": true,
+                "direcotryListing": true,
+                "port": 8000,
+                "fallback": "index.html"
+                })
+            );
+            
+        實測過後發現上面那樣的寫法已不再有效，改用 gulp-connect 建議的做法再加上非同步通知才可以既正確顯示執行所有任務，
+        同時又不會在中斷伺服器的時候出現 gulp 錯誤訊息。
+        https://www.npmjs.com/package/gulp-connect
+        */
+
+        connect.server({
+            "root": ['dist'],
             "livereload": true,
             "direcotryListing": true,
+            "host": "localhost",
             "port": 8000,
             "fallback": "index.html"
-            })
-        );
-    
-    實測過後發現上面那樣的寫法已不再有效，改用 gulp-connect 建議的做法再加上非同步通知才可以既正確顯示執行所有任務，
-    同時又不會在中斷伺服器的時候出現 gulp 錯誤訊息。
-    https://www.npmjs.com/package/gulp-connect
-    */
-
-    connect.server({
-        "root": ['dist'],
-        "livereload": true,
-        "direcotryListing": true,
-        "host": "localhost",
-        "port": 8000,
-        "fallback": "index.html"
-        });
-    done();
-});
+            });
+        done();
+    })
+);
 gulp.task('serve', runDevServerTask);
 
 const archiveTask = gulp.series(cleanTask, gulp.parallel(prepareJSTask, concateCSSTask, prepareHtmlTask), 
