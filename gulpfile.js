@@ -10,17 +10,41 @@ const print = require('gulp-print').default;
 const connect = require('gulp-connect');
 const dateFormat = require('dateformat');
 const zip = require('gulp-zip');
+const path = require('path');
 
 const srcRoot = './src';//原始碼來源路徑
 const distRoot = './dist'; //輸出建置成品的路徑
 
-//清空輸出打包成品的資料夾
-const cleanTask = function() {
-        return del(distRoot);
-    };
-gulp.task('clean', gulp.series(cleanTask));
-
 const tsEntryFiles = ['src/ts/index.tsx'];
+const jsArtifact = 'index.js';
+const cssEntryFiles = ['src/css/style.css'];
+const cssArtifact = 'style.css';
+const htmlSrcFiles = ['src/html/**/*.html'];
+const htmlArtifact = '*.html';
+
+function removeHtmlArtifact(done) {
+    del(path.join(distRoot, htmlArtifact))
+        .then(() => {
+            done();
+        });
+}
+function removeJSArtifact(done) {
+    del(path.join(distRoot, jsArtifact))
+        .then(() => {
+            done();
+        });
+}
+function removeCSSArtifact(done) {
+    del(path.join(distRoot, cssArtifact))
+        .then(() => {
+            done();
+        });
+}
+
+//清空輸出打包成品的資料夾
+const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeJSArtifact);
+gulp.task('clean', cleanTask);
+
 const tsConfig = require('./tsconfig.json');
 /*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
     所以下面要把 tsconfig 的 compilerOptions 往外提出來
@@ -32,6 +56,7 @@ if (tsConfig.hasOwnProperty('compilerOptions')) {
 }
 //提出 compilterOption 之後就是複製其他欄位
 Object.assign(transpileConfig, tsConfig);
+
 
 function prepareJSTask() {
     /*
@@ -50,7 +75,7 @@ function prepareJSTask() {
     ).bundle()
     //必須要使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
     //source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
-    .pipe(source('index.js')) // 透過 vinyl-source-stream 轉換前面的建置成果為 gulp 可輸出的串流
+    .pipe(source(jsArtifact)) // 透過 vinyl-source-stream 轉換前面的建置成果為 gulp 可輸出的串流
     .pipe(gulp.dest(distRoot)); 
 
     /* gulp 4.0 的任務函式仍支持兩種結束方式: 1. 回傳 gulp 串流 2. 呼叫 gulp 注入給任務函式的 done 函式。*/
@@ -58,13 +83,14 @@ function prepareJSTask() {
 
 gulp.task('prepareJS', gulp.series(cleanTask, prepareJSTask));
 
+
 function concateCSSTask(done) {
     /*
         此建置流程的設計是只讀取 ./src/css/style.css
         若開發時引入其他 css 檔案，則從 style.css 透過 css import 語法載入進來。
         這樣建置時 gulp-concat-css 就會按照 import 語法依我們要的順序整合 css 檔案。
     */
-    return gulp.src('./src/css/style.css')
+    return gulp.src(cssEntryFiles)
         .pipe(sourcemaps.init())
         .pipe(concat('style.css'))
         .pipe(sourcemaps.write())
@@ -73,7 +99,7 @@ function concateCSSTask(done) {
 gulp.task('prepareCSS', gulp.series(cleanTask, concateCSSTask));
 
 const prepareHtmlTask = function() {
-    return gulp.src(srcRoot + '/html/**/*.html')
+    return gulp.src(htmlSrcFiles)
         .pipe(gulp.dest(distRoot));
 }
 gulp.task('prepareHTML', gulp.series(cleanTask, prepareHtmlTask));
@@ -83,33 +109,32 @@ const defaultTask = gulp.series(
 );
 gulp.task('default', defaultTask);
 
-const runDevServerTask = 'serve';
-gulp.task(runDevServerTask, gulp.series(defaultTask, function (done) {
-        /*return gulp.src(distRoot)
-            .pipe(webserver({
-                "livereload": true,
-                "direcotryListing": true,
-                "port": 8000,
-                "fallback": "index.html"
-                })
-            );
-        
-        實測過後發現上面那樣的寫法已不再有效，改用 gulp-connect 建議的做法再加上非同步通知才可以既正確顯示執行所有任務，
-        同時又不會在中斷伺服器的時候出現 gulp 錯誤訊息。
-        https://www.npmjs.com/package/gulp-connect
-        */
-
-        connect.server({
-            "root": ['dist'],
+const runDevServerTask = gulp.series(defaultTask, function (done) {
+    /*return gulp.src(distRoot)
+        .pipe(webserver({
             "livereload": true,
             "direcotryListing": true,
-            "host": "localhost",
             "port": 8000,
             "fallback": "index.html"
-            });
-        done();
-    }
-));
+            })
+        );
+    
+    實測過後發現上面那樣的寫法已不再有效，改用 gulp-connect 建議的做法再加上非同步通知才可以既正確顯示執行所有任務，
+    同時又不會在中斷伺服器的時候出現 gulp 錯誤訊息。
+    https://www.npmjs.com/package/gulp-connect
+    */
+
+    connect.server({
+        "root": ['dist'],
+        "livereload": true,
+        "direcotryListing": true,
+        "host": "localhost",
+        "port": 8000,
+        "fallback": "index.html"
+        });
+    done();
+});
+gulp.task('serve', runDevServerTask);
 
 const archiveTask = gulp.series(cleanTask, gulp.parallel(prepareJSTask, concateCSSTask, prepareHtmlTask), 
 function(){
