@@ -43,7 +43,7 @@ function removeCSSArtifact(done) {
 const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeJSArtifact);
 gulp.task('clean', cleanTask);
 
-const tsEntryFiles = ['src/ts/index.tsx'];
+const tsEntryFiles = ['src/ts/index.ts'];
 const tsConfig = require('./tsconfig.json');
 /*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
     所以下面要把 tsconfig 的 compilerOptions 往外提出來
@@ -142,7 +142,6 @@ const runDevServerTask = gulp.series(defaultTask, gulp.parallel(watchTask ,funct
         connect.server({
             "root": ['dist'],
             "livereload": true,
-            "direcotryListing": true,
             "host": "localhost",
             "port": 8000,
             "fallback": "index.html"
