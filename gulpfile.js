@@ -19,6 +19,7 @@ const distRoot = './dist'; //輸出建置成品的路徑
 const jsArtifact = 'index.js';
 const cssArtifact = 'style.css';
 const htmlArtifact = '*.html';
+const imgArtifact = '*.png';
 
 function removeHtmlArtifact(done) {
     del(path.join(distRoot, htmlArtifact))
@@ -39,8 +40,15 @@ function removeCSSArtifact(done) {
         });
 }
 
+function removeImgArtifact(done) {
+    del(path.join(distRoot, imgArtifact))
+        .then(() => {
+            done();
+        });
+}
+
 //清空輸出打包成品的資料夾
-const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeJSArtifact);
+const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeJSArtifact, removeImgArtifact);
 gulp.task('clean', cleanTask);
 
 const tsEntryFiles = ['src/ts/index.ts'];
@@ -79,7 +87,7 @@ function prepareJSTask() {
     /* gulp 4.0 的任務函式仍支持兩種結束方式: 1. 回傳 gulp 串流 2. 呼叫 gulp 注入給任務函式的 done 函式。*/
 }
 
-gulp.task('prepareJS', gulp.series(cleanTask, prepareJSTask));
+gulp.task('prepareJS', gulp.series(removeJSArtifact, prepareJSTask));
 
 const cssEntryFiles = ['src/css/style.css'];
 function concateCSSTask(done) {
@@ -94,17 +102,26 @@ function concateCSSTask(done) {
         .pipe(sourcemaps.write())
         .pipe(gulp.dest(distRoot));
 }
-gulp.task('prepareCSS', gulp.series(cleanTask, concateCSSTask));
+gulp.task('prepareCSS', gulp.series(removeCSSArtifact, concateCSSTask));
 
 const htmlSrcFiles = ['src/html/**/*.html'];
 const prepareHtmlTask = function() {
-    return gulp.src(htmlSrcFiles)
+    return gulp.src(htmlSrcFiles, { base: 'src/html'})
         .pipe(gulp.dest(distRoot));
 }
-gulp.task('prepareHTML', gulp.series(cleanTask, prepareHtmlTask));
+
+const imgSrcFiles = ['src/img/**/*.png', 'src/img/**/*.svg'];
+
+const prepareImgTask = function() {
+    return gulp.src(imgSrcFiles, { base:'src' })
+                .pipe(gulp.dest(distRoot));
+}
+gulp.task('prepareImg', gulp.series(removeImgArtifact, prepareImgTask));
+
+gulp.task('prepareHTML', gulp.series(removeHtmlArtifact, prepareHtmlTask));
 
 const defaultTask = gulp.series(
-    cleanTask, gulp.parallel(prepareJSTask, concateCSSTask, prepareHtmlTask)
+    cleanTask, gulp.parallel(prepareJSTask, concateCSSTask, prepareImgTask, prepareHtmlTask)
 );
 gulp.task('default', defaultTask);
 
@@ -113,7 +130,8 @@ const cssSrcFiles = ['src/css/**/*.css'];
 const watchTask = function() {
             gulp.watch(htmlSrcFiles, gulp.series(removeHtmlArtifact, prepareHtmlTask)),
             gulp.watch(cssSrcFiles, gulp.series(removeCSSArtifact, concateCSSTask)),
-            gulp.watch(tsSrcFiles, gulp.series(removeJSArtifact, prepareJSTask))
+            gulp.watch(tsSrcFiles, gulp.series(removeJSArtifact, prepareJSTask)),
+            gulp.watch(imgSrcFiles, gulp.series(removeImgArtifact, prepareImgTask))
 };
 gulp.task('watch', watchTask);
 /*
@@ -151,7 +169,7 @@ const runDevServerTask = gulp.series(defaultTask, gulp.parallel(watchTask ,funct
 );
 gulp.task('serve', runDevServerTask);
 
-const archiveTask = gulp.series(cleanTask, gulp.parallel(prepareJSTask, concateCSSTask, prepareHtmlTask), 
+const archiveTask = gulp.series(defaultTask, 
 function(){
     const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
     return gulp.src('./dist/*')
