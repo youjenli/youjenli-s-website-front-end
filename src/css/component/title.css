@@ -1,17 +1,86 @@
 #header-bar {
+    position:relative;
     background: linear-gradient(#3F4E60, #1F2A3A);
     width:100%;
-    -webkit-box-shadow: 0px 2px 4px 0px rgba(255,255,255,1);
-    -moz-box-shadow: 0px 2px 4px 0px rgba(255,255,255,1);
     box-shadow: 0px 2px 4px 0px rgba(255,255,255,1);
-    color:white;/*暫留*/
+}
+
+#header-bar #site-name {
+    position: absolute;
+    color:white;
+}
+
+#header-bar #groupOfFeatureLinks {
+    position: absolute;
+    right:100%;
+    /*一定要加上 white-space 設定，否則元素之間的斷行記號會導致連結變成直的*/
+    white-space: nowrap;
 }
 
 #header-bar .featureLink {
+    position:relative;
+    display:inline-block;
     color:white;
     font-family: "PingFangTC-Regular", "STHeitiTC-Light", "Microsoft JhengHei", Arial, Helvetica, sans-serif;
 }
 
 #header-bar #search-bar {
+    position:absolute;
+    display: flex;
+}
+
+#search-bar #search-field {
+    box-sizing:border-box;
+    border: 1px solid #979797;
+    background-color:#D8D8D8;
+    padding:0;
     transition: width 150ms ease-out;
+    color:#000000;
+}
+
+#search-bar #search-field::-webkit-input-placeholder,/* Edge */
+#search-bar #search-field::-ms-input-placeholder,/* Internet Explorer 10-11 */
+#search-bar #search-field::placeholder { 
+    color: #9C9C9C;
+}
+
+#header-bar .featureLink:hover,
+#search-bar #search-btn {
+    cursor: pointer;
+}
+
+#header-bar .featureHint {
+    position:absolute;
+    color:black;
+    background-color:#FFFFFF;
+    border-style:solid;
+    border-color:#979797;
+    box-sizing: border-box;
+    /* 
+        雖然 MDN 說 white-space 的 normal 是預設值，可是實際測試發現若在 chrome 73 上面不設定 normal，那文字不會自動包起來，原因不明。
+        https://developer.mozilla.org/en-US/docs/Web/CSS/white-space
+        因此這裡一定要加上 normal 才能下常排版。
+    */
+    white-space: normal;
+}
+#header-bar .featureHint #point {
+    stroke:#979797;
+}
+
+#header-bar .featureHint #point,
+#header-bar .featureHint .arrow {
+    position:absolute;
+    fill:#FFFFFF;
+    fill-rule:evenodd;
+}
+
+#header-bar .featureHint .hint {
+    line-height:1;
+}
+
+/* #lab 是專門用來實驗瀏覽器是否支援特定字體的區域 */
+#font-preceiving {
+    position:fixed;
+    left:-3000px;
+    visibility:hidden;
 }
