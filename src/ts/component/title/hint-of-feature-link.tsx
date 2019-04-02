@@ -55,7 +55,8 @@ export default class HintOfFeatureLink extends React.Component<HintOfFeatureLink
             bottom:`${bottomShiftOfHintBody}px`,
             left:`${leftShiftOfHintBody}px`,
             borderRadius:`${borderRadiusOfHintBody}px`,
-            fontSize:this.props.fontSizeOfHint
+            fontSize:this.props.fontSizeOfHint,
+            boxShadow:"0 2px 3px 0 #000000"
         };
         return (
             <div style={styleOfHintBody} className="featureHint">
