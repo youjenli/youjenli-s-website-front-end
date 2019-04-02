@@ -16,7 +16,7 @@ export default class HintOfFeatureLink extends React.Component<HintOfFeatureLink
         const charactersInARow = 20;
         const rowsInHint = Math.ceil(this.props.hint.length / charactersInARow);
         const paddingUnit = 1;
-        const borderWidth = 1;
+        const borderWidth = 2;
         const heightOfHintBody = (rowsInHint + 2 * paddingUnit) * this.props.fontSizeOfHint + 2 * borderWidth;
         let widthOfHintBody;
         if (this.props.hint.length > charactersInARow) {
@@ -60,7 +60,7 @@ export default class HintOfFeatureLink extends React.Component<HintOfFeatureLink
         return (
             <div style={styleOfHintBody} className="featureHint">
                 <svg id="point" style={styleOfPoint} className="arrow" version="1.1">
-                <g strokeWidth="1">   
+                <g strokeWidth={borderWidth}>   
                       <g transform="translate(-149.000000, 0.000000)">
                                 <polygon id="Triangle" points="168.5 0.75 188 15.75 149 15.75"></polygon>
                       </g>
