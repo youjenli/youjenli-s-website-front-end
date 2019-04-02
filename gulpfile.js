@@ -12,9 +12,7 @@ const dateFormat = require('dateformat');
 const zip = require('gulp-zip');
 const path = require('path');
 
-const srcRoot = './src';//原始碼來源路徑
 const distRoot = './dist'; //輸出建置成品的路徑
-
 
 const jsArtifact = 'index.js';
 const cssArtifact = 'style.css';
@@ -158,7 +156,7 @@ const runDevServerTask = gulp.series(defaultTask, gulp.parallel(watchTask ,funct
         */
 
         connect.server({
-            "root": ['dist'],
+            "root": [distRoot],
             "livereload": true,
             "host": "localhost",
             "port": 8000,
@@ -172,7 +170,7 @@ gulp.task('serve', runDevServerTask);
 const archiveTask = gulp.series(defaultTask, 
 function(){
     const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
-    return gulp.src('./dist/*')
+    return gulp.src(`${distRoot}/*`)
             .pipe(print(filePath => `Packing file ${filePath} to wordpress theme.`))
             .pipe(zip('wp-youjenli-website-' + createDate + '.zip'))
             .pipe(gulp.dest(distRoot));
