@@ -49,7 +49,7 @@ function removeImgArtifact(done) {
 const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeJSArtifact, removeImgArtifact);
 gulp.task('clean', cleanTask);
 
-const tsEntryFiles = ['src/ts/index.ts'];
+const tsEntryFiles = ['src/ts/index.tsx'];
 const tsConfig = require('./tsconfig.json');
 /*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
     所以下面要把 tsconfig 的 compilerOptions 往外提出來

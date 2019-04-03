@@ -84,3 +84,20 @@
     left:-3000px;
     visibility:hidden;
 }
+
+#header-bar #menuBtn {
+    position:absolute;
+}
+
+#header-bar #menuBtn .bar {
+    background-color:white;
+    transition:rotate 150ms ease-out;
+}
+
+#header-bar #menuBtn .bar.upper.open {
+    transform:rotate(45deg);
+}
+
+#header-bar #menuBtn .bar.lower.open {
+    transform:rotate(-45deg);
+}

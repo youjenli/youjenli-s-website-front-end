@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-interface SearchBarProps {
+interface ExternalScreenSearchBarProps {
     width:number;
     height:number;
     top:number;
@@ -9,11 +9,11 @@ interface SearchBarProps {
     toggleSearchBarState:() => void;
 }
 
-interface SearchBarState {
+interface ExternalScreenSearchBarState {
     placeHolderOfSearchField:string;
 }
 
-export default class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
+export default class ExternalScreenSearchBar extends React.Component<ExternalScreenSearchBarProps, ExternalScreenSearchBarState> {
     constructor(props){
         super(props);
         const input = document.createElement('input');

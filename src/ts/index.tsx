@@ -6,10 +6,19 @@
     所以 TypeScript 型態定義檔要採用 export = module 的方式輸出。這使得我們要用下面的方法載入 Navigo 模組。
 */
 import router from './router';
-import { showHomePage } from './service/home-service';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import HomePage from './component/home';
+
+const routeToHome = () => {
+    ReactDOM.render(
+        <HomePage />,
+        document.getElementById('react-root')
+    );
+}
 
 router.on({
-       '/':showHomePage,
-       '/index.html':showHomePage
+       '/':routeToHome,
+       '/index.html':routeToHome
     })
     .resolve();
