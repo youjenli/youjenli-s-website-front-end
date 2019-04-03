@@ -1,7 +1,8 @@
 import * as React from 'react';
-import base64EncodedTitle from './site-name-2_5x_base64';
 
 interface SiteNameProps {
+    name:string,
+    base64EncodedTitle:string,
     fontSize:number,
     top:number,
     left:number
@@ -41,7 +42,6 @@ export default class SiteName extends React.Component<SiteNameProps, SiteNameSta
         test.parentElement.removeChild(test);
     }
     render () {
-        const siteName = "祐任的個人網站";
         const title = "網站標題";
         let basicStyle = {
             top:this.props.top + "px",
@@ -50,13 +50,13 @@ export default class SiteName extends React.Component<SiteNameProps, SiteNameSta
         if (this.state.showSiteNameWithPNG) {
             basicStyle["height"] = `${this.props.fontSize * 1.15}px`;//1.15 是 html 文字預設的行高。
             return (
-                <img id="site-name" src={base64EncodedTitle} style={basicStyle} alt={siteName} title={title}/>
+                <img id="site-name" src={this.props.base64EncodedTitle} style={basicStyle} alt={this.props.name} title={title}/>
             );
         } else {
             basicStyle["fontFamily"] = "'HanziPen SC', 'HanziPenSC-W5', 'Arial'";
             basicStyle["fontSize"] = `${this.props.fontSize}px`;
             return (
-                <span id="site-name" style={basicStyle} title={title}>{siteName}</span>
+                <span id="site-name" style={basicStyle} title={title}>{this.props.name}</span>
             );
         }
     }

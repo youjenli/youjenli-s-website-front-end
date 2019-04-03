@@ -1,5 +1,6 @@
 import * as React from 'react';
 import SiteName from './site-name';
+import base64EncodedTitle from './site-name-2_5x_base64';
 
 interface MobileDeviceTitleBarProps {
     viewportWidth:number;
@@ -22,20 +23,21 @@ export default class MobileDeviceTitleBar extends
         this.setState({isMenuOpened:!this.state.isMenuOpened});
     }
     render(){
+        const siteName = "祐任的個人網站";
         let fontSizeOfSiteName;
         let headerHeight;
         let siteNameTopPosition, siteNameLeftPosition;
         let menuButtonBarWidth, menuButtonBarHeight, menuButtonBarTransformOrigin, menuButtonBarBorderRadius;
         let topShiftOfMenuButton, rightShiftOfMenuButton;
-        let spaceBetweenTwoBars;
-        
+        let spaceBetweenTwoBars;        
+
         if (this.props.viewportWidth > 1024) {
             //todo 拋出例外
         } else if (this.props.viewportWidth > 640 ) {//平板
             fontSizeOfSiteName = ((Math.log10(this.props.viewportWidth/640)/1.6) + 1) * 28;
             headerHeight = fontSizeOfSiteName * 1.933;
             siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
-            siteNameLeftPosition = 18 * 1;//todo 標錯了 解決需要標題寬度才能推 left shift 的問題
+            siteNameLeftPosition = (this.props.viewportWidth - fontSizeOfSiteName * siteName.length) / 2;
             rightShiftOfMenuButton = 18 * 1;
             menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
         } else {//手機的情況
@@ -91,7 +93,8 @@ export default class MobileDeviceTitleBar extends
 
         return (
             <header id="header-bar" style={headerStyle}>
-                <SiteName fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
+                <SiteName name={siteName} base64EncodedTitle={base64EncodedTitle}
+                    fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
 
                 <span id="menuBtn" style={menuBtnStyle} onClick={this.toggleMenuState}
                     onTouchStart={this.toggleMenuState}>

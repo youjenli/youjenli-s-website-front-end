@@ -2,6 +2,7 @@ import * as React from 'react';
 import SiteName from './site-name';
 import ExternalScreenSearchBar from './external-screen-search-bar';
 import HintOfFeatureLink from './hint-of-feature-link';
+import base64EncodedTitle from './site-name-2_5x_base64';
 
 interface ExternalScreenTitleBarProps {
     viewportWidth:number;
@@ -116,7 +117,8 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
 
         return (
             <header id="header-bar" style={headerBarStyle}>
-                <SiteName fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
+                <SiteName name={"祐任的個人網站"} base64EncodedTitle={base64EncodedTitle}
+                    fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
 
                 <ExternalScreenSearchBar width={searchBarWidth} height={searchBarHeight} 
                     top={searchBarTop} right={siteNameFontSize}
