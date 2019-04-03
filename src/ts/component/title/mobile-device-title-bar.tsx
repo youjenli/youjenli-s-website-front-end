@@ -31,31 +31,32 @@ export default class MobileDeviceTitleBar extends
         let topShiftOfMenuButton, rightShiftOfMenuButton;
         let spaceBetweenTwoBars;        
 
-        if (this.props.viewportWidth > 1024) {
-            //todo 拋出例外
-        } else if (this.props.viewportWidth > 640 ) {//平板
-            fontSizeOfSiteName = ((Math.log10(this.props.viewportWidth/640)/1.6) + 1) * 28;
-            headerHeight = fontSizeOfSiteName * 1.933;
-            siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
-            siteNameLeftPosition = (this.props.viewportWidth - fontSizeOfSiteName * siteName.length) / 2;
-            rightShiftOfMenuButton = 18 * 1;
-            menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
-        } else {//手機的情況
-            if (window.innerWidth >= window.innerHeight) { //水平模式
-                fontSizeOfSiteName = 28;
+        if (this.props.viewportWidth < 1024) {
+            const remFontSize = ( this.props.viewportWidth > 432 ? 18 : 16);
+            if (this.props.viewportWidth > 640 ) {//平板
+                fontSizeOfSiteName = ((Math.log10(this.props.viewportWidth/640)/1.6) + 1) * 28;
                 headerHeight = fontSizeOfSiteName * 1.933;
                 siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
-                siteNameLeftPosition = 18 * 1;
-                rightShiftOfMenuButton = siteNameLeftPosition;
+                siteNameLeftPosition = (this.props.viewportWidth - fontSizeOfSiteName * siteName.length) / 2;
+                rightShiftOfMenuButton = remFontSize;
                 menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
-            } else {//垂直模式
-                fontSizeOfSiteName = (this.props.viewportWidth + 352) / 28;
-                headerHeight = (-0.14 * this.props.viewportWidth + 292.32) / 112;
-                siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
-                siteNameLeftPosition = 16 * 1;
-                rightShiftOfMenuButton = siteNameLeftPosition;
-                menuButtonBarWidth = 1.5 * fontSizeOfSiteName;
+            } else if (this.props.viewportWidth > 432) { //顯示寬度超過 432 即視為手機水平模式
+                    fontSizeOfSiteName = 28;
+                    headerHeight = fontSizeOfSiteName * 1.933;
+                    siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
+                    siteNameLeftPosition = remFontSize;
+                    rightShiftOfMenuButton = siteNameLeftPosition;
+                    menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
+            } else {//顯示寬度小於 432 即視為手機垂直模式
+                    fontSizeOfSiteName = (this.props.viewportWidth + 352) / 28;
+                    headerHeight = (-0.14 * this.props.viewportWidth + 292.32) / 112;
+                    siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
+                    siteNameLeftPosition = remFontSize;
+                    rightShiftOfMenuButton = siteNameLeftPosition;
+                    menuButtonBarWidth = 1.5 * fontSizeOfSiteName;
             }
+        } else {
+            //todo 拋出例外
         }
        
         menuButtonBarHeight = menuButtonBarWidth / 10;
@@ -95,7 +96,6 @@ export default class MobileDeviceTitleBar extends
             <header id="header-bar" style={headerStyle}>
                 <SiteName name={siteName} base64EncodedTitle={base64EncodedTitle}
                     fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
-
                 <span id="menuBtn" style={menuBtnStyle} onClick={this.toggleMenuState}
                     onTouchStart={this.toggleMenuState}>
                     <div className={"upper " + classNamesOfBar} style={upperBarStyle}></div>
