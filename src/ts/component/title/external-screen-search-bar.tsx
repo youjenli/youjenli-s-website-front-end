@@ -6,6 +6,7 @@ interface ExternalScreenSearchBarProps {
     top:number;
     right:number;
     fontSizeOfFeatureLink:number;
+    fontSizeOfSearchHint:number;
     toggleSearchBarState:() => void;
 }
 
@@ -68,7 +69,8 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
             */
             borderRadius:`${this.props.width * 0.04}px`,
             //搜尋欄位需要功能連結字體的大小來計算它和搜尋按鈕的間距大小。
-            marginRight:`${this.props.fontSizeOfFeatureLink * 0.5}px`
+            marginRight:`${this.props.fontSizeOfFeatureLink * 0.5}px`,
+            fontSize:`${this.props.fontSizeOfSearchHint}px`
         }
         const searchFieldPlaceHolder = '搜尋文章、分類、標籤...';
         const titleOfSearchBtn = '搜尋按鈕';  

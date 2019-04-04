@@ -122,7 +122,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
 
                 <ExternalScreenSearchBar width={searchBarWidth} height={searchBarHeight} 
                     top={searchBarTop} right={siteNameFontSize}
-                    fontSizeOfFeatureLink={featureLinkFontSize}
+                    fontSizeOfFeatureLink={featureLinkFontSize} fontSizeOfSearchHint={searchHintFontSize}
                     toggleSearchBarState={this.toggleSearchBarState}>
                    <nav id="groupOfFeatureLinks" style={groupOfFeatureLinkStyle}>
                         <a style={featureLinkStyle} className="featureLink" 
