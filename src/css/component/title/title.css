@@ -98,6 +98,8 @@
     border-style:solid;
     border-color:#979797;
     box-sizing: border-box;
+    box-shadow:0 2px 3px 0 #979797;
+    border-radius:8px;
     /* 
         雖然 MDN 說 white-space 的 normal 是預設值，可是實際測試發現若在 chrome 73 上面不設定 normal，那文字不會自動包起來，原因不明。
         https://developer.mozilla.org/en-US/docs/Web/CSS/white-space

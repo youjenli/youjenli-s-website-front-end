@@ -15,8 +15,8 @@ export default class HintOfFeatureLink extends React.Component<HintOfFeatureLink
         */
         const charactersInARow = 20;
         const rowsInHint = Math.ceil(this.props.hint.length / charactersInARow);
-        const paddingUnit = 1;
-        const borderWidth = 2;
+        const paddingUnit = 1;//提示框內沿的距離，單位是提示訊息的字體大小。
+        const borderWidth = 1;
         const heightOfHintBody = (rowsInHint + 2 * paddingUnit) * this.props.fontSizeOfHint + 2 * borderWidth;
         let widthOfHintBody;
         if (this.props.hint.length > charactersInARow) {
@@ -33,7 +33,6 @@ export default class HintOfFeatureLink extends React.Component<HintOfFeatureLink
             - borderWidth + heightOfHintBody);
         const leftShiftOfHintBody = 
             (this.props.fontSizeOfFeatureLink * this.props.charactersOfFeatureLink - widthOfHintBody) / 2;
-        const borderRadiusOfHintBody = widthOfHintBody * 0.025;
         let styleOfPoint = {
             width:`${widthOfArrow}px`,
             height:`${heightOfArrow}px`,
@@ -51,12 +50,10 @@ export default class HintOfFeatureLink extends React.Component<HintOfFeatureLink
             borderWidth:`${borderWidth}px`,
             width:`${widthOfHintBody}px`,
             height:`${heightOfHintBody}px`,
-            padding:`${this.props.fontSizeOfHint * paddingUnit}px`,
+            padding:`${paddingUnit}em`,
             bottom:`${bottomShiftOfHintBody}px`,
             left:`${leftShiftOfHintBody}px`,
-            borderRadius:`${borderRadiusOfHintBody}px`,
-            fontSize:this.props.fontSizeOfHint,
-            boxShadow:"0 2px 3px 0 #000000"
+            fontSize:this.props.fontSizeOfHint
         };
         return (
             <div style={styleOfHintBody} className="featureHint">
