@@ -116,48 +116,50 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
         }
 
         return (
-            <header id="header-bar" className="es" style={headerBarStyle}>
-                <SiteName name={"祐任的個人網站"} base64EncodedTitle={base64EncodedTitle}
-                    fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
+            <div id="header-ctx">
+                <header id="header-bar" style={headerBarStyle}>
+                    <SiteName name={"祐任的個人網站"} base64EncodedTitle={base64EncodedTitle}
+                        fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
 
-                <ExternalScreenSearchBar width={searchBarWidth} height={searchBarHeight} 
-                    top={searchBarTop} right={siteNameFontSize}
-                    fontSizeOfFeatureLink={featureLinkFontSize} fontSizeOfSearchHint={searchHintFontSize}
-                    toggleSearchBarState={this.toggleSearchBarState}>
-                   <nav id="groupOfFeatureLinks" style={groupOfFeatureLinkStyle}>
-                        <a style={featureLinkStyle} className="featureLink" 
-                            onMouseEnter={this.toggleSelfIntroductionLinkHoverState}
-                            onMouseLeave={this.toggleSelfIntroductionLinkHoverState}
-                            >{selfIntroduction}
-                            { this.state.showHintOfSelfIntroduction ?
-                            <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                charactersOfFeatureLink={selfIntroduction.length} 
-                                hint={hintOfSelfIntroduction} fontSizeOfHint={featureHintFontSize} />
-                            : null }
-                        </a>
-                        <a style={featureLinkStyle} className="featureLink"
-                            onMouseEnter={this.toggleCatagoryOfArticlesHoverState}
-                            onMouseLeave={this.toggleCatagoryOfArticlesHoverState}
-                            >{catagoryOfArticles}
-                            { this.state.showHintOfCatagoryOfArticles ?
-                            <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                charactersOfFeatureLink={catagoryOfArticles.length} 
-                                hint={hintOfCatagoryOfArticles} fontSizeOfHint={featureHintFontSize} />
-                            : null }
-                        </a>
-                        <a style={featureLinkStyle} className="featureLink"
-                            onMouseEnter={this.toggleAboutThisSiteHoverState}
-                            onMouseLeave={this.toggleAboutThisSiteHoverState}
-                            >{aboutThisSite}
-                            { this.state.showHintOfAboutThisSite ?
-                            <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                charactersOfFeatureLink={aboutThisSite.length} 
-                                hint={hintOfAboutThisSite} fontSizeOfHint={featureHintFontSize} />
-                            : null }
-                        </a>
-                    </nav> 
-                </ExternalScreenSearchBar>             
-            </header>
+                    <ExternalScreenSearchBar width={searchBarWidth} height={searchBarHeight} 
+                        top={searchBarTop} right={siteNameFontSize}
+                        fontSizeOfFeatureLink={featureLinkFontSize} fontSizeOfSearchHint={searchHintFontSize}
+                        toggleSearchBarState={this.toggleSearchBarState}>
+                       <nav id="groupOfFeatureLinks" style={groupOfFeatureLinkStyle}>
+                            <a style={featureLinkStyle} className="featureLink" 
+                                onMouseEnter={this.toggleSelfIntroductionLinkHoverState}
+                                onMouseLeave={this.toggleSelfIntroductionLinkHoverState}
+                                >{selfIntroduction}
+                                { this.state.showHintOfSelfIntroduction ?
+                                <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
+                                    charactersOfFeatureLink={selfIntroduction.length} 
+                                    hint={hintOfSelfIntroduction} fontSizeOfHint={featureHintFontSize} />
+                                : null }
+                            </a>
+                            <a style={featureLinkStyle} className="featureLink"
+                                onMouseEnter={this.toggleCatagoryOfArticlesHoverState}
+                                onMouseLeave={this.toggleCatagoryOfArticlesHoverState}
+                                >{catagoryOfArticles}
+                                { this.state.showHintOfCatagoryOfArticles ?
+                                <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
+                                    charactersOfFeatureLink={catagoryOfArticles.length} 
+                                    hint={hintOfCatagoryOfArticles} fontSizeOfHint={featureHintFontSize} />
+                                : null }
+                            </a>
+                            <a style={featureLinkStyle} className="featureLink"
+                                onMouseEnter={this.toggleAboutThisSiteHoverState}
+                                onMouseLeave={this.toggleAboutThisSiteHoverState}
+                                >{aboutThisSite}
+                                { this.state.showHintOfAboutThisSite ?
+                                <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
+                                    charactersOfFeatureLink={aboutThisSite.length} 
+                                    hint={hintOfAboutThisSite} fontSizeOfHint={featureHintFontSize} />
+                                : null }
+                            </a>
+                        </nav> 
+                    </ExternalScreenSearchBar>             
+                </header>
+            </div>
         );
     }
 }

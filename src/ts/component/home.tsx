@@ -1,24 +1,20 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import ExternalScreenTitleBar from '../component/title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../component/title/mobile-device-title-bar';
+import { calculateViewPortWidth, calculateViewPortHeight } from '../service/dimensionsCalculator';
 
 interface HomePageState {
     viewportWidth:number;
     viewportHeight:number;
 }
 
-//todo 要記得處理畫面旋轉的情境，還有顯示畫面縮放的狀況
-
 export default class HomePage extends React.Component<{}, HomePageState> {
     constructor(props){
         super(props);
-        this.calculateViewPortHeight = this.calculateViewPortHeight.bind(this);
-        this.calculateViewPortWidth = this.calculateViewPortWidth.bind(this);
         this.calculateViewPortDimensions = this.calculateViewPortDimensions.bind(this);
         this.state = {
-            viewportWidth:this.calculateViewPortWidth(),
-            viewportHeight:this.calculateViewPortHeight()
+            viewportWidth:calculateViewPortWidth(),
+            viewportHeight:calculateViewPortHeight()
         }
     }
     componentDidMount() {
@@ -29,16 +25,10 @@ export default class HomePage extends React.Component<{}, HomePageState> {
         window.removeEventListener('resize', this.calculateViewPortDimensions);
         window.removeEventListener('orientationchange', this.calculateViewPortDimensions);
     }
-    calculateViewPortWidth():number {
-        return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-    }
-    calculateViewPortHeight():number {
-        return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-    }
     calculateViewPortDimensions() {
         this.setState({
-            viewportWidth:this.calculateViewPortWidth(),
-            viewportHeight:this.calculateViewPortHeight()
+            viewportWidth:calculateViewPortWidth(),
+            viewportHeight:calculateViewPortHeight()
         });
     }
     render () {

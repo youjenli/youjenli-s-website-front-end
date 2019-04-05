@@ -1,13 +1,15 @@
-#header-bar {
+#header-ctx {
+    position:relative;
+    width:100%;
+}
+
+#header-ctx #header-bar {
     position:relative;
     background: linear-gradient(#3F4E60, #1F2A3A);
     width:100%;
     /*box-shadow: 0px 2px 4px 0px rgba(255,255,255,1);*//*todo*/
     box-shadow: 0px 2px 4px 0px black;
-}
-
-#header-bar.mobile {
-    z-index:2;
+    z-index:3;
 }
 
 #header-bar #site-name {
@@ -15,144 +17,15 @@
     color:white;
 }
 
-#header-bar #groupOfFeatureLinks {
-    position: absolute;
-    right:100%;
-    /*一定要加上 white-space 設定，否則元素之間的斷行記號會導致連結變成直的*/
-    white-space: nowrap;
-}
-
-#header-bar .featureLink {
-    position:relative;
-    display:inline-block;
-    color:white;
-    font-family: "PingFangTC-Regular", "STHeitiTC-Light", "Microsoft JhengHei", Arial, Helvetica, sans-serif;
-}
-
-#header-bar .search-bar {
+#header-ctx .search-bar {
     display: flex;
     align-items: center;
     box-sizing:border-box;
 }
 
-#header-bar.es .search-bar {
-    position:absolute;
-}
-
-#header-bar.mobile .search-bar {
-    width:100%;
-    border-radius:8px;
-    border: 0.5px solid #979797;
-    background-color:#F9F9F9;
-    box-shadow:inset 0 0 3px 0 #979797;
-}
-
-#header-bar .search-bar input {
-    outline:0;
-    border:0;
-    padding:0;
-    color:#000000;
-}
-
-/* es 類別是 external screen 的縮寫 */
-#header-bar.es .search-bar input {
-    background-color:#D8D8D8;
-    border: 1px solid #979797;
-    transition: width 150ms ease-out;
-}
-
-#header-bar.es .search-bar input::-webkit-input-placeholder,/* Edge */
-#header-bar.es .search-bar input::-ms-input-placeholder,/* Internet Explorer 10-11 */
-#header-bar.es .search-bar input::placeholder { 
-    color: #9C9C9C;
-}
-
-#header-bar.mobile .search-bar input {
-    flex:1;
-    line-height:1;
-    background:transparent;
-}
-
-#header-bar.mobile .search-bar input::-webkit-input-placeholder,/* Edge */
-#header-bar.mobile .search-bar input::-ms-input-placeholder,/* Internet Explorer 10-11 */
-#header-bar.mobile .search-bar input::placeholder { 
-    color: #BFBFBF;
-}
-
-#header-bar .featureLink:hover,
-#header-bar .search-bar .search-btn:hover {
+#header-ctx .search-bar .search-btn:hover {
     cursor: pointer;
 }
 
-#header-bar.mobile .search-btn {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    background:transparent;
-}
-
-#header-bar .featureHint {
-    position:absolute;
-    color:black;
-    background-color:#FFFFFF;
-    border-style:solid;
-    border-color:#979797;
-    box-sizing: border-box;
-    box-shadow:0 2px 3px 0 #979797;
-    border-radius:8px;
-    /* 
-        雖然 MDN 說 white-space 的 normal 是預設值，可是實際測試發現若在 chrome 73 上面不設定 normal，那文字不會自動包起來，原因不明。
-        https://developer.mozilla.org/en-US/docs/Web/CSS/white-space
-        因此這裡一定要加上 normal 才能下常排版。
-    */
-    white-space: normal;
-}
-#header-bar .featureHint #point {
-    stroke:#979797;
-}
-
-#header-bar .featureHint #point,
-#header-bar .featureHint .arrow {
-    position:absolute;
-    fill:#FFFFFF;
-    fill-rule:evenodd;
-}
-
-#header-bar .featureHint .hint {
-    line-height:1;
-}
-
-#header-bar .menu {
-    display:none;
-    position:absolute;
-    /*top:100%;*/
-    top:98%;/*todo*/
-    width:100%;
-    background-color:white;
-}
-
-#header-bar .menu.open {
-    display:block;
-    z-index:1;/*todo*/
-}
-
-#header-bar .menu .content {
-    margin:0 auto;
-}
-
-#header-bar .menuBtn {
-    position:absolute;
-}
-
-#header-bar .menuBtn .bar {
-    background-color:white;
-    transition:rotate 150ms ease-out;
-}
-
-#header-bar .menuBtn .bar.upper.open {
-    transform:rotate(45deg);
-}
-
-#header-bar .menuBtn .bar.lower.open {
-    transform:rotate(-45deg);
-}
+@import url('./es.css');
+@import url('./mobile.css');

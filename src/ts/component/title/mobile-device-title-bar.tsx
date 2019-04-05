@@ -2,6 +2,7 @@ import * as React from 'react';
 import SiteName from './site-name';
 import base64EncodedTitle from './site-name-2_5x_base64';
 import MobileDeviceSearchBar from './mobile-device-search-bar';
+import { calculateViewPortHeight } from '../../service/dimensionsCalculator';
 
 interface MobileDeviceTitleBarProps {
     viewportWidth:number;
@@ -29,7 +30,7 @@ export default class MobileDeviceTitleBar extends
         let fontSizeOfSiteName, siteNameTopPosition, siteNameLeftPosition;
         let menuButtonBarWidth, menuButtonBarHeight, menuButtonBarTransformOrigin, menuButtonBarBorderRadius;
         let topShiftOfMenuButton, rightShiftOfMenuButton, spaceBetweenTwoBars;
-        let spaceBetweenMenuAndContent;
+        let topShiftOfMenu, maxHeightOfMenu, spaceBetweenMenuAndContent;
         let searchBarWidth, searchBarHeight, fontSizeOfSearchHint, searchIconWidth, searchIconHeight;
         let spaceBetweenMenuItems;
         let iconWidth, fontSizeOfFeatureLink, spaceBetweenIconAndLink;
@@ -80,6 +81,8 @@ export default class MobileDeviceTitleBar extends
             fontSizeOfFeatureLink = 24;
             spaceBetweenIconAndLink = fontSizeOfFeatureLink * 1.5;
         }
+        topShiftOfMenu = headerHeight;
+        maxHeightOfMenu = calculateViewPortHeight() - headerHeight;
         spaceBetweenMenuAndContent = remFontSize;
         menuButtonBarHeight = menuButtonBarWidth / 10;
         spaceBetweenTwoBars = 2 * menuButtonBarHeight;
@@ -117,32 +120,44 @@ export default class MobileDeviceTitleBar extends
             transformOrigin:`${menuButtonBarTransformOrigin}% 50% 0`
         }
 
-        let additionalClassNamesInMenuOpenedState = "";
+        let styleOfMenu, styleOfShadow;
         if (this.state.isMenuOpened) {
-            additionalClassNamesInMenuOpenedState = "open";
-        }
-
-        const styleOfMenu = {
-            padding:`${spaceBetweenMenuAndContent}px 0`
-        }
+            styleOfMenu = {
+                top:`${topShiftOfMenu}px`,
+                maxHeight:`${maxHeightOfMenu}px`,
+                padding:`${spaceBetweenMenuAndContent}px 0`
+            }
+    
+            styleOfShadow = {//畫面陰影會躲在選單後面，因此尺寸和選單相似
+                top:`${topShiftOfMenu}px`,
+                height:`${maxHeightOfMenu}px`
+            }
+        }        
 
         return (
-            <header id="header-bar" className="mobile" style={headerStyle}>
-               <SiteName name={siteName} base64EncodedTitle={base64EncodedTitle}
-                   fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
-               <span className="menuBtn" style={menuBtnStyle} 
-                    onClick={this.toggleMenuState} onTouchStart={this.toggleMenuState}>
-                   <div className={"upper bar " + additionalClassNamesInMenuOpenedState} style={upperBarStyle}></div>
-                   <div className={"lower bar " + additionalClassNamesInMenuOpenedState} style={lowerBarStyle}></div>
-               </span>
-               <div className={"menu " + additionalClassNamesInMenuOpenedState} style={styleOfMenu}>
-                   <nav className="content" style={styleOfMenuContent}>
-                       <MobileDeviceSearchBar searchBarHeight={searchBarHeight} searchBarWidth={searchBarWidth}
-                            fontSizeOfSearchHint={fontSizeOfSearchHint} marginBottom={spaceBetweenMenuItems}
-                            searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
-                   </nav>
-               </div>
-            </header>
+            <div id="header-ctx" className={this.state.isMenuOpened ? "menuOpened":""}>
+                <header id="header-bar" style={headerStyle}>
+                   <SiteName name={siteName} base64EncodedTitle={base64EncodedTitle}
+                       fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
+                   <span className="menuBtn" style={menuBtnStyle}
+                        onClick={this.toggleMenuState} onTouchStart={this.toggleMenuState}>                  
+                           <div className={"upper bar " + (this.state.isMenuOpened ? "rotate":"")} style={upperBarStyle} ></div>
+                           <div className={"lower bar " + (this.state.isMenuOpened ? "rotate":"")}  style={lowerBarStyle} ></div>
+                   </span>
+                </header>
+                { this.state.isMenuOpened ?
+                    <React.Fragment>
+                        <div id="shadow" style={styleOfShadow}></div>
+                        <div className="menu" style={styleOfMenu}>
+                            <nav className="content" style={styleOfMenuContent}>
+                                <MobileDeviceSearchBar searchBarHeight={searchBarHeight} searchBarWidth={searchBarWidth}
+                                     fontSizeOfSearchHint={fontSizeOfSearchHint} marginBottom={spaceBetweenMenuItems}
+                                     searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
+                            </nav>
+                        </div>    
+                    </React.Fragment>                    
+                : null }                
+            </div>
             //todo lightbox 陰影和選單外框、標題列在選單上的陰影。
         );
     }

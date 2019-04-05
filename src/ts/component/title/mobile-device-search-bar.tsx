@@ -92,7 +92,7 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
                       }}
                       defaultValue={searchFieldPlaceHolder} ref={ (ref) => {this.searchField = ref} }/>
                 }
-                <div className="search-btn mobile" title={titleOfSearchBtn} style={styleOfSearchBtn}>
+                <div className="search-btn" title={titleOfSearchBtn} style={styleOfSearchBtn}>
                     <img  src="/img/search-btn-mobile.svg"
                         style={styleOfSearchIcon} alt={altOfSearchBtn}/>
                 </div>                

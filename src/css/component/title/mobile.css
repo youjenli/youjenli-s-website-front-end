@@ -1,0 +1,78 @@
+#header-ctx.menuOpened {
+    position:fixed;
+    top:0;
+}
+
+#header-ctx .menuBtn {
+    position:absolute;
+}
+
+#header-ctx .menuBtn .bar {
+    background-color:white;
+    transition:rotate 150ms ease-out;
+}
+
+#header-ctx .menuBtn .bar.upper.rotate {
+    transform:rotate(45deg);
+}
+
+#header-ctx .menuBtn .bar.lower.rotate {
+    transform:rotate(-45deg);
+}
+
+#header-ctx .menu {
+    display:block;
+    position:absolute;
+    width:100%;
+    z-index:2;
+    background-color:white;
+    overflow-y:auto;
+    box-shadow:0 2px 4px 0 #545454;
+}
+
+#header-ctx .menu .content {
+    margin:0 auto;
+}
+
+#header-ctx #shadow {
+    position:absolute;
+    background-color:#9D9D9D;
+    opacity:0.6;
+    width:100%;
+    z-index:1;
+}
+
+#header-ctx .menu .search-bar {
+    width:100%;
+    border-radius:8px;
+    border: 0.5px solid #979797;
+    background-color:#F9F9F9;
+    box-shadow:inset 0 0 3px 0 #979797;
+}
+
+#header-ctx .search-bar input {
+    outline:0;
+    border:0;
+    padding:0;
+    color:#000000;
+    flex:1;
+    line-height:1;
+    background:transparent;
+}
+
+#header-ctx .search-bar input::-webkit-input-placeholder,/* Edge */
+#header-ctx .search-bar input::-ms-input-placeholder,/* Internet Explorer 10-11 */
+#header-ctx .search-bar input::placeholder { 
+    color: #BFBFBF;
+}
+
+#header-ctx .menu .search-btn {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background:transparent;
+}
+
+#header-ctx .search-bar .search-btn:hover {
+    cursor: pointer;
+}
