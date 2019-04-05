@@ -28,19 +28,21 @@ export default class MobileDeviceTitleBar extends
     onWindowScroll
     toggleMenuState() {
         this.setState({isMenuOpened:!this.state.isMenuOpened});
+        const reactRoot:HTMLElement = document.querySelector('#react-root');
+        reactRoot.classList.toggle('trim');
     }
     componentDidMount() {
         this.onWindowScroll = debounce(()=>{
-            if (window.scrollY > this.headerHeight) {
-                this.setState({shouldTitleBeSticky:true});
-            } else {
-                this.setState({shouldTitleBeSticky:false});
-            }            
+            this.setState({
+                shouldTitleBeSticky:(window.scrollY >= this.headerHeight)
+            });
         }, 150);
         window.addEventListener('scroll', this.onWindowScroll);
     }
     componentWillUnmount() {
         window.removeEventListener('scroll', this.onWindowScroll);
+        const reactRoot:HTMLElement = document.querySelector('#react-root');
+        reactRoot.classList.remove('trim');
     }
     render(){
         const siteName = "祐任的個人網站";
