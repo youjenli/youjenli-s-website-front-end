@@ -178,7 +178,8 @@ export default class MobileDeviceTitleBar extends
                 </header>
                 { this.state.isMenuOpened ?
                     <React.Fragment>
-                        <div id="shadow" style={styleOfShadow}></div>
+                        <div id="shadow" style={styleOfShadow} onClick={this.toggleMenuState}
+                            onTouchStart={this.toggleMenuState} ></div>
                         <div className="menu" style={styleOfMenu}>
                             <nav className="content" style={styleOfMenuContent}>
                                 <MobileDeviceSearchBar searchBarHeight={searchBarHeight} searchBarWidth={searchBarWidth}
