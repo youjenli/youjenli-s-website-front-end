@@ -1,6 +1,17 @@
 #header-ctx.menuOpened {
+    z-index:5;
+}
+
+#header-ctx.sticky {
     position:fixed;
     top:0;
+}
+
+#header-plhdr {
+    position:relative;
+    width:100%;
+    background: transparent;
+    z-index:1;
 }
 
 #header-ctx .menuBtn {
@@ -24,7 +35,7 @@
     display:block;
     position:absolute;
     width:100%;
-    z-index:2;
+    z-index:4;
     background-color:white;
     overflow-y:auto;
     box-shadow:0 2px 4px 0 #545454;
@@ -39,7 +50,7 @@
     background-color:#9D9D9D;
     opacity:0.6;
     width:100%;
-    z-index:1;
+    z-index:3;
 }
 
 #header-ctx .menu .search-bar {

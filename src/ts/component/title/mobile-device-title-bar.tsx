@@ -3,6 +3,7 @@ import SiteName from './site-name';
 import base64EncodedTitle from './site-name-2_5x_base64';
 import MobileDeviceSearchBar from './mobile-device-search-bar';
 import { calculateViewPortHeight } from '../../service/dimensionsCalculator';
+import debounce from '../../service/debounce';
 
 interface MobileDeviceTitleBarProps {
     viewportWidth:number;
@@ -10,6 +11,7 @@ interface MobileDeviceTitleBarProps {
 
 interface MobileDeviceTitleBarState {
     isMenuOpened:boolean;
+    shouldTitleBeSticky:boolean;
 }
 
 export default class MobileDeviceTitleBar extends 
@@ -17,16 +19,31 @@ export default class MobileDeviceTitleBar extends
     constructor(props) {
         super(props);
         this.state = {
-            isMenuOpened:false
+            isMenuOpened:false,
+            shouldTitleBeSticky:false
         };
         this.toggleMenuState = this.toggleMenuState.bind(this);
     }
+    headerHeight:number
+    onWindowScroll
     toggleMenuState() {
         this.setState({isMenuOpened:!this.state.isMenuOpened});
     }
+    componentDidMount() {
+        this.onWindowScroll = debounce(()=>{
+            if (window.scrollY > this.headerHeight) {
+                this.setState({shouldTitleBeSticky:true});
+            } else {
+                this.setState({shouldTitleBeSticky:false});
+            }            
+        }, 150);
+        window.addEventListener('scroll', this.onWindowScroll);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.onWindowScroll);
+    }
     render(){
         const siteName = "祐任的個人網站";
-        let headerHeight;
         let fontSizeOfSiteName, siteNameTopPosition, siteNameLeftPosition;
         let menuButtonBarWidth, menuButtonBarHeight, menuButtonBarTransformOrigin, menuButtonBarBorderRadius;
         let topShiftOfMenuButton, rightShiftOfMenuButton, spaceBetweenTwoBars;
@@ -38,8 +55,8 @@ export default class MobileDeviceTitleBar extends
         const remFontSize = ( this.props.viewportWidth > 432 ? 18 : 16);
         if (this.props.viewportWidth > 640 ) {//平板
             fontSizeOfSiteName = ((Math.log10(this.props.viewportWidth/640)/1.6) + 1) * 28;
-            headerHeight = fontSizeOfSiteName * 1.933;
-            siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
+            this.headerHeight = fontSizeOfSiteName * 1.933;
+            siteNameTopPosition = (this.headerHeight - fontSizeOfSiteName)/2
             siteNameLeftPosition = (this.props.viewportWidth - fontSizeOfSiteName * siteName.length) / 2;
             rightShiftOfMenuButton = remFontSize;
             menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
@@ -55,8 +72,8 @@ export default class MobileDeviceTitleBar extends
         } else {//套用手機的佈局規則
             if (this.props.viewportWidth > 432) { //顯示寬度超過 432 即視為手機水平模式
                 fontSizeOfSiteName = 28;
-                headerHeight = fontSizeOfSiteName * 1.933;
-                siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
+                this.headerHeight = fontSizeOfSiteName * 1.933;
+                siteNameTopPosition = (this.headerHeight - fontSizeOfSiteName)/2
                 siteNameLeftPosition = remFontSize;
                 rightShiftOfMenuButton = siteNameLeftPosition;
                 menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
@@ -65,8 +82,8 @@ export default class MobileDeviceTitleBar extends
                 
             } else {//顯示寬度小於 432 即視為手機垂直模式
                 fontSizeOfSiteName = (this.props.viewportWidth + 352) / 28;
-                headerHeight = (-0.14 * this.props.viewportWidth + 292.32) / 112;
-                siteNameTopPosition = (headerHeight - fontSizeOfSiteName)/2
+                this.headerHeight = (-0.14 * this.props.viewportWidth + 292.32) / 112;
+                siteNameTopPosition = (this.headerHeight - fontSizeOfSiteName)/2
                 siteNameLeftPosition = remFontSize;
                 rightShiftOfMenuButton = siteNameLeftPosition;
                 menuButtonBarWidth = 1.5 * fontSizeOfSiteName;
@@ -81,8 +98,8 @@ export default class MobileDeviceTitleBar extends
             fontSizeOfFeatureLink = 24;
             spaceBetweenIconAndLink = fontSizeOfFeatureLink * 1.5;
         }
-        topShiftOfMenu = headerHeight;
-        maxHeightOfMenu = calculateViewPortHeight() - headerHeight;
+        topShiftOfMenu = this.headerHeight;
+        maxHeightOfMenu = calculateViewPortHeight() - this.headerHeight;
         spaceBetweenMenuAndContent = remFontSize;
         menuButtonBarHeight = menuButtonBarWidth / 10;
         spaceBetweenTwoBars = 2 * menuButtonBarHeight;
@@ -91,10 +108,18 @@ export default class MobileDeviceTitleBar extends
             / (2 * menuButtonBarWidth)
           )*100);
         menuButtonBarBorderRadius = Math.round(menuButtonBarWidth * 0.057);
-        topShiftOfMenuButton = (headerHeight - 2 * menuButtonBarHeight - 3 * spaceBetweenTwoBars )/2;
+        topShiftOfMenuButton = (this.headerHeight - 2 * menuButtonBarHeight - 3 * spaceBetweenTwoBars )/2;
+
+        let classesOfHeaderCtx = "";
+        if (this.state.isMenuOpened) {
+            classesOfHeaderCtx = classesOfHeaderCtx + "menuOpened ";
+        }
+        if (this.state.shouldTitleBeSticky) {
+            classesOfHeaderCtx = classesOfHeaderCtx + "sticky";
+        }
 
         const headerStyle = {
-            height:headerHeight
+            height:this.headerHeight
         };
 
         const styleOfMenuContent = {
@@ -135,7 +160,11 @@ export default class MobileDeviceTitleBar extends
         }        
 
         return (
-            <div id="header-ctx" className={this.state.isMenuOpened ? "menuOpened":""}>
+            <React.Fragment>
+            { this.state.shouldTitleBeSticky ?
+                <div id="header-plhdr" style={headerStyle}></div> 
+            : null }
+            <div id="header-ctx" className={classesOfHeaderCtx}>
                 <header id="header-bar" style={headerStyle}>
                    <SiteName name={siteName} base64EncodedTitle={base64EncodedTitle}
                        fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
@@ -158,7 +187,7 @@ export default class MobileDeviceTitleBar extends
                     </React.Fragment>                    
                 : null }                
             </div>
-            //todo lightbox 陰影和選單外框、標題列在選單上的陰影。
-        );
+            </React.Fragment>
+        );//todo 標題列在選單上的陰影。
     }
 }
