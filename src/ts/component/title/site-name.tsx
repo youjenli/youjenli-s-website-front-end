@@ -50,7 +50,8 @@ export default class SiteName extends React.Component<SiteNameProps, SiteNameSta
         if (this.state.showSiteNameWithPNG) {
             basicStyle["height"] = `${this.props.fontSize * 1.15}px`;//1.15 是 html 文字預設的行高。
             return (
-                <img id="site-name" src={this.props.base64EncodedTitle} style={basicStyle} alt={this.props.name} title={title}/>
+                <img id="site-name" src={this.props.base64EncodedTitle} style={basicStyle} 
+                alt={this.props.name} title={title}/>
             );
         } else {
             basicStyle["fontFamily"] = "'HanziPen SC', 'HanziPenSC-W5', 'Arial'";

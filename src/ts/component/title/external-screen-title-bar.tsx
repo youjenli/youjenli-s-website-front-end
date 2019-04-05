@@ -116,7 +116,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
         }
 
         return (
-            <header id="header-bar" style={headerBarStyle}>
+            <header id="header-bar" className="es" style={headerBarStyle}>
                 <SiteName name={"祐任的個人網站"} base64EncodedTitle={base64EncodedTitle}
                     fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
 

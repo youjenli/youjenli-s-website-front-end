@@ -1,0 +1,6 @@
+/* #lab 是專門用來實驗瀏覽器是否支援特定字體的區域 */
+#font-family-preceiving {
+    position:fixed;
+    left:-3000px;
+    visibility:hidden;
+}

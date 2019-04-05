@@ -2,7 +2,12 @@
     position:relative;
     background: linear-gradient(#3F4E60, #1F2A3A);
     width:100%;
-    box-shadow: 0px 2px 4px 0px rgba(255,255,255,1);
+    /*box-shadow: 0px 2px 4px 0px rgba(255,255,255,1);*//*todo*/
+    box-shadow: 0px 2px 4px 0px black;
+}
+
+#header-bar.mobile {
+    z-index:2;
 }
 
 #header-bar #site-name {
@@ -24,29 +29,66 @@
     font-family: "PingFangTC-Regular", "STHeitiTC-Light", "Microsoft JhengHei", Arial, Helvetica, sans-serif;
 }
 
-#header-bar #search-bar {
-    position:absolute;
+#header-bar .search-bar {
     display: flex;
+    align-items: center;
+    box-sizing:border-box;
 }
 
-#search-bar #search-field {
-    box-sizing:border-box;
-    border: 1px solid #979797;
-    background-color:#D8D8D8;
+#header-bar.es .search-bar {
+    position:absolute;
+}
+
+#header-bar.mobile .search-bar {
+    width:100%;
+    border-radius:8px;
+    border: 0.5px solid #979797;
+    background-color:#F9F9F9;
+    box-shadow:inset 0 0 3px 0 #979797;
+}
+
+#header-bar .search-bar input {
+    outline:0;
+    border:0;
     padding:0;
-    transition: width 150ms ease-out;
     color:#000000;
 }
 
-#search-bar #search-field::-webkit-input-placeholder,/* Edge */
-#search-bar #search-field::-ms-input-placeholder,/* Internet Explorer 10-11 */
-#search-bar #search-field::placeholder { 
+/* es 類別是 external screen 的縮寫 */
+#header-bar.es .search-bar input {
+    background-color:#D8D8D8;
+    border: 1px solid #979797;
+    transition: width 150ms ease-out;
+}
+
+#header-bar.es .search-bar input::-webkit-input-placeholder,/* Edge */
+#header-bar.es .search-bar input::-ms-input-placeholder,/* Internet Explorer 10-11 */
+#header-bar.es .search-bar input::placeholder { 
     color: #9C9C9C;
 }
 
+#header-bar.mobile .search-bar input {
+    flex:1;
+    line-height:1;
+    background:transparent;
+}
+
+#header-bar.mobile .search-bar input::-webkit-input-placeholder,/* Edge */
+#header-bar.mobile .search-bar input::-ms-input-placeholder,/* Internet Explorer 10-11 */
+#header-bar.mobile .search-bar input::placeholder { 
+    color: #BFBFBF;
+}
+
 #header-bar .featureLink:hover,
-#search-bar #search-btn {
+#header-bar .search-bar .search-btn:hover {
     cursor: pointer;
+}
+
+#header-bar.mobile .search-btn {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background:transparent;
 }
 
 #header-bar .featureHint {
@@ -78,26 +120,37 @@
     line-height:1;
 }
 
-/* #lab 是專門用來實驗瀏覽器是否支援特定字體的區域 */
-#font-preceiving {
-    position:fixed;
-    left:-3000px;
-    visibility:hidden;
+#header-bar .menu {
+    display:none;
+    position:absolute;
+    /*top:100%;*/
+    top:98%;/*todo*/
+    width:100%;
+    background-color:white;
 }
 
-#header-bar #menuBtn {
+#header-bar .menu.open {
+    display:block;
+    z-index:1;/*todo*/
+}
+
+#header-bar .menu .content {
+    margin:0 auto;
+}
+
+#header-bar .menuBtn {
     position:absolute;
 }
 
-#header-bar #menuBtn .bar {
+#header-bar .menuBtn .bar {
     background-color:white;
     transition:rotate 150ms ease-out;
 }
 
-#header-bar #menuBtn .bar.upper.open {
+#header-bar .menuBtn .bar.upper.open {
     transform:rotate(45deg);
 }
 
-#header-bar #menuBtn .bar.lower.open {
+#header-bar .menuBtn .bar.lower.open {
     transform:rotate(-45deg);
 }

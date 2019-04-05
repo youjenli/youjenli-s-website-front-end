@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
 
 interface ExternalScreenSearchBarProps {
     width:number;
@@ -18,8 +19,7 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
     constructor(props){
         super(props);
         const input = document.createElement('input');
-        if (!input.placeholder) {
-            this.shouldUsePlaceHolderAttr = true;            
+        if (!isPlaceHolderOfInputSupported()) {
             this.removePlaceHolder = this.removePlaceHolder.bind(this);
             this.resetPlaceHolder = this.resetPlaceHolder.bind(this);
         }
@@ -27,7 +27,6 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
             placeHolderOfSearchField:'搜尋文章、分類、標籤...'
         }  
     }
-    shouldUsePlaceHolderAttr:boolean = false
     searchField:HTMLInputElement
     removePlaceHolder() {
         /* 檢查欄位內容是否為預設填充物？ 是 => 移除，否 => 不處理 */
@@ -42,7 +41,6 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
         if (this.searchField.value == "") {
             this.searchField.value = this.state.placeHolderOfSearchField;
             this.searchField.style.color = '#9C9C9C';
-            //todo 重設之後，若游標未離開，接下來編輯時應自動刪除，但這要怎麼做？
         } else {
             if (this.searchField.style.color != '#000000') {
                 this.searchField.style.color = '#000000';
@@ -50,7 +48,7 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
         }
     }
     componentDidMount() {
-        if (!this.shouldUsePlaceHolderAttr) {
+        if (!isPlaceHolderOfInputSupported()) {
             this.searchField.style.color = '#9C9C9C';
         }
     }
@@ -79,14 +77,14 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
             height:this.props.height + "px"
         }
         return (
-            <div id="search-bar" style={searchBarStyle}>
+            <div className="search-bar" style={searchBarStyle}>
                 {this.props.children}
-                { this.shouldUsePlaceHolderAttr ? 
-                    <input id="search-field" style={searchFieldStyle}  type="text" 
+                { isPlaceHolderOfInputSupported() ? 
+                    <input style={searchFieldStyle}  type="text" 
                             onFocus={this.props.toggleSearchBarState}
                             onBlur={this.props.toggleSearchBarState} 
                             placeholder={searchFieldPlaceHolder} /> :
-                    <input id="search-field" style={searchFieldStyle}  type="text" 
+                    <input style={searchFieldStyle}  type="text" 
                         onFocus={() => {
                             this.props.toggleSearchBarState();
                             this.removePlaceHolder();
@@ -97,7 +95,7 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
                         }}
                         defaultValue={searchFieldPlaceHolder} ref={ (ref) => {this.searchField = ref} } />
                 }                
-                <img id="search-btn" src="/img/search-btn.svg" style={searchBtnStyle} title={titleOfSearchBtn} 
+                <img className="search-btn" src="/img/search-btn.svg" style={searchBtnStyle} title={titleOfSearchBtn} 
                     alt="點此按鈕搜尋網站的內容"/>
             </div>
         );
