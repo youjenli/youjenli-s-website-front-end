@@ -2,9 +2,14 @@
     z-index:4;
 }
 
-@supports (position: sticky) {
+@supports (position: sticky) or (position: -webkit-sticky) or
+        (position: -moz-sticky) or (position: -ms-sticky) or (position: -o-sticky){
     #header-ctx {
-        position:sticky;
+        position: -webkit-sticky;
+        position: -moz-sticky;
+        position: -ms-sticky;
+        position: -o-sticky;
+        position: sticky;
     }
 }
 
