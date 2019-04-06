@@ -2,9 +2,14 @@
     z-index:4;
 }
 
+@supports (position: sticky) {
+    #header-ctx {
+        position:sticky;
+    }
+}
+
 #header-ctx.sticky {
     position:fixed;
-    top:0;
 }
 
 #header-plhdr {

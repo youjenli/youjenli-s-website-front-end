@@ -3,6 +3,7 @@ import SiteName from './site-name';
 import base64EncodedTitle from './site-name-2_5x_base64';
 import MobileDeviceSearchBar from './mobile-device-search-bar';
 import { calculateViewPortHeight } from '../../service/dimensionsCalculator';
+import { isStickyPositionSupported } from '../../service/featureDetection';
 import debounce from '../../service/debounce';
 
 interface MobileDeviceTitleBarProps {
@@ -32,15 +33,19 @@ export default class MobileDeviceTitleBar extends
         reactRoot.classList.toggle('trim');
     }
     componentDidMount() {
-        this.onWindowScroll = debounce(()=>{
-            this.setState({
-                shouldTitleBeSticky:(window.scrollY >= this.headerHeight)
-            });
-        }, 150);
-        window.addEventListener('scroll', this.onWindowScroll);
+        if (!isStickyPositionSupported()) {
+            this.onWindowScroll = debounce(()=>{
+                this.setState({
+                    shouldTitleBeSticky:(window.scrollY >= this.headerHeight)
+                });
+            }, 150);
+            window.addEventListener('scroll', this.onWindowScroll);
+        }        
     }
     componentWillUnmount() {
-        window.removeEventListener('scroll', this.onWindowScroll);
+        if (!isStickyPositionSupported()) {
+            window.removeEventListener('scroll', this.onWindowScroll);
+        }        
         const reactRoot:HTMLElement = document.querySelector('#react-root');
         reactRoot.classList.remove('trim');
     }
@@ -116,7 +121,7 @@ export default class MobileDeviceTitleBar extends
         if (this.state.isMenuOpened) {
             classesOfHeaderCtx = classesOfHeaderCtx + "menuOpened ";
         }
-        if (this.state.shouldTitleBeSticky) {
+        if (!isStickyPositionSupported() && this.state.shouldTitleBeSticky) {
             classesOfHeaderCtx = classesOfHeaderCtx + "sticky";
         }
 
@@ -163,7 +168,7 @@ export default class MobileDeviceTitleBar extends
 
         return (
             <React.Fragment>
-            { this.state.shouldTitleBeSticky ?
+            { (!isStickyPositionSupported() && this.state.shouldTitleBeSticky) ?
                 <div id="header-plhdr" style={headerStyle}></div> 
             : null }
             <div id="header-ctx" className={classesOfHeaderCtx}>
@@ -191,6 +196,6 @@ export default class MobileDeviceTitleBar extends
                 : null }                
             </div>
             </React.Fragment>
-        );//todo 標題列在選單上的陰影。
+        );
     }
 }
