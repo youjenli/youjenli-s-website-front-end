@@ -3,6 +3,7 @@ import SiteName from './site-name';
 import ExternalScreenSearchBar from './external-screen-search-bar';
 import HintOfFeatureLink from './hint-of-feature-link';
 import base64EncodedTitle from './site-name-2_5x_base64';
+import * as terms from './terms';
 
 interface ExternalScreenTitleBarProps {
     viewportWidth:number;
@@ -15,13 +16,6 @@ interface ExternalScreenTitleBarState {
     showHintOfCatagoryOfArticles:boolean;
     showHintOfAboutThisSite:boolean;
 }
-
-let selfIntroduction = '自我介紹';
-let hintOfSelfIntroduction = '公開的簡單自我介紹，說說自己的學經歷、情感、志向、嗜好與興趣。';
-let catagoryOfArticles = '文章分類';
-let hintOfCatagoryOfArticles = '列出這個網站的文章類型，讓您一目了然。';
-let aboutThisSite = '關於這網站';
-let hintOfAboutThisSite = '說明用來開發這個網站的工具、網站架構與感謝名單。';
 
 export default class ExternalScreenTitleBar extends React.Component<ExternalScreenTitleBarProps, ExternalScreenTitleBarState> {
     constructor(props){
@@ -118,7 +112,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
         return (
             <div id="header-ctx">
                 <header id="header-bar" style={headerBarStyle}>
-                    <SiteName name={"祐任的個人網站"} base64EncodedTitle={base64EncodedTitle}
+                    <SiteName name={terms.siteName} base64EncodedTitle={base64EncodedTitle}
                         fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
 
                     <ExternalScreenSearchBar width={searchBarWidth} height={searchBarHeight} 
@@ -129,31 +123,31 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
                             <a style={featureLinkStyle} className="featureLink" 
                                 onMouseEnter={this.toggleSelfIntroductionLinkHoverState}
                                 onMouseLeave={this.toggleSelfIntroductionLinkHoverState}
-                                >{selfIntroduction}
+                                >{terms.selfIntroduction}
                                 { this.state.showHintOfSelfIntroduction ?
                                 <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                    charactersOfFeatureLink={selfIntroduction.length} 
-                                    hint={hintOfSelfIntroduction} fontSizeOfHint={featureHintFontSize} />
+                                    charactersOfFeatureLink={terms.selfIntroduction.length} 
+                                    hint={terms.hintOfSelfIntroduction} fontSizeOfHint={featureHintFontSize} />
                                 : null }
                             </a>
                             <a style={featureLinkStyle} className="featureLink"
                                 onMouseEnter={this.toggleCatagoryOfArticlesHoverState}
                                 onMouseLeave={this.toggleCatagoryOfArticlesHoverState}
-                                >{catagoryOfArticles}
+                                >{terms.catagoryOfArticles}
                                 { this.state.showHintOfCatagoryOfArticles ?
                                 <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                    charactersOfFeatureLink={catagoryOfArticles.length} 
-                                    hint={hintOfCatagoryOfArticles} fontSizeOfHint={featureHintFontSize} />
+                                    charactersOfFeatureLink={terms.catagoryOfArticles.length} 
+                                    hint={terms.hintOfCatagoryOfArticles} fontSizeOfHint={featureHintFontSize} />
                                 : null }
                             </a>
                             <a style={featureLinkStyle} className="featureLink"
                                 onMouseEnter={this.toggleAboutThisSiteHoverState}
                                 onMouseLeave={this.toggleAboutThisSiteHoverState}
-                                >{aboutThisSite}
+                                >{terms.aboutThisSite}
                                 { this.state.showHintOfAboutThisSite ?
                                 <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                    charactersOfFeatureLink={aboutThisSite.length} 
-                                    hint={hintOfAboutThisSite} fontSizeOfHint={featureHintFontSize} />
+                                    charactersOfFeatureLink={terms.aboutThisSite.length} 
+                                    hint={terms.hintOfAboutThisSite} fontSizeOfHint={featureHintFontSize} />
                                 : null }
                             </a>
                         </nav> 

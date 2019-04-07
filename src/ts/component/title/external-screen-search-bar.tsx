@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
+import * as terms from './terms';
 
 interface ExternalScreenSearchBarProps {
     width:number;
@@ -70,8 +71,7 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
             marginRight:`${this.props.fontSizeOfFeatureLink * 0.5}px`,
             fontSize:`${this.props.fontSizeOfSearchHint}px`
         }
-        const searchFieldPlaceHolder = '搜尋文章、分類、標籤...';
-        const titleOfSearchBtn = '搜尋按鈕';  
+        
         const searchBtnStyle = {
             width:this.props.height + "px",
             height:this.props.height + "px"
@@ -83,7 +83,7 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
                     <input style={searchFieldStyle}  type="text" 
                             onFocus={this.props.toggleSearchBarState}
                             onBlur={this.props.toggleSearchBarState} 
-                            placeholder={searchFieldPlaceHolder} /> :
+                            placeholder={terms.searchFieldPlaceHolder} /> :
                     <input style={searchFieldStyle}  type="text" 
                         onFocus={() => {
                             this.props.toggleSearchBarState();
@@ -93,11 +93,11 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
                             this.props.toggleSearchBarState();
                             this.resetPlaceHolder();
                         }}
-                        defaultValue={searchFieldPlaceHolder} ref={ (ref) => {this.searchField = ref} } />
+                        defaultValue={terms.searchFieldPlaceHolder} ref={ (ref) => {this.searchField = ref} } />
                 }                
-                <img className="search-btn" src="/img/search-btn.svg" style={searchBtnStyle} title={titleOfSearchBtn} 
-                    alt="點此按鈕搜尋網站的內容"/>
+                <img className="search-btn" src="/img/search-btn.svg" style={searchBtnStyle} title={terms.titleOfSearchBtn} 
+                    alt={terms.searchIconAlt}/>
             </div>
-        );
+        );//註:不能為了刪減網頁大小而刪除 search-btn svg 圖示的 width, height 和 viewBox ，否則它可能會不受外框的拘束而卡掉更多的空間。
     }    
 }

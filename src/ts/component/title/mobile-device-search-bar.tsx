@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
+import * as terms from './terms';
 
 interface MobileDeviceSearchBarProps {
     searchBarWidth:number;
@@ -73,28 +74,24 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
             height:`${this.props.searchIconHeight}px`
         }
         
-        const searchFieldPlaceHolder = '搜尋文章、分類、標籤...';
-        const titleOfSearchBtn = '查詢網站內容';
-        const altOfSearchBtn = '點此處搜尋網站內容';
-
         return ( 
             <div className="search-bar" style={styleOfSearchBar} >
                 { isPlaceHolderOfInputSupported ? 
                   <input type="text" style={styleOfSearchField}
-                     placeholder={searchFieldPlaceHolder} /> :  
+                     placeholder={terms.searchFieldPlaceHolder} /> :  
                   <input type="text" style={styleOfSearchField}
-                      placeholder={searchFieldPlaceHolder} 
+                      placeholder={terms.searchFieldPlaceHolder} 
                       onFocus={() => {
                           this.removePlaceHolder();
                       }}
                       onBlur={() => {
                           this.resetPlaceHolder();
                       }}
-                      defaultValue={searchFieldPlaceHolder} ref={ (ref) => {this.searchField = ref} }/>
+                      defaultValue={terms.searchFieldPlaceHolder} ref={ (ref) => {this.searchField = ref} }/>
                 }
-                <div className="search-btn" title={titleOfSearchBtn} style={styleOfSearchBtn}>
+                <div className="search-btn" title={terms.titleOfSearchBtn} style={styleOfSearchBtn}>
                     <img  src="/img/search-btn-mobile.svg"
-                        style={styleOfSearchIcon} alt={altOfSearchBtn}/>
+                        style={styleOfSearchIcon} alt={terms.searchIconAlt}/>
                 </div>                
             </div>
         );

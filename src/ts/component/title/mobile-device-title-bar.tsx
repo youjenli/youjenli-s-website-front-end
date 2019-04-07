@@ -5,6 +5,7 @@ import MobileDeviceSearchBar from './mobile-device-search-bar';
 import { calculateViewPortHeight } from '../../service/dimensionsCalculator';
 import { isStickyPositionSupported } from '../../service/featureDetection';
 import debounce from '../../service/debounce';
+import * as terms from './terms';
 
 interface MobileDeviceTitleBarProps {
     viewportWidth:number;
@@ -50,21 +51,23 @@ export default class MobileDeviceTitleBar extends
         reactRoot.classList.remove('trim');
     }
     render(){
-        const siteName = "祐任的個人網站";
         let fontSizeOfSiteName, siteNameTopPosition, siteNameLeftPosition;
         let menuButtonBarWidth, menuButtonBarHeight, menuButtonBarTransformOrigin, menuButtonBarBorderRadius;
         let topShiftOfMenuButton, rightShiftOfMenuButton, spaceBetweenTwoBars;
         let topShiftOfMenu, maxHeightOfMenu, spaceBetweenMenuAndContent;
         let searchBarWidth, searchBarHeight, fontSizeOfSearchHint, searchIconWidth, searchIconHeight;
         let spaceBetweenMenuItems;
-        let iconWidth, fontSizeOfFeatureLink, spaceBetweenIconAndLink;
-        
+        let iconWidth, spaceBetweenIconAndLink, fontSizeOfFeatureLink;
+        let flexBasisOfSocialMediaGrp;
+        let styleOfSelfIntroduction, styleOfCatagoryOfArticles, styleOfAboutThisSite, styleOfSocialMediaGrp;
+        let styleOfLinkIcon, styleOfSocialMediaBtn;
+
         const remFontSize = ( this.props.viewportWidth > 432 ? 18 : 16);
         if (this.props.viewportWidth > 640 ) {//平板
             fontSizeOfSiteName = ((Math.log10(this.props.viewportWidth/640)/1.6) + 1) * 28;
             this.headerHeight = fontSizeOfSiteName * 1.933;
             siteNameTopPosition = (this.headerHeight - fontSizeOfSiteName)/2
-            siteNameLeftPosition = (this.props.viewportWidth - fontSizeOfSiteName * siteName.length) / 2;
+            siteNameLeftPosition = (this.props.viewportWidth - fontSizeOfSiteName * terms.siteName.length) / 2;
             rightShiftOfMenuButton = remFontSize;
             menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
             searchBarWidth = this.props.viewportWidth * 0.75;
@@ -76,7 +79,24 @@ export default class MobileDeviceTitleBar extends
             iconWidth = (this.props.viewportWidth + 1376) / 48;
             fontSizeOfFeatureLink = (this.props.viewportWidth + 896) / 64;
             spaceBetweenIconAndLink = (this.props.viewportWidth + 128) / 768 * fontSizeOfFeatureLink;
+            flexBasisOfSocialMediaGrp = 50;
+            styleOfSelfIntroduction = {
+                padding:`${spaceBetweenMenuItems}px 0`
+            };
+            styleOfCatagoryOfArticles = Object.assign({}, styleOfSelfIntroduction);
+            styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
+            styleOfCatagoryOfArticles['borderLeft'] = `1px`;
+            styleOfAboutThisSite = {
+                paddingTop:`${spaceBetweenMenuItems}px`
+            };
         } else {//套用手機的佈局規則
+            spaceBetweenMenuItems = remFontSize * 0.5;
+            //圖示寬度要移到這邊，這樣手機版的邏輯區域才可以判斷是否要把 social media grp 展到第三層。
+            iconWidth = 42;
+            //選單同一列第一項元素的樣式表要移到這邊，這樣才可以給第二項元素引用
+            styleOfSelfIntroduction = {
+                padding:`${spaceBetweenMenuItems}px 0`
+            };
             if (this.props.viewportWidth > 432) { //顯示寬度超過 432 即視為手機水平模式
                 fontSizeOfSiteName = 28;
                 this.headerHeight = fontSizeOfSiteName * 1.933;
@@ -86,7 +106,20 @@ export default class MobileDeviceTitleBar extends
                 menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
                 searchBarWidth = (21 * this.props.viewportWidth + 11520) / 52;
                 fontSizeOfSearchHint = 24;
-                
+                //選單同一列第二項元素的樣式表要移到這邊，這樣才能減少重覆判斷
+                styleOfCatagoryOfArticles = Object.assign({}, styleOfSelfIntroduction);
+                styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
+                styleOfCatagoryOfArticles['borderLeft'] = `1px`;
+                if (iconWidth * 4 + remFontSize * 0.5 * 3 < searchBarWidth * 0.5) {
+                    styleOfAboutThisSite = {
+                        paddingTop:`${spaceBetweenMenuItems}px`
+                    };
+                    flexBasisOfSocialMediaGrp = 50;
+                } else {
+                    styleOfCatagoryOfArticles['borderBottom'] = `1px`;
+                    styleOfAboutThisSite = Object.assign({}, styleOfSelfIntroduction);
+                    flexBasisOfSocialMediaGrp = 100;
+                }              
             } else {//顯示寬度小於 432 即視為手機垂直模式
                 fontSizeOfSiteName = (this.props.viewportWidth + 352) / 28;
                 this.headerHeight = (-0.14 * this.props.viewportWidth + 292.32) / 112;
@@ -96,12 +129,13 @@ export default class MobileDeviceTitleBar extends
                 menuButtonBarWidth = 1.5 * fontSizeOfSiteName;
                 searchBarWidth = this.props.viewportWidth - 2 * remFontSize;
                 fontSizeOfSearchHint = (this.props.viewportWidth * 3 + 48) / 56;
+                flexBasisOfSocialMediaGrp = 100;
+                styleOfCatagoryOfArticles = styleOfSelfIntroduction;
+                styleOfAboutThisSite = styleOfSelfIntroduction;
             }
             searchBarHeight = 53;
-            spaceBetweenMenuItems = remFontSize * 0.5;
             searchIconWidth = 42;
             searchIconHeight = 38;
-            iconWidth = 42;
             fontSizeOfFeatureLink = 24;
             spaceBetweenIconAndLink = fontSizeOfFeatureLink * 1.5;
         }
@@ -164,7 +198,19 @@ export default class MobileDeviceTitleBar extends
                 top:`${topShiftOfMenu}px`,
                 height:`${maxHeightOfMenu}px`
             }
-        }        
+        }
+        
+        styleOfLinkIcon = {
+            marginRight:`${spaceBetweenIconAndLink}px`,
+            width:`${iconWidth}px`
+        };
+      
+        styleOfSocialMediaBtn = {
+            width:`${iconWidth}px`
+        }
+
+        styleOfSocialMediaGrp = Object.assign({}, styleOfSelfIntroduction);
+        styleOfSocialMediaGrp['flexBasis'] =`${flexBasisOfSocialMediaGrp}%`;
 
         return (
             <React.Fragment>
@@ -173,7 +219,7 @@ export default class MobileDeviceTitleBar extends
             : null }
             <div id="header-ctx" className={classesOfHeaderCtx}>
                 <header id="header-bar" style={headerStyle}>
-                   <SiteName name={siteName} base64EncodedTitle={base64EncodedTitle}
+                   <SiteName name={terms.siteName} base64EncodedTitle={base64EncodedTitle}
                        fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
                    <span className="menuBtn" style={menuBtnStyle}
                         onClick={this.toggleMenuState} onTouchStart={this.toggleMenuState}>                  
@@ -190,6 +236,22 @@ export default class MobileDeviceTitleBar extends
                                 <MobileDeviceSearchBar searchBarHeight={searchBarHeight} searchBarWidth={searchBarWidth}
                                      fontSizeOfSearchHint={fontSizeOfSearchHint} marginBottom={spaceBetweenMenuItems}
                                      searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
+                                <a className="link" style={styleOfSelfIntroduction} id="cv">
+                                    <img className="icon" style={styleOfLinkIcon} src="/img/curriculum-vitae.svg" />{terms.selfIntroduction}</a>
+                                <a className="link" style={styleOfCatagoryOfArticles} id="catagory">
+                                    <img className="icon" style={styleOfLinkIcon} src="/img/terms-catagory.svg" />{terms.catagoryOfArticles}</a>
+                                <a className="link" style={styleOfAboutThisSite} id="about">
+                                    <img className="icon" style={styleOfLinkIcon} src="/img/programming-code.svg" />{terms.aboutThisSite}</a>
+                                <div id="socialMediaGrp" className="link"  style={styleOfSocialMediaGrp}>
+                                    <img style={styleOfSocialMediaBtn} className="media" src="/img/facebook-icon-link.svg" title={terms.facebookIconTitle} 
+                                        alt={terms.facebookIconAlt}/>
+                                    <img style={styleOfSocialMediaBtn} className="media" src="/img/github-icon-link.svg" title={terms.githubIconTitle} 
+                                        alt={terms.githubIconAlt}/>
+                                    <img style={styleOfSocialMediaBtn} className="media" src="/img/stack_overflow-icon-link.svg" title={terms.stackOverflowIconTitle}
+                                        alt={terms.stackOverflowIconAlt} />
+                                    <img style={styleOfSocialMediaBtn} className="media" src="/img/youtube-icon-link.svg" title={terms.youtubeIconTitle} 
+                                        alt={terms.youtubeIconAlt} />
+                                </div> 
                             </nav>
                         </div>    
                     </React.Fragment>                    
