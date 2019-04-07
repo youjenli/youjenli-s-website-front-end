@@ -57,7 +57,8 @@ export default class MobileDeviceTitleBar extends
         let topShiftOfMenu, maxHeightOfMenu, spaceBetweenMenuAndContent;
         let searchBarWidth, searchBarHeight, fontSizeOfSearchHint, searchIconWidth, searchIconHeight;
         let spaceBetweenMenuItems;
-        let iconWidth, spaceBetweenIconAndLink, fontSizeOfFeatureLink;
+        const borderWidthOfLink = 1;
+        let featureLinkIconWidth, spaceBetweenIconAndLink, fontSizeOfFeatureLink;
         let styleOfSelfIntroduction, styleOfCatagoryOfArticles, styleOfAboutThisSite, styleOfSocialMediaGrp;
         let styleOfLinkIcon, styleOfSocialMediaBtn;
 
@@ -75,31 +76,36 @@ export default class MobileDeviceTitleBar extends
             spaceBetweenMenuItems = remFontSize * 0.75;
             searchIconWidth = (this.props.viewportWidth + 3008) / 96;
             searchIconHeight = searchIconWidth;
-            iconWidth = (this.props.viewportWidth + 1376) / 48;
+            featureLinkIconWidth = (this.props.viewportWidth + 1376) / 48;
             fontSizeOfFeatureLink = (this.props.viewportWidth + 896) / 64;
             spaceBetweenIconAndLink = (this.props.viewportWidth + 128) / 768 * fontSizeOfFeatureLink;
-            styleOfSelfIntroduction = {
-                padding:`${spaceBetweenMenuItems}px 0`,
+            const commonStyleOfFeatureLink = {
+                borderTop:`${borderWidthOfLink}px solid #979797`,
                 flexBasis:'50%'
-            };
+            }
+            styleOfSelfIntroduction = Object.assign({}, commonStyleOfFeatureLink);
+            styleOfSelfIntroduction['padding'] = `${spaceBetweenMenuItems}px 0`;
+
             styleOfCatagoryOfArticles = Object.assign({}, styleOfSelfIntroduction);
             styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
-            styleOfCatagoryOfArticles['borderLeft'] = `1px solid #979797`;
-            styleOfAboutThisSite = {
-                paddingTop:`${spaceBetweenMenuItems}px`,
-                flexBasis:'50%'
-            };
+            styleOfCatagoryOfArticles['borderLeft'] = `${borderWidthOfLink}px solid #979797`;
+
+            styleOfAboutThisSite = Object.assign({}, commonStyleOfFeatureLink);
+            styleOfAboutThisSite['paddingTop'] = `${spaceBetweenMenuItems}px`;
+            
             styleOfSocialMediaGrp = Object.assign({}, styleOfAboutThisSite);
         } else {//套用手機的佈局規則
             spaceBetweenMenuItems = remFontSize * 0.5;
-            styleOfSelfIntroduction = {
-                padding:`${spaceBetweenMenuItems}px 0`                
+            const commonStyleOfFeatureLink = {
+                borderTop: `${borderWidthOfLink}px solid #979797`
             };
-            styleOfSocialMediaGrp = {
-                paddingTop:`${spaceBetweenMenuItems}px`
-            };
+            styleOfSelfIntroduction = Object.assign({}, commonStyleOfFeatureLink);
+            styleOfSelfIntroduction['padding'] = `${spaceBetweenMenuItems}px 0`;
+            
+            styleOfSocialMediaGrp = Object.assign({}, commonStyleOfFeatureLink);
+            styleOfSocialMediaGrp['paddingTop'] = `${spaceBetweenMenuItems}px`;
             //圖示寬度要移到這邊，這樣手機版的邏輯區域才可以判斷是否要把 social media grp 展到第三層。
-            iconWidth = 42;
+            featureLinkIconWidth = 42;
             if (this.props.viewportWidth > 432) { //顯示寬度超過 432 即視為手機水平模式
                 fontSizeOfSiteName = 28;
                 this.headerHeight = fontSizeOfSiteName * 1.933;
@@ -111,19 +117,18 @@ export default class MobileDeviceTitleBar extends
                 fontSizeOfSearchHint = 24;
                 styleOfSelfIntroduction['flexBasis'] = '50%';
                 styleOfCatagoryOfArticles = Object.assign({}, styleOfSelfIntroduction);
-                if ((searchBarWidth / 2 - 4 * iconWidth) / 3 < iconWidth * 0.5) {//社群網站連結區域太窄
-                    styleOfCatagoryOfArticles['borderBottom'] = `1px solid #979797`;
+                if ((searchBarWidth / 2 - 4 * featureLinkIconWidth) / 3 < featureLinkIconWidth * 0.5) {//社群網站連結區域太窄
+                    styleOfCatagoryOfArticles['borderBottom'] = `${borderWidthOfLink}px solid #979797`;
                     styleOfAboutThisSite = Object.assign({}, styleOfSelfIntroduction); 
                     styleOfSocialMediaGrp['flexBasis'] = '100%';
                 } else {//社群網站連結不會太窄
-                    styleOfAboutThisSite = {
-                        paddingTop:`${spaceBetweenMenuItems}px`,
-                        flexBasis:'50%'
-                    }
+                    styleOfAboutThisSite = Object.assign({}, commonStyleOfFeatureLink);
+                    styleOfAboutThisSite['paddingTop'] = `${spaceBetweenMenuItems}px`;
+                    styleOfAboutThisSite['flexBasis'] = '50%';
                     styleOfSocialMediaGrp['flexBasis'] = '50%';
                 }
                 styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
-                styleOfCatagoryOfArticles['borderLeft'] = `1px solid #979797`;
+                styleOfCatagoryOfArticles['borderLeft'] = `${borderWidthOfLink}px solid #979797`;
             } else {//顯示寬度小於 432 即視為手機垂直模式
                 fontSizeOfSiteName = (this.props.viewportWidth + 352) / 28;
                 this.headerHeight = (5 * this.props.viewportWidth + 4336) / 112;
@@ -135,7 +140,7 @@ export default class MobileDeviceTitleBar extends
                 fontSizeOfSearchHint = (this.props.viewportWidth * 3 + 48) / 56;
                 styleOfSelfIntroduction['flexBasis'] = '100%';
                 styleOfCatagoryOfArticles = styleOfSelfIntroduction;
-                styleOfAboutThisSite = styleOfSelfIntroduction;                  
+                styleOfAboutThisSite = styleOfSelfIntroduction;
                 styleOfSocialMediaGrp['flexBasis'] = '100%';          
             }
             searchBarHeight = 53;
@@ -207,11 +212,11 @@ export default class MobileDeviceTitleBar extends
         
         styleOfLinkIcon = {
             marginRight:`${spaceBetweenIconAndLink}px`,
-            width:`${iconWidth}px`
+            width:`${featureLinkIconWidth}px`
         };
       
         styleOfSocialMediaBtn = {
-            width:`${iconWidth}px`
+            width:`${featureLinkIconWidth}px`
         }
 
         return (
