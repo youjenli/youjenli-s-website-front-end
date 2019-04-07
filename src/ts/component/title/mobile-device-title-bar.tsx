@@ -228,16 +228,14 @@ export default class MobileDeviceTitleBar extends
                 <header id="header-bar" style={headerStyle}>
                    <SiteName name={terms.siteName} base64EncodedTitle={base64EncodedTitle}
                        fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
-                   <span className="menuBtn" style={menuBtnStyle}
-                        onClick={this.toggleMenuState} onTouchStart={this.toggleMenuState}>                  
+                   <span className="menuBtn" style={menuBtnStyle} onClick={this.toggleMenuState} >                  
                            <div className={"upper bar " + (this.state.isMenuOpened ? "rotate":"")} style={upperBarStyle} ></div>
                            <div className={"lower bar " + (this.state.isMenuOpened ? "rotate":"")}  style={lowerBarStyle} ></div>
                    </span>
                 </header>
                 { this.state.isMenuOpened ?
                     <React.Fragment>
-                        <div id="shadow" style={styleOfShadow} onClick={this.toggleMenuState}
-                            onTouchStart={this.toggleMenuState} ></div>
+                        <div id="shadow" style={styleOfShadow} onClick={this.toggleMenuState} ></div>
                         <div className="menu" style={styleOfMenu}>
                             <nav className="content" style={styleOfMenuContent}>
                                 <MobileDeviceSearchBar searchBarHeight={searchBarHeight} searchBarWidth={searchBarWidth}
