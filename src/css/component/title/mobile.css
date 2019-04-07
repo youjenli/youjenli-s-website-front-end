@@ -100,26 +100,39 @@
 #header-ctx .menu .link {
     border-top:1px /*todo 數值待動態產生*/ solid #979797;
     box-sizing:border-box;
+    display:flex;
+    align-items: center;
 }
 
-#header-ctx .menu .link img {
-    vertical-align: middle;
+#header-ctx .menu a {
     cursor:pointer;
+}
+
+#header-ctx .menu .link img,
+#header-ctx .menu .link svg {
+    flex-grow:0;
+    vertical-align: middle;
+}
+
+#header-ctx .menu .link span {
+    flex-grow:1;
 }
 
 #header-ctx .menu #cv {
     color:#FCBE60;
+    fill:#FCBE60;
 }
 
 #header-ctx .menu #catagory {
     color:#7FB14C;
+    fill:#7FB14C;
 }
 
 #header-ctx .menu #about {
     color:#263242;
+    fill:#263242;
 }
 
 #header-ctx .menu #socialMediaGrp {
-    display:flex;
     justify-content: space-between;
 }

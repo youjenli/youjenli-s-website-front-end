@@ -239,20 +239,26 @@ export default class MobileDeviceTitleBar extends
                                      fontSizeOfSearchHint={fontSizeOfSearchHint} marginBottom={spaceBetweenMenuItems}
                                      searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
                                 <a className="link" style={styleOfSelfIntroduction} id="cv">
-                                    <img className="icon" style={styleOfLinkIcon} src="/img/curriculum-vitae.svg" />{terms.selfIntroduction}</a>
+                                    <img className="icon" style={styleOfLinkIcon} src="/img/curriculum-vitae.svg" />
+                                    <span>{terms.selfIntroduction}</span>{this.props.viewportWidth <= 432 ? <ArrowShape /> : null}
+                                </a>
                                 <a className="link" style={styleOfCatagoryOfArticles} id="catagory">
-                                    <img className="icon" style={styleOfLinkIcon} src="/img/terms-catagory.svg" />{terms.catagoryOfArticles}</a>
+                                    <img className="icon" style={styleOfLinkIcon} src="/img/terms-catagory.svg" />
+                                    <span>{terms.catagoryOfArticles}</span>{this.props.viewportWidth <= 432 ? <ArrowShape /> : null}
+                                </a>
                                 <a className="link" style={styleOfAboutThisSite} id="about">
-                                    <img className="icon" style={styleOfLinkIcon} src="/img/programming-code.svg" />{terms.aboutThisSite}</a>
+                                    <img className="icon" style={styleOfLinkIcon} src="/img/programming-code.svg" />
+                                    <span>{terms.aboutThisSite}</span>{this.props.viewportWidth <= 432 ? <ArrowShape /> : null}
+                                </a>
                                 <div id="socialMediaGrp" className="link"  style={styleOfSocialMediaGrp}>
-                                    <img style={styleOfSocialMediaBtn} className="media" src="/img/facebook-icon-link.svg" title={terms.facebookIconTitle} 
-                                        alt={terms.facebookIconAlt}/>
-                                    <img style={styleOfSocialMediaBtn} className="media" src="/img/github-icon-link.svg" title={terms.githubIconTitle} 
-                                        alt={terms.githubIconAlt}/>
-                                    <img style={styleOfSocialMediaBtn} className="media" src="/img/stack_overflow-icon-link.svg" title={terms.stackOverflowIconTitle}
-                                        alt={terms.stackOverflowIconAlt} />
-                                    <img style={styleOfSocialMediaBtn} className="media" src="/img/youtube-icon-link.svg" title={terms.youtubeIconTitle} 
-                                        alt={terms.youtubeIconAlt} />
+                                    <a><img style={styleOfSocialMediaBtn} src="/img/facebook-icon-link.svg" title={terms.facebookIconTitle} 
+                                        alt={terms.facebookIconAlt}/></a>
+                                    <a><img style={styleOfSocialMediaBtn} src="/img/github-icon-link.svg" title={terms.githubIconTitle} 
+                                        alt={terms.githubIconAlt}/></a>
+                                    <a><img style={styleOfSocialMediaBtn} src="/img/stack_overflow-icon-link.svg" title={terms.stackOverflowIconTitle}
+                                        alt={terms.stackOverflowIconAlt} /></a>
+                                    <a><img style={styleOfSocialMediaBtn} src="/img/youtube-icon-link.svg" title={terms.youtubeIconTitle} 
+                                        alt={terms.youtubeIconAlt} /></a>
                                 </div> 
                             </nav>
                         </div>    
@@ -260,6 +266,24 @@ export default class MobileDeviceTitleBar extends
                 : null }                
             </div>
             </React.Fragment>
+        );
+    }
+}
+
+
+
+class ArrowShape extends React.Component {
+    render() {
+        return (
+            <svg className="arrow" width="42px" height="32px" viewBox="0 0 42 32" version="1.1">
+                <g transform="translate(-358.000000, -74.000000)" fill-rule="nonzero">
+                    <g transform="translate(0.000000, 70.000000)">
+                        <g transform="translate(358.000000, 4.600000)">
+                            <path d="M28.2823118,0.466218047 C27.7101302,-0.155406016 26.7578279,-0.155406016 26.1656399,0.466218047 C25.5934582,1.0668413 25.5934582,2.06647999 26.1656399,2.66570319 L36.8983804,13.9319393 L1.48180375,13.9319393 C0.65620832,13.9333394 0,14.622166 0,15.4887996 C0,16.3554331 0.65620832,17.0666606 1.48180375,17.0666606 L36.8983804,17.0666606 L26.1656399,28.3118959 C25.5934582,28.93352 25.5934582,29.9345588 26.1656399,30.533782 C26.7578279,31.155406 27.711464,31.155406 28.2823118,30.533782 L41.555859,16.6004426 C42.148047,15.9998193 42.148047,15.0001807 41.555859,14.4009575 L28.2823118,0.466218047 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </svg>
         );
     }
 }
