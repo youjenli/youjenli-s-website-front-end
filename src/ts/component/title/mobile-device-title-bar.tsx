@@ -256,14 +256,18 @@ export default class MobileDeviceTitleBar extends
                                     <span>{terms.aboutThisSite}</span>{this.props.viewportWidth <= 432 ? <ArrowShape /> : null}
                                 </a>
                                 <div id="socialMediaGrp" className="link"  style={styleOfSocialMediaGrp}>
-                                    <a><img style={styleOfSocialMediaBtn} src="/img/facebook-icon-link.svg" title={terms.facebookIconTitle} 
-                                        alt={terms.facebookIconAlt}/></a>
-                                    <a><img style={styleOfSocialMediaBtn} src="/img/github-icon-link.svg" title={terms.githubIconTitle} 
-                                        alt={terms.githubIconAlt}/></a>
-                                    <a><img style={styleOfSocialMediaBtn} src="/img/stack_overflow-icon-link.svg" title={terms.stackOverflowIconTitle}
-                                        alt={terms.stackOverflowIconAlt} /></a>
-                                    <a><img style={styleOfSocialMediaBtn} src="/img/youtube-icon-link.svg" title={terms.youtubeIconTitle} 
-                                        alt={terms.youtubeIconAlt} /></a>
+                                    <a href={terms.facebookPersonalPage} target="_blank">
+                                        <img style={styleOfSocialMediaBtn} src="/img/facebook-icon-link.svg"                                         
+                                        title={terms.facebookIconTitle} alt={terms.facebookIconAlt}/></a>
+                                    <a href={terms.githubPersonalPage} target="_blank">
+                                        <img style={styleOfSocialMediaBtn} src="/img/github-icon-link.svg"
+                                        title={terms.githubIconTitle} alt={terms.githubIconAlt}/></a>
+                                    <a href={terms.stackoverflowPersonalPage} target="_blank">
+                                        <img style={styleOfSocialMediaBtn} src="/img/stack_overflow-icon-link.svg"
+                                        title={terms.stackOverflowIconTitle} alt={terms.stackOverflowIconAlt} /></a>
+                                    <a href={terms.youtubePlayList} target="_blank">
+                                        <img style={styleOfSocialMediaBtn} src="/img/youtube-icon-link.svg"
+                                        title={terms.youtubeIconTitle} alt={terms.youtubeIconAlt} /></a>
                                 </div> 
                             </nav>
                         </div>    
