@@ -98,15 +98,13 @@
 }
 
 #header-ctx .menu .link {
-    border-color:#979797;
-    border-style:solid;
-    border-width:1px 0 0 0;/*todo 數值待定義*/
+    border-top:1px /*todo 數值待動態產生*/ solid #979797;
     box-sizing:border-box;
-    cursor:pointer;
 }
 
 #header-ctx .menu .link img {
     vertical-align: middle;
+    cursor:pointer;
 }
 
 #header-ctx .menu #cv {
@@ -124,9 +122,4 @@
 #header-ctx .menu #socialMediaGrp {
     display:flex;
     justify-content: space-between;
-}
-
-#header-ctx .menu #socialMediaGrp .media {
-    vertical-align: middle;
-    cursor:pointer;
 }

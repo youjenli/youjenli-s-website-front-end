@@ -58,7 +58,6 @@ export default class MobileDeviceTitleBar extends
         let searchBarWidth, searchBarHeight, fontSizeOfSearchHint, searchIconWidth, searchIconHeight;
         let spaceBetweenMenuItems;
         let iconWidth, spaceBetweenIconAndLink, fontSizeOfFeatureLink;
-        let flexBasisOfSocialMediaGrp;
         let styleOfSelfIntroduction, styleOfCatagoryOfArticles, styleOfAboutThisSite, styleOfSocialMediaGrp;
         let styleOfLinkIcon, styleOfSocialMediaBtn;
 
@@ -79,24 +78,28 @@ export default class MobileDeviceTitleBar extends
             iconWidth = (this.props.viewportWidth + 1376) / 48;
             fontSizeOfFeatureLink = (this.props.viewportWidth + 896) / 64;
             spaceBetweenIconAndLink = (this.props.viewportWidth + 128) / 768 * fontSizeOfFeatureLink;
-            flexBasisOfSocialMediaGrp = 50;
             styleOfSelfIntroduction = {
-                padding:`${spaceBetweenMenuItems}px 0`
+                padding:`${spaceBetweenMenuItems}px 0`,
+                flexBasis:'50%'
             };
             styleOfCatagoryOfArticles = Object.assign({}, styleOfSelfIntroduction);
             styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
-            styleOfCatagoryOfArticles['borderLeft'] = `1px`;
+            styleOfCatagoryOfArticles['borderLeft'] = `1px solid #979797`;
             styleOfAboutThisSite = {
-                paddingTop:`${spaceBetweenMenuItems}px`
+                paddingTop:`${spaceBetweenMenuItems}px`,
+                flexBasis:'50%'
             };
+            styleOfSocialMediaGrp = Object.assign({}, styleOfAboutThisSite);
         } else {//套用手機的佈局規則
             spaceBetweenMenuItems = remFontSize * 0.5;
+            styleOfSelfIntroduction = {
+                padding:`${spaceBetweenMenuItems}px 0`                
+            };
+            styleOfSocialMediaGrp = {
+                paddingTop:`${spaceBetweenMenuItems}px`
+            };
             //圖示寬度要移到這邊，這樣手機版的邏輯區域才可以判斷是否要把 social media grp 展到第三層。
             iconWidth = 42;
-            //選單同一列第一項元素的樣式表要移到這邊，這樣才可以給第二項元素引用
-            styleOfSelfIntroduction = {
-                padding:`${spaceBetweenMenuItems}px 0`
-            };
             if (this.props.viewportWidth > 432) { //顯示寬度超過 432 即視為手機水平模式
                 fontSizeOfSiteName = 28;
                 this.headerHeight = fontSizeOfSiteName * 1.933;
@@ -106,32 +109,34 @@ export default class MobileDeviceTitleBar extends
                 menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
                 searchBarWidth = (21 * this.props.viewportWidth + 11520) / 52;
                 fontSizeOfSearchHint = 24;
-                //選單同一列第二項元素的樣式表要移到這邊，這樣才能減少重覆判斷
+                styleOfSelfIntroduction['flexBasis'] = '50%';
                 styleOfCatagoryOfArticles = Object.assign({}, styleOfSelfIntroduction);
-                styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
-                styleOfCatagoryOfArticles['borderLeft'] = `1px`;
-                if (iconWidth * 4 + remFontSize * 0.5 * 3 < searchBarWidth * 0.5) {
+                if ((searchBarWidth / 2 - 4 * iconWidth) / 3 < iconWidth * 0.5) {//社群網站連結區域太窄
+                    styleOfCatagoryOfArticles['borderBottom'] = `1px solid #979797`;
+                    styleOfAboutThisSite = Object.assign({}, styleOfSelfIntroduction); 
+                    styleOfSocialMediaGrp['flexBasis'] = '100%';
+                } else {//社群網站連結不會太窄
                     styleOfAboutThisSite = {
-                        paddingTop:`${spaceBetweenMenuItems}px`
-                    };
-                    flexBasisOfSocialMediaGrp = 50;
-                } else {
-                    styleOfCatagoryOfArticles['borderBottom'] = `1px`;
-                    styleOfAboutThisSite = Object.assign({}, styleOfSelfIntroduction);
-                    flexBasisOfSocialMediaGrp = 100;
-                }              
+                        paddingTop:`${spaceBetweenMenuItems}px`,
+                        flexBasis:'50%'
+                    }
+                    styleOfSocialMediaGrp['flexBasis'] = '50%';
+                }
+                styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
+                styleOfCatagoryOfArticles['borderLeft'] = `1px solid #979797`;
             } else {//顯示寬度小於 432 即視為手機垂直模式
                 fontSizeOfSiteName = (this.props.viewportWidth + 352) / 28;
-                this.headerHeight = (-0.14 * this.props.viewportWidth + 292.32) / 112;
+                this.headerHeight = (5 * this.props.viewportWidth + 4336) / 112;
                 siteNameTopPosition = (this.headerHeight - fontSizeOfSiteName)/2
                 siteNameLeftPosition = remFontSize;
                 rightShiftOfMenuButton = siteNameLeftPosition;
                 menuButtonBarWidth = 1.5 * fontSizeOfSiteName;
                 searchBarWidth = this.props.viewportWidth - 2 * remFontSize;
                 fontSizeOfSearchHint = (this.props.viewportWidth * 3 + 48) / 56;
-                flexBasisOfSocialMediaGrp = 100;
+                styleOfSelfIntroduction['flexBasis'] = '100%';
                 styleOfCatagoryOfArticles = styleOfSelfIntroduction;
-                styleOfAboutThisSite = styleOfSelfIntroduction;
+                styleOfAboutThisSite = styleOfSelfIntroduction;                  
+                styleOfSocialMediaGrp['flexBasis'] = '100%';          
             }
             searchBarHeight = 53;
             searchIconWidth = 42;
@@ -208,9 +213,6 @@ export default class MobileDeviceTitleBar extends
         styleOfSocialMediaBtn = {
             width:`${iconWidth}px`
         }
-
-        styleOfSocialMediaGrp = Object.assign({}, styleOfSelfIntroduction);
-        styleOfSocialMediaGrp['flexBasis'] =`${flexBasisOfSocialMediaGrp}%`;
 
         return (
             <React.Fragment>
