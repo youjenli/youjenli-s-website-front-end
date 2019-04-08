@@ -11,7 +11,6 @@ body {
 }
 
 @import url('./component/home.css');
-@import url('./component/title/title.css');
 @import url('./service/featureDetection.css');
 
 /* 載入 prismjs 和 prismjs 的擴充套件 line-numbers */
