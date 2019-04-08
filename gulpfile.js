@@ -3,6 +3,8 @@ const del = require('del');
 const browserify = require("browserify");
 const source = require('vinyl-source-stream');
 const tsify = require("tsify");
+const sass = require('gulp-sass');
+sass.compiler = require('node-sass');
 const concat = require('gulp-concat-css');
 const sourcemaps = require('gulp-sourcemaps');
 const print = require('gulp-print').default;
@@ -87,14 +89,16 @@ function prepareJSTask() {
 
 gulp.task('prepareJS', gulp.series(removeJSArtifact, prepareJSTask));
 
-const cssEntryFiles = ['src/css/style.css'];
+const cssSrcFiles = ['src/css/**/*.css','src/css/**/*.scss'];
 function concateCSSTask(done) {
     /*
         此建置流程的設計是只讀取 ./src/css/style.css
         若開發時引入其他 css 檔案，則從 style.css 透過 css import 語法載入進來。
         這樣建置時 gulp-concat-css 就會按照 import 語法依我們要的順序整合 css 檔案。
     */
-    return gulp.src(cssEntryFiles)
+    return gulp.src(cssSrcFiles)
+        .pipe(sass.sync())
+        /* 註: sass 要提出來到 sourcemaps 的外面，這樣才能順利轉譯全部的 css 檔並且整理成一份 */
         .pipe(sourcemaps.init())
         .pipe(concat('style.css'))
         .pipe(sourcemaps.write())
@@ -124,7 +128,6 @@ const defaultTask = gulp.series(
 gulp.task('default', defaultTask);
 
 const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
-const cssSrcFiles = ['src/css/**/*.css'];
 const watchTask = function() {
             gulp.watch(htmlSrcFiles, gulp.series(removeHtmlArtifact, prepareHtmlTask)),
             gulp.watch(cssSrcFiles, gulp.series(removeCSSArtifact, concateCSSTask)),
