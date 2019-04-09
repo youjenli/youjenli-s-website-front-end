@@ -8,6 +8,7 @@ body {
 #react-root {
     /*使 react 元件區塊以 relative 定位以便裡面的元件可以使用其他定位方式。*/
     position:relative;
+    min-height:100vh;
 }
 
 @import './component/home.scss';
