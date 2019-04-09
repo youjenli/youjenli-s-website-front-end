@@ -4,20 +4,17 @@
     .l2bg{
         background-color:#1B3404;
         position:relative;
-        z-index:2;
 
         .myPic {
             position:absolute;
         }
         .portrait {
             position:relative;
-            z-index:4;
         }
         .l1bg{
             position:absolute;
             background-color:#7FB14C;
             opacity:0.9;
-            z-index:3;
         }
         .gtPanel {
             position:absolute;
@@ -76,7 +73,6 @@
         background-color:#FFF2DF;
         opacity:0.9;
         position:relative;
-        z-index:1;
         box-sizing:border-box;
     }
 }

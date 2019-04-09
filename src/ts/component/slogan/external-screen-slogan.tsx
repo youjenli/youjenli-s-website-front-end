@@ -6,6 +6,7 @@ import * as logo from './logo';
 
 interface ExternalScreenSloganProps {
     viewportWidth:number;
+    baseZIndex:number;
 }
 
 export default class ExternalScreenSlogan extends React.Component<ExternalScreenSloganProps> {
@@ -93,7 +94,8 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
         }
 
         const styleOfL2bg = {
-            height:`${l2bgHeight}px`
+            height:`${l2bgHeight}px`,
+            zIndex:this.props.baseZIndex + 2
         };
         const styleOfMyPic = {
             top:`${topShiftOfMyPic_basedOnUpperBG}px`,
@@ -101,13 +103,15 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
         };
         const portraitStyle = {
             width:`${portraitWidth}px`,
-            height:`${portraitHeight}px`
+            height:`${portraitHeight}px`,
+            zIndex:this.props.baseZIndex + 4
         };
         const styleOfL1bg = {
             width:`${l1bgWidth}px`,
             height:`${l1bgHeight}px`,
             left:`${-1 * leftShiftOfL1bg_basedOnPortrait}px`,
-            top:`${topShiftOfL1bg_basedOnPortrait}px`
+            top:`${topShiftOfL1bg_basedOnPortrait}px`,
+            zIndex:this.props.baseZIndex + 3
         }
         const styleOfGtPanel = {
             width:`${widthOfGtPanel}px`,
@@ -141,7 +145,8 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
         const styleOfPostsOfBg = {
             width:`${widthOfBgOfPosts}px`,
             height:`${heightOfBgOfPosts}px`,
-            padding:`${paddingTopOfBgOfPosts}px ${paddingLeftAndRightOfBackgroundOfPosts}px 0 ${paddingLeftAndRightOfBackgroundOfPosts}px`
+            padding:`${paddingTopOfBgOfPosts}px ${paddingLeftAndRightOfBackgroundOfPosts}px 0 ${paddingLeftAndRightOfBackgroundOfPosts}px`,
+            zIndex:this.props.baseZIndex + 1
         };
         
         return (

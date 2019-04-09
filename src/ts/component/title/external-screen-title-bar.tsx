@@ -8,6 +8,7 @@ import * as terms from './terms';
 interface ExternalScreenTitleBarProps {
     viewportWidth:number;
     aspectRatio:number;
+    baseZIndex:number;
 }
 
 interface ExternalScreenTitleBarState {
@@ -98,6 +99,9 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
         featureLinkMarginRight = featureLinkFontSize * 2;
         groupOfFeatureLinkTop = (searchBarHeight - featureLinkFontSize) / 2;
 
+        const headerCtxStyle = {
+            zIndex:this.props.baseZIndex + 1
+        }
         const headerBarStyle = {
             height:headerHeight + "px"            
         };
@@ -110,7 +114,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
         }
 
         return (
-            <div id="header-ctx">
+            <div id="header-ctx" style={headerCtxStyle}>
                 <header id="header-bar" style={headerBarStyle}>
                     <SiteName name={terms.siteName} base64EncodedTitle={base64EncodedTitle}
                         fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />

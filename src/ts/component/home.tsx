@@ -33,18 +33,20 @@ export default class HomePage extends React.Component<{}, HomePageState> {
         });
     }
     render () {
+        const headerBaseZIndex = 100;
         if (this.state.viewportWidth > 1024) {//使用外接螢幕的佈局
             return (
                 <React.Fragment>
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
-                        aspectRatio={this.state.viewportHeight / this.state.viewportWidth} />
-                    <ExternalScreenSlogan viewportWidth={this.state.viewportWidth} />
+                        aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
+                        baseZIndex={headerBaseZIndex} />
+                    <ExternalScreenSlogan viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}/>
                 </React.Fragment>           
             ); 
         } else {//使用行動裝置的佈局
             return (
                 <React.Fragment>
-                    <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} />
+                    <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                 </React.Fragment>
             );  
         }                  

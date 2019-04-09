@@ -11,6 +11,7 @@ import * as icons from '../socialMedia/icons';
 
 interface MobileDeviceTitleBarProps {
     viewportWidth:number;
+    baseZIndex:number;
 }
 
 interface MobileDeviceTitleBarState {
@@ -171,31 +172,22 @@ export default class MobileDeviceTitleBar extends
             classesOfHeaderCtx = classesOfHeaderCtx + "sticky";
         }
 
+        const headerCtxStyle = {
+            zIndex:this.props.baseZIndex + 4
+        }
+
         const headerStyle = {
             height:this.headerHeight
         };
 
-        const styleOfMenuContent = {
-            width:`${searchBarWidth}px`
-        };
+        let plhdrStyle = {
+            height:this.headerHeight,
+            zIndex:this.props.baseZIndex + 1
+        }
 
         const menuBtnStyle = {
             top:`${topShiftOfMenuButton}px`,
             right:`${rightShiftOfMenuButton}px`
-        }
-        const upperBarStyle = {
-            width:`${menuButtonBarWidth}px`,
-            height:`${menuButtonBarHeight}px`,
-            marginTop:`${spaceBetweenTwoBars}px`,
-            borderRadius: `${menuButtonBarBorderRadius}px`,
-            transformOrigin:`${menuButtonBarTransformOrigin}% 50% 0`
-        }
-        const lowerBarStyle = {
-            width:`${menuButtonBarWidth}px`,
-            height:`${menuButtonBarHeight}px`,
-            margin:`${spaceBetweenTwoBars}px 0`,
-            borderRadius: `${menuButtonBarBorderRadius}px`,
-            transformOrigin:`${menuButtonBarTransformOrigin}% 50% 0`
         }
 
         let styleOfMenu, styleOfShadow;
@@ -203,13 +195,35 @@ export default class MobileDeviceTitleBar extends
             styleOfMenu = {
                 top:`${topShiftOfMenu}px`,
                 maxHeight:`${maxHeightOfMenu}px`,
-                padding:`${spaceBetweenMenuAndContent}px 0`
+                padding:`${spaceBetweenMenuAndContent}px 0`,
+                zIndex:this.props.baseZIndex + 3
             }
     
             styleOfShadow = {//畫面陰影會躲在選單後面，因此尺寸和選單相似
                 top:`${topShiftOfMenu}px`,
-                height:`${maxHeightOfMenu}px`
+                height:`${maxHeightOfMenu}px`,
+                zIndex:this.props.baseZIndex + 2
             }
+        }
+
+        const styleOfMenuContent = {
+            width:`${searchBarWidth}px`
+        };
+
+        const upperBarStyle = {
+            width:`${menuButtonBarWidth}px`,
+            height:`${menuButtonBarHeight}px`,
+            marginTop:`${spaceBetweenTwoBars}px`,
+            borderRadius: `${menuButtonBarBorderRadius}px`,
+            transformOrigin:`${menuButtonBarTransformOrigin}% 50% 0`
+        }
+
+        const lowerBarStyle = {
+            width:`${menuButtonBarWidth}px`,
+            height:`${menuButtonBarHeight}px`,
+            margin:`${spaceBetweenTwoBars}px 0`,
+            borderRadius: `${menuButtonBarBorderRadius}px`,
+            transformOrigin:`${menuButtonBarTransformOrigin}% 50% 0`
         }
         
         styleOfLinkIcon = {
@@ -224,9 +238,9 @@ export default class MobileDeviceTitleBar extends
         return (
             <React.Fragment>
             { (!isStickyPositionSupported() && this.state.shouldTitleBeSticky) ?
-                <div id="header-plhdr" style={headerStyle}></div> 
+                <div id="header-plhdr" style={plhdrStyle}></div> 
             : null }
-            <div id="header-ctx" className={classesOfHeaderCtx}>
+            <div id="header-ctx" style={headerCtxStyle} className={classesOfHeaderCtx}>
                 <header id="header-bar" style={headerStyle}>
                    <SiteName name={terms.siteName} base64EncodedTitle={base64EncodedTitle}
                        fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
