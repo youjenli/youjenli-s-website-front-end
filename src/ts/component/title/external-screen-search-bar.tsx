@@ -9,6 +9,7 @@ interface ExternalScreenSearchBarProps {
     right:number;
     fontSizeOfFeatureLink:number;
     fontSizeOfSearchHint:number;
+    borderRadius:number;
     toggleSearchBarState:() => void;
 }
 
@@ -58,16 +59,12 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
             top:this.props.top + "px",
             right:this.props.right + "px"
         }
+        const borderRadius = this.props.borderRadius;
         const searchFieldStyle = {
-            width:this.props.width + "px",
+            width:(this.props.width - borderRadius) + "px",
             height:this.props.height + "px",
-            /*
-            註: sketch app 上面設計輸入欄位的圓弧度是 `7`，但是單位不明，
-            而我猜測單位是 px ，因此在計算 弧度設定/欄位寬度 得到 0.0336 的比例之後，
-            此處在得到欄位寬度後乘以 0.04 求弧度的 px 單位。
-            */
-            borderRadius:`${this.props.width * 0.04}px`,
-            //搜尋欄位需要功能連結字體的大小來計算它和搜尋按鈕的間距大小。
+            borderRadius:`${borderRadius}px`,
+            paddingLeft:`${borderRadius}px`,
             marginRight:`${this.props.fontSizeOfFeatureLink * 0.5}px`,
             fontSize:`${this.props.fontSizeOfSearchHint}px`
         }

@@ -54,14 +54,16 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
        let siteNameFontSize:number, siteNameTopPosition:number, siteNameLeftPosition:number;
        let featureLinkFontSize:number, featureHintFontSize:number, featureLinkMarginRight:number;
        let groupOfFeatureLinkTop:number;
-       let searchHintFontSize:number, searchBarWidth:number, searchBarHeight:number, searchBarTop:number;
+       let searchHintFontSize:number, searchBarWidth:number, searchBarHeight:number, searchBarTop:number,
+            searchFieldBorderRadius:number;
 
        if (this.props.viewportWidth >= 1440) {//最大螢幕
             siteNameFontSize = this.props.viewportWidth / 62;
             headerHeight = 2.1 * siteNameFontSize;
             featureLinkFontSize = this.props.viewportWidth / 67;
             featureHintFontSize = (this.props.viewportWidth + 1920)/240;
-            searchHintFontSize = this.props.viewportWidth / 90; 
+            searchHintFontSize = this.props.viewportWidth / 90;
+            searchFieldBorderRadius = 10;
             searchBarHeight = (0.11 * this.props.viewportWidth + 1.6) / 5;
             searchBarWidth = 13 * searchHintFontSize * (this.state.isSearchBarFocused ? 1.5 : 1);
         } else if (this.props.viewportWidth >= 1024) {//小螢幕或水平大行動裝置
@@ -89,7 +91,8 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
                 searchHintFontSize = 14;
                 searchBarHeight = (2.6 * this.props.viewportWidth + 7737.6) / 416;
                 searchBarWidth = 13 * searchHintFontSize * (this.state.isSearchBarFocused ? 1.5 : 1);
-            }            
+            }
+            searchFieldBorderRadius = 8;   
         } else {//行動裝置或垂直的大行動裝置
             //todo 拋出例外
         }
@@ -120,7 +123,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
                         fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
 
                     <ExternalScreenSearchBar width={searchBarWidth} height={searchBarHeight} 
-                        top={searchBarTop} right={siteNameFontSize}
+                        top={searchBarTop} right={siteNameFontSize} borderRadius={searchFieldBorderRadius}
                         fontSizeOfFeatureLink={featureLinkFontSize} fontSizeOfSearchHint={searchHintFontSize}
                         toggleSearchBarState={this.toggleSearchBarState}>
                        <nav id="groupOfFeatureLinks" style={groupOfFeatureLinkStyle}>
