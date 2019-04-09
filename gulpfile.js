@@ -135,21 +135,21 @@ function optimizeCSS(){
 const prepareCSSTask = gulp.series(removeCSSArtifactTask, transpileSCSS, optimizeCSS);
 gulp.task('prepareCSS', prepareCSSTask);
 
+const imgSrcFiles = ['src/img/**/*.png', 'src/img/**/*.svg'];
+const prepareImgTask = gulp.series(removeImgArtifact, 
+    function copyImgs() {
+        return gulp.src(imgSrcFiles, { base:'src' })
+                .pipe(gulp.dest(distRoot));
+    });
+gulp.task('prepareImg', prepareImgTask);
+
 const htmlSrcFiles = ['src/html/**/*.html'];
-const prepareHtmlTask = function() {
+const prepareHtmlTask = gulp.series(removeHtmlArtifact, function copyHtmlFiles() {
     return gulp.src(htmlSrcFiles, { base: 'src/html'})
         .pipe(gulp.dest(distRoot));
-}
+});
 
-const imgSrcFiles = ['src/img/**/*.png', 'src/img/**/*.svg'];
-
-const prepareImgTask = function() {
-    return gulp.src(imgSrcFiles, { base:'src' })
-                .pipe(gulp.dest(distRoot));
-}
-gulp.task('prepareImg', gulp.series(removeImgArtifact, prepareImgTask));
-
-gulp.task('prepareHTML', gulp.series(removeHtmlArtifact, prepareHtmlTask));
+gulp.task('prepareHTML', prepareHtmlTask);
 
 const defaultTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask);
 gulp.task('default', defaultTask);
@@ -157,10 +157,10 @@ gulp.task('default', defaultTask);
 const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
 const cssSrcFiles = ['src/css/**/*.css','src/css/**/*.scss'];
 const watchTask = function() {
-            gulp.watch(htmlSrcFiles, gulp.series(removeHtmlArtifact, prepareHtmlTask)),
-            gulp.watch(cssSrcFiles, gulp.series(removeCSSArtifactTask, prepareCSSTask)),
-            gulp.watch(tsSrcFiles, gulp.series(removeJSArtifact, prepareJSTask)),
-            gulp.watch(imgSrcFiles, gulp.series(removeImgArtifact, prepareImgTask))
+            gulp.watch(htmlSrcFiles, prepareHtmlTask),
+            gulp.watch(cssSrcFiles, prepareCSSTask),
+            gulp.watch(tsSrcFiles, prepareJSTask),
+            gulp.watch(imgSrcFiles, prepareImgTask)
 };
 gulp.task('watch', watchTask);
 /*
@@ -199,11 +199,11 @@ const runDevServerTask = gulp.series(defaultTask, gulp.parallel(watchTask ,funct
 gulp.task('serve', runDevServerTask);
 
 const archiveTask = gulp.series(defaultTask, 
-function(){
-    const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
-    return gulp.src(`${distRoot}/*`)
-            .pipe(print(filePath => `Packing file ${filePath} to wordpress theme.`))
-            .pipe(zip('wp-youjenli-website-' + createDate + '.zip'))
-            .pipe(gulp.dest(distRoot));
-});
+    function packArtifacts(){
+        const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
+        return gulp.src(`${distRoot}/*`)
+                .pipe(print(filePath => `Packing file ${filePath} to wordpress theme.`))
+                .pipe(zip('wp-youjenli-website-' + createDate + '.zip'))
+                .pipe(gulp.dest(distRoot));
+    });
 gulp.task('archive', archiveTask);
