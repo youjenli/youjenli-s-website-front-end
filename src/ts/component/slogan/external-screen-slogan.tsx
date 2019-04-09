@@ -15,7 +15,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
         let portraitWidth, portraitHeight, topShiftOfMyPic_basedOnUpperBG, leftShiftOfMyPic_basedOnUpperBG;
         let l2bgHeight;
         let l1bgWidth, l1bgHeight, leftShiftOfL1bg_basedOnPortrait, topShiftOfL1bg_basedOnPortrait;
-        let fontSizeOfGreetings, leftShiftOfGreetings_basedOnUpperBG, topShiftOfGreetings_basedOnUpperBG;
+        let fontSizeOfGreetings, leftShiftOfGreetings_basedOnUpperBG, topShiftOfGreetings_basedOnUpperBG, widthOfGreetings;
         let socialMediaLinkWidth, spaceBetweenSocialMediaLinks;
         let widthOfGtPanel;
         let descPanelWidth, leftShiftOfDescPanel_basedOnUpperBG;
@@ -34,7 +34,6 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
             portraitHeight = portraitWidth * 10 / 16;
             topShiftOfL1bg_basedOnPortrait = portraitHeight * 0.19;
             leftShiftOfL1bg_basedOnPortrait = portraitWidth * 0.065;
-            console.log(leftShiftOfL1bg_basedOnPortrait);
             topShiftOfMyPic_basedOnUpperBG = (2.1 * this.props.viewportWidth - 472)/40;
             leftShiftOfMyPic_basedOnUpperBG = ( this.props.viewportWidth - widthOfBgOfPosts) / 2 
                 + 2 * leftShiftOfL1bg_basedOnPortrait;
@@ -47,6 +46,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
             const spaceBetweenMyPicAndGreetings = ((-0.104 * fontSizeOfGreetings + 27.4433) / 18.47) * fontSizeOfGreetings;
             leftShiftOfGreetings_basedOnUpperBG = leftShiftOfMyPic_basedOnUpperBG + portraitWidth 
                 + spaceBetweenMyPicAndGreetings;
+            widthOfGreetings = terms.myName.length * fontSizeOfGreetings;
             socialMediaLinkWidth = fontSizeOfGreetings * 3/4;
             spaceBetweenSocialMediaLinks = 0.5 * socialMediaLinkWidth;
             widthOfGtPanel = widthOfBgOfPosts - 3 * leftShiftOfL1bg_basedOnPortrait 
@@ -55,7 +55,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
             leftShiftOfDescPanel_basedOnUpperBG = leftShiftOfMyPic_basedOnUpperBG + portraitWidth;
             paddingLeftOfDescPanel = spaceBetweenMyPicAndGreetings;
             paddingRightOfDescPanel = paddingLeftOfDescPanel;
-            fontSizeOfWelcomeMsg = (descPanelWidth - 2 * spaceBetweenMyPicAndGreetings) / 11;
+            fontSizeOfWelcomeMsg = widthOfGreetings * 1.1 / terms.welcomeMsg.length; //todo (descPanelWidth - 2 * spaceBetweenMyPicAndGreetings) / 11;
             paddingTopOfDescPanel = 0.5 * fontSizeOfWelcomeMsg;
             marginBottomOfWelcomeMsg = paddingTopOfDescPanel;
             fontSizeOfDesc = this.props.viewportWidth / 80;
@@ -120,7 +120,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
         }
         const styleOfGreetings = {
             fontSize:`${fontSizeOfGreetings}px`,
-            width:`${terms.myName.length * fontSizeOfGreetings}px`
+            width:`${widthOfGreetings}px`
         }
         const styleOfSMGrp = {
             width:`${socialMediaLinkWidth * 4 + spaceBetweenSocialMediaLinks * 3}px`
