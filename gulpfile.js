@@ -5,7 +5,7 @@ const source = require('vinyl-source-stream');
 const tsify = require("tsify");
 const sass = require('gulp-sass');
 sass.compiler = require('node-sass');
-const concat = require('gulp-concat-css');
+const cleanCSS = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const print = require('gulp-print').default;
 //註: gulp-webserver 已經四年沒有更新了，現在 jetbrains 好像接手開發這專案並改名為 gulp-connect，最後更新時間是四個月前。
@@ -33,12 +33,21 @@ function removeJSArtifact(done) {
             done();
         });
 }
-function removeCSSArtifact(done) {
-    del(path.join(distRoot, cssArtifact))
+
+const pathOfIntermediates = path.join(distRoot, 'intermediate');
+function removeCSSSemiProduct(done) {
+    del(pathOfIntermediates)
         .then(() => {
             done();
         });
 }
+
+const removeCSSArtifactTask = gulp.parallel(removeCSSSemiProduct, function removeCSSArtifact(done){
+    del(path.join(distRoot, cssArtifact))
+        .then(() => {
+            done();
+        });
+});
 
 function removeImgArtifact(done) {
     del(path.join(distRoot, imgArtifact))
@@ -48,7 +57,7 @@ function removeImgArtifact(done) {
 }
 
 //清空輸出打包成品的資料夾
-const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeJSArtifact, removeImgArtifact);
+const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifactTask, removeJSArtifact, removeImgArtifact);
 gulp.task('clean', cleanTask);
 
 const tsEntryFiles = ['src/ts/index.tsx'];
@@ -64,7 +73,7 @@ if (tsConfig.hasOwnProperty('compilerOptions')) {
 //提出 compilterOption 之後就是複製其他欄位
 Object.assign(transpileConfig, tsConfig);
 
-function prepareJSTask() {
+function transpileTS() {
     /*
         先前改用 gulp-typescript 的原因是原本使用的 browserify 的方法在 gulp 4.0 沒辦法正常使用。
         但是後來發現 gulp-typescript 沒辦法解決 js 檔案的整併問題，那得引入其他擴充套件來解決。
@@ -86,25 +95,45 @@ function prepareJSTask() {
 
     /* gulp 4.0 的任務函式仍支持兩種結束方式: 1. 回傳 gulp 串流 2. 呼叫 gulp 注入給任務函式的 done 函式。*/
 }
+const prepareJSTask = gulp.series(removeJSArtifact, transpileTS);
 
-gulp.task('prepareJS', gulp.series(removeJSArtifact, prepareJSTask));
+gulp.task('prepareJS', prepareJSTask);
 
-const cssSrcFiles = ['src/css/**/*.css','src/css/**/*.scss'];
-function concateCSSTask(done) {
-    /*
-        此建置流程的設計是只讀取 ./src/css/style.css
-        若開發時引入其他 css 檔案，則從 style.css 透過 css import 語法載入進來。
-        這樣建置時 gulp-concat-css 就會按照 import 語法依我們要的順序整合 css 檔案。
-    */
-    return gulp.src(cssSrcFiles)
-        .pipe(sass.sync())
-        /* 註: sass 要提出來到 sourcemaps 的外面，這樣才能順利轉譯全部的 css 檔並且整理成一份 */
-        .pipe(sourcemaps.init())
-        .pipe(concat('style.css'))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(distRoot));
+const scssEntryNames = ['style'];
+const scssEntryFiles = scssEntryNames.map((name) => {
+    return path.join('src/css', name + '.scss');
+});
+/*
+    因為一直沒辦法順利把 scss 轉譯好的檔案交給其他 gulp 可調用的 css 整併函式，
+    所以現在把 css 的準備作業分成兩個步驟:
+    1. 轉譯 scss
+        這部分包含利用 scss 自訂的 css import 語法機制將其他 css 檔案合併到主要的 css 檔案裡
+        轉譯完成後會先送 ${distRoot}/intermediates 資料匣中
+    2. 優化 css 語法
+        包含整併其他 css 資源，以及利用功能相同但是更簡短的語法替代原本的 css 語法。
+        未來要正式輸出生產級別的資源時，還會再引入 sourcemap 並啟用壓縮機制。
+*/
+function transpileSCSS() {
+    return gulp.src(scssEntryFiles)
+                .pipe(sass())
+                .pipe(gulp.dest(pathOfIntermediates));
 }
-gulp.task('prepareCSS', gulp.series(removeCSSArtifact, concateCSSTask));
+
+const cssIntermediateEntryFiles = scssEntryNames.map((name) => {
+    return path.join(pathOfIntermediates, name + ".css");
+});
+
+let cleanCSSConfig = require('./clean-css-config');
+function optimizeCSS(){
+    return gulp.src(cssIntermediateEntryFiles)
+                //.pipe(sourcemaps.init())
+                .pipe(cleanCSS(cleanCSSConfig))
+                //.pipe(sourcemaps.write())
+                .pipe(gulp.dest(distRoot));
+}
+
+const prepareCSSTask = gulp.series(removeCSSArtifactTask, transpileSCSS, optimizeCSS);
+gulp.task('prepareCSS', prepareCSSTask);
 
 const htmlSrcFiles = ['src/html/**/*.html'];
 const prepareHtmlTask = function() {
@@ -122,15 +151,14 @@ gulp.task('prepareImg', gulp.series(removeImgArtifact, prepareImgTask));
 
 gulp.task('prepareHTML', gulp.series(removeHtmlArtifact, prepareHtmlTask));
 
-const defaultTask = gulp.series(
-    cleanTask, gulp.parallel(prepareJSTask, concateCSSTask, prepareImgTask, prepareHtmlTask)
-);
+const defaultTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask);
 gulp.task('default', defaultTask);
 
 const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
+const cssSrcFiles = ['src/css/**/*.css','src/css/**/*.scss'];
 const watchTask = function() {
             gulp.watch(htmlSrcFiles, gulp.series(removeHtmlArtifact, prepareHtmlTask)),
-            gulp.watch(cssSrcFiles, gulp.series(removeCSSArtifact, concateCSSTask)),
+            gulp.watch(cssSrcFiles, gulp.series(removeCSSArtifactTask, prepareCSSTask)),
             gulp.watch(tsSrcFiles, gulp.series(removeJSArtifact, prepareJSTask)),
             gulp.watch(imgSrcFiles, gulp.series(removeImgArtifact, prepareImgTask))
 };
