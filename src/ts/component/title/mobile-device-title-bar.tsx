@@ -6,6 +6,7 @@ import { calculateViewPortHeight } from '../../service/dimensionsCalculator';
 import { isStickyPositionSupported } from '../../service/featureDetection';
 import debounce from '../../service/debounce';
 import * as terms from './terms';
+import * as socialMediaTerms from '../socialMedia/terms';
 import * as icons from '../socialMedia/icons';
 
 interface MobileDeviceTitleBarProps {
@@ -255,13 +256,13 @@ export default class MobileDeviceTitleBar extends
                                     <span>{terms.aboutThisSite}</span>{this.props.viewportWidth <= 432 ? <ArrowShape /> : null}
                                 </a>
                                 <div id="socialMediaGrp" className="link"  style={styleOfSocialMediaGrp}>
-                                    <a href={terms.facebookPersonalPage} target="_blank" title={terms.facebookIconTitle}>
+                                    <a href={socialMediaTerms.facebookPersonalPage} target="_blank" title={socialMediaTerms.facebookIconTitle}>
                                         <icons.FaceBookIcon style={styleOfSocialMediaBtn} /></a>
-                                    <a href={terms.githubPersonalPage} target="_blank" title={terms.githubIconTitle}>
+                                    <a href={socialMediaTerms.githubPersonalPage} target="_blank" title={socialMediaTerms.githubIconTitle}>
                                         <icons.GithubIcon style={styleOfSocialMediaBtn} /></a>
-                                    <a href={terms.stackoverflowPersonalPage} target="_blank" title={terms.stackOverflowIconTitle}>
+                                    <a href={socialMediaTerms.stackoverflowPersonalPage} target="_blank" title={socialMediaTerms.stackOverflowIconTitle}>
                                         <icons.StackOverflowIcon style={styleOfSocialMediaBtn} /></a>
-                                    <a href={terms.youtubePlayList} target="_blank" title={terms.youtubeIconTitle}>
+                                    <a href={socialMediaTerms.youtubePlayList} target="_blank" title={socialMediaTerms.youtubeIconTitle}>
                                         <icons.YoutubeIcon style={styleOfSocialMediaBtn} /></a>
                                 </div> 
                             </nav>

@@ -11,6 +11,7 @@ body {
     min-height:100vh;
 }
 
+@import './component/title/title';
 @import './component/home.scss';
 @import './service/featureDetection.scss';
 

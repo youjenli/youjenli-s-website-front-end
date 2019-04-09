@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ExternalScreenTitleBar from '../component/title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../component/title/mobile-device-title-bar';
+import ExternalScreenSlogan from '../component/slogan/external-screen-slogan';
 import { calculateViewPortWidth, calculateViewPortHeight } from '../service/dimensionsCalculator';
 
 interface HomePageState {
@@ -34,12 +35,17 @@ export default class HomePage extends React.Component<{}, HomePageState> {
     render () {
         if (this.state.viewportWidth > 1024) {//使用外接螢幕的佈局
             return (
-                <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
-                    aspectRatio={this.state.viewportHeight / this.state.viewportWidth} />
+                <React.Fragment>
+                    <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
+                        aspectRatio={this.state.viewportHeight / this.state.viewportWidth} />
+                    <ExternalScreenSlogan viewportWidth={this.state.viewportWidth} />
+                </React.Fragment>           
             ); 
         } else {//使用行動裝置的佈局
             return (
-                <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} />
+                <React.Fragment>
+                    <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} />
+                </React.Fragment>
             );  
         }                  
     };

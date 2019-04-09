@@ -91,7 +91,7 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
                 }
                 <div className="search-btn" title={terms.titleOfSearchBtn} style={styleOfSearchBtn}>
                     <img  src="/img/search-btn-mobile.svg"
-                        style={styleOfSearchIcon} alt={terms.searchIconAlt}/>
+                        style={styleOfSearchIcon} alt={terms.altOfSearchIcon}/>
                 </div>                
             </div>
         );
