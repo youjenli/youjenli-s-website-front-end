@@ -1,20 +1,71 @@
-#home {
+#main {
 
     width:100%;  
     .l2bg{
         background-color:#1B3404;
-    }
-    
-    .l1bg{
-        background-color:#7FB14C;
-        opacity:0.9;
-    }
-    
-    .descPanel{
-        background-color:#E0DFDF;
+        position:relative;
+        z-index:2;
+
+        .myPic {
+            position:absolute;
+        }
+        .portrait {
+            position:relative;
+            z-index:4;
+        }
+        .l1bg{
+            position:absolute;
+            background-color:#7FB14C;
+            opacity:0.9;
+            z-index:3;
+        }
+        .gtPanel {
+            position:absolute;
+            display:flex;
+            justify-content: space-between;
+            & > * {
+                flex-grow:0;
+            }
+        }
+        .greetings {
+            margin:0;
+            color:#FFFFFF;
+            font-family:"YuppyTC-Regular", "STYuanti-TC-Light", "HannotateTC-W5", "PTSerif-Regular","ArialMT", "Arial";
+
+        }
+        .socialMediaGrp {
+            display:flex;
+            justify-content: space-between;
+            svg {
+                &:hover {
+                    cursor:pointer;
+                }
+                g {
+                    fill:rgba(255,255,255, 0.65);
+                }                
+            }
+        }
+        .descPanel{
+            background-color:#E0DFDF;
+            position:absolute;
+            top:100%;
+            .desc {
+                color:#000000;
+                font-family: "PingFangTC-Regular","ArialMT", "Arial";
+            }
+        }
+        .welcome {
+            color:#354255;
+            margin:0;
+            font-family: "Klee-Demibold", "ArialMT", "Arial";
+        }
     }
     
     .bgOfPosts{
+        margin:0 auto;
         background-color:#FFF2DF;
+        opacity:0.9;
+        position:relative;
+        z-index:1;
     }
 }

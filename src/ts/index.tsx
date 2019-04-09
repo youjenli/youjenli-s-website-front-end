@@ -9,10 +9,15 @@ import router from './router';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import HomePage from './component/home';
+import LongArticle from './component/placeholdingText';
 
 const routeToHome = () => {
     ReactDOM.render(
-        <HomePage />,
+        <HomePage>
+            <LongArticle />
+            <LongArticle />
+            <LongArticle />
+        </HomePage>,
         document.getElementById('react-root')
     );
 }

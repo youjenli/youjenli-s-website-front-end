@@ -11,6 +11,7 @@ body {
 }
 
 @import './component/home.scss';
+@import './component/title/title.scss';
 @import './service/featureDetection.scss';
 
 /* 載入 prismjs 和 prismjs 的擴充套件 line-numbers */
