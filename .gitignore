@@ -3,6 +3,9 @@ node_modules
 #擺放建置成品的位置
 /dist
 
+#暫時存放開發用，但不會提交的檔案
+/temp
+
 # OS generated files #
 ######################
 .DS_Store
