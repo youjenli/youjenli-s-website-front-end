@@ -39,7 +39,8 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
                 + 2 * leftShiftOfL1bg_basedOnPortrait;
             l2bgHeight = topShiftOfMyPic_basedOnUpperBG + 0.5 * portraitHeight; 
             l1bgWidth = leftShiftOfL1bg_basedOnPortrait + 0.88 * portraitWidth;
-            l1bgHeight =  (portraitHeight - topShiftOfL1bg_basedOnPortrait) + 0.102 * portraitHeight;
+            const distanceBetweenTheBottomOfL1bgAndPortrait = 0.102 * portraitHeight;
+            l1bgHeight =  (portraitHeight - topShiftOfL1bg_basedOnPortrait) + distanceBetweenTheBottomOfL1bgAndPortrait;
 
             fontSizeOfGreetings = portraitHeight / 6.5;
             topShiftOfGreetings_basedOnUpperBG = topShiftOfMyPic_basedOnUpperBG + ( portraitHeight / 2 - 2 * fontSizeOfGreetings ) / 2;
@@ -75,7 +76,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
                 bottom:`${-1 * heightOfTallToolIcon * 1.5}px`
             }          
 
-            paddingTopOfBgOfPosts = portraitHeight * 0.5 + 2 * topShiftOfL1bg_basedOnPortrait;
+            paddingTopOfBgOfPosts = portraitHeight * 0.5 + 2 * distanceBetweenTheBottomOfL1bgAndPortrait;
             heightOfRecentPost = 318;
             widthOfRecentPost = 414;
             rowsOfArticle = 1;//todo
