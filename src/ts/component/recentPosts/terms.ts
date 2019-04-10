@@ -1,0 +1,1 @@
+export let readArticle = '...了解更多';

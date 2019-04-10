@@ -19,7 +19,7 @@ const distRoot = './dist'; //輸出建置成品的路徑
 const jsArtifact = 'index.js';
 const cssArtifact = 'style.css';
 const htmlArtifact = '*.html';
-const imgArtifact = '*.png';
+const imgAssets = ['img/*.png', 'img/*.svg', 'img/*.jpeg'];
 
 function removeHtmlArtifact(done) {
     del(path.join(distRoot, htmlArtifact))
@@ -50,10 +50,13 @@ const removeCSSArtifactTask = gulp.parallel(removeCSSSemiProduct, function remov
 });
 
 function removeImgArtifact(done) {
-    del(path.join(distRoot, imgArtifact))
-        .then(() => {
-            done();
-        });
+    Promise.all(
+        imgAssets.map((srcFiles) =>{
+            return del(path.join(distRoot, srcFiles))
+        })
+    ).then(() => {
+        done();
+    });    
 }
 
 //清空輸出打包成品的資料夾
@@ -135,7 +138,9 @@ function optimizeCSS(){
 const prepareCSSTask = gulp.series(removeCSSArtifactTask, transpileSCSS, optimizeCSS);
 gulp.task('prepareCSS', prepareCSSTask);
 
-const imgSrcFiles = ['src/img/**/*.png', 'src/img/**/*.svg'];
+const imgSrcFiles = imgAssets.map((img) => {
+    return path.join('src', img);
+});
 const prepareImgTask = gulp.series(removeImgArtifact, 
     function copyImgs() {
         return gulp.src(imgSrcFiles, { base:'src' })

@@ -24,7 +24,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
         let fontSizeOfDesc;
         let styleOfTallToolIcon, styleOfShortToolIcon, styleOfIconChain;
         let widthOfBgOfPosts, heightOfBgOfPosts, paddingTopOfBgOfPosts, 
-            paddingLeftAndRightOfBackgroundOfPosts;
+            paddingLeftAndRightOfBackgroundOfPosts, marginBottomOfBgOfPosts;
         let rowsOfArticle;
         let articlesInARow, spaceBetweenDifferentRow, heightOfRecentPost, widthOfRecentPost;
 
@@ -79,7 +79,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
             heightOfRecentPost = 318;
             widthOfRecentPost = 414;
             rowsOfArticle = 1;//todo
-            heightOfBgOfPosts = paddingTopOfBgOfPosts + 318 * (rowsOfArticle - 1) +  + 9 + 396;
+            heightOfBgOfPosts = paddingTopOfBgOfPosts + 318 * (rowsOfArticle - 1) + 9 + 238;
             spaceBetweenDifferentRow = topShiftOfL1bg_basedOnPortrait;
             let spaceBetweenArticlesInARow = remFontSize;
             articlesInARow = Math.floor(
@@ -87,6 +87,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
             );
             paddingLeftAndRightOfBackgroundOfPosts =
             (widthOfBgOfPosts - articlesInARow * widthOfRecentPost - (articlesInARow + 1) * spaceBetweenArticlesInARow) / 2;
+            marginBottomOfBgOfPosts = (318 - 9 - 238) * 2;//todo 改成發文的變數
         } else {
             return (
                 <React.Fragment>Todo</React.Fragment>
@@ -98,9 +99,12 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
             zIndex:this.props.baseZIndex + 2
         };
         const styleOfMyPic = {
+            width:`${portraitWidth}px`,
+            height:`${portraitHeight}px`,
             top:`${topShiftOfMyPic_basedOnUpperBG}px`,
             left:`${leftShiftOfMyPic_basedOnUpperBG}px`
         };
+        
         const portraitStyle = {
             width:`${portraitWidth}px`,
             height:`${portraitHeight}px`,
@@ -146,11 +150,12 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
             width:`${widthOfBgOfPosts}px`,
             height:`${heightOfBgOfPosts}px`,
             padding:`${paddingTopOfBgOfPosts}px ${paddingLeftAndRightOfBackgroundOfPosts}px 0 ${paddingLeftAndRightOfBackgroundOfPosts}px`,
-            zIndex:this.props.baseZIndex + 1
+            zIndex:this.props.baseZIndex + 1,
+            marginBottom:`${marginBottomOfBgOfPosts}px`
         };
         
         return (
-            <main id="main">
+            <main id="main" className="es">
                 <section className="l2bg" style={styleOfL2bg}>
                     <div className="myPic" style={styleOfMyPic}>
                         <div className="l1bg" style={styleOfL1bg}></div>

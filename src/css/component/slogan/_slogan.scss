@@ -82,5 +82,10 @@
         position:relative;
         box-sizing:border-box;
         box-shadow: 0 2px 4px 0 #DFD3CF;
+        display:flex;
+        flex-wrap:wrap;
+        justify-content: space-between;
     }
 }
+
+@import '../recentPost/es.scss';

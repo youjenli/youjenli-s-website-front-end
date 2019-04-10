@@ -1,0 +1,76 @@
+#main.es {
+    .rPost {
+        $rPostBGColor:#FFFFFF;
+        background:$rPostBGColor;
+        border-radius: 8px;/*再確認是否要自動給值*/
+        box-sizing: border-box;
+        box-shadow:0 1px 3px 0 rgba(0,0,0,50);/*再確認是否要自動給值*/
+        h3, h4 {
+            margin:0;
+        }
+        .category, .tag, .excerpt a, .read {
+            text-decoration: underline;
+            cursor:pointer;            
+        }
+        .title {
+            cursor:pointer;
+        }
+
+        &.img {
+            font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+            img {
+                object-fit: contain;
+            }
+            .date {
+                color:#969594;
+            }
+            .categories {
+                color:#223552;
+            }
+            .title {
+                color:#655E55;
+            }
+        }
+
+        &.plain {
+            position:relative;
+
+            .postInfoBg {
+                max-width:100%;
+                background:rgb(231,231,231);
+                font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Regular, system-ui;
+            }
+            .titleBar {
+                display:flex;
+                align-items: center;
+            }
+            .date {
+                color:#6F3737;
+                flex-grow:0;
+            }
+            .title {
+                color:#323232;
+            }
+            .categories {
+                color:#667E4D;
+            }
+            .tags {
+                color:#6F8099;
+            }
+            .icon {
+                vertical-align: middle;
+            }
+            .excerpt {
+                color:#2F411C;
+                font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+                overflow-y:hidden;
+            }
+            .read {
+                color:#8EBB5E;
+                position:absolute;
+                text-decoration: underline;
+                background:$rPostBGColor;
+            }
+        }
+    }
+}
