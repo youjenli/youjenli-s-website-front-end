@@ -23,8 +23,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
         let fontSizeOfWelcomeMsg, marginBottomOfWelcomeMsg;
         let fontSizeOfDesc;
         let styleOfTallToolIcon, styleOfShortToolIcon, styleOfIconChain;
-        let widthOfBgOfPosts, heightOfBgOfPosts, paddingTopOfBgOfPosts, 
-            paddingLeftAndRightOfBackgroundOfPosts, marginBottomOfBgOfPosts;
+        let widthOfBgOfPosts, heightOfBgOfPosts, paddingTopOfBgOfPosts, marginBottomOfBgOfPosts;
         let rowsOfArticle;
         let articlesInARow, spaceBetweenDifferentRow, heightOfRecentPost, widthOfRecentPost;
 
@@ -86,8 +85,6 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
             articlesInARow = Math.floor(
                 (widthOfBgOfPosts - spaceBetweenArticlesInARow) / (widthOfRecentPost + spaceBetweenArticlesInARow)
             );
-            paddingLeftAndRightOfBackgroundOfPosts =
-            (widthOfBgOfPosts - articlesInARow * widthOfRecentPost - (articlesInARow + 1) * spaceBetweenArticlesInARow) / 2;
             marginBottomOfBgOfPosts = (318 - 9 - 238) * 2;//todo 改成發文的變數
         } else {
             return (
@@ -150,7 +147,7 @@ export default class ExternalScreenSlogan extends React.Component<ExternalScreen
         const styleOfPostsOfBg = {
             width:`${widthOfBgOfPosts}px`,
             height:`${heightOfBgOfPosts}px`,
-            padding:`${paddingTopOfBgOfPosts}px ${paddingLeftAndRightOfBackgroundOfPosts}px 0 ${paddingLeftAndRightOfBackgroundOfPosts}px`,
+            paddingTop:`${paddingTopOfBgOfPosts}px`,
             zIndex:this.props.baseZIndex + 1,
             marginBottom:`${marginBottomOfBgOfPosts}px`
         };
