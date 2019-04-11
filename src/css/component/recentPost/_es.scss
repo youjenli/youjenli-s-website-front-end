@@ -10,6 +10,11 @@
             margin:0;
             font-weight: normal;
         }
+        .categories, .tags {
+            .noData {
+                color:#888844;
+            }
+        }
         .category, .tag, .read {
             &:hover {
                 text-decoration: underline;
@@ -55,6 +60,12 @@
             .title {
                 color:#383838;                
                 font-weight: 400;
+            }
+            .categories {
+                color:#667E4D;
+            }
+            .tags {
+                color:#6F8099;
             }
             .categories, .tags {
                 font-weight: bolder;

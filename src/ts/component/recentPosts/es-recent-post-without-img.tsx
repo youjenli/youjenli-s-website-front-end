@@ -54,13 +54,39 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
             height:`${this.props.postInfoBar.fontSizeOfCategoriesAndTags}px`,
             marginRight:`${this.props.postInfoBar.marginRightOfIconOfCategoriesAndTags}px`
         };
-        const styleOfCategories = {
+        let styleOfCategories = {
             fontSize:`${this.props.postInfoBar.fontSizeOfCategoriesAndTags}px`
         }
-        const styleOfTags = {
+        let categories;
+        if (this.props.postInfoBar.categories.length > 0) {
+            categories = this.props.postInfoBar.categories.map(
+                (category, idx, array) => {
+                return (<span><a className="category">{category.name}</a>
+                    { idx != array.length - 1 ? 
+                        '﹒' : null }
+                </span>);
+            });
+        } else {
+            categories = (<span className="noData">{terms.postWasNotCategorized}</span>);
+        }
+
+        let styleOfTags = {
             fontSize:`${this.props.postInfoBar.fontSizeOfCategoriesAndTags}px`,
             marginTop:`${this.props.postInfoBar.marginTopOfTags}px`
         };
+        let tags;
+        if (this.props.postInfoBar.tags.length > 0) {
+            tags = this.props.postInfoBar.tags.map((tag, idx, array) => {
+                return (<span><a className="tag">{tag.name}</a>
+                    { idx != array.length - 1 ? 
+                        '﹒' : null }
+                </span>);
+            });
+        } else {
+            tags = (<span className="noData">{terms.postWasNotTagged}</span>);
+        }
+        
+
         const p = this.props.postInfoBar.paddingTopRightLeft;
         const styleOfPostInfoBg = {
             padding:`${p}px ${p}px ${this.props.postInfoBar.paddingBottom}px ${p}px`,
@@ -75,6 +101,7 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
             bottom:`${this.props.excerpt.bottomMargin}px`,
             zIndex:this.props.excerpt.zIndexOfReadArticle
         }
+
         //要實驗 title 延長時的處理方式
         return (
             <article className="rPost plain" style={styleOfPost}>
@@ -84,28 +111,13 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
                             {this.props.postInfoBar.titleBar.date.getFullYear()}<br />{month}.{day}</span>
                         <h3 className="title">{this.props.postInfoBar.titleBar.titleName}</h3>
                     </div>
-                    <h4 style={styleOfCategories}>
+                    <h4 style={styleOfCategories} className="categories">
                         <CategoryIcon style={styleOfIcon}/>
-                        <span className="categories">
-                            {this.props.postInfoBar.categories.map(
-                                (category, idx, array) => {
-                                return (<span><a className="category">{category.name}</a>
-                                    { idx != array.length - 1 ? 
-                                        '﹒' : null }
-                                </span>);
-                            })}
-                        </span>
+                        {categories}
                     </h4>
-                    <h4 style={styleOfTags}>
+                    <h4 style={styleOfTags} className="tags">
                         <TagIcon style={styleOfIcon}/>
-                        <span className="tags">
-                            {this.props.postInfoBar.tags.map((tag, idx, array) => {
-                                return (<span><a className="tag">{tag.name}</a>
-                                    { idx != array.length - 1 ? 
-                                        '﹒' : null }
-                                </span>);
-                            })}
-                        </span>
+                        {tags}
                     </h4>
                 </div>
                 <p className="excerpt" 
