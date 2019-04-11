@@ -5,19 +5,23 @@
         border-radius: 8px;/*再確認是否要自動給值*/
         box-sizing: border-box;
         box-shadow:0 1px 3px 0 rgba(0,0,0,50);/*再確認是否要自動給值*/
+        font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
         h3, h4 {
             margin:0;
+            font-weight: normal;
         }
-        .category, .tag, .excerpt a, .read {
-            text-decoration: underline;
-            cursor:pointer;            
+        .category, .tag, .read {
+            &:hover {
+                text-decoration: underline;
+                cursor:pointer;
+            }            
         }
         .title {
             cursor:pointer;
+            font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, Helvetica-Light, system-ui;
         }
 
-        &.img {
-            font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+        &.img {            
             img {
                 object-fit: contain;
             }
@@ -38,7 +42,6 @@
             .postInfoBg {
                 max-width:100%;
                 background:rgb(231,231,231);
-                font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Regular, system-ui;
             }
             .titleBar {
                 display:flex;
@@ -47,28 +50,28 @@
             .date {
                 color:#6F3737;
                 flex-grow:0;
+                text-align:center;
             }
             .title {
-                color:#323232;
+                color:#383838;                
+                font-weight: 400;
             }
-            .categories {
-                color:#667E4D;
-            }
-            .tags {
-                color:#6F8099;
+            .categories, .tags {
+                font-weight: bolder;
             }
             .icon {
                 vertical-align: middle;
+                g {
+                    fill:#888888;
+                }               
             }
             .excerpt {
                 color:#2F411C;
-                font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
                 overflow-y:hidden;
             }
             .read {
                 color:#8EBB5E;
                 position:absolute;
-                text-decoration: underline;
                 background:$rPostBGColor;
             }
         }
