@@ -1,4 +1,9 @@
 #main.es {
+    #rp-ctnr {
+        display:flex;
+        flex-wrap:wrap;
+        justify-content: space-evenly;
+    }
     .rPost {
         $rPostBGColor:#FFFFFF;
         background:$rPostBGColor;

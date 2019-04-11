@@ -1,6 +1,6 @@
 #main {
-
     width:100%;  
+    position:relative;
     .l2bg{
         background-color:#1B3404;
         position:relative;
@@ -37,11 +37,11 @@
             font-family:"YuppyTC-Regular", "STYuanti-TC-Light", "HannotateTC-W5", "PTSerif-Regular","ArialMT", "Arial";
 
         }
-        .socialMediaGrp {
+        .socialMediaGrp {//todo 再評估好做法
             display:flex;
             justify-content: space-between;
             align-items:center;
-            object-fit: contain;
+            object-fit: contain;/*忘記這樣做的目的...*/
             svg {
                 &:hover {
                     cursor:pointer;
@@ -51,30 +51,29 @@
                 }                
             }
         }
-        .descPanel{
-            background-color:#E0DFDF;
-            position:absolute;
-            top:100%;
-            box-sizing:border-box;
-            box-shadow: 0 2px 4px 0 rgba(0,0,0, 0.5);
-            .desc {
-                margin:0;
-                color:#000000;
-                font-family: "PingFangTC-Regular","ArialMT", "Arial";
-            }
-            .logoChain {
-                position:absolute;
-                display:flex;
-                align-items: center;
-            }
-        }
+        
+    }
+    .descPanel{
+        background-color:#E0DFDF;
+        position:absolute;
+        box-sizing:border-box;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0, 0.5);
         .welcome {
             color:#354255;
             margin:0;
             font-family: "Klee-Demibold", "ArialMT", "Arial";
         }
-    }
-    
+        .desc {
+            margin:0;
+            color:#000000;
+            font-family: "PingFangTC-Regular","ArialMT", "Arial";
+        }
+        .logoChain {
+            position:absolute;
+            display:flex;
+            align-items: center;
+        }
+    }    
     .bgOfPosts{
         margin:0 auto;
         background-color:#FFF2DF;
@@ -82,9 +81,6 @@
         position:relative;
         box-sizing:border-box;
         box-shadow: 0 2px 4px 0 #DFD3CF;
-        display:flex;
-        flex-wrap:wrap;
-        justify-content: space-evenly;
     }
 }
 

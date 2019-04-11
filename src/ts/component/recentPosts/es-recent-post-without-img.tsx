@@ -7,6 +7,8 @@ import {formatMonthOrDayTo2Digits} from '../../service/date-formatter';
 interface ExternalScreenRecentPostWithoutImgProps {
     width:number;
     minHeight:number;
+    marginTop:number;
+    marginLeftRight:number;
     postInfoBar:{
         marginTopRightLeft:number,
         paddingTopRightLeft:number,
@@ -40,7 +42,8 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
 
         let styleOfPost = {
             width:`${this.props.width}px`,
-            minHeight:`${this.props.minHeight}px`
+            minHeight:`${this.props.minHeight}px`,
+            margin:`${this.props.marginTop}px ${this.props.marginLeftRight}px 0 ${this.props.marginLeftRight}px`
         }
         const styleOfTitleBar = {
             fontSize:`${this.props.postInfoBar.titleBar.fontSizeOfDateAndTitle}px`,
@@ -64,13 +67,13 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
         if (this.props.postInfoBar.categories.length > 0) {
             categories = this.props.postInfoBar.categories.map(
                 (category, idx, array) => {
-                return (<span><a className="category">{category.name}</a>
+                return (<span key={idx}><a className="category">{category.name}</a>
                     { idx != array.length - 1 ? 
                         '﹒' : null }
                 </span>);
             });
         } else {
-            categories = (<span className="noData">{terms.postWasNotCategorized}</span>);
+            categories = (<span className="noData" key={0}>{terms.postWasNotCategorized}</span>);
         }
 
         let styleOfTags = {
@@ -80,13 +83,13 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
         let tags;
         if (this.props.postInfoBar.tags.length > 0) {
             tags = this.props.postInfoBar.tags.map((tag, idx, array) => {
-                return (<span><a className="tag">{tag.name}</a>
+                return (<span key={idx}><a className="tag">{tag.name}</a>
                     { idx != array.length - 1 ? 
                         '﹒' : null }
                 </span>);
             });
         } else {
-            tags = (<span className="noData">{terms.postWasNotTagged}</span>);
+            tags = (<span className="noData" key={0}>{terms.postWasNotTagged}</span>);
         }
         
 

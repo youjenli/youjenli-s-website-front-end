@@ -6,6 +6,7 @@ export interface CategoryOfPost {
 export type TagOfPost = CategoryOfPost;
 
 export interface Post {
+    id:number,
     urlOfPost:string,
     date:Date,
     categories:CategoryOfPost[],
