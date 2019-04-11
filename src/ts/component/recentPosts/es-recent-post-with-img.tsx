@@ -46,7 +46,7 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
         return (
             <article className="rPost img" style={styleOfPost} title={this.props.title.name}>
                 <img style={styleOfImg} src={this.props.imgUrl} />
-                <h4 style={styleOfPostProps} className="postProps">
+                <div style={styleOfPostProps} className="postProps">
                     <span className="date">{this.props.date.getFullYear()}/{month}/{day}﹒</span>
                     <span className="categories">
                         {this.props.categories.map((category, idx, array) => {
@@ -57,8 +57,8 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
                             </span>)
                         })}
                     </span>
-                </h4>
-                <h3 style={styleOfTitle} className="title">{this.props.title.name}</h3>
+                </div>
+                <div style={styleOfTitle} className="title">{this.props.title.name}</div>
             </article>
         );
     }

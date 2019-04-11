@@ -6,10 +6,6 @@
         box-sizing: border-box;
         box-shadow:0 1px 3px 0 rgba(0,0,0,50);/*再確認是否要自動給值*/
         font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
-        h3, h4 {
-            margin:0;
-            font-weight: normal;
-        }
         .categories, .tags {
             .noData {
                 color:#888844;
@@ -72,7 +68,7 @@
             }
             .title {
                 color:#383838;                
-                font-weight: 400;
+                //font-weight: 400;
             }
             .categories {
                 color:#667E4D;

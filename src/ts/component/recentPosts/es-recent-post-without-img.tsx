@@ -113,16 +113,16 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
                     <div className="titleBar" style={styleOfTitleBar}>
                         <span className="date" style={styleOfDate}>
                             {this.props.postInfoBar.titleBar.date.getFullYear()}<br />{month}.{day}</span>
-                        <h3 className="title">{this.props.postInfoBar.titleBar.titleName}</h3>
+                        <span className="title">{this.props.postInfoBar.titleBar.titleName}</span>
                     </div>
-                    <h4 style={styleOfCategories} className="categories">
+                    <div style={styleOfCategories} className="categories">
                         <CategoryIcon style={styleOfIcon}/>
                         <span>{categories}</span>                        
-                    </h4>
-                    <h4 style={styleOfTags} className="tags">
+                    </div>
+                    <div style={styleOfTags} className="tags">
                         <TagIcon style={styleOfIcon}/>
                         <span>{tags}</span>
-                    </h4>
+                    </div>
                 </div>
                 <p className="excerpt" 
                     style={styleOfExcerpt}>{this.props.excerpt.content}
