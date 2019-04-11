@@ -50,8 +50,11 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
             marginRight:`${this.props.postInfoBar.titleBar.marginRightOfDate}px`
         }
         const styleOfIcon = {
-            width:`${this.props.postInfoBar.fontSizeOfCategoriesAndTags}px`,
-            height:`${this.props.postInfoBar.fontSizeOfCategoriesAndTags}px`,
+            /* icon 的長寬必須透過 minWidth, minHeight 設定，否則當分類或標籤列使用 flex 來分配欄寬時，icon 的尺寸會被壓縮。
+                為什麼會壓縮的原因還不是很清楚，只知道照以下這樣設定可以解決此問題。
+            */
+            minWidth:`${this.props.postInfoBar.fontSizeOfCategoriesAndTags}px`,
+            minHeight:`${this.props.postInfoBar.fontSizeOfCategoriesAndTags}px`,
             marginRight:`${this.props.postInfoBar.marginRightOfIconOfCategoriesAndTags}px`
         };
         let styleOfCategories = {
@@ -97,6 +100,7 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
             margin:`${this.props.excerpt.fontSize}px ${this.props.excerpt.leftRightMargin}px ${this.props.excerpt.bottomMargin}px ${this.props.excerpt.leftRightMargin}px`
         }
         const styleOfReadArticle = {
+            fontSize:`${this.props.excerpt.fontSize}px`,
             right:`${this.props.excerpt.leftRightMargin}px`,
             bottom:`${this.props.excerpt.bottomMargin}px`,
             zIndex:this.props.excerpt.zIndexOfReadArticle
@@ -113,11 +117,11 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
                     </div>
                     <h4 style={styleOfCategories} className="categories">
                         <CategoryIcon style={styleOfIcon}/>
-                        {categories}
+                        <span>{categories}</span>                        
                     </h4>
                     <h4 style={styleOfTags} className="tags">
                         <TagIcon style={styleOfIcon}/>
-                        {tags}
+                        <span>{tags}</span>
                     </h4>
                 </div>
                 <p className="excerpt" 

@@ -41,13 +41,12 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
             fontSize:`${this.props.postProps.fontSize}px`
         };
         const styleOfTitle = {
-            fontSize:`${this.props.title.fontSize}px`,
-            margin:`${this.props.title.marginTopMarginBottom}px 0`
+            fontSize:`${this.props.title.fontSize}px`
         }
         return (
             <article className="rPost img" style={styleOfPost} title={this.props.title.name}>
-                <a><img style={styleOfImg} src={this.props.imgUrl} /></a>
-                <h4 style={styleOfPostProps}>
+                <img style={styleOfImg} src={this.props.imgUrl} />
+                <h4 style={styleOfPostProps} className="postProps">
                     <span className="date">{this.props.date.getFullYear()}/{month}/{day}﹒</span>
                     <span className="categories">
                         {this.props.categories.map((category, idx, array) => {

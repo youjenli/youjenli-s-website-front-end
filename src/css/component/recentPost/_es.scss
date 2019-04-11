@@ -26,17 +26,30 @@
             font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, Helvetica-Light, system-ui;
         }
 
-        &.img {            
+        &.img {
+            display:flex;
+            flex-direction:column;
             img {
+                flex-grow:0;
                 object-fit: contain;
+                &:hover {
+                    cursor:pointer;
+                }
+            }
+            .postProps {
+                flex-grow:0;
+                display:flex;
+                align-items: center;
             }
             .date {
                 color:#969594;
+                flex-grow:0;
             }
             .categories {
                 color:#223552;
             }
             .title {
+                margin:auto 0;
                 color:#655E55;
             }
         }
@@ -50,7 +63,7 @@
             }
             .titleBar {
                 display:flex;
-                align-items: center;
+                align-items: flex-start;
             }
             .date {
                 color:#6F3737;
@@ -69,9 +82,12 @@
             }
             .categories, .tags {
                 font-weight: bolder;
+                display:flex;
+                align-items: center;
             }
             .icon {
                 vertical-align: middle;
+                flex-grow:0;
                 g {
                     fill:#888888;
                 }               
