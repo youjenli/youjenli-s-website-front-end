@@ -10,21 +10,20 @@ interface PropsOfLargeExternalScreenRecentPosts {
     posts:Post[];
 }
 
-export const widthOfExternalScreenRecentPost = 414;
-export const minHeightOfExternalScreenRecentPost = 318;
+const widthOfExternalScreenRecentPost = 414;
+const minHeightOfExternalScreenRecentPost = 318;
 const fontSizeOfDateAndTitle = 22;
 const marginTopOfPost = fontSizeOfDateAndTitle;
 const marginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
 export default class LargeExternalScreenRecentPosts extends React.Component<PropsOfLargeExternalScreenRecentPosts> {
     render() {
+        const paddingOfRPWithImg = this.props.remFontSize * 0.5;
         let reactElementsOfPosts = this.props.posts.map((post) => {
             if (post.imageUrl) {
-                const padding = this.props.remFontSize * 0.5;
                 const fontSizeOfPostProps = 16;
-                const marginTopOfPostProps = fontSizeOfPostProps * 0.5;
                 const postProps = {
                     fontSize:fontSizeOfPostProps,
-                    marginTop:marginTopOfPostProps
+                    marginTop:fontSizeOfPostProps * 0.5
                 }
                 const title = {
                     name:post.title,
@@ -35,7 +34,7 @@ export default class LargeExternalScreenRecentPosts extends React.Component<Prop
                 return (
                     <ExternalScreenRecentPostWithImg key={post.id} width={widthOfExternalScreenRecentPost} 
                         minHeight={minHeightOfExternalScreenRecentPost} marginTop={marginTopOfPost} 
-                        marginLeftRight={marginLeftRightOfPost} padding={padding} imgUrl={post.imageUrl} 
+                        marginLeftRight={marginLeftRightOfPost} padding={paddingOfRPWithImg} imgUrl={post.imageUrl} 
                         postProps={postProps} date={post.date} categories={post.categories} title={title} />
                 );
             } else {
@@ -60,8 +59,11 @@ export default class LargeExternalScreenRecentPosts extends React.Component<Prop
                 const fontSizeOfExcerpt = 18;
                 const excerpt = {
                     fontSize:fontSizeOfExcerpt,
-                    leftRightMargin:this.props.remFontSize,
-                    bottomMargin:this.props.remFontSize * 0.5,
+                    margin:{
+                        top:fontSizeOfExcerpt,
+                        leftRight:this.props.remFontSize,
+                        bottom:this.props.remFontSize * 0.5
+                    },
                     zIndexOfReadArticle:this.props.baseZIndex + 1,
                     content:post.excerpt
                 };
@@ -77,6 +79,7 @@ export default class LargeExternalScreenRecentPosts extends React.Component<Prop
             (this.props.estimatedWidthOfContainer - 2 * marginLeftRightOfPost) 
                 / (widthOfExternalScreenRecentPost + 2 * marginLeftRightOfPost)
         );
+
         const remainedPostsInTheLastRowOfPosts = this.props.posts.length % estimatedNumberOfPostsInARow;
         let numberOfPlaceHoldingPosts = 0;
         if (remainedPostsInTheLastRowOfPosts > 0) {
@@ -86,6 +89,7 @@ export default class LargeExternalScreenRecentPosts extends React.Component<Prop
         for (let i = 0 ; i < numberOfPlaceHoldingPosts ; i++, keysForPlaceHoldingPost --) {
             reactElementsOfPosts.push(<PlaceHoldingLargeExternalScreenRecentPosts key={keysForPlaceHoldingPost}/>);
         }
+
         const styleOfPostCtnr = {
             marginTop:`${-1 * marginTopOfPost}px`,
             padding:`0 ${marginLeftRightOfPost}px`

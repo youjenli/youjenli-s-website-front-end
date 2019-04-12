@@ -65,7 +65,7 @@ export interface PropsOfExternalScreenSlogan {
     bgOfPost:{
         marginLeftRightInPercent:number;
         postCtnr:{
-            marginTop:number;
+            distanceFromTopOfBgOfPosts:number;
         }
     }
     baseZIndex:number;
@@ -152,7 +152,7 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
         };
 
         const styleOfPlaceHldrInBgOfPosts = {
-            height:`${this.props.bgOfPost.postCtnr.marginTop}px`
+            height:`${this.props.bgOfPost.postCtnr.distanceFromTopOfBgOfPosts}px`
         }
 
         return (

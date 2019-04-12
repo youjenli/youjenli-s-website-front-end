@@ -28,8 +28,11 @@ interface ExternalScreenRecentPostWithoutImgProps {
     }
     excerpt:{
         fontSize:number,
-        leftRightMargin:number,
-        bottomMargin:number,
+        margin:{
+            top:number;
+            leftRight:number;
+            bottom:number;
+        },        
         zIndexOfReadArticle:number,
         content:string
     }
@@ -100,12 +103,12 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
         }
         const styleOfExcerpt = {
             fontSize:`${this.props.excerpt.fontSize}px`,
-            margin:`${this.props.excerpt.fontSize}px ${this.props.excerpt.leftRightMargin}px ${this.props.excerpt.bottomMargin}px ${this.props.excerpt.leftRightMargin}px`
+            margin:`${this.props.excerpt.margin.top}px ${this.props.excerpt.margin.leftRight}px ${this.props.excerpt.margin.bottom}px ${this.props.excerpt.margin.leftRight}px`
         }
         const styleOfReadArticle = {
             fontSize:`${this.props.excerpt.fontSize}px`,
-            right:`${this.props.excerpt.leftRightMargin}px`,
-            bottom:`${this.props.excerpt.bottomMargin}px`,
+            right:`${this.props.excerpt.margin.leftRight}px`,
+            bottom:`${this.props.excerpt.margin.bottom}px`,
             zIndex:this.props.excerpt.zIndexOfReadArticle
         }
 

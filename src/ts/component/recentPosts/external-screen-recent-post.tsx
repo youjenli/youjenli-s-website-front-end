@@ -4,22 +4,22 @@ import ExternalScreenRecentPostWithImg from './es-recent-post-with-img';
 import {Post} from '../../model/post';
 
 interface PropsOfExternalScreenRecentPosts {
+    estimatedWidthOfContainer:number;
     baseZIndex:number;
     remFontSize:number;
-    numberOfPostsInARow:number;
     posts:Post[];
 }
 
-export const widthOfExternalScreenRecentPost = 396;
-export const minHeightOfExternalScreenRecentPost = 306;
+const widthOfExternalScreenRecentPost = 396;
+const minHeightOfExternalScreenRecentPost = 306;
 const fontSizeOfDateAndTitle = 20;
 const marginTopOfPost = fontSizeOfDateAndTitle;
-export const marginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
+const marginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
 export default class ExternalScreenRecentPosts extends React.Component<PropsOfExternalScreenRecentPosts> {
     render() {
+        const padding = this.props.remFontSize * 0.75;
         let reactElementsOfPosts = this.props.posts.map((post) => {
             if (post.imageUrl) {
-                const padding = this.props.remFontSize * 0.75;
                 const fontSizeOfPostProps = 14;                
                 const postProps = {
                     fontSize:fontSizeOfPostProps,
@@ -56,14 +56,15 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                     marginRightOfIconOfCategoriesAndTags:fontSizeOfCategoriesAndTags * 0.5,
                     fontSizeOfCategoriesAndTags:fontSizeOfCategoriesAndTags,
                     marginTopOfTags:fontSizeOfCategoriesAndTags * 0.65
-                };
-                
+                };                
                 const fontSizeOfExcerpt = 16;
                 const excerpt = {
                     fontSize:fontSizeOfExcerpt,
-                    marginTop:fontSizeOfExcerpt * 0.75,
-                    leftRightMargin:fontSizeOfDateAndTitle,
-                    bottomMargin:this.props.remFontSize * 0.75,
+                    margin:{
+                        top:fontSizeOfExcerpt * 0.75,
+                        leftRight:fontSizeOfDateAndTitle,
+                        bottom:this.props.remFontSize * 0.75
+                    },
                     zIndexOfReadArticle:this.props.baseZIndex + 1,
                     content:post.excerpt
                 }                  
@@ -75,15 +76,20 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
             }
         });//end of this.props.posts.map
         
-        const remainedPostsInTheLastRowOfPosts = this.props.posts.length % this.props.numberOfPostsInARow;
+        let estimatedNumberOfPostsInARow = Math.floor(
+            (this.props.estimatedWidthOfContainer - 2 * marginLeftRightOfPost) 
+                / (widthOfExternalScreenRecentPost + 2 * marginLeftRightOfPost)
+        );
+        const remainedPostsInTheLastRowOfPosts = this.props.posts.length % estimatedNumberOfPostsInARow;
         let numberOfPlaceHoldingPosts = 0;
         if (remainedPostsInTheLastRowOfPosts > 0) {
-            numberOfPlaceHoldingPosts = this.props.numberOfPostsInARow - remainedPostsInTheLastRowOfPosts;
+            numberOfPlaceHoldingPosts = estimatedNumberOfPostsInARow - remainedPostsInTheLastRowOfPosts;
         }
         let keysForPlaceHoldingPost = -1;
         for (let i = 0 ; i < numberOfPlaceHoldingPosts ; i++, keysForPlaceHoldingPost --) {
             reactElementsOfPosts.push(<PlaceHoldingExternalScreenRecentPosts key={keysForPlaceHoldingPost}/>);
         }
+        
         const styleOfPostCtnr = {
             marginTop:`${-1 * marginTopOfPost}px`,
             padding:`0 ${marginLeftRightOfPost}px`
