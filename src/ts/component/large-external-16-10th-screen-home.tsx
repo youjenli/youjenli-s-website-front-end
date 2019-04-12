@@ -4,13 +4,13 @@ import {Post} from '../model/post';
 import SloganOfExternalScreen from './slogan/external-screen-slogan';
 import LargeExternalScreenRecentPosts from './recentPosts/large-external-screen-recent-post';
 
-interface PropsOfHomeOnLargeExternalScreen {
+interface PropsOfHomeOfLarge16To10ExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
     posts:Post[];
 }
 
-export default class HomeOnLargeExternalScreen extends React.Component<PropsOfHomeOnLargeExternalScreen> {
+export default class HomeOfLarge16To10ExternalScreen extends React.Component<PropsOfHomeOfLarge16To10ExternalScreen> {
     render() {
         const marginLeftRightOfBgOfPostsInPercent = 2;
         const portraitWidth = 0.4 * this.props.viewportWidth;
@@ -39,7 +39,7 @@ export default class HomeOnLargeExternalScreen extends React.Component<PropsOfHo
         const heightOfShortToolIcon = (this.props.viewportWidth - 240) /40;
         const leftShiftOfIconChain_basedOnDescPanel = marginLeftOfGtPanel;
         const bottomShiftOfIconChain_basedOnDescPanel = -1 * heightOfTallToolIcon * 1.5;
-        const marginTopOfPlaceHldrOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomOfL1bgAndPortrait * 2;
+        const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomOfL1bgAndPortrait * 2;
         
         const l2bg = {
             height:l2bgHeight,
@@ -100,7 +100,7 @@ export default class HomeOnLargeExternalScreen extends React.Component<PropsOfHo
         const bgOfPost = {
             marginLeftRightInPercent:marginLeftRightOfBgOfPostsInPercent,
             postCtnr:{
-                marginTop:marginTopOfPlaceHldrOfBgOfPosts
+                distanceFromTopOfBgOfPosts:distanceFromTopOfBgOfPosts
             }
         };
         //這是為了讓發文元件能計算填充物而提供的
