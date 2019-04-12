@@ -1,14 +1,24 @@
-#main {
+@import '../recentPost/les.scss';
+
+#main.es {
     width:100%;  
     position:relative;
+
     .l2bg{
+        width:100%;
         background-color:#1B3404;
         position:relative;
         box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
 
+        .picAndGtCtnr {
+            position:relative;
+            display:flex;
+            align-items: flex-start;
+        }
         .myPic {
-            position:absolute;
+            position:relative;
             box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+            flex-grow:0;
         }
         .portrait {
             position:relative;
@@ -23,7 +33,7 @@
             border-radius:5px;/*待考慮是否動態給值*/
         }
         .gtPanel {
-            position:absolute;
+            flex-grow:1;
             display:flex;
             justify-content: space-between;
             align-items: flex-end;
@@ -37,7 +47,7 @@
             font-family:"YuppyTC-Regular", "STYuanti-TC-Light", "HannotateTC-W5", "PTSerif-Regular","ArialMT", "Arial";
 
         }
-        .socialMediaGrp {//todo 再評估好做法
+        .socialMediaGrp {
             display:flex;
             justify-content: space-between;
             align-items:center;
@@ -55,7 +65,7 @@
     }
     .descPanel{
         background-color:#E0DFDF;
-        position:absolute;
+        position:relative;
         box-sizing:border-box;
         box-shadow: 0 2px 4px 0 rgba(0,0,0, 0.5);
         .welcome {
@@ -75,13 +85,11 @@
         }
     }    
     .bgOfPosts{
-        margin:0 auto;
-        background-color:#FFF2DF;
-        opacity:0.9;
-        position:relative;
-        box-sizing:border-box;
-        box-shadow: 0 2px 4px 0 #DFD3CF;
+        background:rgb(255,242,225);
+        box-shadow: 0 2px 4px 0 #DFD3CF;       
+        .placehlder {
+            width:100%;
+        }
+        @include large-es-recent-post-ctnr();        
     }
 }
-
-@import '../recentPost/es.scss';

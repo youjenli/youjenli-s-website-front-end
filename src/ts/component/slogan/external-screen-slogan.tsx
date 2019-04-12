@@ -4,15 +4,16 @@ import * as socialMediaTerms from '../socialMedia/terms';
 import * as icon from '../socialMedia/icons';
 import * as logo from './logo';
 
-interface PropsOfExternalScreenSlogan {
+export interface PropsOfExternalScreenSlogan {
     viewportWidth:number;
     l2bg:{
         height:number;
+        picAndGtCtnr:{
+            topShift:number;
+        }
         portrait:{
             width:number;
             height:number;
-            topShift:number;
-            leftShift:number;
             l1bg:{
                 width:number;
                 height:number;
@@ -21,9 +22,8 @@ interface PropsOfExternalScreenSlogan {
             }
         },
         gtPanel:{
-            width:number;
-            topShift:number;
-            leftShift:number;
+            marginTop:number;
+            marginLeft:number;
             greetings:{
                 fontSize:number;
                 width:number;
@@ -36,14 +36,10 @@ interface PropsOfExternalScreenSlogan {
         }        
     }
     descPanel:{
-        width:number;
-        leftShift:number;
-        topShift:number;
+        marginLeft:number;
         padding:{
             top:number;
-            right:number;
             bottom:number;
-            left:number;
         }
         welMsg:{
             fontSize:number;
@@ -67,8 +63,10 @@ interface PropsOfExternalScreenSlogan {
         }            
     }
     bgOfPost:{
-        width:number;
-        paddingTop:number;
+        marginLeftRightInPercent:number;
+        postCtnr:{
+            marginTop:number;
+        }
     }
     baseZIndex:number;
 }
@@ -80,13 +78,17 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
             height:`${this.props.l2bg.height}px`,
             zIndex:this.props.baseZIndex + 3
         };
+        const styleOfPicAndGtCtnr = {
+            top:`${this.props.l2bg.picAndGtCtnr.topShift}px`,
+            marginLeft:`${this.props.bgOfPost.marginLeftRightInPercent}%`,
+            marginRight:`${this.props.bgOfPost.marginLeftRightInPercent}%`,
+            paddingLeft:`${this.props.l2bg.portrait.l1bg.leftShift * 2}px`
+        };
         const styleOfMyPic = {
             width:`${this.props.l2bg.portrait.width}px`,
-            height:`${this.props.l2bg.portrait.height}px`,
-            top:`${this.props.l2bg.portrait.topShift}px`,
-            left:`${this.props.l2bg.portrait.leftShift}px`
-        };
-        
+            height:`${this.props.l2bg.portrait.height}px`
+            /*注意，在 pic and gt ctnr 的左邊有兩倍 l1bg leftshift 的 padding 之後，這裡就不必再有 margin */
+        };        
         const portraitStyle = {
             width:`${this.props.l2bg.portrait.width}px`,
             height:`${this.props.l2bg.portrait.height}px`,
@@ -100,9 +102,9 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
             zIndex:this.props.baseZIndex + 4
         }
         const styleOfGtPanel = {
-            width:`${this.props.l2bg.gtPanel.width}px`,
-            top:`${this.props.l2bg.gtPanel.topShift}px`,
-            left:`${this.props.l2bg.gtPanel.leftShift}px`
+            marginTop:`${this.props.l2bg.gtPanel.marginTop}px`,
+            marginLeft:`${this.props.l2bg.gtPanel.marginLeft}px`,
+            marginRight:`${this.props.l2bg.portrait.l1bg.leftShift}px`
         }
         const styleOfGreetings = {
             fontSize:`${this.props.l2bg.gtPanel.greetings.fontSize}px`,
@@ -119,11 +121,10 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
         }
         const paddingOfDescPanel = this.props.descPanel.padding;
         const styleOfDescPanel = {
-            width:`${this.props.descPanel.width}px`,
-            top:`${this.props.descPanel.topShift}px`,
-            left:`${this.props.descPanel.leftShift}px`,
-            padding:`${paddingOfDescPanel.top}px ${paddingOfDescPanel.right}px ${paddingOfDescPanel.bottom}px ${paddingOfDescPanel.left}px`,
-            zIndex:this.props.baseZIndex + 2
+            marginLeft:`${this.props.descPanel.marginLeft}px`,
+            marginRight:`${this.props.l2bg.portrait.l1bg.leftShift}px`,
+            padding:`${paddingOfDescPanel.top}px ${this.props.l2bg.gtPanel.marginLeft}px ${paddingOfDescPanel.bottom}px ${this.props.l2bg.gtPanel.marginLeft}px`,
+            zIndex:this.props.baseZIndex + 1
         }
         const styleOfWelMsg = {
             fontSize:`${this.props.descPanel.welMsg.fontSize}px`,
@@ -141,57 +142,61 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
             height:`${this.props.descPanel.iconChain.icon.short.height}px`,
             marginRight:`${this.props.descPanel.iconChain.icon.marginRight}px`
         }
-        const spaceBetweenPortraitAndGtPanel = this.props.l2bg.gtPanel.leftShift 
-                - (this.props.l2bg.portrait.leftShift + this.props.l2bg.portrait.width);
+        
         const styleOfIconChain = {
-            left:`${spaceBetweenPortraitAndGtPanel}px`,
-            bottom:`${-1 * this.props.descPanel.iconChain.icon.tall.height * 1.5}px`
+            bottom:`${this.props.descPanel.iconChain.bottomShift}px`
         }
 
         const styleOfPostsOfBg = {
-            width:`${this.props.bgOfPost.width}px`,
-            paddingTop:`${this.props.bgOfPost.paddingTop}px`,
-            zIndex:this.props.baseZIndex + 1
+            margin:`0 ${this.props.bgOfPost.marginLeftRightInPercent}%`
         };
-        
+
+        const styleOfPlaceHldrInBgOfPosts = {
+            height:`${this.props.bgOfPost.postCtnr.marginTop}px`
+        }
+
         return (
             <main id="main" className="es">
                 <section className="l2bg" style={styleOfL2bg}>
-                    <div className="myPic" style={styleOfMyPic}>
-                        <div className="l1bg" style={styleOfL1bg}></div>
-                        <img className="portrait" style={portraitStyle} src="img/portrait-es-large-16-10th.png" />
-                    </div>
-                    <div className="gtPanel" style={styleOfGtPanel}>
-                        <h1 className="greetings" style={styleOfGreetings}>
-                            {terms.greetingMsg}<br />{terms.myName}</h1>
-                        <div className="socialMediaGrp" style={styleOfSMGrp}>
-                            <a href={socialMediaTerms.facebookPersonalPage} target="_blank" title={socialMediaTerms.facebookIconTitle}>
-                                <icon.FaceBookIcon style={styleOfSMIcon} /></a>
-                            <a href={socialMediaTerms.githubPersonalPage} target="_blank" title={socialMediaTerms.githubIconTitle}>
-                                <icon.GithubIcon style={styleOfSMIcon} /></a>
-                            <a href={socialMediaTerms.stackoverflowPersonalPage} target="_blank" title={socialMediaTerms.stackOverflowIconTitle}>
-                                <icon.StackOverflowIcon style={styleOfSMIcon} /></a>
-                            <a href={socialMediaTerms.youtubePlayList} target="_blank" title={socialMediaTerms.youtubeIconTitle}>
-                                <icon.YoutubeIcon style={styleOfSMIcon} /></a>
+                    <div className="picAndGtCtnr" style={styleOfPicAndGtCtnr}>
+                        <div className="myPic" style={styleOfMyPic}>
+                            <div className="l1bg" style={styleOfL1bg}></div>
+                            <img className="portrait" style={portraitStyle} src="img/portrait-es-large-16-10th.png" />
+                        </div>
+                        <div className="gtPanel" style={styleOfGtPanel}>
+                            <h1 className="greetings" style={styleOfGreetings}>
+                                {terms.greetingMsg}<br />{terms.myName}</h1>
+                            <div className="socialMediaGrp" style={styleOfSMGrp}>
+                                <a href={socialMediaTerms.facebookPersonalPage} target="_blank" title={socialMediaTerms.facebookIconTitle}>
+                                    <icon.FaceBookIcon style={styleOfSMIcon} /></a>
+                                <a href={socialMediaTerms.githubPersonalPage} target="_blank" title={socialMediaTerms.githubIconTitle}>
+                                    <icon.GithubIcon style={styleOfSMIcon} /></a>
+                                <a href={socialMediaTerms.stackoverflowPersonalPage} target="_blank" title={socialMediaTerms.stackOverflowIconTitle}>
+                                    <icon.StackOverflowIcon style={styleOfSMIcon} /></a>
+                                <a href={socialMediaTerms.youtubePlayList} target="_blank" title={socialMediaTerms.youtubeIconTitle}>
+                                    <icon.YoutubeIcon style={styleOfSMIcon} /></a>
+                            </div>
+                        </div>
+                    </div>                    
+                </section>
+                <section className="bgOfPosts" style={styleOfPostsOfBg}>
+                    <div className="placehlder" style={styleOfPlaceHldrInBgOfPosts}>
+                        <div className="descPanel" style={styleOfDescPanel}>
+                            <h2 className="welcome" style={styleOfWelMsg}>{terms.welcomeMsg}</h2>
+                            <p className="desc" style={styleOfDesc}>{terms.desc}</p>
+                            <div className="logoChain" style={styleOfIconChain}>
+                                <logo.HTMLLogo style={styleOfTallToolIcon} />
+                                <logo.CSSLogo style={styleOfTallToolIcon} />
+                                <logo.JavaScriptLogo style={styleOfShortToolIcon} />
+                                <logo.TypeScriptLogo style={styleOfShortToolIcon} />
+                                <logo.JavaLogo style={styleOfTallToolIcon} />
+                                <logo.GradleLogo style={styleOfShortToolIcon} />
+                                <logo.JQueryLogo style={styleOfShortToolIcon} />
+                                <logo.ReactJSLogo style={styleOfShortToolIcon} />
+                                <logo.SpringFoundationLogo style={styleOfTallToolIcon} />
+                            </div>
                         </div>
                     </div>
-                </section>
-                <div className="descPanel" style={styleOfDescPanel}>
-                    <h2 className="welcome" style={styleOfWelMsg}>{terms.welcomeMsg}</h2>
-                    <p className="desc" style={styleOfDesc}>{terms.desc}</p>
-                    <div className="logoChain" style={styleOfIconChain}>
-                        <logo.HTMLLogo style={styleOfTallToolIcon} />
-                        <logo.CSSLogo style={styleOfTallToolIcon} />
-                        <logo.JavaScriptLogo style={styleOfShortToolIcon} />
-                        <logo.TypeScriptLogo style={styleOfShortToolIcon} />
-                        <logo.JavaLogo style={styleOfTallToolIcon} />
-                        <logo.GradleLogo style={styleOfShortToolIcon} />
-                        <logo.JQueryLogo style={styleOfShortToolIcon} />
-                        <logo.ReactJSLogo style={styleOfShortToolIcon} />
-                        <logo.SpringFoundationLogo style={styleOfTallToolIcon} />
-                    </div>
-                </div>
-                <section className="bgOfPosts" style={styleOfPostsOfBg}>
                     {this.props.children}
                 </section>
             </main>

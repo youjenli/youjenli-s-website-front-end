@@ -4,9 +4,9 @@ import ExternalScreenRecentPostWithImg from './es-recent-post-with-img';
 import {Post} from '../../model/post';
 
 interface PropsOfLargeExternalScreenRecentPosts {
+    estimatedWidthOfContainer:number;
     baseZIndex:number;
     remFontSize:number;
-    numberOfPostsInARow:number;
     posts:Post[];
 }
 
@@ -14,8 +14,8 @@ export const widthOfExternalScreenRecentPost = 414;
 export const minHeightOfExternalScreenRecentPost = 318;
 const fontSizeOfDateAndTitle = 22;
 const marginTopOfPost = fontSizeOfDateAndTitle;
-export const marginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
-export class LargeExternalScreenRecentPosts extends React.Component<PropsOfLargeExternalScreenRecentPosts> {
+const marginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
+export default class LargeExternalScreenRecentPosts extends React.Component<PropsOfLargeExternalScreenRecentPosts> {
     render() {
         let reactElementsOfPosts = this.props.posts.map((post) => {
             if (post.imageUrl) {
@@ -72,22 +72,30 @@ export class LargeExternalScreenRecentPosts extends React.Component<PropsOfLarge
                 );
             }
         });
-        const remainedPostsInTheLastRowOfPosts = this.props.posts.length % this.props.numberOfPostsInARow;
+        
+        let estimatedNumberOfPostsInARow = Math.floor(
+            (this.props.estimatedWidthOfContainer - 2 * marginLeftRightOfPost) 
+                / (widthOfExternalScreenRecentPost + 2 * marginLeftRightOfPost)
+        );
+        const remainedPostsInTheLastRowOfPosts = this.props.posts.length % estimatedNumberOfPostsInARow;
         let numberOfPlaceHoldingPosts = 0;
         if (remainedPostsInTheLastRowOfPosts > 0) {
-            numberOfPlaceHoldingPosts = this.props.numberOfPostsInARow - remainedPostsInTheLastRowOfPosts;
+            numberOfPlaceHoldingPosts = estimatedNumberOfPostsInARow - remainedPostsInTheLastRowOfPosts;
         }
         let keysForPlaceHoldingPost = -1;
         for (let i = 0 ; i < numberOfPlaceHoldingPosts ; i++, keysForPlaceHoldingPost --) {
             reactElementsOfPosts.push(<PlaceHoldingLargeExternalScreenRecentPosts key={keysForPlaceHoldingPost}/>);
         }
-        const styleOfRecentPostContainer = {
-            padding:`0 ${marginLeftRightOfPost}px`,
-            marginTop:`${-1 * marginTopOfPost}px`
-        };
+        const styleOfPostCtnr = {
+            marginTop:`${-1 * marginTopOfPost}px`,
+            padding:`0 ${marginLeftRightOfPost}px`
+        }
+
         return (
-            <div id="rp-ctnr" style={styleOfRecentPostContainer}>{reactElementsOfPosts}</div>
-        )
+            <div id="post-ctnr" style={styleOfPostCtnr}>
+                {reactElementsOfPosts}
+            </div>
+        );
     }
 }
 

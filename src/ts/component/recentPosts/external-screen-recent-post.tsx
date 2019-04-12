@@ -74,6 +74,7 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                 );
             }
         });//end of this.props.posts.map
+        
         const remainedPostsInTheLastRowOfPosts = this.props.posts.length % this.props.numberOfPostsInARow;
         let numberOfPlaceHoldingPosts = 0;
         if (remainedPostsInTheLastRowOfPosts > 0) {
@@ -83,12 +84,15 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
         for (let i = 0 ; i < numberOfPlaceHoldingPosts ; i++, keysForPlaceHoldingPost --) {
             reactElementsOfPosts.push(<PlaceHoldingExternalScreenRecentPosts key={keysForPlaceHoldingPost}/>);
         }
-        const styleOfRecentPostContainer = {
-            padding:`0 ${marginLeftRightOfPost}px`,
-            marginTop:`${-1 * marginTopOfPost}px`
-        };
+        const styleOfPostCtnr = {
+            marginTop:`${-1 * marginTopOfPost}px`,
+            padding:`0 ${marginLeftRightOfPost}px`
+        }
+
         return (
-            <div id="rp-ctnr" style={styleOfRecentPostContainer}>{reactElementsOfPosts}</div>
+            <div id="post-ctnr" style={styleOfPostCtnr}>
+                {reactElementsOfPosts}
+            </div>
         );
     }
 }
