@@ -8,7 +8,7 @@ export class HTMLLogo extends React.Component<LogoProps> {
     render() {
         return (
             <svg style={this.props.style} viewBox="0 0 39 54" version="1.1">
-                <title>HTML5_official_Logo</title>
+                <title>HTML 5</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g>
                         <g>
@@ -33,8 +33,8 @@ export class HTMLLogo extends React.Component<LogoProps> {
 export class CSSLogo extends React.Component<LogoProps> {
     render() {
         return (
-            <svg style={this.props.style} viewBox="0 0 39 54">
-                <title>css3 logo</title>
+            <svg style={this.props.style} viewBox="0 0 39 54" version="1.1">
+                <title>CSS 3</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(8.000000, 0.000000)" fill="#6C490C">
                         <g>
@@ -60,8 +60,8 @@ export class CSSLogo extends React.Component<LogoProps> {
 export class JavaScriptLogo extends React.Component<LogoProps> {
     render() {
         return (
-            <svg style={this.props.style} viewBox="0 0 36 36">
-                <title>Javascript</title>
+            <svg style={this.props.style} viewBox="0 0 36 36" version="1.1">
+                <title>JavaScript</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g fill="#F3B03D" fillRule="nonzero">
                         <g>
@@ -78,7 +78,7 @@ export class TypeScriptLogo extends React.Component<LogoProps> {
     render() {
         return(
             <svg style={this.props.style} viewBox="0 0 36 36" version="1.1">
-                <title>typescript-logo</title>
+                <title>TypeScript</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g fill="#DF8C00" fillRule="nonzero">
                         <g>
@@ -96,8 +96,8 @@ export class TypeScriptLogo extends React.Component<LogoProps> {
 export class JavaLogo extends React.Component<LogoProps> {
     render() {
         return (
-            <svg style={this.props.style} viewBox="0 0 30 55">
-                <title>Java logo</title>
+            <svg style={this.props.style} viewBox="0 0 30 55" version="1.1">
+                <title>Java</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g>
                         <g>
@@ -119,7 +119,7 @@ export class GradleLogo extends React.Component<LogoProps> {
     render() {
         return (
             <svg style={this.props.style} viewBox="0 0 49 40" version="1.1">
-                <title>gradle-official-log</title>
+                <title>Gradle build tool</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(-1.000000, 0.000000)">
                         <g transform="translate(1.000000, 0.000000)">
@@ -141,7 +141,7 @@ export class JQueryLogo extends React.Component<LogoProps> {
     render() {
         return (
             <svg style={this.props.style} viewBox="0 0 42 40" version="1.1">
-                <title>jquery logo</title>
+                <title>JavaScript 的 jQuery 函式庫</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g fill="#EFA21E">
                         <g>
@@ -158,7 +158,7 @@ export class ReactJSLogo extends React.Component<LogoProps> {
     render() {
         return(
             <svg style={this.props.style} viewBox="0 0 45 40" version="1.1">
-                <title>React-icon</title>
+                <title>JavaScript 的 React.js 函式庫</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g fill="#EFA21E" fillRule="nonzero">
                         <g>
@@ -175,7 +175,7 @@ export class SpringFoundationLogo extends React.Component<LogoProps> {
     render() {
         return (
             <svg style={this.props.style} viewBox="0 0 40 40" version="1.1">
-                <title>spring foundation logo</title>
+                <title>Java 的 Spring mvc 框架</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g fill="#E19719" fillRule="nonzero">
                         <g>
