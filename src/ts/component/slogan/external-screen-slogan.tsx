@@ -10,8 +10,10 @@ export interface PropsOfExternalScreenSlogan {
         height:number;
         picAndGtCtnr:{
             topShift:number;
+            paddingLeft:number;
         }
         portrait:{
+            imgUrl:string;
             width:number;
             height:number;
             l1bg:{
@@ -63,7 +65,11 @@ export interface PropsOfExternalScreenSlogan {
         }            
     }
     bgOfPost:{
-        marginLeftRightInPercent:number;
+        margin:{
+            leftRightInPercent:number;
+            bottom:number;
+        },
+        paddingBottom:number;
         postCtnr:{
             distanceFromTopOfBgOfPosts:number;
         }
@@ -80,9 +86,9 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
         };
         const styleOfPicAndGtCtnr = {
             top:`${this.props.l2bg.picAndGtCtnr.topShift}px`,
-            marginLeft:`${this.props.bgOfPost.marginLeftRightInPercent}%`,
-            marginRight:`${this.props.bgOfPost.marginLeftRightInPercent}%`,
-            paddingLeft:`${this.props.l2bg.portrait.l1bg.leftShift * 2}px`
+            marginLeft:`${this.props.bgOfPost.margin.leftRightInPercent}%`,
+            marginRight:`${this.props.bgOfPost.margin.leftRightInPercent}%`,
+            paddingLeft:`${this.props.l2bg.picAndGtCtnr.paddingLeft}px`
         };
         const styleOfMyPic = {
             width:`${this.props.l2bg.portrait.width}px`,
@@ -148,7 +154,8 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
         }
 
         const styleOfPostsOfBg = {
-            margin:`0 ${this.props.bgOfPost.marginLeftRightInPercent}%`
+            margin:`0 ${this.props.bgOfPost.margin.leftRightInPercent}% ${this.props.bgOfPost.paddingBottom}px ${this.props.bgOfPost.margin.leftRightInPercent}%`,
+            paddingBottom:`${this.props.bgOfPost.paddingBottom}px`
         };
 
         const styleOfPlaceHldrInBgOfPosts = {
@@ -161,7 +168,7 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
                     <div className="picAndGtCtnr" style={styleOfPicAndGtCtnr}>
                         <div className="myPic" style={styleOfMyPic}>
                             <div className="l1bg" style={styleOfL1bg}></div>
-                            <img className="portrait" style={portraitStyle} src="img/portrait-es-large-16-10th.png" />
+                            <img className="portrait" style={portraitStyle} src={this.props.l2bg.portrait.imgUrl} />
                         </div>
                         <div className="gtPanel" style={styleOfGtPanel}>
                             <h1 className="greetings" style={styleOfGreetings}>

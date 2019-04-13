@@ -18,6 +18,7 @@ export default class HomeOfLarge16To10ExternalScreen extends React.Component<Pro
         const topShiftOfL1bg_basedOnPortrait = portraitHeight * 0.19;
         const leftShiftOfL1bg_basedOnPortrait = portraitWidth * 0.065;
         const topShiftOfMyPic_basedOnUpperBG = (2.1 * this.props.viewportWidth - 472)/40;
+        const paddingLeftOfPicAndGtPanelCtnr = leftShiftOfL1bg_basedOnPortrait * 2;
         const l2bgHeight = topShiftOfMyPic_basedOnUpperBG + 0.5 * portraitHeight; 
         const l1bgWidth = leftShiftOfL1bg_basedOnPortrait + 0.88 * portraitWidth;
         const distanceBetweenTheBottomOfL1bgAndPortrait = 0.102 * portraitHeight;
@@ -44,9 +45,11 @@ export default class HomeOfLarge16To10ExternalScreen extends React.Component<Pro
         const l2bg = {
             height:l2bgHeight,
             picAndGtCtnr:{
-                topShift:topShiftOfMyPic_basedOnUpperBG
+                topShift:topShiftOfMyPic_basedOnUpperBG,
+                paddingLeft:paddingLeftOfPicAndGtPanelCtnr
             },
             portrait:{
+                imgUrl:"img/portrait-es-large-16-10th.png",
                 width:portraitWidth,
                 height:portraitHeight,
                 l1bg:{
@@ -98,7 +101,11 @@ export default class HomeOfLarge16To10ExternalScreen extends React.Component<Pro
             }          
         }
         const bgOfPost = {
-            marginLeftRightInPercent:marginLeftRightOfBgOfPostsInPercent,
+            margin:{
+                leftRightInPercent:marginLeftRightOfBgOfPostsInPercent,
+                bottom:distanceBetweenTheBottomOfL1bgAndPortrait
+            },
+            paddingBottom:distanceBetweenTheBottomOfL1bgAndPortrait,
             postCtnr:{
                 distanceFromTopOfBgOfPosts:distanceFromTopOfBgOfPosts
             }
