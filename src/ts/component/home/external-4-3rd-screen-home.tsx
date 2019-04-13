@@ -15,14 +15,14 @@ export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHom
         const marginLeftRightOfBgOfPostsInPercent = 3;
         const portraitWidth = 0.38 * this.props.viewportWidth;
         const portraitHeight = portraitWidth * 3 / 4;
-        const topShiftOfL1bg_basedOnPortrait = portraitHeight * 0.2;
+        const distanceBetweenTheTopsOfL1bgAndPortrait = portraitHeight * 0.2;
+        const distanceBetweenTheBottomOfL1bgAndPortrait = 0.106 * portraitHeight;
         const leftShiftOfL1bg_basedOnPortrait = portraitWidth * 0.0877;
         const topShiftOfMyPic_basedOnUpperBG = (17 * this.props.viewportWidth + 2144)/416;
         const paddingLeftOfPicAndGtPanelCtnr = leftShiftOfL1bg_basedOnPortrait * 2;
         const l2bgHeight = topShiftOfMyPic_basedOnUpperBG + 0.5 * portraitHeight; 
-        const l1bgWidth = leftShiftOfL1bg_basedOnPortrait + 0.81 * portraitWidth;
-        const distanceBetweenTheBottomOfL1bgAndPortrait = 0.106 * portraitHeight;
-        const l1bgHeight =  (portraitHeight - topShiftOfL1bg_basedOnPortrait) + distanceBetweenTheBottomOfL1bgAndPortrait;
+        const l1bgWidth = leftShiftOfL1bg_basedOnPortrait + 0.81 * portraitWidth;        
+        const l1bgHeight =  (portraitHeight - distanceBetweenTheTopsOfL1bgAndPortrait) + distanceBetweenTheBottomOfL1bgAndPortrait;
         const fontSizeOfGreetings = portraitHeight / 7;
         const widthOfGreetings = terms.myName.length * fontSizeOfGreetings;
         const marginLeftOfGtPanel = ((-0.036 * fontSizeOfGreetings + 20.15982) / 17.19) * fontSizeOfGreetings;
@@ -55,7 +55,7 @@ export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHom
                 l1bg:{
                     width:l1bgWidth,
                     height:l1bgHeight,
-                    topShift:topShiftOfL1bg_basedOnPortrait,
+                    topShift:distanceBetweenTheTopsOfL1bgAndPortrait,
                     leftShift:leftShiftOfL1bg_basedOnPortrait
                 }
             },
