@@ -15,14 +15,14 @@ export default class HomeOfLarge16To9ExternalScreen extends React.Component<Prop
         const marginLeftRightOfBgOfPostsInPercent = 2.5;
         const portraitWidth = 0.4 * this.props.viewportWidth;
         const portraitHeight = portraitWidth * 9 / 16;
-        const topShiftOfL1bg_basedOnPortrait = portraitHeight * 0.19;
+        const distanceBetweenTheTopsOfL1bgAndPortrait = portraitHeight * 0.19;
+        const distanceBetweenTheBottomsOfL1bgAndPortrait = 0.095 * portraitHeight;
         const leftShiftOfL1bg_basedOnPortrait = portraitWidth * 0.055;
         const topShiftOfMyPic_basedOnUpperBG = (19 * this.props.viewportWidth - 480)/480;
         const paddingLeftOfPicAndGtPanelCtnr = leftShiftOfL1bg_basedOnPortrait * 2;
         const l2bgHeight = (73 * this.props.viewportWidth + 480)/480; 
         const l1bgWidth = leftShiftOfL1bg_basedOnPortrait + 0.86 * portraitWidth;
-        const distanceBetweenTheBottomOfL1bgAndPortrait = 0.095 * portraitHeight;
-        const l1bgHeight =  (portraitHeight - topShiftOfL1bg_basedOnPortrait) + distanceBetweenTheBottomOfL1bgAndPortrait;
+        const l1bgHeight =  (portraitHeight - distanceBetweenTheTopsOfL1bgAndPortrait) + distanceBetweenTheBottomsOfL1bgAndPortrait;
         const fontSizeOfGreetings = portraitHeight / 7;
         const widthOfGreetings = terms.myName.length * fontSizeOfGreetings;
         const marginLeftOfGtPanel = 1.5 * fontSizeOfGreetings;
@@ -36,11 +36,11 @@ export default class HomeOfLarge16To9ExternalScreen extends React.Component<Prop
         const fontSizeOfDesc = this.props.viewportWidth / 80;
         const paddingBottomOfDescPanel = fontSizeOfDesc;
         const marginRightOfToolIcon = (this.props.viewportWidth + 1440) / 96;
-        const heightOfTallToolIcon = (-0.119 * this.props.viewportWidth + 837.12) / 480 * distanceBetweenTheBottomOfL1bgAndPortrait;
-        const heightOfShortToolIcon = 0.972 * distanceBetweenTheBottomOfL1bgAndPortrait;
+        const heightOfTallToolIcon = (-0.119 * this.props.viewportWidth + 837.12) / 480 * distanceBetweenTheBottomsOfL1bgAndPortrait;
+        const heightOfShortToolIcon = 0.972 * distanceBetweenTheBottomsOfL1bgAndPortrait;
         const leftShiftOfIconChain_basedOnDescPanel = marginLeftOfGtPanel;
         const bottomShiftOfIconChain_basedOnDescPanel = -1 * heightOfTallToolIcon * 1.5;
-        const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomOfL1bgAndPortrait * 2;
+        const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomsOfL1bgAndPortrait * 2;
         
         const l2bg = {
             height:l2bgHeight,
@@ -55,7 +55,7 @@ export default class HomeOfLarge16To9ExternalScreen extends React.Component<Prop
                 l1bg:{
                     width:l1bgWidth,
                     height:l1bgHeight,
-                    topShift:topShiftOfL1bg_basedOnPortrait,
+                    topShift:distanceBetweenTheTopsOfL1bgAndPortrait,
                     leftShift:leftShiftOfL1bg_basedOnPortrait
                 }
             },
@@ -103,9 +103,9 @@ export default class HomeOfLarge16To9ExternalScreen extends React.Component<Prop
         const bgOfPost = {
             margin:{
                 leftRightInPercent:marginLeftRightOfBgOfPostsInPercent,
-                bottom:distanceBetweenTheBottomOfL1bgAndPortrait
+                bottom:distanceBetweenTheBottomsOfL1bgAndPortrait
             },
-            paddingBottom:distanceBetweenTheBottomOfL1bgAndPortrait,
+            paddingBottom:distanceBetweenTheBottomsOfL1bgAndPortrait,
             postCtnr:{
                 distanceFromTopOfBgOfPosts:distanceFromTopOfBgOfPosts
             }
@@ -118,7 +118,7 @@ export default class HomeOfLarge16To9ExternalScreen extends React.Component<Prop
                 bgOfPost={bgOfPost} baseZIndex={this.props.baseZIndex + 1}>
                 <LargeExternalScreenRecentPosts estimatedWidthOfContainer={estimatedWidthOfContainer}
                     baseZIndex={this.props.baseZIndex + 10} remFontSize={18} posts={this.props.posts}
-                    marginTopOfPost={distanceBetweenTheBottomOfL1bgAndPortrait} />
+                    marginTopOfPost={distanceBetweenTheBottomsOfL1bgAndPortrait} />
             </SloganOfExternalScreen>
         );
     }
