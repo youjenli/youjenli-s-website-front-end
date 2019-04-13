@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as terms from './slogan/terms';
-import {Post} from '../model/post';
+import {Post} from '../../model/post';
 import SloganOfExternalScreen from './slogan/external-screen-slogan';
 import LargeExternalScreenRecentPosts from './recentPosts/large-external-screen-recent-post';
 

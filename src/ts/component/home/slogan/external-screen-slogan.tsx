@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as terms from './terms';
-import * as socialMediaTerms from '../socialMedia/terms';
-import * as icon from '../socialMedia/icons';
+import * as socialMediaTerms from './socialMedia/terms';
+import * as icon from './socialMedia/icons';
 import * as logo from './logo';
 
 export interface PropsOfExternalScreenSlogan {

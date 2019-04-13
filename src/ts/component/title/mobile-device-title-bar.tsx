@@ -6,8 +6,8 @@ import { calculateViewPortHeight } from '../../service/dimensionsCalculator';
 import { isStickyPositionSupported } from '../../service/featureDetection';
 import debounce from '../../service/debounce';
 import * as terms from './terms';
-import * as socialMediaTerms from '../socialMedia/terms';
-import * as icons from '../socialMedia/icons';
+import * as socialMediaTerms from '../home/slogan/socialMedia/terms';
+import * as icons from '../home/slogan/socialMedia/icons';
 
 interface MobileDeviceTitleBarProps {
     viewportWidth:number;

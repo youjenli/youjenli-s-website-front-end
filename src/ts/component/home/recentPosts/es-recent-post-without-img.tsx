@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {CategoryOfPost, TagOfPost} from '../../model/post';
+import {CategoryOfPost, TagOfPost} from '../../../model/post';
 import {CategoryIcon, TagIcon} from './icons';
 import * as terms from './terms';
-import {formatMonthOrDayTo2Digits} from '../../service/date-formatter';
+import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
 interface ExternalScreenRecentPostWithoutImgProps {
     width:number;

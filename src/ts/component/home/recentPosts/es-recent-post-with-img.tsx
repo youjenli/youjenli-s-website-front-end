@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as terms from './terms';
-import {CategoryOfPost} from '../../model/post';
-import {formatMonthOrDayTo2Digits} from '../../service/date-formatter';
+import {CategoryOfPost} from '../../../model/post';
+import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
 interface ExternalScreenRecentPostWithImgProps {
     width:number;

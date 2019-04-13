@@ -8,7 +8,7 @@
 import router from './router';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import HomePage from './component/home';
+import HomePage from './component/home/home';
 
 const routeToHome = () => {
     ReactDOM.render(

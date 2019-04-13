@@ -1,10 +1,10 @@
 import * as React from 'react';
-import ExternalScreenTitleBar from '../component/title/external-screen-title-bar';
-import MobileDeviceTitleBar from '../component/title/mobile-device-title-bar';
+import ExternalScreenTitleBar from '../title/external-screen-title-bar';
+import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import HomeOfLarge16To10ExternalScreen from './large-external-16-10th-screen-home';
-import { calculateViewPortWidth, calculateViewPortHeight } from '../service/dimensionsCalculator';
+import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/dimensionsCalculator';
 
-import { posts } from '../model/test/fake-posts-for-test';
+import { posts } from '../../model/test/fake-posts-for-test';
 
 interface HomePageState {
     viewportWidth:number;
