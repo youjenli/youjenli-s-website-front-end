@@ -8,15 +8,15 @@ interface PropsOfExternalScreenRecentPosts {
     baseZIndex:number;
     remFontSize:number;
     posts:Post[];
+    marginTopOfPost:number;
 }
 
-const widthOfExternalScreenRecentPost = 396;
-const minHeightOfExternalScreenRecentPost = 306;
-const fontSizeOfDateAndTitle = 20;
-const marginTopOfPost = fontSizeOfDateAndTitle;
-const marginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
 export default class ExternalScreenRecentPosts extends React.Component<PropsOfExternalScreenRecentPosts> {
     render() {
+        const widthOfExternalScreenRecentPost = 396;
+        const minHeightOfExternalScreenRecentPost = 306;
+        const fontSizeOfDateAndTitle = 20;
+        const marginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
         const padding = this.props.remFontSize * 0.75;
         let reactElementsOfPosts = this.props.posts.map((post) => {
             if (post.imageUrl) {
@@ -34,7 +34,7 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                 return (
                     <ExternalScreenRecentPostWithImg key={post.id} width={widthOfExternalScreenRecentPost} 
                         minHeight={minHeightOfExternalScreenRecentPost} padding={padding} 
-                        marginTop={marginTopOfPost} marginLeftRight={marginLeftRightOfPost} 
+                        marginTop={this.props.marginTopOfPost} marginLeftRight={marginLeftRightOfPost} 
                         imgUrl={post.imageUrl} postProps={postProps} date={post.date} categories={post.categories} 
                         title={title}/>
                 );
@@ -70,7 +70,7 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                 }                  
                 return (
                     <ExternalScreenRecentPostWithoutImg key={post.id} width={widthOfExternalScreenRecentPost} 
-                        minHeight={minHeightOfExternalScreenRecentPost} marginTop={marginTopOfPost} 
+                        minHeight={minHeightOfExternalScreenRecentPost} marginTop={this.props.marginTopOfPost} 
                         marginLeftRight={marginLeftRightOfPost} postInfoBar={postInfoBar} excerpt={excerpt}/>
                 );
             }
@@ -85,13 +85,21 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
         if (remainedPostsInTheLastRowOfPosts > 0) {
             numberOfPlaceHoldingPosts = estimatedNumberOfPostsInARow - remainedPostsInTheLastRowOfPosts;
         }
+
+        const style = {
+            width:`${widthOfExternalScreenRecentPost}px`,
+            height:`${minHeightOfExternalScreenRecentPost}px`,
+            margin:`${this.props.marginTopOfPost}px ${marginLeftRightOfPost}px 0 ${marginLeftRightOfPost}px`,
+            minHeight:`${minHeightOfExternalScreenRecentPost}px`,
+            backgroundColor:'transparent'
+        };
         let keysForPlaceHoldingPost = -1;
         for (let i = 0 ; i < numberOfPlaceHoldingPosts ; i++, keysForPlaceHoldingPost --) {
-            reactElementsOfPosts.push(<PlaceHoldingExternalScreenRecentPosts key={keysForPlaceHoldingPost}/>);
+            reactElementsOfPosts.push((<div style={style} key={keysForPlaceHoldingPost}></div>));
         }
         
         const styleOfPostCtnr = {
-            marginTop:`${-1 * marginTopOfPost}px`,
+            marginTop:`${-1 * this.props.marginTopOfPost}px`,
             padding:`0 ${marginLeftRightOfPost}px`
         }
 
@@ -99,21 +107,6 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
             <div id="post-ctnr" style={styleOfPostCtnr}>
                 {reactElementsOfPosts}
             </div>
-        );
-    }
-}
-
-export class PlaceHoldingExternalScreenRecentPosts extends React.Component {
-    render() {
-        const style = {
-            width:`${widthOfExternalScreenRecentPost}px`,
-            height:`${minHeightOfExternalScreenRecentPost}px`,
-            margin:`${marginTopOfPost}px ${marginLeftRightOfPost}px 0 ${marginLeftRightOfPost}px`,
-            minHeight:`${minHeightOfExternalScreenRecentPost}px`,
-            backgroundColor:'transparent'
-        };
-        return (
-            <div style={style}></div>
         );
     }
 }

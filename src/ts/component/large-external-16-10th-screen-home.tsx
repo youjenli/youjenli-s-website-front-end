@@ -12,7 +12,7 @@ interface PropsOfHomeOfLarge16To10ExternalScreen {
 
 export default class HomeOfLarge16To10ExternalScreen extends React.Component<PropsOfHomeOfLarge16To10ExternalScreen> {
     render() {
-        const marginLeftRightOfBgOfPostsInPercent = 2;
+        const marginLeftRightOfBgOfPostsInPercent = 2.5;
         const portraitWidth = 0.4 * this.props.viewportWidth;
         const portraitHeight = portraitWidth * 10 / 16;
         const topShiftOfL1bg_basedOnPortrait = portraitHeight * 0.19;
@@ -117,7 +117,8 @@ export default class HomeOfLarge16To10ExternalScreen extends React.Component<Pro
             <SloganOfExternalScreen viewportWidth={this.props.viewportWidth} l2bg={l2bg} descPanel={descPanel}
                 bgOfPost={bgOfPost} baseZIndex={this.props.baseZIndex + 1}>
                 <LargeExternalScreenRecentPosts estimatedWidthOfContainer={estimatedWidthOfContainer}
-                    baseZIndex={this.props.baseZIndex + 10} remFontSize={18} posts={this.props.posts}/>
+                    baseZIndex={this.props.baseZIndex + 10} remFontSize={18} posts={this.props.posts}
+                    marginTopOfPost={distanceBetweenTheBottomOfL1bgAndPortrait} />
             </SloganOfExternalScreen>
         );
     }
