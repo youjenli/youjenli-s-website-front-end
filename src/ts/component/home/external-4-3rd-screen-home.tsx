@@ -30,7 +30,7 @@ export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHom
         const socialMediaLinkHeight = (-0.187 * this.props.viewportWidth + 553) / 416 * fontSizeOfGreetings;
         const marginRightOfSocialMediaLink = (0.236 * this.props.viewportWidth - 183.84) / 416 * socialMediaLinkHeight;
         const fontSizeOfWelcomeMsg = widthOfGreetings * 1.05 / terms.welcomeMsg.length;
-        const marginLeftOfDescPanel = leftShiftOfL1bg_basedOnPortrait * 2 + portraitWidth;
+        const marginLeftOfDescPanel = paddingLeftOfPicAndGtPanelCtnr + portraitWidth;
         const paddingTopOfDescPanel = (-0.25 * this.props.viewportWidth + 568)/416 * fontSizeOfWelcomeMsg;
         const marginBottomOfWelcomeMsg = paddingTopOfDescPanel;
         const fontSizeOfDesc = (3 * this.props.viewportWidth - 160) / 208;

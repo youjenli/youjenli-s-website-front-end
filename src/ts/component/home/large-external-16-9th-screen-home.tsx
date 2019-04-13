@@ -30,7 +30,7 @@ export default class HomeOfLarge16To9ExternalScreen extends React.Component<Prop
         const socialMediaLinkWidth = fontSizeOfGreetings * 7/8;
         const marginRightOfSocialMediaLink = 0.5 * socialMediaLinkWidth;
         const fontSizeOfWelcomeMsg = widthOfGreetings * 1.2 / terms.welcomeMsg.length;
-        const marginLeftOfDescPanel = 2 * leftShiftOfL1bg_basedOnPortrait + portraitWidth;
+        const marginLeftOfDescPanel = paddingLeftOfPicAndGtPanelCtnr + portraitWidth;
         const paddingTopOfDescPanel = 0.5 * fontSizeOfWelcomeMsg;
         const marginBottomOfWelcomeMsg = paddingTopOfDescPanel;
         const fontSizeOfDesc = this.props.viewportWidth / 80;
