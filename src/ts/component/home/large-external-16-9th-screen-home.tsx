@@ -4,40 +4,41 @@ import {Post} from '../../model/post';
 import SloganOfExternalScreen from './slogan/external-screen-slogan';
 import LargeExternalScreenRecentPosts from './recentPosts/large-external-screen-recent-post';
 
-interface PropsOfHomeOfLarge16To10ExternalScreen {
+interface PropsOfHomeOfLarge16To9ExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
     posts:Post[];
 }
 
-export default class HomeOfLarge16To10ExternalScreen extends React.Component<PropsOfHomeOfLarge16To10ExternalScreen> {
+export default class HomeOfLarge16To9ExternalScreen extends React.Component<PropsOfHomeOfLarge16To9ExternalScreen> {
     render() {
         const marginLeftRightOfBgOfPostsInPercent = 2.5;
         const portraitWidth = 0.4 * this.props.viewportWidth;
-        const portraitHeight = portraitWidth * 10 / 16;
+        const portraitHeight = portraitWidth * 9 / 16;
         const topShiftOfL1bg_basedOnPortrait = portraitHeight * 0.19;
-        const leftShiftOfL1bg_basedOnPortrait = portraitWidth * 0.065;
-        const topShiftOfMyPic_basedOnUpperBG = (2.1 * this.props.viewportWidth - 472)/40;
+        const leftShiftOfL1bg_basedOnPortrait = portraitWidth * 0.055;
+        const topShiftOfMyPic_basedOnUpperBG = (19 * this.props.viewportWidth - 480)/480;
         const paddingLeftOfPicAndGtPanelCtnr = leftShiftOfL1bg_basedOnPortrait * 2;
-        const l2bgHeight = topShiftOfMyPic_basedOnUpperBG + 0.5 * portraitHeight; 
-        const l1bgWidth = leftShiftOfL1bg_basedOnPortrait + 0.88 * portraitWidth;
-        const distanceBetweenTheBottomOfL1bgAndPortrait = 0.102 * portraitHeight;
+        const l2bgHeight = (73 * this.props.viewportWidth + 480)/480; 
+        const l1bgWidth = leftShiftOfL1bg_basedOnPortrait + 0.86 * portraitWidth;
+        const distanceBetweenTheBottomOfL1bgAndPortrait = 0.095 * portraitHeight;
         const l1bgHeight =  (portraitHeight - topShiftOfL1bg_basedOnPortrait) + distanceBetweenTheBottomOfL1bgAndPortrait;
-        const fontSizeOfGreetings = portraitHeight / 6.5;
+        const fontSizeOfGreetings = portraitHeight / 7;
         const widthOfGreetings = terms.myName.length * fontSizeOfGreetings;
-        const marginLeftOfGtPanel = ((-0.104 * fontSizeOfGreetings + 27.4433) / 18.47) * fontSizeOfGreetings;
+        const marginLeftOfGtPanel = 1.5 * fontSizeOfGreetings;
         const marginTopOfGtPanel = ( portraitHeight * 0.5 - 2/* 也就是 greeting 的行數 */ * fontSizeOfGreetings ) / 2;
-        const socialMediaLinkWidth = fontSizeOfGreetings * 3/4;
-        const marginRightOfSocialMediaLink = 0.5 * socialMediaLinkWidth;        
-        const fontSizeOfWelcomeMsg = widthOfGreetings * 1.1 / terms.welcomeMsg.length;
-        const marginLeftOfDescPanel = leftShiftOfL1bg_basedOnPortrait * 2 + portraitWidth;
+        const socialMediaLinkWidth = fontSizeOfGreetings * 7/8;
+        const marginRightOfSocialMediaLink = 0.5 * socialMediaLinkWidth;
+        const fontSizeOfWelcomeMsg = widthOfGreetings * 1.2 / terms.welcomeMsg.length;
+        const marginLeftOfDescPanel = 2 * leftShiftOfL1bg_basedOnPortrait + portraitWidth;
         const paddingTopOfDescPanel = 0.5 * fontSizeOfWelcomeMsg;
         const marginBottomOfWelcomeMsg = paddingTopOfDescPanel;
         const fontSizeOfDesc = this.props.viewportWidth / 80;
         const paddingBottomOfDescPanel = fontSizeOfDesc;
+
         const marginRightOfToolIcon = (this.props.viewportWidth + 1440) / 96;
-        const heightOfTallToolIcon = 1.17 * distanceBetweenTheBottomOfL1bgAndPortrait;
-        const heightOfShortToolIcon = 0.875 * distanceBetweenTheBottomOfL1bgAndPortrait;
+        const heightOfTallToolIcon = distanceBetweenTheBottomOfL1bgAndPortrait * 1.25;
+        const heightOfShortToolIcon = distanceBetweenTheBottomOfL1bgAndPortrait;
         const leftShiftOfIconChain_basedOnDescPanel = marginLeftOfGtPanel;
         const bottomShiftOfIconChain_basedOnDescPanel = -1 * heightOfTallToolIcon * 1.5;
         const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomOfL1bgAndPortrait * 2;
@@ -49,7 +50,7 @@ export default class HomeOfLarge16To10ExternalScreen extends React.Component<Pro
                 paddingLeft:paddingLeftOfPicAndGtPanelCtnr
             },
             portrait:{
-                imgUrl:"img/portrait-es-large-16-10th.png",
+                imgUrl:"img/portrait-es-large-16-9th.png",
                 width:portraitWidth,
                 height:portraitHeight,
                 l1bg:{

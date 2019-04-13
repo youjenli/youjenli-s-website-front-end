@@ -1,4 +1,4 @@
-@import '../recentPost/les.scss';
+@import '../recentPost/es.scss';
 
 #main.es {
     width:100%;  
@@ -30,7 +30,7 @@
             background-color:#7FB14C;
             opacity:0.9;
             box-shadow:0 2px 4px 0 #6F9C41;
-            border-radius:5px;/*待考慮是否動態給值*/
+            border-radius:5px;
         }
         .gtPanel {
             flex-grow:1;
@@ -86,7 +86,8 @@
     }    
     .bgOfPosts{
         background:rgb(255,242,225);
-        box-shadow: 0 2px 4px 0 #DFD3CF;       
+        box-shadow: 0 2px 4px 0 #DFD3CF;
+        border-radius:8px;
         .placehlder {
             width:100%;
         }
