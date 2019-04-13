@@ -35,10 +35,9 @@ export default class HomeOfLarge16To9ExternalScreen extends React.Component<Prop
         const marginBottomOfWelcomeMsg = paddingTopOfDescPanel;
         const fontSizeOfDesc = this.props.viewportWidth / 80;
         const paddingBottomOfDescPanel = fontSizeOfDesc;
-
         const marginRightOfToolIcon = (this.props.viewportWidth + 1440) / 96;
-        const heightOfTallToolIcon = distanceBetweenTheBottomOfL1bgAndPortrait * 1.25;
-        const heightOfShortToolIcon = distanceBetweenTheBottomOfL1bgAndPortrait;
+        const heightOfTallToolIcon = (-0.119 * this.props.viewportWidth + 837.12) / 480 * distanceBetweenTheBottomOfL1bgAndPortrait;
+        const heightOfShortToolIcon = 0.972 * distanceBetweenTheBottomOfL1bgAndPortrait;
         const leftShiftOfIconChain_basedOnDescPanel = marginLeftOfGtPanel;
         const bottomShiftOfIconChain_basedOnDescPanel = -1 * heightOfTallToolIcon * 1.5;
         const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomOfL1bgAndPortrait * 2;
