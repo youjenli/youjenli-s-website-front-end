@@ -28,7 +28,7 @@ export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHo
         const marginLeftOfGtPanel = 1.4 * fontSizeOfGreetings;
         const marginTopOfGtPanel = ( portraitHeight * 0.5 - 2/* 也就是 greeting 的行數 */ * fontSizeOfGreetings ) / 2;
         const socialMediaLinkWidth = (-0.1 * this.props.viewportWidth + 476.8) / 416 * fontSizeOfGreetings;
-        const marginRightOfSocialMediaLink = 10;
+        const marginRightOfSocialMediaLink = (5 * this.props.viewportWidth + 1120) / 416;
         const fontSizeOfWelcomeMsg = (0.165 * this.props.viewportWidth + 276.16) * widthOfGreetings / (416 * terms.welcomeMsg.length);
         const marginLeftOfDescPanel = paddingLeftOfPicAndGtPanelCtnr + portraitWidth;
         const paddingTopOfDescPanel = 0.5 * fontSizeOfWelcomeMsg;
