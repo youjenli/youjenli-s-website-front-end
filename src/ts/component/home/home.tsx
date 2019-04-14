@@ -5,6 +5,7 @@ import HomeOfLarge16To9ExternalScreen from './large-external-16-9th-screen-home'
 import HomeOfLarge16To10ExternalScreen from './large-external-16-10th-screen-home';
 import HomeOf4To3ExternalScreen from './external-4-3rd-screen-home';
 import HomeOf16To10ExternalScreen from './external-16-10th-screen-home';
+import HomeOf16To9ExternalScreen from './external-16-9th-screen-home';
 import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/dimensionsCalculator';
 
 import { posts } from '../../model/test/fake-posts-for-test';
@@ -73,7 +74,7 @@ export default class HomePage extends React.Component<{}, HomePageState> {
                             posts={posts} />
                     </React.Fragment>
                 );
-            } else {//if (aspectRatio > 0.6) 套用 16:10 外接螢幕的佈局規則
+            } else if (aspectRatio > 0.6) {//套用 16:10 外接螢幕的佈局規則
                 return (
                     <React.Fragment>
                         <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
@@ -84,7 +85,17 @@ export default class HomePage extends React.Component<{}, HomePageState> {
                             posts={posts} />
                     </React.Fragment>
                 );
-            }            
+            } else {//套用 16:9 外接螢幕的佈局規則
+                return (
+                    <React.Fragment>
+                        <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
+                            aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
+                            baseZIndex={headerBaseZIndex} />
+                        <HomeOf16To9ExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
+                            posts={posts} />
+                    </React.Fragment>
+                );
+            }
         } else {//使用行動裝置的佈局
             return (
                 <React.Fragment>
