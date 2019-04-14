@@ -163,7 +163,7 @@ export default class SloganOfExternalScreen extends React.Component<PropsOfExter
         }
 
         return (
-            <main id="main" className="es">
+            <main id="slogan" className="es">
                 <section className="l2bg" style={styleOfL2bg}>
                     <div className="picAndGtCtnr" style={styleOfPicAndGtCtnr}>
                         <div className="myPic" style={styleOfMyPic}>

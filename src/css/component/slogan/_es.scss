@@ -1,37 +1,7 @@
 @import '../recentPost/es.scss';
 
-#main.es {
-    width:100%;  
-    position:relative;
-
+#slogan.es {
     .l2bg{
-        width:100%;
-        background-color:#1B3404;
-        position:relative;
-        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
-
-        .picAndGtCtnr {
-            position:relative;
-            display:flex;
-            align-items: flex-start;
-        }
-        .myPic {
-            position:relative;
-            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
-            flex-grow:0;
-        }
-        .portrait {
-            position:relative;
-            width:100%;
-            object-fit: contain;
-        }
-        .l1bg{
-            position:absolute;
-            background-color:#7FB14C;
-            opacity:0.9;
-            box-shadow:0 2px 4px 0 #6F9C41;
-            border-radius:5px;
-        }
         .gtPanel {
             flex-grow:1;
             display:flex;
@@ -40,11 +10,6 @@
             & > * {
                 flex-grow:0;
             }
-        }
-        .greetings {
-            margin:0;
-            color:#FFFFFF;
-            font-family:"YuppyTC-Regular", "STYuanti-TC-Light", "HannotateTC-W5", "PingFangTC-Light", "PTSerif-Regular","ArialMT", "Arial";
         }
         .socialMediaGrp {
             display:flex;
@@ -60,23 +25,9 @@
                 }                
             }
         }
-        
     }
     .descPanel{
-        background-color:#E0DFDF;
         position:relative;
-        box-sizing:border-box;
-        box-shadow: 0 2px 4px 0 rgba(0,0,0, 0.5);
-        .welcome {
-            color:#354255;
-            margin:0;
-            font-family: "Klee-Demibold", "ArialMT", "Arial";
-        }
-        .desc {
-            margin:0;
-            color:#000000;
-            font-family: "PingFangTC-Regular","ArialMT", "Arial";
-        }
         .logoChain {
             position:absolute;
             display:flex;
@@ -90,6 +41,6 @@
         .placehlder {
             width:100%;
         }
-        @include large-es-recent-post-ctnr();        
+        @include large-es-recent-post-ctnr();
     }
 }
