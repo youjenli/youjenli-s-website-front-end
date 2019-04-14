@@ -6,6 +6,7 @@ import HomeOfLarge16To10ExternalScreen from './large-external-16-10th-screen-hom
 import HomeOf4To3ExternalScreen from './external-4-3rd-screen-home';
 import HomeOf16To10ExternalScreen from './external-16-10th-screen-home';
 import HomeOf16To9ExternalScreen from './external-16-9th-screen-home';
+import HomeOfTablet from './tablet-home';
 import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/dimensionsCalculator';
 
 import { posts } from '../../model/test/fake-posts-for-test';
@@ -97,11 +98,20 @@ export default class HomePage extends React.Component<{}, HomePageState> {
                 );
             }
         } else {//使用行動裝置的佈局
-            return (
-                <React.Fragment>
-                    <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
-                </React.Fragment>
-            );
+            if (this.state.viewportWidth > 640) {
+                return (
+                    <React.Fragment>
+                        <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
+                        <HomeOfTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}/>
+                    </React.Fragment>
+                );
+            } else {
+                return (
+                    <React.Fragment>
+                        <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
+                    </React.Fragment>
+                );
+            }            
         }
     };
 }
