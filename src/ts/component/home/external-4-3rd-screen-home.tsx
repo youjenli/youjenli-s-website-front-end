@@ -49,7 +49,7 @@ export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHom
                 paddingLeft:paddingLeftOfPicAndGtPanelCtnr
             },
             portrait:{
-                imgUrl:"img/portrait-es-4-3rd.png",
+                imgUrl:"img/portrait-4-3rd.png",
                 width:portraitWidth,
                 height:portraitHeight,
                 l1bg:{

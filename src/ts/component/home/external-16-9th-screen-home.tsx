@@ -51,7 +51,7 @@ export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHo
                 paddingLeft:paddingLeftOfPicAndGtPanelCtnr
             },
             portrait:{
-                imgUrl:"img/portrait-es-large-16-9th.png",
+                imgUrl:"img/portrait-16-9th.png",
                 width:portraitWidth,
                 height:portraitHeight,
                 l1bg:{
