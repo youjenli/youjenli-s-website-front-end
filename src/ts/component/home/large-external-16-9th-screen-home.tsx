@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as terms from './slogan/terms';
 import {Post} from '../../model/post';
 import SloganOfExternalScreen from './slogan/external-screen-slogan';
-import LargeExternalScreenRecentPosts from './recentPosts/large-external-screen-recent-post';
+import LargeExternalScreenRecentPosts from './listOfPosts/large-external-screen-list-of-posts';
 
 interface PropsOfHomeOfLarge16To9ExternalScreen {
     viewportWidth:number;

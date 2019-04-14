@@ -4,20 +4,30 @@ import {CategoryIcon, TagIcon} from './icons';
 import * as terms from './terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
-interface ExternalScreenRecentPostWithoutImgProps {
+interface DefaultRecentPostWithoutImgProps {
     width:number;
     minHeight:number;
-    marginTop:number;
-    marginLeftRight:number;
+    margin:{
+        top:number;
+        leftRight:number;
+    }
     postInfoBar:{
-        marginTopRightLeft:number,
-        paddingTopRightLeft:number,
-        paddingBottom:number,
+        margin:{
+            top:number;
+            right:number;
+            left:number;
+        }
+        padding:{
+            top:number;
+            left:number;
+            right:number;
+            bottom:number;
+        }
         titleBar:{
             date:Date,
-            titleName:string,            
-            fontSizeOfDateAndTitle:number,           
-            marginRightOfDate:number,            
+            titleName:string,
+            fontSizeOfDateAndTitle:number,
+            marginRightOfDate:number,       
             marginBottom:number
         }
         categories:CategoryOfPost[],
@@ -38,7 +48,7 @@ interface ExternalScreenRecentPostWithoutImgProps {
     }
 }
 
-export default class ExternalScreenRecentPostWithoutImg extends React.Component<ExternalScreenRecentPostWithoutImgProps> {
+export default class DefaultRecentPostWithoutImg extends React.Component<DefaultRecentPostWithoutImgProps> {
     render() {
         const month = formatMonthOrDayTo2Digits(this.props.postInfoBar.titleBar.date.getMonth());
         const day = formatMonthOrDayTo2Digits(this.props.postInfoBar.titleBar.date.getDate());
@@ -46,15 +56,21 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
         let styleOfPost = {
             width:`${this.props.width}px`,
             minHeight:`${this.props.minHeight}px`,
-            margin:`${this.props.marginTop}px ${this.props.marginLeftRight}px 0 ${this.props.marginLeftRight}px`
+            margin:`${this.props.margin.top}px ${this.props.margin.leftRight}px 0 ${this.props.margin.leftRight}px`
         }
-        const styleOfTitleBar = {
-            fontSize:`${this.props.postInfoBar.titleBar.fontSizeOfDateAndTitle}px`,
-            marginBottom:`${this.props.postInfoBar.titleBar.marginBottom}px`
+        const p = this.props.postInfoBar.padding;
+        const m = this.props.postInfoBar.margin;
+        const styleOfPostInfoBg = {
+            padding:`${p.top}px ${p.right}px ${p.bottom}px ${p.left}px`,
+            margin:`${m.top}px ${m.right}px 0 ${m.left}px`
         }
         const styleOfDate = {
             marginRight:`${this.props.postInfoBar.titleBar.marginRightOfDate}px`
         }
+        const styleOfTitleBar = {
+            fontSize:`${this.props.postInfoBar.titleBar.fontSizeOfDateAndTitle}px`,
+            marginBottom:`${this.props.postInfoBar.titleBar.marginBottom}px`
+        }        
         const styleOfIcon = {
             /* icon 的長寬必須透過 minWidth, minHeight 設定，否則當分類或標籤列使用 flex 來分配欄寬時，icon 的尺寸會被壓縮。
                 為什麼會壓縮的原因還不是很清楚，只知道照以下這樣設定可以解決此問題。
@@ -95,21 +111,17 @@ export default class ExternalScreenRecentPostWithoutImg extends React.Component<
             tags = (<span className="noData" key={0}>{terms.postWasNotTagged}</span>);
         }
         
-
-        const p = this.props.postInfoBar.paddingTopRightLeft;
-        const styleOfPostInfoBg = {
-            padding:`${p}px ${p}px ${this.props.postInfoBar.paddingBottom}px ${p}px`,
-            margin:`${this.props.postInfoBar.marginTopRightLeft}px ${this.props.postInfoBar.marginTopRightLeft}px 0 ${this.props.postInfoBar.marginTopRightLeft}px`
-        }
+        const em = this.props.excerpt.margin;
         const styleOfExcerpt = {
             fontSize:`${this.props.excerpt.fontSize}px`,
-            margin:`${this.props.excerpt.margin.top}px ${this.props.excerpt.margin.leftRight}px ${this.props.excerpt.margin.bottom}px ${this.props.excerpt.margin.leftRight}px`
+            margin:`${em.top}px ${em.leftRight}px ${em.bottom}px ${em.leftRight}px`
         }
+        const e = this.props.excerpt;
         const styleOfReadArticle = {
-            fontSize:`${this.props.excerpt.fontSize}px`,
-            right:`${this.props.excerpt.margin.leftRight}px`,
-            bottom:`${this.props.excerpt.margin.bottom}px`,
-            zIndex:this.props.excerpt.zIndexOfReadArticle
+            fontSize:`${e.fontSize}px`,
+            right:`${e.margin.leftRight}px`,
+            bottom:`${e.margin.bottom}px`,
+            zIndex:e.zIndexOfReadArticle
         }
 
         //要實驗 title 延長時的處理方式

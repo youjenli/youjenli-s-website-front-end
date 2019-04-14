@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as terms from './slogan/terms';
 import {Post} from '../../model/post';
 import SloganOfExternalScreen from './slogan/external-screen-slogan';
-import ExternalScreenRecentPosts from './recentPosts/external-screen-recent-post';
+import ExternalScreenRecentPosts from './listOfPosts/external-screen-list-of-posts';
 
 interface PropsOfHomeOf4To3ExternalScreen {
     viewportWidth:number;

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import ExternalScreenRecentPostWithoutImg from './es-recent-post-without-img';
-import ExternalScreenRecentPostWithImg from './es-recent-post-with-img';
+import DefaultRecentPostWithoutImg from '../recentPosts/default-recent-post-without-img';
+import ExternalScreenRecentPostWithImg from '../recentPosts/es-recent-post-with-img';
 import {Post} from '../../../model/post';
 
 interface PropsOfExternalScreenRecentPosts {
@@ -40,10 +40,23 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                 );
             } else {
                 const fontSizeOfCategoriesAndTags = 14;
+                const marginTopLeftRightOfPostInfoBar = this.props.remFontSize * 0.75;
+                const marginOfPost = {
+                    top:this.props.marginTopOfPost,
+                    leftRight:marginLeftRightOfPost
+                }
                 const postInfoBar = {
-                    marginTopRightLeft:this.props.remFontSize * 0.75,
-                    paddingTopRightLeft:this.props.remFontSize * 0.75,
-                    paddingBottom:fontSizeOfCategoriesAndTags * 0.75,
+                    margin:{
+                        top:marginTopLeftRightOfPostInfoBar,
+                        right:marginTopLeftRightOfPostInfoBar,
+                        left:marginTopLeftRightOfPostInfoBar,
+                    },
+                    padding:{
+                        top:marginTopLeftRightOfPostInfoBar,
+                        left:marginTopLeftRightOfPostInfoBar,
+                        right:marginTopLeftRightOfPostInfoBar,
+                        bottom:fontSizeOfCategoriesAndTags * 0.75
+                    },
                     titleBar:{
                         date:post.date,
                         titleName:post.title,
@@ -56,7 +69,7 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                     marginRightOfIconOfCategoriesAndTags:fontSizeOfCategoriesAndTags * 0.5,
                     fontSizeOfCategoriesAndTags:fontSizeOfCategoriesAndTags,
                     marginTopOfTags:fontSizeOfCategoriesAndTags * 0.65
-                };                
+                }          
                 const fontSizeOfExcerpt = 16;
                 const excerpt = {
                     fontSize:fontSizeOfExcerpt,
@@ -67,11 +80,11 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                     },
                     zIndexOfReadArticle:this.props.baseZIndex + 1,
                     content:post.excerpt
-                }                  
+                }                
                 return (
-                    <ExternalScreenRecentPostWithoutImg key={post.id} width={widthOfExternalScreenRecentPost} 
-                        minHeight={minHeightOfExternalScreenRecentPost} marginTop={this.props.marginTopOfPost} 
-                        marginLeftRight={marginLeftRightOfPost} postInfoBar={postInfoBar} excerpt={excerpt}/>
+                    <DefaultRecentPostWithoutImg key={post.id} width={widthOfExternalScreenRecentPost} 
+                        minHeight={minHeightOfExternalScreenRecentPost} margin={marginOfPost} 
+                        postInfoBar={postInfoBar} excerpt={excerpt}/>
                 );
             }
         });//end of this.props.posts.map
