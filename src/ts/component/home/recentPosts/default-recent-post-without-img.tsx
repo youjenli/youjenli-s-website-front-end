@@ -6,10 +6,10 @@ import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
 interface DefaultRecentPostWithoutImgProps {
     width:number;
-    minHeight:number;
     margin:{
         top:number;
         leftRight:number;
+        bottom:number;
     }
     postInfoBar:{
         margin:{
@@ -55,11 +55,11 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
 
         let styleOfPost = {
             width:`${this.props.width}px`,
-            minHeight:`${this.props.minHeight}px`,
-            margin:`${this.props.margin.top}px ${this.props.margin.leftRight}px 0 ${this.props.margin.leftRight}px`
+            margin:`${this.props.margin.top}px ${this.props.margin.leftRight}px ${this.props.margin.bottom}px ${this.props.margin.leftRight}px`
         }
         const p = this.props.postInfoBar.padding;
         const m = this.props.postInfoBar.margin;
+        
         const styleOfPostInfoBg = {
             padding:`${p.top}px ${p.right}px ${p.bottom}px ${p.left}px`,
             margin:`${m.top}px ${m.right}px 0 ${m.left}px`

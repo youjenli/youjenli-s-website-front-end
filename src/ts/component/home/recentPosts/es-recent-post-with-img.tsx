@@ -5,10 +5,15 @@ import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
 interface ExternalScreenRecentPostWithImgProps {
     width:number;
-    minHeight:number;
-    marginTop:number;
-    marginLeftRight:number;
-    padding:number;
+    margin:{
+        top:number;
+        leftRight:number;
+        bottom:number;
+    }
+    padding:{
+        top:number;
+        leftRight:number;
+    }
     imgUrl:string;
     postProps:{
         fontSize:number,
@@ -17,8 +22,11 @@ interface ExternalScreenRecentPostWithImgProps {
     date:Date;
     categories:CategoryOfPost[];
     title:{
+        margin:{
+            top:number;
+            bottom:number;
+        }
         name:string,
-        marginTopMarginBottom:number;
         fontSize:number;
     }
 }
@@ -43,22 +51,25 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
 
         let styleOfPost = {
             width:`${this.props.width}px`,
-            minHeight:`${this.props.minHeight}px`,
-            margin:`${this.props.marginTop}px ${this.props.marginLeftRight}px 0 ${this.props.marginLeftRight}px`,
-            padding:`${this.props.padding}px`
+            margin:`${this.props.margin.top}px ${this.props.margin.leftRight}px ${this.props.margin.bottom} ${this.props.margin.leftRight}px`,
+            padding:`${this.props.padding.top}px ${this.props.padding.leftRight}px 0 ${this.props.padding.leftRight}px`
         } 
 
-        const widthOfImg = this.props.width - 2 * this.props.padding;
+        const widthOfImg = this.props.width - 2 * this.props.padding.leftRight;
         let styleOfImg = {
             width:`${widthOfImg}px`,
             height:`${widthOfImg * 3/5}px`
         }
         const styleOfPostProps = {
             marginTop:`${this.props.postProps.marginTop}px`,
-            fontSize:`${this.props.postProps.fontSize}px`
+            fontSize:`${this.props.postProps.fontSize}px`,
+            flexGrow:0.75
         };
         const styleOfTitle = {
-            fontSize:`${this.props.title.fontSize}px`
+            marginTop:`${this.props.title.margin.top}px`,
+            marginBottom:`${this.props.title.margin.bottom}px`,
+            fontSize:`${this.props.title.fontSize}px`,
+            flexGrow:1            
         }
         return (
             <article className="rPost img" style={styleOfPost} title={this.props.title.name}>
@@ -67,7 +78,7 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
                     <span className="date">{this.props.date.getFullYear()}/{month}/{day}﹒</span>
                     <span className="categories">{categories}</span>
                 </div>
-                <div style={styleOfTitle} className="title">{this.props.title.name}</div>
+                <div style={styleOfTitle} className="title">{this.props.title.name}</div>               
             </article>
         );
     }

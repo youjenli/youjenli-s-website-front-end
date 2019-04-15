@@ -1,5 +1,3 @@
-@import '../recentPost/es.scss';
-
 #slogan.es {
     .l2bg{
         .gtPanel {
@@ -41,6 +39,5 @@
         .placehlder {
             width:100%;
         }
-        @include large-es-recent-post-ctnr();
     }
 }

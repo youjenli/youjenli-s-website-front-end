@@ -14,10 +14,8 @@ interface PropsOfExternalScreenRecentPosts {
 export default class ExternalScreenRecentPosts extends React.Component<PropsOfExternalScreenRecentPosts> {
     render() {
         const widthOfExternalScreenRecentPost = 396;
-        const minHeightOfExternalScreenRecentPost = 306;
         const fontSizeOfDateAndTitle = 20;
-        const marginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
-        const padding = this.props.remFontSize * 0.75;
+        const minMarginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
         let reactElementsOfPosts = this.props.posts.map((post) => {
             if (post.imageUrl) {
                 const fontSizeOfPostProps = 14;                
@@ -25,16 +23,29 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                     fontSize:fontSizeOfPostProps,
                     marginTop:fontSizeOfPostProps * 0.75
                 }
+                const margin = {
+                    top:this.props.marginTopOfPost,
+                    leftRight:minMarginLeftRightOfPost,
+                    bottom:0
+                };
+                const paddingOfRPWithImg = this.props.remFontSize * 0.75
+                const padding = {
+                    top:paddingOfRPWithImg,
+                    leftRight:paddingOfRPWithImg
+                }
                 
+                const marginTopBottomOfTitle = fontSizeOfDateAndTitle * 0.5;
                 const title = {
                     name:post.title,
-                    marginTopMarginBottom:fontSizeOfDateAndTitle * 0.5,
+                    margin:{
+                        top:marginTopBottomOfTitle,
+                        bottom:marginTopBottomOfTitle
+                    },
                     fontSize:fontSizeOfDateAndTitle
-                };
+                }
                 return (
                     <ExternalScreenRecentPostWithImg key={post.id} width={widthOfExternalScreenRecentPost} 
-                        minHeight={minHeightOfExternalScreenRecentPost} padding={padding} 
-                        marginTop={this.props.marginTopOfPost} marginLeftRight={marginLeftRightOfPost} 
+                        margin={margin} padding={padding} 
                         imgUrl={post.imageUrl} postProps={postProps} date={post.date} categories={post.categories} 
                         title={title}/>
                 );
@@ -43,7 +54,8 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                 const marginTopLeftRightOfPostInfoBar = this.props.remFontSize * 0.75;
                 const marginOfPost = {
                     top:this.props.marginTopOfPost,
-                    leftRight:marginLeftRightOfPost
+                    leftRight:minMarginLeftRightOfPost,
+                    bottom:0
                 }
                 const postInfoBar = {
                     margin:{
@@ -83,15 +95,14 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
                 }                
                 return (
                     <DefaultRecentPostWithoutImg key={post.id} width={widthOfExternalScreenRecentPost} 
-                        minHeight={minHeightOfExternalScreenRecentPost} margin={marginOfPost} 
-                        postInfoBar={postInfoBar} excerpt={excerpt}/>
+                        margin={marginOfPost} postInfoBar={postInfoBar} excerpt={excerpt}/>
                 );
             }
         });//end of this.props.posts.map
         
         let estimatedNumberOfPostsInARow = Math.floor(
-            (this.props.estimatedWidthOfContainer - 2 * marginLeftRightOfPost) 
-                / (widthOfExternalScreenRecentPost + 2 * marginLeftRightOfPost)
+            (this.props.estimatedWidthOfContainer - 2 * minMarginLeftRightOfPost) 
+                / (widthOfExternalScreenRecentPost + 2 * minMarginLeftRightOfPost)
         );
         const remainedPostsInTheLastRowOfPosts = this.props.posts.length % estimatedNumberOfPostsInARow;
         let numberOfPlaceHoldingPosts = 0;
@@ -101,9 +112,7 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
 
         const style = {
             width:`${widthOfExternalScreenRecentPost}px`,
-            height:`${minHeightOfExternalScreenRecentPost}px`,
-            margin:`${this.props.marginTopOfPost}px ${marginLeftRightOfPost}px 0 ${marginLeftRightOfPost}px`,
-            minHeight:`${minHeightOfExternalScreenRecentPost}px`,
+            margin:`${this.props.marginTopOfPost}px ${minMarginLeftRightOfPost}px 0 ${minMarginLeftRightOfPost}px`,
             backgroundColor:'transparent'
         };
         let keysForPlaceHoldingPost = -1;
@@ -113,7 +122,7 @@ export default class ExternalScreenRecentPosts extends React.Component<PropsOfEx
         
         const styleOfPostCtnr = {
             marginTop:`${-1 * this.props.marginTopOfPost}px`,
-            padding:`0 ${marginLeftRightOfPost}px`
+            padding:`0 ${minMarginLeftRightOfPost}px`
         }
 
         return (
