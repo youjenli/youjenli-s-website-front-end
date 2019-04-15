@@ -4,7 +4,7 @@ import * as socialMediaTerms from './socialMedia/terms';
 import * as icon from './socialMedia/icons';
 import * as logo from './logo';
 
-export interface PropsOfExternalScreenSlogan {
+export interface PropsOfSloganOnExternalScreen {
     viewportWidth:number;
     l2bg:{
         height:number;
@@ -77,7 +77,7 @@ export interface PropsOfExternalScreenSlogan {
     baseZIndex:number;
 }
 
-export default class SloganOfExternalScreen extends React.Component<PropsOfExternalScreenSlogan> {
+export default class SloganOnExternalScreen extends React.Component<PropsOfSloganOnExternalScreen> {
     render() {
         
         const styleOfL2bg = {

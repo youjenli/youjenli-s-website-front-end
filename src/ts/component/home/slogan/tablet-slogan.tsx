@@ -1,12 +1,12 @@
 import * as React from 'react';
-import * as terms from './slogan/terms';
+import * as terms from './terms';
 
-interface PropsOfHomeOfTablet {
+interface PropsOfSloganOnTablet {
     viewportWidth:number;
     baseZIndex:number;
 }
 
-export default class HomeOfTablet extends React.Component<PropsOfHomeOfTablet> {
+export default class SloganOnTablet extends React.Component<PropsOfSloganOnTablet> {
     render() {
         const remFontSize = 18;
         const widthOfPortrait = this.props.viewportWidth * 0.54;

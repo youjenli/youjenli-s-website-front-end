@@ -1,48 +1,46 @@
 import * as React from 'react';
 import * as terms from './slogan/terms';
 import {Post} from '../../model/post';
-import SloganOfExternalScreen from './slogan/external-screen-slogan';
-import ExternalScreenRecentPosts from './listOfPosts/external-screen-list-of-posts';
+import SloganOnExternalScreen from './slogan/external-screen-slogan';
+import ListOfRecentPostsOnLargeExternalScreen from './listOfPosts/large-external-screen';
 
-interface PropsOfHomeOf16To9ExternalScreen {
+interface PropsOfHomeOf16To9LargeExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
     posts:Post[];
 }
 
-export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHomeOf16To9ExternalScreen> {
+export default class HomeOf16To9LargeExternalScreen extends React.Component<PropsOfHomeOf16To9LargeExternalScreen> {
     render() {
-        const marginLeftRightOfBgOfPostsInPercent = 3;
-        const portraitWidth = 0.38 * this.props.viewportWidth;
+        const marginLeftRightOfBgOfPostsInPercent = 2.5;
+        const portraitWidth = 0.4 * this.props.viewportWidth;
         const portraitHeight = portraitWidth * 9 / 16;
-        const distanceBetweenTheTopsOfL1bgAndPortrait = portraitHeight * 0.2;
-        const distanceBetweenTheBottomsOfL1bgAndPortrait = 0.0949 * portraitHeight;
-        const leftShiftOfL1bg_basedOnPortrait = portraitWidth * 0.0546;
-        const topShiftOfMyPic_basedOnUpperBG = (11 * this.props.viewportWidth + 5376)/416;
+        const distanceBetweenTheTopsOfL1bgAndPortrait = portraitHeight * 0.19;
+        const distanceBetweenTheBottomsOfL1bgAndPortrait = 0.095 * portraitHeight;
+        const leftShiftOfL1bg_basedOnPortrait = portraitWidth * 0.055;
+        const topShiftOfMyPic_basedOnUpperBG = (19 * this.props.viewportWidth - 480)/480;
         const paddingLeftOfPicAndGtPanelCtnr = leftShiftOfL1bg_basedOnPortrait * 2;
-        const l2bgHeight = topShiftOfMyPic_basedOnUpperBG + 0.5 * portraitHeight; 
+        const l2bgHeight = (73 * this.props.viewportWidth + 480)/480; 
         const l1bgWidth = leftShiftOfL1bg_basedOnPortrait + 0.86 * portraitWidth;
         const l1bgHeight =  (portraitHeight - distanceBetweenTheTopsOfL1bgAndPortrait) + distanceBetweenTheBottomsOfL1bgAndPortrait;
-        const fontSizeOfGreetings = portraitHeight / 6.5;
+        const fontSizeOfGreetings = portraitHeight / 7;
         const widthOfGreetings = terms.myName.length * fontSizeOfGreetings;
-        const marginLeftOfGtPanel = 1.4 * fontSizeOfGreetings;
+        const marginLeftOfGtPanel = 1.5 * fontSizeOfGreetings;
         const marginTopOfGtPanel = ( portraitHeight * 0.5 - 2/* 也就是 greeting 的行數 */ * fontSizeOfGreetings ) / 2;
-        const socialMediaLinkWidth = (-0.1 * this.props.viewportWidth + 476.8) / 416 * fontSizeOfGreetings;
-        const marginRightOfSocialMediaLink = (5 * this.props.viewportWidth + 1120) / 416;
-        const fontSizeOfWelcomeMsg = (0.165 * this.props.viewportWidth + 276.16) * widthOfGreetings / (416 * terms.welcomeMsg.length);
+        const socialMediaLinkWidth = fontSizeOfGreetings * 7/8;
+        const marginRightOfSocialMediaLink = 0.5 * socialMediaLinkWidth;
+        const fontSizeOfWelcomeMsg = widthOfGreetings * 1.2 / terms.welcomeMsg.length;
         const marginLeftOfDescPanel = paddingLeftOfPicAndGtPanelCtnr + portraitWidth;
         const paddingTopOfDescPanel = 0.5 * fontSizeOfWelcomeMsg;
         const marginBottomOfWelcomeMsg = paddingTopOfDescPanel;
-        const fontSizeOfDesc = (this.props.viewportWidth + 432) / 104;
+        const fontSizeOfDesc = this.props.viewportWidth / 80;
         const paddingBottomOfDescPanel = fontSizeOfDesc;
-        const marginRightOfToolIcon = (10 * this.props.viewportWidth - 1920) / 416;
-        const heightOfTallToolIcon = (-0.479 * this.props.viewportWidth + 1203.52) * distanceBetweenTheBottomsOfL1bgAndPortrait / 416;
-        const heightOfShortToolIcon = 30;
+        const marginRightOfToolIcon = (this.props.viewportWidth + 1440) / 96;
+        const heightOfTallToolIcon = (-0.119 * this.props.viewportWidth + 837.12) / 480 * distanceBetweenTheBottomsOfL1bgAndPortrait;
+        const heightOfShortToolIcon = 0.972 * distanceBetweenTheBottomsOfL1bgAndPortrait;
         const leftShiftOfIconChain_basedOnDescPanel = marginLeftOfGtPanel;
-        const bottomShiftOfIconChain_basedOnDescPanel = -1 * heightOfTallToolIcon 
-                * ((0.25 * this.props.viewportWidth - 152) / 416 + 1);
-        const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomsOfL1bgAndPortrait
-                *((0.434 * this.props.viewportWidth + 9.024) / 416 + 1);
+        const bottomShiftOfIconChain_basedOnDescPanel = -1 * heightOfTallToolIcon * 1.5;
+        const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomsOfL1bgAndPortrait * 2;
         
         const l2bg = {
             height:l2bgHeight,
@@ -73,7 +71,7 @@ export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHo
                     height:socialMediaLinkWidth,
                     marginRight:marginRightOfSocialMediaLink
                 }
-            }
+            }        
         };
         const descPanel = {
             marginLeft:marginLeftOfDescPanel,
@@ -99,8 +97,8 @@ export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHo
                     short:{
                         height:heightOfShortToolIcon,
                     }
-                }
-            }      
+                }                
+            }          
         }
         const bgOfPost = {
             margin:{
@@ -116,12 +114,12 @@ export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHo
         const estimatedWidthOfContainer = this.props.viewportWidth - 2 * marginLeftRightOfBgOfPostsInPercent;
 
         return (
-            <SloganOfExternalScreen viewportWidth={this.props.viewportWidth} l2bg={l2bg} descPanel={descPanel}
+            <SloganOnExternalScreen viewportWidth={this.props.viewportWidth} l2bg={l2bg} descPanel={descPanel}
                 bgOfPost={bgOfPost} baseZIndex={this.props.baseZIndex + 1}>
-                <ExternalScreenRecentPosts estimatedWidthOfContainer={estimatedWidthOfContainer}
+                <ListOfRecentPostsOnLargeExternalScreen estimatedWidthOfContainer={estimatedWidthOfContainer}
                     baseZIndex={this.props.baseZIndex + 10} remFontSize={18} posts={this.props.posts}
                     marginTopOfPost={distanceBetweenTheBottomsOfL1bgAndPortrait} />
-            </SloganOfExternalScreen>
+            </SloganOnExternalScreen>
         );
     }
 }

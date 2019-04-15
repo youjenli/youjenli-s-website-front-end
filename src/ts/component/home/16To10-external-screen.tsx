@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as terms from './slogan/terms';
 import {Post} from '../../model/post';
-import SloganOfExternalScreen from './slogan/external-screen-slogan';
-import ExternalScreenRecentPosts from './listOfPosts/external-screen-list-of-posts';
+import SloganOnExternalScreen from './slogan/external-screen-slogan';
+import ListOfRecentPostsOnExternalScreen from './listOfPosts/external-screen';
 
 interface PropsOfHomeOf16To10ExternalScreen {
     viewportWidth:number;
@@ -115,12 +115,12 @@ export default class HomeOf16To10ExternalScreen extends React.Component<PropsOfH
         const estimatedWidthOfContainer = this.props.viewportWidth - 2 * marginLeftRightOfBgOfPostsInPercent;
 
         return (
-            <SloganOfExternalScreen viewportWidth={this.props.viewportWidth} l2bg={l2bg} descPanel={descPanel}
+            <SloganOnExternalScreen viewportWidth={this.props.viewportWidth} l2bg={l2bg} descPanel={descPanel}
                 bgOfPost={bgOfPost} baseZIndex={this.props.baseZIndex + 1}>
-                <ExternalScreenRecentPosts estimatedWidthOfContainer={estimatedWidthOfContainer}
+                <ListOfRecentPostsOnExternalScreen estimatedWidthOfContainer={estimatedWidthOfContainer}
                     baseZIndex={this.props.baseZIndex + 10} remFontSize={18} posts={this.props.posts}
                     marginTopOfPost={distanceBetweenTheBottomsOfL1bgAndPortrait} />
-            </SloganOfExternalScreen>
+            </SloganOnExternalScreen>
         );
     }
 }

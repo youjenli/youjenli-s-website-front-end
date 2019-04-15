@@ -1,13 +1,14 @@
 import * as React from 'react';
 import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
-import HomeOfLarge16To9ExternalScreen from './large-external-16-9th-screen-home';
-import HomeOfLarge16To10ExternalScreen from './large-external-16-10th-screen-home';
-import HomeOf4To3ExternalScreen from './external-4-3rd-screen-home';
-import HomeOf16To10ExternalScreen from './external-16-10th-screen-home';
-import HomeOf16To9ExternalScreen from './external-16-9th-screen-home';
-import HomeOfTablet from './tablet-home';
-import TabletRecentPosts from './listOfPosts/tablet-list-of-posts';
+import HomeOf16To9LargeExternalScreen from './16To9-large-external-screen';
+import HomeOf16To10LargeExternalScreen from './16To10-large-external-screen';
+import HomeOf4To3ExternalScreen from './4To3-external-screen';
+import HomeOf16To10ExternalScreen from './16To10-external-screen';
+import HomeOf16To9ExternalScreen from './16To9-external-screen';
+import SloganOnTablet from './slogan/tablet-slogan';
+import HomeOf16To9SmartPhone from './16To9-smart-phone';
+import ListOfRecentPostsOnTablet from './listOfPosts/tablet';
 import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/dimensionsCalculator';
 
 import { posts } from '../../model/test/fake-posts-for-test';
@@ -50,7 +51,7 @@ export default class HomePage extends React.Component<{}, HomePageState> {
                         <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                             aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                             baseZIndex={headerBaseZIndex} />
-                        <HomeOfLarge16To10ExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
+                        <HomeOf16To10LargeExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
                             posts={posts} />
                     </React.Fragment>
                 );
@@ -60,7 +61,7 @@ export default class HomePage extends React.Component<{}, HomePageState> {
                         <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                             aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                             baseZIndex={headerBaseZIndex} />
-                        <HomeOfLarge16To9ExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
+                        <HomeOf16To9LargeExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
                             posts={posts} />
                     </React.Fragment>
                 );
@@ -98,23 +99,26 @@ export default class HomePage extends React.Component<{}, HomePageState> {
                     </React.Fragment>
                 );
             }
-        } else {//使用行動裝置的佈局
-            if (this.state.viewportWidth > 640) {
+        } else if (this.state.viewportWidth > 640) {//使用平板的佈局
+            return (
+                <React.Fragment>
+                    <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
+                    <SloganOnTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
+                    <ListOfRecentPostsOnTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
+                        remFontSize={18} posts={posts}/>
+                </React.Fragment>
+            );
+        } else {//使用手機版面的佈局
+            if (this.state.viewportWidth > 432) {
                 return (
                     <React.Fragment>
                         <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
-                        <HomeOfTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
-                        <TabletRecentPosts viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
-                            remFontSize={18} posts={posts}/>
+                        <HomeOf16To9SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
                     </React.Fragment>
                 );
             } else {
-                return (
-                    <React.Fragment>
-                        <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
-                    </React.Fragment>
-                );
-            }            
+
+            }
         }
     };
 }

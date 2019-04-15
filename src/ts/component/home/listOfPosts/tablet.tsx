@@ -1,16 +1,16 @@
 import * as React from 'react';
-import DefaultRecentPostWithoutImg from '../recentPosts/default-recent-post-without-img';
-import MobileRecentPostWithImg from '../recentPosts/default-mobile-recent-post-with-img';
+import DefaultRecentPostWithoutImg from '../recentPosts/default-without-img';
+import MobileRecentPostWithImg from '../recentPosts/mobile-default-with-img';
 import {Post} from '../../../model/post';
 
-interface PropsTabletRecentPosts {
+interface PropsOfListOfRecentPostsOnTablet {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
     posts:Post[];
 }
 
-export default class TabletRecentPosts extends React.Component<PropsTabletRecentPosts> {
+export default class ListOfRecentPostsOnTablet extends React.Component<PropsOfListOfRecentPostsOnTablet> {
     render() {
         const widthOfRecentPost = (this.props.viewportWidth - 3 * this.props.remFontSize) / 2;
         const marginTopBottomOfPost = this.props.remFontSize * 0.5;
