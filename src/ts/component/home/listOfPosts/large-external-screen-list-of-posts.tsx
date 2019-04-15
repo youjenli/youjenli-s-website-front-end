@@ -112,8 +112,7 @@ export default class LargeExternalScreenRecentPosts extends React.Component<Prop
 
         const styleOfPlaceHolder = {
             width:`${widthOfExternalScreenRecentPost}px`,
-            margin:`${this.props.marginTopOfPost}px ${minMarginLeftRightOfPost}px 0 ${minMarginLeftRightOfPost}px`,
-            backgroundColor:'transparent'
+            margin:`${this.props.marginTopOfPost}px ${minMarginLeftRightOfPost}px 0 ${minMarginLeftRightOfPost}px`
         };      
         let keysForPlaceHoldingPost = -1;
         for (let i = 0 ; i < numberOfPlaceHoldingPosts ; i++, keysForPlaceHoldingPost --) {

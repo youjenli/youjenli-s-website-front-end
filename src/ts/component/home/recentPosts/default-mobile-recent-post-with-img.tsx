@@ -3,21 +3,18 @@ import * as terms from './terms';
 import {CategoryOfPost} from '../../../model/post';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
-interface PropsOfTabletRecentPostWithImg {
+interface PropsOfMobileRecentPostWithImg {
     width:number;
-    minHeight:number;
     margin:{
         top:number;
         leftRight:number;
+        bottom:number;
     }
-    padding:number;
-    imgUrl:string;
-    postProps:{
-        fontSize:number,
-        marginBottom:number
+    padding:{
+        top:number;
+        leftRight:number;
+        bottom:number;
     }
-    date:Date;
-    categories:CategoryOfPost[];
     title:{
         name:string,
         margin:{
@@ -26,12 +23,38 @@ interface PropsOfTabletRecentPostWithImg {
         }
         fontSize:number;
     }
+    postProps:{
+        fontSize:number,
+        marginBottom:number
+    }
+    date:Date;
+    categories:CategoryOfPost[];
+    imgUrl:string;
 }
 
-export default class TabletRecentPostWithImg extends React.Component<PropsOfTabletRecentPostWithImg> {
+export default class MobileRecentPostWithImg extends React.Component<PropsOfMobileRecentPostWithImg> {
     render() {
         const month = formatMonthOrDayTo2Digits(this.props.date.getMonth());
         const day = formatMonthOrDayTo2Digits(this.props.date.getDate());
+
+        let styleOfPost = {
+            width:`${this.props.width}px`,
+            margin:`${this.props.margin.top}px ${this.props.margin.leftRight}px ${this.props.margin.bottom}px ${this.props.margin.leftRight}px`,
+            padding:`${this.props.padding.top}px ${this.props.padding.leftRight}px ${this.props.padding.bottom}px ${this.props.padding.leftRight}px`
+        }
+
+        const styleOfTitle = {
+            fontSize:`${this.props.title.fontSize}px`,
+            paddingTop:`${this.props.title.margin.top}px`,
+            paddingBottom:`${this.props.title.margin.bottom}px`,
+            alignItems:'flex-start',
+            flexGrow:0.5
+        }
+        const styleOfPostProps = {            
+            fontSize:`${this.props.postProps.fontSize}px`,
+            paddingBottom:`${this.props.postProps.marginBottom}px`,
+            flexGrow:1
+        };
 
         let categories = null;
         if (this.props.categories.length > 0) {
@@ -44,24 +67,9 @@ export default class TabletRecentPostWithImg extends React.Component<PropsOfTabl
             });
         } else {
             categories = (<span className="noData" key={0}>{terms.postWasNotCategorized}</span>);
-        }
-
-        let styleOfPost = {
-            width:`${this.props.width}px`,
-            minHeight:`${this.props.minHeight}px`,
-            margin:`${this.props.margin.top}px ${this.props.margin.leftRight}px 0 ${this.props.margin.leftRight}px`,
-            padding:`${this.props.padding}px`
-        }
-        const styleOfTitle = {
-            fontSize:`${this.props.title.fontSize}px`,
-            marginTop:`${this.props.title.margin.top}px`,
-            marginBottom:`${this.props.title.margin.bottom}px`
-        }
-        const styleOfPostProps = {
-            marginBottom:`${this.props.postProps.marginBottom}px`,
-            fontSize:`${this.props.postProps.fontSize}px`
-        };
-        const widthOfImg = this.props.width - 2 * this.props.padding;
+        }      
+        
+        const widthOfImg = this.props.width - 2 * this.props.padding.leftRight;
         let styleOfImg = {
             width:`${widthOfImg}px`,
             height:`${widthOfImg * 3/5}px`

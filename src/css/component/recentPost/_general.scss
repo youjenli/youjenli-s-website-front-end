@@ -4,7 +4,7 @@
     flex-wrap:wrap;
     justify-content: space-evenly;
     box-sizing:border-box;
-    
+
     .rPost {
         $rPostBGColor:#FFFFFF;
         background:$rPostBGColor;
@@ -37,10 +37,9 @@
                     cursor:pointer;
                 }
             }
-            .postProps {
+            .title, .postProps {
                 display:flex;
                 align-items: center;
-                flex-grow:0;
             }
             .date {
                 color:#969594;
@@ -48,10 +47,6 @@
             }
             .categories {
                 color:#223552;
-            }
-            .title-wrp {
-                display:flex;
-                flex-grow:1;
             }
             .title {
                 color:#655E55;                
