@@ -9,6 +9,7 @@ import HomeOf16To9ExternalScreen from './16To9-external-screen';
 import SloganOnTablet from './slogan/tablet-slogan';
 import HomeOf16To9SmartPhone from './16To9-smart-phone';
 import ListOfRecentPostsOnTablet from './listOfPosts/tablet';
+import ListOfRecentPostsOnSmartPhone from './listOfPosts/smart-phone';
 import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/dimensionsCalculator';
 
 import { posts } from '../../model/test/fake-posts-for-test';
@@ -114,6 +115,8 @@ export default class HomePage extends React.Component<{}, HomePageState> {
                     <React.Fragment>
                         <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                         <HomeOf16To9SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
+                        <ListOfRecentPostsOnSmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
+                            remFontSize={18} posts={posts}/>
                     </React.Fragment>
                 );
             } else {

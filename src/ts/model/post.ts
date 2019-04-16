@@ -1,6 +1,8 @@
 export interface CategoryOfPost {
+    id:number,
     name:string,
-    url:string
+    url:string,
+    description?:string
 }
 
 export type TagOfPost = CategoryOfPost;
@@ -9,7 +11,8 @@ export interface Post {
     id:number,
     urlOfPost:string,
     date:Date,
-    categories:CategoryOfPost[],
+    modified?:Date,
+    categories?:CategoryOfPost[],
     tags?:TagOfPost[],
     title:string,
     imageUrl?:string,

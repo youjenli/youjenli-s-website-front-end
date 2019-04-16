@@ -17,7 +17,6 @@ export default class HomeOf16To9SmartPhone extends React.Component<PropsOfHomeOf
         const leftShiftOfPortrait = (this.props.viewportWidth - 2 * marginLeftRightOfL1bg - widthOfPortrait)/2;
         
         const fontSizeOfGreetings = this.props.viewportWidth / 15;
-        console.log(fontSizeOfGreetings);
         const fontSizeOfWelMsg = this.props.viewportWidth / 20.3;
         const marginBottomOfSlogan = remFontSize * 0.5;
         const l1bg = {
