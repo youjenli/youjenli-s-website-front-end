@@ -5,3 +5,5 @@ export let published = '發佈於';
 export let lastModified = '最後更新於';
 export let infoSeparater = '．';
 export let postDoesNotHaveExcerpt = '不好意思，這篇文章沒有摘抄哦～';
+export let wordCount = "共有";
+export let unitOfWord = "字";

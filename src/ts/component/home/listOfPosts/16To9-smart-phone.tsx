@@ -1,13 +1,13 @@
 import * as React from 'react';
 import MobileHorizontalRecentPostWithoutImg from '../recentPosts/mobile-horizontal-without-img';
 import MobileRecentPostWithImg from '../recentPosts/mobile-default-with-img';
-import {Post} from '../../../model/post';
+import {MetaOfPost} from '../../../model/post';
 
 interface PropsOfListOfRecentPostsOn16To9SmartPhone {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    posts:Post[];
+    posts:MetaOfPost[];
 }
 
 export default class ListOfRecentPostsOn16To9SmartPhone extends React.Component<PropsOfListOfRecentPostsOn16To9SmartPhone> {
@@ -72,7 +72,7 @@ export default class ListOfRecentPostsOn16To9SmartPhone extends React.Component<
                         titleName:post.title,
                         fontSizeOfDateAndTitle:fontSizeOfTitle,
                         marginBottom:marginTopBottomOfTitleBar
-                    },                    
+                    },
                     categories:post.categories,
                     tags:post.tags,
                     date:post.date,

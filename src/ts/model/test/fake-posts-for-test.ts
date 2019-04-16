@@ -1,4 +1,4 @@
-import {Post} from '../post';
+import {MetaOfPost} from '../post';
 import { lastModified } from '../../component/home/recentPosts/terms';
 
 const fakeDate = new Date();
@@ -40,7 +40,7 @@ const fakeTag3 = {
 }
 const fakeTags = [fakeTag1, fakeTag2, fakeTag3];
 
-export const posts:Post[] = [
+export const posts:MetaOfPost[] = [
     {
         id:1,
         urlOfPost:'https://www.google.com.tw',

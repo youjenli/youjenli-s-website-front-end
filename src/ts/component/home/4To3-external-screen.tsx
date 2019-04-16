@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as terms from './slogan/terms';
-import {Post} from '../../model/post';
+import {MetaOfPost} from '../../model/post';
 import SloganOnExternalScreen from './slogan/external-screen-slogan';
 import ListOfRecentPostsOnExternalScreen from './listOfPosts/external-screen';
 
 interface PropsOfHomeOf4To3ExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
-    posts:Post[];
+    posts:MetaOfPost[];
 }
 
 export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHomeOf4To3ExternalScreen> {

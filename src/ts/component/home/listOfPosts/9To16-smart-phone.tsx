@@ -1,13 +1,13 @@
 import * as React from 'react';
 import DefaultRecentPostWithoutImg from '../recentPosts/default-without-img';
 import MobileRecentPostWithImg from '../recentPosts/mobile-default-with-img';
-import {Post} from '../../../model/post';
+import {MetaOfPost} from '../../../model/post';
 
 interface PropsOfListOf9To16RecentPostsOnSmartPhone {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    posts:Post[];
+    posts:MetaOfPost[];
 }
 
 export default class ListOf9To16RecentPostsOnSmartPhone extends React.Component<PropsOfListOf9To16RecentPostsOnSmartPhone> {

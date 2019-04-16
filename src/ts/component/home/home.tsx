@@ -1,4 +1,5 @@
 import * as React from 'react';
+import LayoutStrategyAdopter from '../layout-strategy-adopter';
 import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import HomeOf16To9LargeExternalScreen from './16To9-large-external-screen';
@@ -12,38 +13,10 @@ import HomeOf9To16SmartPhone from './9To16-smart-phone';
 import ListOfRecentPostsOnTablet from './listOfPosts/tablet';
 import ListOfRecentPostsOn16To9SmartPhone from './listOfPosts/16To9-smart-phone';
 import ListOfRecentPostsOn9To16SmartPhone from './listOfPosts/9To16-smart-phone';
-import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/dimensionsCalculator';
 
 import { posts } from '../../model/test/fake-posts-for-test';
 
-interface HomePageState {
-    viewportWidth:number;
-    viewportHeight:number;
-}
-
-export default class HomePage extends React.Component<{}, HomePageState> {
-    constructor(props){
-        super(props);
-        this.calculateViewPortDimensions = this.calculateViewPortDimensions.bind(this);
-        this.state = {
-            viewportWidth:calculateViewPortWidth(),
-            viewportHeight:calculateViewPortHeight()
-        }
-    }
-    componentDidMount() {
-        window.addEventListener('resize', this.calculateViewPortDimensions);
-        window.addEventListener('orientationchange', this.calculateViewPortDimensions);
-    }
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.calculateViewPortDimensions);
-        window.removeEventListener('orientationchange', this.calculateViewPortDimensions);
-    }
-    calculateViewPortDimensions() {
-        this.setState({
-            viewportWidth:calculateViewPortWidth(),
-            viewportHeight:calculateViewPortHeight()
-        });
-    }
+export default class HomePage extends LayoutStrategyAdopter {
     render () {
         const headerBaseZIndex = 100;
         const aspectRatio = this.state.viewportHeight / this.state.viewportWidth;

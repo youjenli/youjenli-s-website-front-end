@@ -192,11 +192,13 @@ const runDevServerTask = gulp.series(defaultTask, gulp.parallel(watchTask ,funct
         */
 
         connect.server({
-            "root": [distRoot],
+            "root": distRoot,
             "livereload": true,
             "host": "localhost",
             "port": 8000,
-            "fallback": "index.html"
+            /* gulp-connect 的 fallback 路徑必須是以 gulpfile 的位置為起點去找檔案，
+                否則當請求路徑是類似 /post/12 這樣的多層路徑時，gulp-connect 就會找不到檔案 */
+            "fallback": path.join(distRoot, 'index.html')
             });
         done();
     })

@@ -7,7 +7,7 @@ export interface CategoryOfPost {
 
 export type TagOfPost = CategoryOfPost;
 
-export interface Post {
+export interface MetaOfPost {
     id:number,
     urlOfPost:string,
     date:Date,

@@ -1,13 +1,13 @@
 import * as React from 'react';
 import DefaultRecentPostWithoutImg from '../recentPosts/default-without-img';
 import ExternalScreenRecentPostWithImg from '../recentPosts/external-screen-with-img';
-import {Post} from '../../../model/post';
+import {MetaOfPost} from '../../../model/post';
 
 interface PropsOfListOfRecentPostsOnExternalScreen {
     estimatedWidthOfContainer:number;
     baseZIndex:number;
     remFontSize:number;
-    posts:Post[];
+    posts:MetaOfPost[];
     marginTopOfPost:number;
 }
 

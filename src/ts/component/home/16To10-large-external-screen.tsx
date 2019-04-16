@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as terms from './slogan/terms';
-import {Post} from '../../model/post';
+import {MetaOfPost} from '../../model/post';
 import SloganOnExternalScreen from './slogan/external-screen-slogan';
 import ListOfRecentPostsOnLargeExternalScreen from './listOfPosts/large-external-screen';
 
 interface PropsOfHomeOf16To10LargeExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
-    posts:Post[];
+    posts:MetaOfPost[];
 }
 
 export default class HomeOf16To10LargeExternalScreen extends React.Component<PropsOfHomeOf16To10LargeExternalScreen> {
