@@ -54,8 +54,6 @@ export const posts:Post[] = [
         id:2,
         urlOfPost:'https://www.google.com.tw',
         date:fakeDate,
-        modified:fakeDate,
-        categories:fakeCategories,
         title:'諸葛亮舌戰群儒，魯子敬力排眾議',
         imageUrl:'/img/bookcase.jpeg'
     },
@@ -73,8 +71,8 @@ export const posts:Post[] = [
         id:4,
         urlOfPost:'https://www.google.com.tw',
         date:fakeDate,
-        categories:[],
-        tags:fakeCategories,
+        tags:fakeTags.concat(fakeTags).concat(fakeTags)
+        .concat(fakeTags).concat(fakeTags).concat(fakeTags),
         title:'諸葛亮舌戰群儒，魯子敬力排眾議。',
         excerpt:'卻說魯肅、孔明辭了玄德、劉琦，登舟望柴桑郡來。二人在舟中共議，魯肅謂孔明曰：「先生見孫將軍，切不可實言曹操兵多將廣。」孔明曰：「不須子敬叮嚀，亮自有...'
     },
@@ -103,16 +101,13 @@ export const posts:Post[] = [
         categories:fakeCategories.concat(fakeCategories)
                     .concat(fakeCategories).concat(fakeCategories)
                     .concat(fakeCategories).concat(fakeCategories),
-        tags:[],
-        title:'諸葛亮舌戰群儒，魯子敬力排眾議',
-        excerpt:'卻說魯肅、孔明辭了玄德、劉琦，登舟望柴桑郡來。二人在舟中共議，魯肅謂孔明曰：「先生見孫將軍，切不可實言曹操兵多將廣。」孔明曰：「不須子敬叮嚀，亮自有'
+        title:'諸葛亮舌戰群儒，魯子敬力排眾議'
     }, {
         id:8,
         urlOfPost:'https://www.google.com.tw',
         date:fakeDate,
         categories:fakeCategories,
-        tags:fakeTags.concat(fakeTags).concat(fakeTags)
-                    .concat(fakeTags).concat(fakeTags).concat(fakeTags),
+        tags:[],
         title:'諸葛亮舌戰群儒，魯子敬力排眾議。諸葛亮舌戰群儒，魯子敬力排眾議。諸葛亮舌戰群儒，魯子敬力排眾議。諸葛亮舌戰群儒，魯子敬力排眾議。諸葛亮舌戰群儒，魯子敬力排眾議。諸葛亮舌戰群儒，魯子敬力排眾議',
         excerpt:'卻說魯肅、孔明辭了玄德、劉琦，登舟望柴桑郡來。二人在舟中共議，魯肅謂孔明曰：「先生見孫將軍，切不可實言曹操兵多將廣。」孔明曰：「不須子敬叮嚀，亮自有'
     },
@@ -121,7 +116,6 @@ export const posts:Post[] = [
         urlOfPost:'https://www.google.com.tw',
         date:fakeDate,
         modified:fakeDate,
-        categories:fakeCategories,
         title:'諸葛亮舌戰群儒，魯子敬力排眾議',
         imageUrl:'/img/afternoon-tea-time.jpeg'
     }

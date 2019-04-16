@@ -57,7 +57,7 @@ export default class MobileRecentPostWithImg extends React.Component<PropsOfMobi
         };
 
         let categories = null;
-        if (this.props.categories.length > 0) {
+        if (this.props.categories && this.props.categories.length > 0) {
             categories = this.props.categories.map((category, idx, array) => {
                 return (
                 <span key={idx}>

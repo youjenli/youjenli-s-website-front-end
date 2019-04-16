@@ -37,7 +37,7 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
         const day = formatMonthOrDayTo2Digits(this.props.date.getDate());
 
         let categories = null;
-        if (this.props.categories.length > 0) {
+        if (this.props.categories && this.props.categories.length > 0) {
             categories = this.props.categories.map((category, idx, array) => {
                 return (
                 <span key={idx}>

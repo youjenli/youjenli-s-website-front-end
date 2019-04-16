@@ -79,7 +79,7 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
             fontSize:`${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`
         }
         let categories;
-        if (this.props.postInfoBar.categories.length > 0) {
+        if (this.props.postInfoBar.categories && this.props.postInfoBar.categories.length > 0) {
             categories = this.props.postInfoBar.categories.map(
                 (category, idx, array) => {
                 return (<span key={idx}><a className="category">{category.name}</a>
@@ -96,7 +96,7 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
             marginTop:`${this.props.postInfoBar.marginTopOfTags}px`
         };
         let tags;
-        if (this.props.postInfoBar.tags.length > 0) {
+        if (this.props.postInfoBar.tags && this.props.postInfoBar.tags.length > 0) {
             tags = this.props.postInfoBar.tags.map((tag, idx, array) => {
                 return (<span key={idx}><a className="tag">{tag.name}</a>
                     { idx != array.length - 1 ? 

@@ -83,7 +83,7 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
             fontSize:`${this.props.postInfoBar.fontSizeOfCategoriesAndTags}px`
         }
         let categories;
-        if (this.props.postInfoBar.categories.length > 0) {
+        if (this.props.postInfoBar.categories && this.props.postInfoBar.categories.length > 0) {
             categories = this.props.postInfoBar.categories.map(
                 (category, idx, array) => {
                 return (<span key={idx}><a className="category">{category.name}</a>
@@ -100,7 +100,7 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
             marginTop:`${this.props.postInfoBar.marginTopOfTags}px`
         };
         let tags;
-        if (this.props.postInfoBar.tags.length > 0) {
+        if (this.props.postInfoBar.tags && this.props.postInfoBar.tags.length > 0) {
             tags = this.props.postInfoBar.tags.map((tag, idx, array) => {
                 return (<span key={idx}><a className="tag">{tag.name}</a>
                     { idx != array.length - 1 ? 
@@ -111,10 +111,18 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
             tags = (<span className="noData" key={0}>{terms.postWasNotTagged}</span>);
         }
         
-        const em = this.props.excerpt.margin;
-        const styleOfExcerpt = {
-            fontSize:`${this.props.excerpt.fontSize}px`,
-            margin:`${em.top}px ${em.leftRight}px ${em.bottom}px ${em.leftRight}px`
+        let excerpt = null;
+        if (this.props.excerpt.content) {
+            const em = this.props.excerpt.margin;
+            const styleOfExcerpt = {
+                fontSize:`${this.props.excerpt.fontSize}px`,
+                margin:`${em.top}px ${em.leftRight}px ${em.bottom}px ${em.leftRight}px`
+            }
+            excerpt = (
+                <p className="excerpt" 
+                    style={styleOfExcerpt}>{this.props.excerpt.content}
+                </p>
+            );
         }
         const e = this.props.excerpt;
         const styleOfReadArticle = {
@@ -142,9 +150,7 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
                         <span>{tags}</span>
                     </div>
                 </div>
-                <p className="excerpt" 
-                    style={styleOfExcerpt}>{this.props.excerpt.content}
-                </p>
+                {excerpt}
                 <a className="read" style={styleOfReadArticle}>{terms.readArticle}</a>
             </article>
         )
