@@ -1,16 +1,16 @@
 import * as React from 'react';
-import MobileHorizontalRecentPostWithoutImg from '../recentPosts/mobile-horizontal-without-img';
+import DefaultRecentPostWithoutImg from '../recentPosts/default-without-img';
 import MobileRecentPostWithImg from '../recentPosts/mobile-default-with-img';
 import {Post} from '../../../model/post';
 
-interface PropsOfListOfRecentPostsOnSmartPhone {
+interface PropsOfListOf9To16RecentPostsOnSmartPhone {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
     posts:Post[];
 }
 
-export default class ListOfRecentPostsOnSmartPhone extends React.Component<PropsOfListOfRecentPostsOnSmartPhone> {
+export default class ListOf9To16RecentPostsOnSmartPhone extends React.Component<PropsOfListOf9To16RecentPostsOnSmartPhone> {
     render() {
         const widthOfRecentPost = this.props.viewportWidth - this.props.remFontSize;
         const marginTopBottomOfPost = this.props.remFontSize * 0.5;
@@ -39,7 +39,7 @@ export default class ListOfRecentPostsOnSmartPhone extends React.Component<Props
                     leftRight:marginLeftRightOfTitle,
                     bottom:marginLeftRightOfTitle
                 };
-                const fontSizeOfPostProps = 16;
+                const fontSizeOfPostProps = 14;
                 const postProps = {
                     fontSize:fontSizeOfPostProps,
                     marginBottom:fontSizeOfPostProps * 0.75
@@ -51,53 +51,53 @@ export default class ListOfRecentPostsOnSmartPhone extends React.Component<Props
                 );
             } else {
                 const marginTopRightLeftOfPostInfoBar = this.props.remFontSize * 0.5;
-                const fontSizeOfTitle = this.props.viewportWidth / 18;
-                const marginTopBottomOfTitleBar = fontSizeOfTitle * 0.5;
-                const fontSizeOfCategoriesAndTags = 16;
-                const marginTopBottomOfTags = fontSizeOfCategoriesAndTags * 0.75;
-
+                const fontSizeOfTitleBar = 20;
+                const marginBottomOfTitleBar = fontSizeOfTitleBar * 0.75;
+                const fontSizeOfCategoriesAndTags = 14;
+                const marginTopBottomOfTags = fontSizeOfCategoriesAndTags * 0.7;
                 const postInfoBar = {
                     margin:{
                         top:marginTopRightLeftOfPostInfoBar,
                         right:marginTopRightLeftOfPostInfoBar,
-                        left:marginTopRightLeftOfPostInfoBar
+                        left:marginTopRightLeftOfPostInfoBar,
+                        bottom:0
                     },
                     padding:{
-                        top:marginTopBottomOfTitleBar,
-                        left:marginTopRightLeftOfPostInfoBar,//按規格來說 left right 的 padding 與 postInfoBar 的 margin 相同。
+                        top:marginTopRightLeftOfPostInfoBar,
+                        left:marginTopRightLeftOfPostInfoBar,
                         right:marginTopRightLeftOfPostInfoBar,
                         bottom:marginTopBottomOfTags
                     },
-                    title:{
+                    titleBar:{
+                        date:post.date,
                         titleName:post.title,
-                        fontSizeOfDateAndTitle:fontSizeOfTitle,
-                        marginBottom:marginTopBottomOfTitleBar
-                    },                    
+                        fontSizeOfDateAndTitle:fontSizeOfTitleBar,
+                        marginRightOfDate:this.props.remFontSize * 0.5,
+                        marginBottom:marginBottomOfTitleBar
+                    },
                     categories:post.categories,
                     tags:post.tags,
-                    date:post.date,
-                    modified:post.modified,
-                    marginRightOfIcon:fontSizeOfCategoriesAndTags,
-                    fontSizeOfCategoriesTagsAndDate:fontSizeOfCategoriesAndTags,
+                    marginRightOfIconOfCategoriesAndTags:fontSizeOfCategoriesAndTags,
+                    fontSizeOfCategoriesAndTags:fontSizeOfCategoriesAndTags,
                     marginTopOfTags:marginTopBottomOfTags
                 }
-                const fontSizeOfExcerpt = 18;
-                const marginTopLeftRightBottom = fontSizeOfExcerpt;
+                const fontSizeOfExcerpt = 16;
+                const marginLeftRightBottom = fontSizeOfExcerpt;
                 const excerpt = {
                     fontSize:fontSizeOfExcerpt,
                     margin:{
-                        top:marginTopLeftRightBottom,
-                        leftRight:marginTopLeftRightBottom,
-                        bottom:marginTopLeftRightBottom
+                        top:fontSizeOfExcerpt * 0.5,
+                        leftRight:marginLeftRightBottom,
+                        bottom:marginLeftRightBottom
                     },        
                     zIndexOfReadArticle:this.props.baseZIndex + 1,
                     content:post.excerpt
                 };
                 
                 return (
-                    <MobileHorizontalRecentPostWithoutImg key={post.id} width={widthOfRecentPost} margin={marginOfPost} 
+                    <DefaultRecentPostWithoutImg key={post.id} width={widthOfRecentPost} margin={marginOfPost} 
                         postInfoBar={postInfoBar} excerpt={excerpt} />
-                ); 
+                );
             }
         });//end of this.props.posts.map
 

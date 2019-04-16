@@ -111,18 +111,10 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
             tags = (<span className="noData" key={0}>{terms.postWasNotTagged}</span>);
         }
         
-        let excerpt = null;
-        if (this.props.excerpt.content) {
-            const em = this.props.excerpt.margin;
-            const styleOfExcerpt = {
-                fontSize:`${this.props.excerpt.fontSize}px`,
-                margin:`${em.top}px ${em.leftRight}px ${em.bottom}px ${em.leftRight}px`
-            }
-            excerpt = (
-                <p className="excerpt" 
-                    style={styleOfExcerpt}>{this.props.excerpt.content}
-                </p>
-            );
+        const em = this.props.excerpt.margin;
+        const styleOfExcerpt = {
+            fontSize:`${this.props.excerpt.fontSize}px`,
+            margin:`${em.top}px ${em.leftRight}px ${em.bottom}px ${em.leftRight}px`
         }
         const e = this.props.excerpt;
         const styleOfReadArticle = {
@@ -150,7 +142,12 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
                         <span>{tags}</span>
                     </div>
                 </div>
-                {excerpt}
+                {
+                    this.props.excerpt.content ?
+                    <p className="excerpt" style={styleOfExcerpt}>{this.props.excerpt.content}</p> :
+                    <p className="noExcerpt" style={styleOfExcerpt}>{terms.postDoesNotHaveExcerpt}</p>
+                    /* 當畫面上沒有摘抄時，要顯示替代內容，否則會把繼續閱讀的連結擠上去 */
+                }
                 <a className="read" style={styleOfReadArticle}>{terms.readArticle}</a>
             </article>
         )

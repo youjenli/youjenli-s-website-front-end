@@ -123,9 +123,7 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
                     {terms.published}&nbsp;{this.props.postInfoBar.date.getFullYear()}/{publishMonth}/{publishDay}
                     {lastUpdate}                    
                 </span>
-            </div>);
-        
-        
+            </div>);      
 
         const em = this.props.excerpt.margin;
         const styleOfExcerpt = {
@@ -156,7 +154,12 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
                     </div>
                     {publishInfoElement}
                 </div>
-                <p className="excerpt" style={styleOfExcerpt}>{this.props.excerpt.content}</p>
+                {
+                    this.props.excerpt.content ?
+                    <p className="excerpt" style={styleOfExcerpt}>{this.props.excerpt.content}</p> :
+                    <p className="noExcerpt" style={styleOfExcerpt}>{terms.postDoesNotHaveExcerpt}</p>
+                    /* 當畫面上沒有摘抄時，要顯示替代內容，否則會把繼續閱讀的連結擠上去 */
+                }
                 <a className="read" style={styleOfReadArticle}>{terms.readArticle}</a>
             </article>
         )
