@@ -18,3 +18,7 @@ export interface MetaOfPost {
     imageUrl?:string,
     excerpt?:string
 }
+
+export interface Post extends MetaOfPost {
+    content:string;
+}

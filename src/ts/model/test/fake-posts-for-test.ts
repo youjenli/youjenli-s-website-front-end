@@ -1,7 +1,6 @@
 import {MetaOfPost} from '../post';
-import { lastModified } from '../../component/home/recentPosts/terms';
 
-const fakeDate = new Date();
+export let fakeDate = new Date();
 fakeDate.setFullYear(2019);
 fakeDate.setMonth(4);
 fakeDate.setDate(10);
@@ -21,7 +20,7 @@ const fakeCategory3 = {
     name:'分類三',
     url:'https://www.google.com.tw'
 };
-const fakeCategories = [fakeCategory1,fakeCategory2,fakeCategory3];
+export const fakeCategories = [fakeCategory1,fakeCategory2,fakeCategory3];
 
 const fakeTag1 = {
     id:-1,
@@ -38,7 +37,7 @@ const fakeTag3 = {
     name:'標籤三',
     url:'https://www.google.com.tw'
 }
-const fakeTags = [fakeTag1, fakeTag2, fakeTag3];
+export const fakeTags = [fakeTag1, fakeTag2, fakeTag3];
 
 export const posts:MetaOfPost[] = [
     {

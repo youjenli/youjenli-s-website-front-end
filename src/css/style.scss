@@ -11,8 +11,9 @@ body {
     min-height:100vh;
 }
 
-@import './component/title/title';
+@import './component/title/title.scss';
 @import './component/home.scss';
+@import './component/post.scss';
 @import './service/featureDetection.scss';
 
 /* 載入 prismjs 和 prismjs 的擴充套件 line-numbers */

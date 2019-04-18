@@ -9,16 +9,29 @@ import router from './router';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import HomePage from './component/home/home';
+import PostPage from './component/post/post';
+
+const reactRoot = document.getElementById('react-root');
 
 const routeToHome = () => {
     ReactDOM.render(
         <HomePage />,
-        document.getElementById('react-root')
+        reactRoot
+    );
+}
+
+const routeToPage = (params) => {
+    ReactDOM.render(
+        <PostPage />,
+        reactRoot
     );
 }
 
 router.on({
        '/':routeToHome,
-       '/index.html':routeToHome
+       '/index.html':routeToHome,
+       '/post/:id':routeToPage,
+       '/post/':routeToPage,//為開發而暫留於此
+       '/post':routeToPage//為開發而暫留於此
     })
     .resolve();
