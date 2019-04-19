@@ -1,12 +1,42 @@
 import * as React from 'react';
-import LayoutStrategyAdopter from '../layout-strategy-adopter';
+import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/dimensionsCalculator';
 import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import LargeExternalScreenPostPage from './large-external-screen';
+import {Post} from '../../model/post';
 
-import {fakePost} from '../../model/test/fake-single-post';
+interface PropsOfPostPage {
+    post:Post;
+}
 
-export default class PostPage extends LayoutStrategyAdopter {
+interface StateOfPostPage {
+    viewportWidth:number;
+    viewportHeight:number;    
+}
+
+export default class PostPage extends React.Component<PropsOfPostPage, StateOfPostPage> {
+    constructor(props){
+        super(props);
+        this.calculateViewPortDimensions = this.calculateViewPortDimensions.bind(this);
+        this.state = {
+            viewportWidth:calculateViewPortWidth(),
+            viewportHeight:calculateViewPortHeight()
+        }
+    }
+    componentDidMount() {
+        window.addEventListener('resize', this.calculateViewPortDimensions);
+        window.addEventListener('orientationchange', this.calculateViewPortDimensions);
+    }
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.calculateViewPortDimensions);
+        window.removeEventListener('orientationchange', this.calculateViewPortDimensions);
+    }
+    calculateViewPortDimensions() {
+        this.setState({
+            viewportWidth:calculateViewPortWidth(),
+            viewportHeight:calculateViewPortHeight()
+        });
+    }
     render () {
         const headerBaseZIndex = 100;
         const vw = this.state.viewportWidth
@@ -17,7 +47,7 @@ export default class PostPage extends LayoutStrategyAdopter {
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={headerBaseZIndex} />
                     <LargeExternalScreenPostPage viewportWidth={this.state.viewportWidth}
-                        baseZIndex={headerBaseZIndex - 10} remFontSize={18} post={fakePost}/>
+                        baseZIndex={headerBaseZIndex - 10} remFontSize={18} post={this.props.post}/>
                 </React.Fragment>
             );
         } else if (vw > 1024) {

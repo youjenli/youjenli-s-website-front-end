@@ -1,9 +1,13 @@
 
 @media (min-width:1440px) {
     #post-header {
+        /*react 元件裡會設定 #post-header 的寬度，然後下面再用 em 來求相對尺寸*/
+        position:relative;
+        #titleBg, #post-dec {
+            position:relative;
+        }
         .postInfo {
             padding-top:1em;
-            padding-bottom:0.75em;
         }
         .title {
             font-size:1em;
@@ -21,18 +25,25 @@
             }
         }
         .subject {
-            margin:0.94vw 0;//todo 要再撿查
+            margin-top:0.94vw;
+            border:4px solid #648942;
+            color:#F5F9F1;
+        }
+        img {
+            width:100%;
+            object-fit: cover;
         }
     }
     #post-dec {
         height:0.33em;
     }
-    #postBg .subject, #post-header .subject {
-        border:4px solid #F4BA66;
+    $fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+    .subject {
         box-sizing:border-box;
         font-size:1.15vw;
         /*註: 本文主旨必須上面的 padding 必須為內容字體大小約 1/3 左右，否則就算內容不多， fieldset 仍會被撐得很高，
             而且內容文字還會與下面的 padding 貼齊，具體原因我還不是很清楚*/
+        font-family: $fontFamilyOfTextInArticle;
         padding:0.383vw 1.15vw 0.9125vw 1.15vw;
         legend {
             font-size:1.25vw;
@@ -41,10 +52,14 @@
     }
     #postBg {
         font-size:18px;
+        font-family: $fontFamilyOfTextInArticle;
         background:rgb(255,253,249);
         .subject {
+            border:4px solid #F4BA66;
+            color:#000000;
             margin:1.875vw 0;
-        }
+            float:none;
+        }      
         #toc {
             background:#F9F9F9;
             box-shadow: 0 0 3px 0 #666666;

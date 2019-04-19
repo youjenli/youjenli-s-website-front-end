@@ -10,6 +10,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import HomePage from './component/home/home';
 import PostPage from './component/post/post';
+import {listOfFakePosts} from  './model/test/fake-posts';
 
 const reactRoot = document.getElementById('react-root');
 
@@ -21,8 +22,13 @@ const routeToHome = () => {
 }
 
 const routeToPage = (params) => {
+    let postId = 0;
+    if (params.id >= 0 && params.id < listOfFakePosts.length) {
+        postId = params.id;
+    }
+    console.log(`route to post id : ${postId}`)
     ReactDOM.render(
-        <PostPage />,
+        <PostPage post={listOfFakePosts[postId]}/>,
         reactRoot
     );
 }
