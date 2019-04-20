@@ -6,24 +6,29 @@ import PostBackgroundOnExternalScreen from './template/es-postBg';
 import Subject from './template/subject';
 import * as Countable from 'countable';
 
-interface PropsOfLargeExternalScreenPostPage {
+interface PropsOfExternalScreenPostPage {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
     post:Post;
 }
 
-export default class LargeExternalScreenPostPage extends React.Component<PropsOfLargeExternalScreenPostPage> {
+export default class ExternalScreenPostPage extends React.Component<PropsOfExternalScreenPostPage> {
     render() {
         const post = this.props.post;
-        const maxWidthOfTitle = (this.props.viewportWidth >= 1657 ? this.props.viewportWidth * 0.618 : 1024 );
-        const fontSizeOfTitle = maxWidthOfTitle / 22.8;
-        const heightOfImg = maxWidthOfTitle * 0.6;
+        let maxWidthOfTitle = 1024;
+        let marginTopOfPostContent = this.props.remFontSize * 1.5;       
+        let marginBottomOfPostBg = this.props.remFontSize * 2;/*數值缺規格，待確認 */
+        let widthOfPostBg = this.props.viewportWidth * 0.382 + 632.832;
+        let paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;
+        let paddingBottomPostBg = this.props.remFontSize * 1.5;
+        const fontSizeOfTitle = 45;
         const title = {
             name:post.title,
             maxWidth:maxWidthOfTitle,
             fontSize:fontSizeOfTitle
         };
+        const heightOfImg = maxWidthOfTitle * 0.6;
         const parser = new DOMParser();
         const doc = parser.parseFromString(this.props.post.content, 'text/html');
         let subjectElement = doc.getElementsByClassName('subject')[0];
@@ -31,20 +36,20 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
         let toc = null;
         if (tocElement) {
             tocElement.parentElement.removeChild(tocElement);
-            const widthOfToc = maxWidthOfTitle * 0.382;
-            const fontSizeOfTocItems = widthOfToc / 20;
+            const widthOfToc = 391;
+            const fontSizeOfTocItems = 17.8;
             const paddingLeftRightOfToc = fontSizeOfTocItems;        
-            const fontSizeOfTitleOfToc = (widthOfToc - 2 * fontSizeOfTocItems) / 16;
+            const fontSizeOfTitleOfToc = 29.6;
             toc = {
                 width:widthOfToc,
                 title:{
                     fontSize:fontSizeOfTitleOfToc,
-                    marginTopBottom:fontSizeOfTitleOfToc * 0.75,
+                    marginTopBottom:fontSizeOfTitleOfToc * 0.5,
                 },
                 item:{
                     fontSize:fontSizeOfTocItems,
                     margin:{
-                        topBottom:fontSizeOfTocItems * 0.8,
+                        topBottom:fontSizeOfTocItems * 0.6,
                         left:fontSizeOfTocItems,
                     }
                 },
@@ -52,12 +57,6 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 content:tocElement.innerHTML
             }
         }
-        
-        const widthOfPostBg = 0.764 * this.props.viewportWidth;
-        const marginBottomOfPostBg = this.props.remFontSize * 2;
-        const marginTopOfPostContent = this.props.remFontSize * 2;
-        const paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;
-        const paddingBottomPostBg = this.props.remFontSize * 2;
                 
         if (post.imageUrl) {
             
@@ -70,7 +69,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     bottom:paddingBottomPostBg
                 }
                 postBg = (
-                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
+                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
                         toc={toc} contentOfPost={doc.body.innerHTML}>
                         <Subject content={subjectElement.innerHTML}/>
@@ -82,10 +81,11 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     leftRight:paddingLeftRightOfPosgBg,
                     bottom:paddingBottomPostBg
                 }
-                postBg = <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
+                postBg = <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                             width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
                             toc={toc} contentOfPost={doc.body.innerHTML}/>;
             }
+            
             let countingResult:Countable.CountingResult;
             Countable.count(doc.body.innerHTML, counter => {
                 countingResult = counter;
@@ -108,8 +108,8 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
             }
             return (
                 <React.Fragment>
-                    <DefaultPostHeaderWithImg baseZIndex={this.props.remFontSize + 1} titleBg={titleBg} title={title}
-                         className="les" postInfo={postInfo} img={img} />
+                    <DefaultPostHeaderWithImg baseZIndex={this.props.remFontSize + 1} className="es"
+                        titleBg={titleBg} title={title} postInfo={postInfo} img={img} />
                     {postBg}
                 </React.Fragment>
             );
@@ -121,7 +121,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 top:marginTopOfPostContent,
                 leftRight:paddingLeftRightOfPosgBg,
                 bottom:paddingBottomPostBg
-            };            
+            };
             let postHeader = null
             if (subjectElement) {
                 subjectElement.parentElement.removeChild(subjectElement);
@@ -137,10 +137,10 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     date:this.props.post.date,
                     modified:this.props.post.modified,
                     wordCount:countingResult.characters,
-                    paddingBottom:'0.9375vw'
+                    paddingBottom:'30px'
                 };
                 postHeader = (
-                    <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1}  className="les"
+                    <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1} className="es"
                         titleBg={titleBg} title={title} postInfo={postInfo}>
                         <Subject content={subjectElement.innerHTML}/>
                     </DefaultPostHeaderWithoutImg>
@@ -160,7 +160,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     paddingBottom:'1em'
                 };
                 postHeader = (
-                    <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1} className="les"
+                    <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1} className="es"
                         titleBg={titleBg} title={title} postInfo={postInfo} />
                 );
             }
@@ -168,7 +168,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
             return (
                 <React.Fragment>
                     {postHeader}
-                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}  className="les" 
+                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
                         toc={toc} contentOfPost={doc.body.innerHTML}/>
                 </React.Fragment>

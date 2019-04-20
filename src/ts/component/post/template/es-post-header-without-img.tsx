@@ -4,7 +4,7 @@ import {CategoryIcon, TagIcon, PublishIcon} from '../../home/recentPosts/icons';
 import * as terms from '../../home/recentPosts/terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
-interface PropsOfPostHeaderWithoutImgOnExternalScreen {
+interface PropsOfDefaultPostHeaderWithoutImg {
     baseZIndex:number;
     className:string;
     titleBg:{
@@ -25,7 +25,7 @@ interface PropsOfPostHeaderWithoutImgOnExternalScreen {
     }
 }
 
-export default class PostHeaderWithoutImgOnExternalScreen extends React.Component<PropsOfPostHeaderWithoutImgOnExternalScreen> {
+export default class DefaultPostHeaderWithoutImg extends React.Component<PropsOfDefaultPostHeaderWithoutImg> {
     render() {
         const styleOfPostHeader = {
             fontSize:`${this.props.title.fontSize}px`,

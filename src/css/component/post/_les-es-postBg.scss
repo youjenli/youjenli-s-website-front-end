@@ -12,6 +12,8 @@
         float:none;
     }
     #toc {
+        margin-right:2em;
+        margin-bottom:2em;
         background:#F9F9F9;
         box-shadow: 0 0 3px 0 #666666;
         border-radius:5px;
@@ -85,15 +87,26 @@
     }    
 }
 
+/* 以下是大外接螢幕專用的樣式 */
 #postBg.les {
     .subject {
         margin:1.875vw 0;
     }
     #toc {
-        margin-right:2em;
-        margin-bottom:2em;
         .sap {
             height:5px;
+        }
+    }
+}
+
+/* 以下是一般外接螢幕專用的樣式 */
+#postBg.es {
+    .subject {
+        margin:15px 0;
+    }      
+    #toc {
+        .sap {
+            height:4px;
         }
     }
 }

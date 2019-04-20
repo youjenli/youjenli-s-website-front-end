@@ -3,6 +3,7 @@ import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/d
 import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import LargeExternalScreenPostPage from './large-external-screen';
+import ExternaScreenPostPage from './external-screen';
 import {Post} from '../../model/post';
 
 interface PropsOfPostPage {
@@ -50,12 +51,14 @@ export default class PostPage extends React.Component<PropsOfPostPage, StateOfPo
                         baseZIndex={headerBaseZIndex - 10} remFontSize={18} post={this.props.post}/>
                 </React.Fragment>
             );
-        } else if (vw > 1024) {
+        } else if (vw > 1060) {
             return (
                 <React.Fragment>
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={headerBaseZIndex} />
+                    <ExternaScreenPostPage viewportWidth={this.state.viewportWidth}
+                        baseZIndex={headerBaseZIndex - 10} remFontSize={18} post={this.props.post}/>
                 </React.Fragment>
             );
         } else if (vw > 640) {

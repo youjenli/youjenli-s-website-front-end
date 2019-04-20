@@ -94,6 +94,7 @@ $fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/*
     font-family: $fontFamilyOfTextInArticle;
 }
 
+/* 以下是大外接螢幕專用的樣式 */
 #post-header.les {          
     .subject {
         margin-top:0.94vw;
@@ -108,5 +109,23 @@ $fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/*
     legend {
         font-size:1.25vw;
         padding:0 0.625vw;
+    }
+}
+
+/* 以下是一般外接螢幕專用的樣式 */
+#post-header.es {          
+    .subject {
+        margin-top:30px;
+    }
+}
+.es .subject {
+    border-width:3px; 
+    font-size:18px;
+    /*註: 本文主旨必須上面的 padding 必須為內容字體大小約 1/3 左右，否則就算內容不多， fieldset 仍會被撐得很高，
+        而且內容文字還會與下面的 padding 貼齊，具體原因我還不是很清楚*/
+    padding:6px 21px 14.4px 21px;
+    legend {
+        font-size:20px;
+        padding:0 10px;
     }
 }
