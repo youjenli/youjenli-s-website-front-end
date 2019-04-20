@@ -4,8 +4,9 @@ import {CategoryIcon, TagIcon, PublishIcon} from '../../home/recentPosts/icons';
 import * as terms from '../../home/recentPosts/terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
-interface PropsOfPostHeaderWithImgOnExternalScreen {
+interface PropsOfPostHeaderWithoutImgOnExternalScreen {
     baseZIndex:number;
+    className:string;
     titleBg:{
         paddingBottom:number;
     }
@@ -17,29 +18,25 @@ interface PropsOfPostHeaderWithImgOnExternalScreen {
     postInfo:{
         categories?:CategoryOfPost[];
         tags?:TagOfPost[];
-        date:Date,
-        modified:Date,
-        wordCount:number
-        paddingBottomInEM:number;
-    }
-    img:{
-        height:number;
-        url:string;    
+        date:Date;
+        modified:Date;
+        wordCount:number;
+        paddingBottom:string;
     }
 }
 
-export default class PostHeaderWithImgOnExternalScreen extends React.Component<PropsOfPostHeaderWithImgOnExternalScreen> {
+export default class PostHeaderWithoutImgOnExternalScreen extends React.Component<PropsOfPostHeaderWithoutImgOnExternalScreen> {
     render() {
         const styleOfPostHeader = {
             fontSize:`${this.props.title.fontSize}px`,
-            zIndex:this.props.baseZIndex
         }
         const styleOfTitleBg = {
-            paddingBottom:`${this.props.titleBg.paddingBottom}px`
+            paddingBottom:`${this.props.titleBg.paddingBottom}px`,
+            zIndex:this.props.baseZIndex + 2
         }
         const styleOfPostInfo = {
             width:`${this.props.title.maxWidth}px`,
-            paddingBottom:`${this.props.postInfo.paddingBottomInEM}em`
+            paddingBottom:this.props.postInfo.paddingBottom
         }
         let categories;
         if (this.props.postInfo.categories && this.props.postInfo.categories.length > 0) {
@@ -81,23 +78,24 @@ export default class PostHeaderWithImgOnExternalScreen extends React.Component<P
                     {lastUpdate}{msgAboutWordCount}
                 </span>
             </div>);
-        
-        const styleOfImg = {
-            width:`${this.props.title.maxWidth}px`,
-            height:`${this.props.img.height}px`
+
+        const styleOfDec = {
+            zIndex:this.props.baseZIndex + 1
         }
+        const decoration = <div id="post-dec" style={styleOfDec}></div>;
        
         return (
-            <div id="post-header" style={styleOfPostHeader}>
+            <div id="post-header" className={this.props.className} style={styleOfPostHeader}>
                 <div id="titleBg" style={styleOfTitleBg}>
                     <div className="postInfo" style={styleOfPostInfo}>
                         <div className="title">{this.props.title.name}</div>
                         <div className="categories"><CategoryIcon/>{categories}</div>
                         <div className="tags"><TagIcon />{tags}</div>
                         {publishInfoElement}
-                        <img style={styleOfImg} src={this.props.img.url}/>
+                        {this.props.children}
                     </div>
                 </div>
+                {decoration}
             </div>             
         );
     }    

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as termsOfArticle from '../terms';
-import Subject from './subject';
 
 interface PropsOfPostBackgroundOnExternalScreen {
     baseZIndex:number;
+    className:string;
     width:number;
     padding:{
         top:number;
@@ -75,7 +75,7 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
         
         return (
             <React.Fragment>
-                <div id="postBg" style={styleOfPostBG}>
+                <div id="postBg" className={this.props.className} style={styleOfPostBG}>
                     {this.props.children}
                     {styleRulesAppliedToItems}
                     {tocElement}

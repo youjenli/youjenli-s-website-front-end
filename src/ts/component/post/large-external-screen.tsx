@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Post } from '../../model/post';
-import PostHeaderWithImgOnExternalScreen from './template/post-header-with-img';
-import PostHeaderWithoutImgOnExternalScreen from './template/post-header-without-img';
-import PostBackgroundOnExternalScreen from './template/postBg';
+import PostHeaderWithImgOnExternalScreen from './template/es-post-header-with-img';
+import PostHeaderWithoutImgOnExternalScreen from './template/es-post-header-without-img';
+import PostBackgroundOnExternalScreen from './template/es-postBg';
 import Subject from './template/subject';
 import * as Countable from 'countable';
 
@@ -45,7 +45,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     fontSize:fontSizeOfTocItems,
                     margin:{
                         topBottom:fontSizeOfTocItems * 0.8,
-                        left:fontSizeOfTocItems,/*數值不確定 */
+                        left:fontSizeOfTocItems,
                     }
                 },
                 paddingLeftRight:paddingLeftRightOfToc,
@@ -70,7 +70,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     bottom:paddingBottomPostBg
                 }
                 postBg = (
-                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}
+                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
                         toc={toc} contentOfPost={doc.body.innerHTML}>
                         <Subject content={subjectElement.innerHTML}/>
@@ -82,7 +82,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     leftRight:paddingLeftRightOfPosgBg,
                     bottom:paddingBottomPostBg
                 }
-                postBg = <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}
+                postBg = <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
                             width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
                             toc={toc} contentOfPost={doc.body.innerHTML}/>;
             }
@@ -109,7 +109,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
             return (
                 <React.Fragment>
                     <PostHeaderWithImgOnExternalScreen baseZIndex={this.props.remFontSize + 1} titleBg={titleBg} title={title}
-                        postInfo={postInfo} img={img} />
+                         className="les" postInfo={postInfo} img={img} />
                     {postBg}
                 </React.Fragment>
             );
@@ -140,7 +140,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     paddingBottom:'0.9375vw'
                 };
                 postHeader = (
-                    <PostHeaderWithoutImgOnExternalScreen baseZIndex={this.props.remFontSize + 1}
+                    <PostHeaderWithoutImgOnExternalScreen baseZIndex={this.props.remFontSize + 1}  className="les"
                         titleBg={titleBg} title={title} postInfo={postInfo}>
                         <Subject content={subjectElement.innerHTML}/>
                     </PostHeaderWithoutImgOnExternalScreen>
@@ -160,7 +160,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     paddingBottom:'1em'
                 };
                 postHeader = (
-                    <PostHeaderWithoutImgOnExternalScreen baseZIndex={this.props.remFontSize + 1} 
+                    <PostHeaderWithoutImgOnExternalScreen baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} postInfo={postInfo} />
                 );
             }
@@ -168,8 +168,8 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
             return (
                 <React.Fragment>
                     {postHeader}
-                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} width={widthOfPostBg}
-                        padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
+                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}  className="les" 
+                        width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
                         toc={toc} contentOfPost={doc.body.innerHTML}/>
                 </React.Fragment>
             );
