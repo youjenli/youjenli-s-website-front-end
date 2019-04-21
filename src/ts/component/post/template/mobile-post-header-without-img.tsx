@@ -11,11 +11,9 @@ interface PropsOfMobilePostHeaderWithoutImg {
     title:{
         name:string;
         fontSize:number;
-        marginBottom:number;
     }
     postInfo:{
         fontSize:number;
-        marginBottom:number;
         categories?:CategoryOfPost[];
         tags?:TagOfPost[];
         date:Date;
@@ -32,12 +30,8 @@ export default class MobilePostHeaderWithoutImg extends React.Component<PropsOfM
             paddingBottom:`${this.props.paddingBottom}px`,
             zIndex:this.props.baseZIndex + 2
         };
-        const styleOfTitle = {
-            marginBottom:`${this.props.title.marginBottom}px`
-        }
         const postInfo = {
-            fontSize:`${this.props.postInfo.fontSize}px`,
-            marginBottom:this.props.postInfo.marginBottom
+            fontSize:`${this.props.postInfo.fontSize}px`
         };
 
         let categories;
@@ -93,7 +87,7 @@ export default class MobilePostHeaderWithoutImg extends React.Component<PropsOfM
         return (
             <React.Fragment>
                 <div id="post-header" style={styleOfPostHeader} className={this.props.className}>
-                    <div className="title" style={styleOfTitle}>{this.props.title.name}</div>
+                    <div className="title">{this.props.title.name}</div>
                     <div className="categories" style={postInfo}><CategoryIcon/>{categories}</div>
                     <div className="tags" style={postInfo}><TagIcon />{tags}</div>
                     {publishInfoElement}

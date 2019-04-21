@@ -19,11 +19,9 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
         const fontSizeOfTitle = (vw + 80) / 24;
         const title = {
             name:this.props.post.title,
-            fontSize:fontSizeOfTitle,
-            marginBottom:fontSizeOfTitle
+            fontSize:fontSizeOfTitle
         };
         const fontSizeOfPostInfo = (vw + 2816)/192;
-        const marginBottomOfPostInfo = fontSizeOfPostInfo * 0.75;
 
         const parser = new DOMParser();
         let subjectElement = this.props.post.dom.getElementsByClassName('subject')[0];
@@ -40,7 +38,6 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
         });
         const postInfo = {
             fontSize:fontSizeOfPostInfo,
-            marginBottom:marginBottomOfPostInfo,
             categories:post.categories,
             tags:post.tags,
             date:post.date,

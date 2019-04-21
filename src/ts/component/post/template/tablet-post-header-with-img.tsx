@@ -10,14 +10,12 @@ interface PropsOfTabletPostHeaderWithImg {
     title:{
         name:string;
         fontSize:number;
-        marginBottom:number;
     };
     titleBg:{
         paddingBottom:number;
     }
     postInfo:{
         fontSize:number;
-        marginBottom:number;
         categories?:CategoryOfPost[];
         tags?:TagOfPost[];
         date:Date;
@@ -36,15 +34,11 @@ export default class TabletPostHeaderWithImg extends React.Component<PropsOfTabl
             fontSize:`${this.props.title.fontSize}px`,
             paddingBottom:`${this.props.paddingBottom}px`
         };
-        const styleOfTitle = {
-            marginBottom:`${this.props.title.marginBottom}px`
-        }
         const styleOfTitleBg = {
             paddingBottom:`${this.props.titleBg.paddingBottom}px`
         }
         const postInfo = {
-            fontSize:`${this.props.postInfo.fontSize}px`,
-            marginBottom:this.props.postInfo.marginBottom
+            fontSize:`${this.props.postInfo.fontSize}px`
         };
 
         let categories;
@@ -99,7 +93,7 @@ export default class TabletPostHeaderWithImg extends React.Component<PropsOfTabl
         return (
             <div id="post-header" style={styleOfPostHeader} className={this.props.className}>
                 <div className="titleBg" style={styleOfTitleBg}>
-                    <div className="title" style={styleOfTitle}>{this.props.title.name}</div>
+                    <div className="title">{this.props.title.name}</div>
                     <div className="categories" style={postInfo}><CategoryIcon/>{categories}</div>
                     <div className="tags" style={postInfo}><TagIcon />{tags}</div>
                     {publishInfoElement}
