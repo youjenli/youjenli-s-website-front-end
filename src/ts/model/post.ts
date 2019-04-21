@@ -22,3 +22,7 @@ export interface MetaOfPost {
 export interface Post extends MetaOfPost {
     content:string;
 }
+
+export interface ParsedPost extends MetaOfPost {
+    dom:Document;
+}

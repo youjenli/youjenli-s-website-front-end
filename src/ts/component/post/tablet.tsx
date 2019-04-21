@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Post } from '../../model/post';
+import { ParsedPost } from '../../model/post';
 import TabletPostHeaderWithImg from './template/tablet-post-header-with-img';
 import MobilePostHeaderWithoutImg from './template/mobile-post-header-without-img';
 import Subject from './template/subject';
@@ -9,15 +9,10 @@ interface PropsOfTabletPostPage {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    post:Post;
+    post:ParsedPost;
 }
 
-export let subjectElement = null;
-
 export default class TabletPostPage extends React.Component<PropsOfTabletPostPage> {
-    componentWillUnmount() {
-        subjectElement = null;
-    }
     render() {
         const post = this.props.post, vw = this.props.viewportWidth;
         const maxWidthOfTitle = vw - 2 * this.props.remFontSize;
@@ -31,22 +26,16 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
         const marginBottomOfPostInfo = fontSizeOfPostInfo * 0.75;
 
         const parser = new DOMParser();
-        const doc = parser.parseFromString(this.props.post.content, 'text/html');
-        let subjectElement = doc.getElementsByClassName('subject')[0];
+        let subjectElement = this.props.post.dom.getElementsByClassName('subject')[0];
         let fontSizeOfSubjectHint = null, fontSizeOfSubjectContent;
         if (subjectElement) {
             subjectElement.parentElement.removeChild(subjectElement);
             fontSizeOfSubjectHint = (vw + 896)/96;
             fontSizeOfSubjectContent = (vw + 704)/96;            
         }
-        const tocElement = doc.getElementById('toc');
-        if (tocElement) {
-            tocElement.parentElement.removeChild(tocElement);
-        }
-        //todo 產生 toc 的內容
                 
         let countingResult:Countable.CountingResult = null;
-        Countable.count(doc.body.innerHTML, counter => {
+        Countable.count(this.props.post.dom.body.innerHTML, counter => {
             countingResult = counter;
         });
         const postInfo = {
@@ -87,7 +76,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 postCtnrElement = 
                     <div id="postBg" style={styleOfPostBg} className="tb">
                         <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} content={subjectElement.innerHTML}/>
-                        <div dangerouslySetInnerHTML={{__html:doc.body.innerHTML}} ></div>
+                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                     </div>;
             } else {
                 const styleOfPostBg = {
@@ -95,7 +84,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 }
 
                 postCtnrElement = 
-                    <div id="postBg" style={styleOfPostBg} className="tb" dangerouslySetInnerHTML={{__html:doc.body.innerHTML}}>
+                    <div id="postBg" style={styleOfPostBg} className="tb" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>;
             }
             return (
@@ -140,7 +129,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
             return (
                 <React.Fragment>
                     {postHeaderElement}    
-                    <div id="postBg" style={styleOfPostBg} className="tb" dangerouslySetInnerHTML={{__html:doc.body.innerHTML}}>
+                    <div id="postBg" style={styleOfPostBg} className="tb" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>
                 </React.Fragment>
             );

@@ -3,6 +3,7 @@ import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
 import * as terms from './terms';
 
 interface MobileDeviceSearchBarProps {
+    widthOfBorderTop:number;
     searchBarWidth:number;
     searchBarHeight:number;
     fontSizeOfSearchHint:number;

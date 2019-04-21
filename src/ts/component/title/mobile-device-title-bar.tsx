@@ -83,7 +83,6 @@ export default class MobileDeviceTitleBar extends
             fontSizeOfFeatureLink = (this.props.viewportWidth + 896) / 64;
             spaceBetweenIconAndLink = (this.props.viewportWidth + 128) / 768 * fontSizeOfFeatureLink;
             const commonStyleOfFeatureLink = {
-                borderTop:`${borderWidthOfLink}px solid #979797`,
                 flexBasis:'50%'
             }
             styleOfSelfIntroduction = Object.assign({}, commonStyleOfFeatureLink);
@@ -99,9 +98,7 @@ export default class MobileDeviceTitleBar extends
             styleOfSocialMediaGrp = Object.assign({}, styleOfAboutThisSite);
         } else {//套用手機的佈局規則
             spaceBetweenMenuItems = remFontSize * 0.5;
-            const commonStyleOfFeatureLink = {
-                borderTop: `${borderWidthOfLink}px solid #979797`
-            };
+            const commonStyleOfFeatureLink = {};
             styleOfSelfIntroduction = Object.assign({}, commonStyleOfFeatureLink);
             styleOfSelfIntroduction['padding'] = `${spaceBetweenMenuItems}px 0`;
             
@@ -207,7 +204,8 @@ export default class MobileDeviceTitleBar extends
         }
 
         const styleOfMenuContent = {
-            width:`${searchBarWidth}px`
+            width:`${searchBarWidth}px`,
+            fontSize:`${remFontSize}px`
         };
 
         const upperBarStyle = {
@@ -254,7 +252,8 @@ export default class MobileDeviceTitleBar extends
                         <div id="shadow" style={styleOfShadow} onClick={this.toggleMenuState} ></div>
                         <div className="menu" style={styleOfMenu}>
                             <nav className="content" style={styleOfMenuContent}>
-                                <MobileDeviceSearchBar searchBarHeight={searchBarHeight} searchBarWidth={searchBarWidth}
+                                {this.props.children}
+                                <MobileDeviceSearchBar widthOfBorderTop={borderWidthOfLink} searchBarHeight={searchBarHeight} searchBarWidth={searchBarWidth}
                                      fontSizeOfSearchHint={fontSizeOfSearchHint} marginBottom={spaceBetweenMenuItems}
                                      searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
                                 <a className="link" style={styleOfSelfIntroduction} id="cv">

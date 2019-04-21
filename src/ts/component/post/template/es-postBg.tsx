@@ -69,6 +69,7 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
             }
             #toc .content > li {
                 margin-left:${this.props.toc.item.margin.left}px;
+                margin-right:${this.props.toc.item.margin.left}px;
             }
             `}</style>;
         }   

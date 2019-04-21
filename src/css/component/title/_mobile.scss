@@ -39,13 +39,15 @@
 #header-ctx .menu {
     display:block;
     position:absolute;
+    /* menu box-sizing 一定要說定為 border-box，否則當選單內容增加時，選單的高度會超出畫面*/
+    box-sizing: border-box;
     width:100%;
     background-color:white;
     overflow-y:auto;
     box-shadow:0 2px 4px 0 #545454;
 }
 
-#header-ctx .menu .content {
+#header-ctx .menu > .content {
     margin:0 auto;
     display:flex;
     flex-wrap:wrap;
@@ -57,6 +59,34 @@
     background-color:#9D9D9D;
     opacity:0.6;
     width:100%;
+}
+
+/* 擺在選單上面的文章目錄列表 */
+#header-ctx .menu #toc{
+    border-bottom:1px solid #979797;
+    margin-bottom:0.75em;
+    width:100%;
+    .sap {
+        height:5px;
+        border-radius:2.5px;
+    }
+    .content {
+        /* 要取消 content 這個 ol 的 margin，
+            否則畫面上會有 ol 的 margin-block-start , margin-block-end 之 1em margin*/
+        margin:0;
+        font-size:22.2px;
+        & > li {
+            margin-left:0.5em;
+            margin-right:0.5em;
+        } 
+        ol {
+            margin-left:2em;
+        }
+        li {
+            margin-top:0.4em;
+            margin-bottom:0.4em;
+        }
+    }    
 }
 
 #header-ctx .menu .search-bar {
@@ -94,6 +124,7 @@
     box-sizing:border-box;
     display:flex;
     align-items: center;
+    border-top:1px solid #979797;
 }
 
 #header-ctx .menu a {
