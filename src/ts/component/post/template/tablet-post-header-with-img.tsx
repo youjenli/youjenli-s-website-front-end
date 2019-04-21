@@ -4,41 +4,49 @@ import {CategoryIcon, TagIcon, PublishIcon} from '../../home/recentPosts/icons';
 import * as terms from '../../home/recentPosts/terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
-interface PropsOfDefaultPostHeaderWithoutImg {
-    baseZIndex:number;
-    className:string;
+interface PropsOfTabletPostHeaderWithImg {
+    className?:string;
+    paddingBottom:number;
+    title:{
+        name:string;
+        fontSize:number;
+        marginBottom:number;
+    };
     titleBg:{
         paddingBottom:number;
     }
-    title:{
-        name:string;
-        maxWidth:number;
-        fontSize:number;
-    }
     postInfo:{
+        fontSize:number;
+        marginBottom:number;
         categories?:CategoryOfPost[];
         tags?:TagOfPost[];
         date:Date;
         modified:Date;
         wordCount:number;
-        paddingBottom:string;
+    };
+    img:{
+        url:string;
+        height:number;
     }
 }
 
-export default class DefaultPostHeaderWithoutImg extends React.Component<PropsOfDefaultPostHeaderWithoutImg> {
+export default class TabletPostHeaderWithImg extends React.Component<PropsOfTabletPostHeaderWithImg> {
     render() {
         const styleOfPostHeader = {
             fontSize:`${this.props.title.fontSize}px`,
-            zIndex:this.props.baseZIndex + 1
+            paddingBottom:`${this.props.paddingBottom}px`
+        };
+        const styleOfTitle = {
+            marginBottom:`${this.props.title.marginBottom}px`
         }
         const styleOfTitleBg = {
-            paddingBottom:`${this.props.titleBg.paddingBottom}px`,
-            zIndex:this.props.baseZIndex + 3
+            paddingBottom:`${this.props.titleBg.paddingBottom}px`
         }
-        const styleOfPostInfo = {
-            width:`${this.props.title.maxWidth}px`,
-            paddingBottom:this.props.postInfo.paddingBottom
-        }
+        const postInfo = {
+            fontSize:`${this.props.postInfo.fontSize}px`,
+            marginBottom:this.props.postInfo.marginBottom
+        };
+
         let categories;
         if (this.props.postInfo.categories && this.props.postInfo.categories.length > 0) {
             categories = this.props.postInfo.categories.map(
@@ -72,32 +80,33 @@ export default class DefaultPostHeaderWithoutImg extends React.Component<PropsOf
         }
         let msgAboutWordCount = `${terms.clauseSeparater}${terms.wordCount} ${this.props.postInfo.wordCount} ${terms.unitOfWord}${terms.period}`;
 
+        const styleOfPublishInfo = {
+            fontSize:`${this.props.postInfo.fontSize}px`
+        }
+
         const publishInfoElement = (
-            <div className="publishInfo">
+            <div className="publishInfo" style={styleOfPublishInfo}>
                 <PublishIcon/><span>
                     {terms.published}&nbsp;{this.props.postInfo.date.getFullYear()}/{publishMonth}/{publishDay}
                     {lastUpdate}{msgAboutWordCount}
                 </span>
             </div>);
+                
+        const styleOfImg = {
+            height:`${this.props.img.height}px`
+        };       
 
-        const styleOfDec = {
-            zIndex:this.props.baseZIndex + 2
-        }
-        const decoration = <div id="post-dec" style={styleOfDec}></div>;
-       
         return (
-            <div id="post-header" className={this.props.className} style={styleOfPostHeader}>
-                <div id="titleBg" style={styleOfTitleBg}>
-                    <div className="postInfo" style={styleOfPostInfo}>
-                        <div className="title">{this.props.title.name}</div>
-                        <div className="categories"><CategoryIcon/>{categories}</div>
-                        <div className="tags"><TagIcon />{tags}</div>
-                        {publishInfoElement}
-                        {this.props.children}
-                    </div>
-                </div>
-                {decoration}
-            </div>             
-        );
-    }    
+            <div id="post-header" style={styleOfPostHeader} className={this.props.className}>
+                <div className="titleBg" style={styleOfTitleBg}>
+                    <div className="title" style={styleOfTitle}>{this.props.title.name}</div>
+                    <div className="categories" style={postInfo}><CategoryIcon/>{categories}</div>
+                    <div className="tags" style={postInfo}><TagIcon />{tags}</div>
+                    {publishInfoElement}
+                    <img style={styleOfImg} src={this.props.img.url}/>
+                </div>                
+            </div>                         
+        );        
+    }
 }
+

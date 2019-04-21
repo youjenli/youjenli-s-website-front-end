@@ -4,41 +4,42 @@ import {CategoryIcon, TagIcon, PublishIcon} from '../../home/recentPosts/icons';
 import * as terms from '../../home/recentPosts/terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
-interface PropsOfDefaultPostHeaderWithoutImg {
+interface PropsOfMobilePostHeaderWithoutImg {
     baseZIndex:number;
-    className:string;
-    titleBg:{
-        paddingBottom:number;
-    }
+    className?:string;
+    paddingBottom:number;
     title:{
         name:string;
-        maxWidth:number;
         fontSize:number;
+        marginBottom:number;
     }
     postInfo:{
+        fontSize:number;
+        marginBottom:number;
         categories?:CategoryOfPost[];
         tags?:TagOfPost[];
         date:Date;
         modified:Date;
         wordCount:number;
-        paddingBottom:string;
     }
+    heightOfDecoration:number;
 }
 
-export default class DefaultPostHeaderWithoutImg extends React.Component<PropsOfDefaultPostHeaderWithoutImg> {
+export default class MobilePostHeaderWithoutImg extends React.Component<PropsOfMobilePostHeaderWithoutImg> {
     render() {
         const styleOfPostHeader = {
             fontSize:`${this.props.title.fontSize}px`,
-            zIndex:this.props.baseZIndex + 1
+            paddingBottom:`${this.props.paddingBottom}px`,
+            zIndex:this.props.baseZIndex + 2
+        };
+        const styleOfTitle = {
+            marginBottom:`${this.props.title.marginBottom}px`
         }
-        const styleOfTitleBg = {
-            paddingBottom:`${this.props.titleBg.paddingBottom}px`,
-            zIndex:this.props.baseZIndex + 3
-        }
-        const styleOfPostInfo = {
-            width:`${this.props.title.maxWidth}px`,
-            paddingBottom:this.props.postInfo.paddingBottom
-        }
+        const postInfo = {
+            fontSize:`${this.props.postInfo.fontSize}px`,
+            marginBottom:this.props.postInfo.marginBottom
+        };
+
         let categories;
         if (this.props.postInfo.categories && this.props.postInfo.categories.length > 0) {
             categories = this.props.postInfo.categories.map(
@@ -72,8 +73,12 @@ export default class DefaultPostHeaderWithoutImg extends React.Component<PropsOf
         }
         let msgAboutWordCount = `${terms.clauseSeparater}${terms.wordCount} ${this.props.postInfo.wordCount} ${terms.unitOfWord}${terms.period}`;
 
+        const styleOfPublishInfo = {
+            fontSize:`${this.props.postInfo.fontSize}px`
+        }
+
         const publishInfoElement = (
-            <div className="publishInfo">
+            <div className="publishInfo" style={styleOfPublishInfo}>
                 <PublishIcon/><span>
                     {terms.published}&nbsp;{this.props.postInfo.date.getFullYear()}/{publishMonth}/{publishDay}
                     {lastUpdate}{msgAboutWordCount}
@@ -81,23 +86,22 @@ export default class DefaultPostHeaderWithoutImg extends React.Component<PropsOf
             </div>);
 
         const styleOfDec = {
-            zIndex:this.props.baseZIndex + 2
-        }
-        const decoration = <div id="post-dec" style={styleOfDec}></div>;
-       
+            height:`${this.props.heightOfDecoration}px`,
+            zIndex:this.props.baseZIndex + 1
+        };
+
         return (
-            <div id="post-header" className={this.props.className} style={styleOfPostHeader}>
-                <div id="titleBg" style={styleOfTitleBg}>
-                    <div className="postInfo" style={styleOfPostInfo}>
-                        <div className="title">{this.props.title.name}</div>
-                        <div className="categories"><CategoryIcon/>{categories}</div>
-                        <div className="tags"><TagIcon />{tags}</div>
-                        {publishInfoElement}
-                        {this.props.children}
-                    </div>
+            <React.Fragment>
+                <div id="post-header" style={styleOfPostHeader} className={this.props.className}>
+                    <div className="title" style={styleOfTitle}>{this.props.title.name}</div>
+                    <div className="categories" style={postInfo}><CategoryIcon/>{categories}</div>
+                    <div className="tags" style={postInfo}><TagIcon />{tags}</div>
+                    {publishInfoElement}
+                    {this.props.children}
                 </div>
-                {decoration}
-            </div>             
-        );
-    }    
+                <div id="post-dec" style={styleOfDec} className={this.props.className}></div>
+            </React.Fragment>
+        );        
+    }
 }
+

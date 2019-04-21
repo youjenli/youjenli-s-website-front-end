@@ -1,18 +1,8 @@
-$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
-$backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
-
-#post-header.les, #post-header.es, #post-header.tb {
-    width:100%;
-    /*react 元件裡會設定 #post-header 的寬度，然後下面再用 em 來求相對尺寸*/
-    position:relative;
-
-    #titleBg, #post-dec {
-        position:relative;
-    }
+#post-header.les, #post-header.es {
     #titleBg {
+        position:relative;
         background:#1B3404;
         box-sizing:border-box;
-        font-family:$prioritizedFonts;
         box-shadow:0 2px 4px 0 rgba(0,0,0,50);
     }
     .postInfo {
@@ -23,23 +13,6 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
     .title {
         font-size:1em;
         margin-bottom:1em;
-        color:#B0CA98;
-        font-family: $prioritizedFonts,'HannotateTC-W5',$backupFonts;
-    }   
-    .categories, .tags, .publishInfo {
-        svg {
-            vertical-align: middle;
-            g {
-                fill:#B2B2B2;
-            }
-        }
-        font-family: $prioritizedFonts, $backupFonts;
-        .tag, .category {
-            &:hover {
-                cursor:pointer;
-                text-decoration:underline;
-            }
-        }
     }
     .categories, .tags {
         margin-bottom:0.75em;
@@ -52,46 +25,18 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
             margin-right:1em;
         }
     }
-    .categories {
-        color:#B0CA98;
-        .noData {
-            color:#739971;
-        }
-    }
-    .tags {
-        color:#CDB28A;
-        .noData {
-            color:#9A9C66;
-        }
-    }
-    .publishInfo {
-        color:#C7C7C7;
-        .noData {
-            color:#AEAEAE;
-        }
-    }
+
     .subject {
-        border:4px solid #648942;
-        color:#F5F9F1;
+        border-width:4px;
     }
     img {
         width:100%;
-        object-fit: cover;
         position:absolute;
         top:100%;       
     }
     #post-dec {
         height:0.33em;
-        width:100%;
-        background:#7FB14C;
-        opacity:0.9;
-        box-shadow:0 2px 4px 0 rgb(111,156, 65);
     }
-}
-$fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
-.les .subject, .es .subject, .tb .subject {
-    box-sizing:border-box;
-    font-family: $fontFamilyOfTextInArticle;
 }
 
 /* 以下是大外接螢幕專用的樣式 */

@@ -1,0 +1,43 @@
+$fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+#postBg.tb {
+    font-size:18px;
+    padding-left:1em;
+    padding-right:1em;
+    padding-bottom:2em;
+    max-width:100%;
+
+    box-sizing:border-box;
+    background:rgb(255,250,244);
+    font-size:18px;
+       
+    font-family: $fontFamilyOfTextInArticle;
+    .subject {
+        border-style:solid;
+        border-color:#F4BA66;
+        color:#000000;
+        float:none;
+    }
+
+    h1,h2,h3,h4,h5 {
+        margin-top:0;
+    }
+    h1 {
+        font-size:28px;
+    }
+    h2 {
+        font-size:26px;
+    }
+    h3 {
+        font-size:24px;
+    }
+    h4 {
+        font-size:22px;
+    }
+    h5 {
+        font-size:20px;
+    }
+    img {
+        /*圖示的編排方式？*/
+        margin:1.5em 2em;
+    }
+}

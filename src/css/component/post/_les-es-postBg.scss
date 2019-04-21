@@ -1,3 +1,4 @@
+$fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
 #postBg.les, #postBg.es {
     box-sizing:border-box;
     font-size:18px;
@@ -20,7 +21,7 @@
         float:left;
         & > * {
             display:block;
-        }        
+        }
         .title{
             text-align:center;
             color:#51719D;
@@ -82,6 +83,7 @@
             font-size:22px;
         }
         img {
+            /*圖示的編排方式？*/
             margin:1.5em auto;
         }
     }    
