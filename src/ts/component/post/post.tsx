@@ -64,7 +64,7 @@ export default class PostPage extends React.Component<PropsOfPostPage, StateOfPo
                 </React.Fragment>
             );
         } else {
-            if (vw > 640) {//套用平板的佈局規則
+            if (vw > 432) {//套用平板的佈局規則
                 /*
                     註: 必須把行動裝置的目錄提早至這個階段解析，否則一旦餵給主要內容的塗層元件後，將不便產生目錄結構給標題列
                 */
@@ -93,7 +93,7 @@ export default class PostPage extends React.Component<PropsOfPostPage, StateOfPo
                     let tocElement = null;
                     if (toc) {
                         toc.parentElement.removeChild(toc);
-                        const fontSizeOfTocTitle = (vw + 800) / 48;
+                        const fontSizeOfTocTitle = (0.9 * vw + 499.2) / 37;
                         const styleOfTocTitle = {
                             fontSize:`${fontSizeOfTocTitle}px`,
                             marginBottom:`0.5em`

@@ -16,20 +16,19 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
     render() {
         const post = this.props.post, vw = this.props.viewportWidth;
         const maxWidthOfTitle = vw - 2 * this.props.remFontSize;
-        const fontSizeOfTitle = (vw + 80) / 24;
+        const fontSizeOfTitle = (5 * vw + 1688) / 148;
         const title = {
             name:this.props.post.title,
             fontSize:fontSizeOfTitle
         };
-        const fontSizeOfPostInfo = (vw + 2816)/192;
+        const fontSizeOfPostInfo = (vw + 1936)/148;
 
-        const parser = new DOMParser();
         let subjectElement = this.props.post.dom.getElementsByClassName('subject')[0];
         let fontSizeOfSubjectHint = null, fontSizeOfSubjectContent;
         if (subjectElement) {
             subjectElement.parentElement.removeChild(subjectElement);
-            fontSizeOfSubjectHint = (vw + 896)/96;
-            fontSizeOfSubjectContent = (vw + 704)/96;            
+            fontSizeOfSubjectHint = (vw + 1936)/148;
+            fontSizeOfSubjectContent = (vw + 1640)/148;            
         }
                 
         let countingResult:Countable.CountingResult = null;
