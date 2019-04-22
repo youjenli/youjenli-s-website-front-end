@@ -1,27 +1,66 @@
 /*擺在選單上面的文章目錄樣式*/
-#header-ctx .menu #toc{
-    border-bottom:1px solid #979797;
-    margin-bottom:0.75em;
-    width:100%;
-    .sap {
-        height:5px;
-        border-radius:2.5px;
+#header-ctx {
+    .menu #toc{
+        border-bottom:1px solid #979797;
+        width:100%;
+        
+        .title {
+            margin:0.5em 0;
+        }
+    
+        .sap {
+            border-radius:2.5px;
+        }
+        
+        .content {
+            /* 要取消 content 這個 ol 的 margin，
+                否則畫面上會有 ol 的 margin-block-start , margin-block-end 之 1em margin*/
+            margin:0;        
+        }
     }
-    .content {
-        /* 要取消 content 這個 ol 的 margin，
-            否則畫面上會有 ol 的 margin-block-start , margin-block-end 之 1em margin*/
-        margin:0;
-        font-size:22.2px;
-        & > li {
-            margin-left:2em;
-            margin-right:0.5em;
+
+    //平板專用的樣式
+    &.tb {
+        .sap {
+            height:5px;
+        }
+        .content {
+            font-size:22.2px;
+            & > li {
+                margin-left:2em;
+                margin-right:0.5em;
+            } 
+            ol {
+                margin-left:1.5em;
+            }
+            li {
+                margin-top:0.8em;
+                margin-bottom:0.8em;
+            }
+        }
+    }
+
+    //手機的樣式
+    &.sp {
+        .title {
+            font-size:24px;
+        }
+        .sap {
+            height:4px;
+        }
+        .content {
+            & > li {
+                margin-left:calc(8px + 1.5em);
+                margin-right:8px;
+            } 
+            ol {
+                margin-left:1.5em
+            }
+            li {
+                margin-top:0.5em;
+                margin-bottom:0.5em;
+            }
         } 
-        ol {
-            margin-left:1.5em;
-        }
-        li {
-            margin-top:0.4em;
-            margin-bottom:0.4em;
-        }
-    }    
+    }
+
 }

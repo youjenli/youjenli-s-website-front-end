@@ -9,128 +9,165 @@
     }
 }
 
-#header-ctx.sticky {
-    position:fixed;
-}
-
 #header-plhdr {
     position:relative;
     width:100%;
     background: transparent;
 }
 
-#header-ctx .menuBtn {
-    position:absolute;
-}
+#header-ctx {
+    &.sticky {
+        position:fixed;
+    }
 
-#header-ctx .menuBtn .bar {
-    background-color:white;
-    transition:rotate 150ms ease-out;
-}
+    .menuBtn {
+        position:absolute;
+        .bar {
+            background-color:white;
+            transition:rotate 150ms ease-out;
 
-#header-ctx .menuBtn .bar.upper.rotate {
-    transform:rotate(45deg);
-}
+            &.upper.rotate {
+                transform:rotate(45deg);
+            }
 
-#header-ctx .menuBtn .bar.lower.rotate {
-    transform:rotate(-45deg);
-}
+            &.lower.rotate {
+                transform:rotate(-45deg);
+            }
+        }
+    }
+    
+    .menu {
+        display:block;
+        position:absolute;
+        /* menu box-sizing 一定要設定為 border-box，否則當選單內容增加時，選單的高度會超出畫面*/
+        box-sizing: border-box;
+        width:100%;
+        padding:1px 0;/*刻意在上下加入 1px 的 padding 以免內部元素的 margin-top margin-bottom 把它頂歪*/
+        background-color:white;
+        overflow-y:auto;
+        box-shadow:0 2px 4px 0 #545454;
 
-#header-ctx .menu {
-    display:block;
-    position:absolute;
-    /* menu box-sizing 一定要說定為 border-box，否則當選單內容增加時，選單的高度會超出畫面*/
-    box-sizing: border-box;
-    width:100%;
-    background-color:white;
-    overflow-y:auto;
-    box-shadow:0 2px 4px 0 #545454;
-}
+        > .content {
+            margin:0 auto;
+            display:flex;
+            flex-wrap:wrap;
+            align-items:stretch;
+        }
 
-#header-ctx .menu > .content {
-    margin:0 auto;
-    display:flex;
-    flex-wrap:wrap;
-    align-items:stretch;
-}
+        .search-bar {
+            flex-basis:100%;
+            border-radius:8px;
+            border: 0.5px solid #979797;
+            background-color:#F9F9F9;
+            box-shadow:inset 0 0 3px 0 #979797;
+        }
 
-#header-ctx #shadow {
-    position:absolute;
-    background-color:#9D9D9D;
-    opacity:0.6;
-    width:100%;
+        .search-bar input {
+            outline:0;
+            border:0;
+            padding:0;
+            color:#000000;
+            flex:1;
+            line-height:1;
+            background:transparent;
+
+            &::-webkit-input-placeholder,/* Edge */
+            &::-ms-input-placeholder,
+            &::placeholder {
+                color: #BFBFBF;
+            }
+        }
+
+        .search-btn {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            background:transparent;
+        }
+
+        .link {
+            box-sizing:border-box;
+            display:flex;
+            align-items: center;
+            border-top:1px solid #979797;
+            img, svg {
+                flex-grow:0;
+                vertical-align: middle;
+            }
+            span {
+                flex-grow:1;
+            }
+
+        }
+
+        #cv {
+            color:#FCBE60;
+            fill:#FCBE60;
+        }
+
+        #catagory {
+            color:#7FB14C;
+            fill:#7FB14C;
+        }
+
+        #about {
+            color:#263242;
+            fill:#263242;
+        }
+
+        a {
+            cursor:pointer;
+        }
+
+        #socialMediaGrp {
+            display:flex;
+            justify-content: space-between;
+        }
+    }
+
+    #shadow {
+        position:absolute;
+        background-color:#9D9D9D;
+        opacity:0.6;
+        width:100%;
+    }
+
+    /* 平板專用的樣式 */
+    &.tb {
+        .menu {
+            .search-bar {
+                &:first-child {
+                    margin-top:18px;/* 1rem*/
+                }
+                &:not(:first-child) {
+                    margin-top:13.5px;/* 0.75rem */
+                }
+                margin-bottom:13.5px;/* 0.75rem */
+            }
+            .content {
+                margin-bottom:18px;/* 1rem*/
+            }
+        }
+    }
+
+    /* 手機專用的樣式 */
+    &.sp {
+        .menu {
+            .search-bar {
+                &:first-child {
+                    margin-top:16px;/* 1rem */
+                }
+                &:not(:first-child) {
+                    margin-top:8px;/* 0.5rem*/
+                }            
+                margin-bottom:8px;/* 0.5rem*/
+            }
+            .content {
+                margin-bottom:16px;/* 1rem*/
+            }
+        }
+    }
 }
 
 /* 載入擺在選單上面的文章目錄樣式 */
 @import '../post/mobile-toc.scss';
-
-#header-ctx .menu .search-bar {
-    flex-basis:100%;
-    border-radius:8px;
-    border: 0.5px solid #979797;
-    background-color:#F9F9F9;
-    box-shadow:inset 0 0 3px 0 #979797;
-}
-
-#header-ctx .menu .search-bar input {
-    outline:0;
-    border:0;
-    padding:0;
-    color:#000000;
-    flex:1;
-    line-height:1;
-    background:transparent;
-}
-
-#header-ctx .menu .search-bar input::-webkit-input-placeholder,/* Edge */
-#header-ctx .menu .search-bar input::-ms-input-placeholder,/* Internet Explorer 10-11 */
-#header-ctx .menu .search-bar input::placeholder { 
-    color: #BFBFBF;
-}
-
-#header-ctx .menu .search-btn {
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    background:transparent;
-}
-
-#header-ctx .menu .link {
-    box-sizing:border-box;
-    display:flex;
-    align-items: center;
-    border-top:1px solid #979797;
-}
-
-#header-ctx .menu a {
-    cursor:pointer;
-}
-
-#header-ctx .menu .link img,
-#header-ctx .menu .link svg {
-    flex-grow:0;
-    vertical-align: middle;
-}
-
-#header-ctx .menu .link span {
-    flex-grow:1;
-}
-
-#header-ctx .menu #cv {
-    color:#FCBE60;
-    fill:#FCBE60;
-}
-
-#header-ctx .menu #catagory {
-    color:#7FB14C;
-    fill:#7FB14C;
-}
-
-#header-ctx .menu #about {
-    color:#263242;
-    fill:#263242;
-}
-
-#header-ctx .menu #socialMediaGrp {
-    justify-content: space-between;
-}

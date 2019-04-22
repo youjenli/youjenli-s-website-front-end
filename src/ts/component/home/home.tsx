@@ -105,7 +105,7 @@ export default class HomePage extends React.Component<{}, StateOfHomePage> {
         } else if (this.state.viewportWidth > 640) {//使用平板的佈局
             return (
                 <React.Fragment>
-                    <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
+                    <MobileDeviceTitleBar className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                     <SloganOnTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
                     <ListOfRecentPostsOnTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
                         remFontSize={18} posts={posts}/>
@@ -115,7 +115,7 @@ export default class HomePage extends React.Component<{}, StateOfHomePage> {
             if (this.state.viewportWidth > 432) {
                 return (
                     <React.Fragment>
-                        <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
+                        <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                         <HomeOf16To9SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
                         <ListOfRecentPostsOn16To9SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
                             remFontSize={18} posts={posts}/>
@@ -124,7 +124,7 @@ export default class HomePage extends React.Component<{}, StateOfHomePage> {
             } else {
                 return (
                     <React.Fragment>
-                        <MobileDeviceTitleBar viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
+                        <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                         <HomeOf9To16SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
                         <ListOfRecentPostsOn9To16SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
                             remFontSize={16} posts={posts}/>

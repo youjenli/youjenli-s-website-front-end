@@ -3,13 +3,11 @@ import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
 import * as terms from './terms';
 
 interface MobileDeviceSearchBarProps {
-    widthOfBorderTop:number;
-    searchBarWidth:number;
-    searchBarHeight:number;
+    width:number;
+    height:number;
     fontSizeOfSearchHint:number;
     searchIconWidth:number;
     searchIconHeight:number;
-    marginBottom:number;
 }
 
 interface MobileDeviceSearchBarState {
@@ -19,7 +17,6 @@ interface MobileDeviceSearchBarState {
 export default class MobileDeviceSearchBar extends React.Component<MobileDeviceSearchBarProps, MobileDeviceSearchBarState> {
     constructor(props){
         super(props);
-        const input = document.createElement('input');
         if (!isPlaceHolderOfInputSupported()) {     
             this.removePlaceHolder = this.removePlaceHolder.bind(this);
             this.resetPlaceHolder = this.resetPlaceHolder.bind(this);
@@ -54,12 +51,12 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
         }
     }
     render() {
-        const heightOfSearchField = this.props.searchBarHeight;
+        let classNameOfSearchBar = 'search-bar';
+        const heightOfSearchField = this.props.height;
         const styleOfSearchBar = {
-            height:`${this.props.searchBarHeight}px`,
-            paddingLeft:`${(heightOfSearchField - this.props.searchIconHeight)/2}px`,
-            marginBottom:`${this.props.marginBottom}px`
-        };        
+            height:`${this.props.height}px`,
+            paddingLeft:`${(heightOfSearchField - this.props.searchIconHeight)/2}px`
+        };
         
         const styleOfSearchField = {
             fontSize:`${this.props.fontSizeOfSearchHint}px`,

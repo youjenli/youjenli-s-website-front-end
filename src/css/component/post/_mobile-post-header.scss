@@ -18,8 +18,8 @@
 
     .categories, .tags, .publishInfo {
         .icon {
-            width:1em;
-            height:1em;
+            min-width:1em;
+            min-height:1em;
         }
     }
     img {
@@ -57,12 +57,7 @@
 
     .categories, .tags, .publishInfo {
         .icon {
-            @media (orientation:horizontal) {
-                margin-right:1em;
-            }
-            @media (orientation:portrait) {
-                margin-right:0.5em;
-            }            
+            margin-right:0.5em; 
         }
     }
 }

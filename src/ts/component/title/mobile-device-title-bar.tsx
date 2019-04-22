@@ -10,6 +10,7 @@ import * as socialMediaTerms from '../home/slogan/socialMedia/terms';
 import * as icons from '../home/slogan/socialMedia/icons';
 
 interface MobileDeviceTitleBarProps {
+    className:string;
     viewportWidth:number;
     baseZIndex:number;
 }
@@ -57,7 +58,7 @@ export default class MobileDeviceTitleBar extends
         let fontSizeOfSiteName, siteNameTopPosition, siteNameLeftPosition;
         let menuButtonBarWidth, menuButtonBarHeight, menuButtonBarTransformOrigin, menuButtonBarBorderRadius;
         let topShiftOfMenuButton, rightShiftOfMenuButton, spaceBetweenTwoBars;
-        let topShiftOfMenu, maxHeightOfMenu, spaceBetweenMenuAndContent;
+        let topShiftOfMenu, maxHeightOfMenu;
         let searchBarWidth, searchBarHeight, fontSizeOfSearchHint, searchIconWidth, searchIconHeight;
         let spaceBetweenMenuItems;
         const borderWidthOfLink = 1;
@@ -83,7 +84,8 @@ export default class MobileDeviceTitleBar extends
             fontSizeOfFeatureLink = (this.props.viewportWidth + 896) / 64;
             spaceBetweenIconAndLink = (this.props.viewportWidth + 128) / 768 * fontSizeOfFeatureLink;
             const commonStyleOfFeatureLink = {
-                flexBasis:'50%'
+                flexBasis:'50%',
+                fontSize:`${fontSizeOfFeatureLink}px`
             }
             styleOfSelfIntroduction = Object.assign({}, commonStyleOfFeatureLink);
             styleOfSelfIntroduction['padding'] = `${spaceBetweenMenuItems}px 0`;
@@ -98,7 +100,10 @@ export default class MobileDeviceTitleBar extends
             styleOfSocialMediaGrp = Object.assign({}, styleOfAboutThisSite);
         } else {//套用手機的佈局規則
             spaceBetweenMenuItems = remFontSize * 0.5;
-            const commonStyleOfFeatureLink = {};
+            fontSizeOfFeatureLink = 24;
+            const commonStyleOfFeatureLink = {
+                fontSize:`${fontSizeOfFeatureLink}px`
+            };
             styleOfSelfIntroduction = Object.assign({}, commonStyleOfFeatureLink);
             styleOfSelfIntroduction['padding'] = `${spaceBetweenMenuItems}px 0`;
             
@@ -146,12 +151,10 @@ export default class MobileDeviceTitleBar extends
             searchBarHeight = 53;
             searchIconWidth = 42;
             searchIconHeight = 38;
-            fontSizeOfFeatureLink = 24;
             spaceBetweenIconAndLink = fontSizeOfFeatureLink * 1.5;
         }
         topShiftOfMenu = this.headerHeight;
         maxHeightOfMenu = calculateViewPortHeight() - this.headerHeight;
-        spaceBetweenMenuAndContent = remFontSize;
         menuButtonBarHeight = menuButtonBarWidth / 10;
         spaceBetweenTwoBars = 2 * menuButtonBarHeight;
         menuButtonBarTransformOrigin = Math.round((
@@ -161,12 +164,12 @@ export default class MobileDeviceTitleBar extends
         menuButtonBarBorderRadius = Math.round(menuButtonBarWidth * 0.057);
         topShiftOfMenuButton = (this.headerHeight - 2 * menuButtonBarHeight - 3 * spaceBetweenTwoBars )/2;
 
-        let classesOfHeaderCtx = "";
+        let classesOfHeaderCtx = this.props.className;
         if (this.state.isMenuOpened) {
-            classesOfHeaderCtx = classesOfHeaderCtx + "menuOpened ";
+            classesOfHeaderCtx = classesOfHeaderCtx + " menuOpened ";
         }
         if (!isStickyPositionSupported() && this.state.shouldTitleBeSticky) {
-            classesOfHeaderCtx = classesOfHeaderCtx + "sticky";
+            classesOfHeaderCtx = classesOfHeaderCtx + " sticky";
         }
 
         const headerCtxStyle = {
@@ -192,7 +195,6 @@ export default class MobileDeviceTitleBar extends
             styleOfMenu = {
                 top:`${topShiftOfMenu}px`,
                 maxHeight:`${maxHeightOfMenu}px`,
-                padding:`${spaceBetweenMenuAndContent}px 0`,
                 zIndex:this.props.baseZIndex + 3
             }
     
@@ -253,8 +255,8 @@ export default class MobileDeviceTitleBar extends
                         <div className="menu" style={styleOfMenu}>
                             <nav className="content" style={styleOfMenuContent}>
                                 {this.props.children}
-                                <MobileDeviceSearchBar widthOfBorderTop={borderWidthOfLink} searchBarHeight={searchBarHeight} searchBarWidth={searchBarWidth}
-                                     fontSizeOfSearchHint={fontSizeOfSearchHint} marginBottom={spaceBetweenMenuItems}
+                                <MobileDeviceSearchBar height={searchBarHeight} width={searchBarWidth}
+                                     fontSizeOfSearchHint={fontSizeOfSearchHint}
                                      searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
                                 <a className="link" style={styleOfSelfIntroduction} id="cv">
                                     <img className="icon" style={styleOfLinkIcon} src="/img/curriculum-vitae.svg" />

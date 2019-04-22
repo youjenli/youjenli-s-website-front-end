@@ -20,8 +20,8 @@
     .categories, .tags, .publishInfo {
         font-size:0.5em;
         .icon {
-            width:1em;
-            height:1em;
+            min-width:1em;
+            min-height:1em;
             margin-right:1em;
         }
     }
