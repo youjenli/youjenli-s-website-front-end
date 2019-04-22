@@ -61,33 +61,8 @@
     width:100%;
 }
 
-/* 擺在選單上面的文章目錄列表 */
-#header-ctx .menu #toc{
-    border-bottom:1px solid #979797;
-    margin-bottom:0.75em;
-    width:100%;
-    .sap {
-        height:5px;
-        border-radius:2.5px;
-    }
-    .content {
-        /* 要取消 content 這個 ol 的 margin，
-            否則畫面上會有 ol 的 margin-block-start , margin-block-end 之 1em margin*/
-        margin:0;
-        font-size:22.2px;
-        & > li {
-            margin-left:0.5em;
-            margin-right:0.5em;
-        } 
-        ol {
-            margin-left:2em;
-        }
-        li {
-            margin-top:0.4em;
-            margin-bottom:0.4em;
-        }
-    }    
-}
+/* 載入擺在選單上面的文章目錄樣式 */
+@import '../post/mobile-toc.scss';
 
 #header-ctx .menu .search-bar {
     flex-basis:100%;

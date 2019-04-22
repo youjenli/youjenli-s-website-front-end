@@ -42,11 +42,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     marginTopBottom:fontSizeOfTitleOfToc * 0.75,
                 },
                 item:{
-                    fontSize:fontSizeOfTocItems,
-                    margin:{
-                        topBottom:fontSizeOfTocItems * 0.8,
-                        left:fontSizeOfTocItems,
-                    }
+                    fontSize:fontSizeOfTocItems
                 },
                 paddingLeftRight:paddingLeftRightOfToc,
                 content:tocElement.innerHTML
@@ -54,38 +50,44 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
         }
         
         const widthOfPostBg = 0.764 * this.props.viewportWidth;
-        const marginBottomOfPostBg = this.props.remFontSize * 2;
         const marginTopOfPostContent = this.props.remFontSize * 2;
-        const paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;
-        const paddingBottomPostBg = this.props.remFontSize * 2;
-                
+        const marginBottomOfPostContent = this.props.remFontSize * 2;
+        const paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;        
+        const marginBottomOfPostBg = this.props.remFontSize * 2;       
+
         if (post.imageUrl) {
+            let postBgElement = null;
+            const paddingOfPostBg = {
+                top:0.382 * heightOfImg,
+                leftRight:paddingLeftRightOfPosgBg
+            }
+            //要在 subject 元素從節點樹上移除之後才可以設定發文內容的樣式，否則內容會出錯。
+            const contentOfPost = {
+                margin:{
+                    top:marginTopOfPostContent,
+                    bottom:marginBottomOfPostContent
+                },
+                post:null //先不擺內容，等接下來可能要移除 subject 的作業結束後再回頭設定此屬性。
+            }
             
-            let postBg = null;
             if (subjectElement) {
                 subjectElement.parentElement.removeChild(subjectElement);
-                const paddingOfPostBg = {
-                    top:0.382 * heightOfImg,
-                    leftRight:paddingLeftRightOfPosgBg,
-                    bottom:paddingBottomPostBg
-                }
-                postBg = (
+                postBgElement = (
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                        toc={toc} contentOfPost={doc.body.innerHTML}>
+                        toc={toc} content={contentOfPost}>
                         <Subject content={subjectElement.innerHTML}/>
                     </PostBackgroundOnExternalScreen>
                 );
             } else {
-                const paddingOfPostBg = {
-                    top:0.382 * heightOfImg + marginTopOfPostContent,
-                    leftRight:paddingLeftRightOfPosgBg,
-                    bottom:paddingBottomPostBg
-                }
-                postBg = <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
+                postBgElement = (<PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
                             width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                            toc={toc} contentOfPost={doc.body.innerHTML}/>;
+                toc={toc} content={contentOfPost} />);
             }
+            //設定內容的 post 屬性。
+            contentOfPost['post'] = doc.body.innerHTML;
+
+            /* 接下來要準備 post-header 的內容 */
             let countingResult:Countable.CountingResult;
             Countable.count(doc.body.innerHTML, counter => {
                 countingResult = counter;
@@ -110,7 +112,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 <React.Fragment>
                     <DefaultPostHeaderWithImg baseZIndex={this.props.remFontSize + 1} titleBg={titleBg} title={title}
                          className="les" postInfo={postInfo} img={img} />
-                    {postBg}
+                    {postBgElement}
                 </React.Fragment>
             );
         } else {
@@ -118,13 +120,12 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 paddingBottom:0
             };
             let paddingOfPostBg = {
-                top:marginTopOfPostContent,
-                leftRight:paddingLeftRightOfPosgBg,
-                bottom:paddingBottomPostBg
-            };            
+                top:0,
+                leftRight:paddingLeftRightOfPosgBg
+            };
             let postHeader = null
             if (subjectElement) {
-                subjectElement.parentElement.removeChild(subjectElement);
+                subjectElement.parentElement.removeChild(subjectElement);//todo 似乎沒有移乾淨。
 
                 let countingResult:Countable.CountingResult;
                 Countable.count(doc.body.innerHTML, counter => {
@@ -139,6 +140,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     wordCount:countingResult.characters,
                     paddingBottom:'0.9375vw'
                 };
+                
                 postHeader = (
                     <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1}  className="les"
                         titleBg={titleBg} title={title} postInfo={postInfo}>
@@ -165,12 +167,21 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 );
             }
 
+            //要在 subject 元素從節點樹上移除之後才可以設定發文內容的樣式，否則內容會出錯。
+            const contentOfPost = {
+                margin:{
+                    top:marginTopOfPostContent,
+                    bottom:marginBottomOfPostContent
+                },
+                post:doc.body.innerHTML
+            }
+
             return (
                 <React.Fragment>
                     {postHeader}
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}  className="les" 
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
-                        toc={toc} contentOfPost={doc.body.innerHTML}/>
+                        toc={toc} content={contentOfPost}/>
                 </React.Fragment>
             );
         }

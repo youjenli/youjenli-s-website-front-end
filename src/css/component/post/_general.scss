@@ -13,8 +13,10 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
     }
 
     .categories, .tags, .publishInfo {
+        display:flex;
+        align-items: center;
         svg {
-            vertical-align: middle;
+            flex-grow:0;
             g {
                 fill:#B2B2B2;
             }
@@ -66,6 +68,6 @@ $fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/*
 }
 
 @import './les-es-post-header.scss';
-@import './tb-post-header.scss';
+@import './mobile-post-header.scss';
 @import './les-es-postBg.scss';
 @import './tb-postBg.scss';

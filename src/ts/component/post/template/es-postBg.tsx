@@ -8,7 +8,6 @@ interface PropsOfPostBackgroundOnExternalScreen {
     padding:{
         top:number;
         leftRight:number;
-        bottom:number;
     }
     marginBottom:number;
     toc?:{
@@ -19,28 +18,44 @@ interface PropsOfPostBackgroundOnExternalScreen {
         }
         item:{
             fontSize:number;
-            margin:{
-                topBottom:number;
-                left:number;
-            }
         }
         paddingLeftRight:number;
         content:string;
     }
-    contentOfPost:string;
+    content:{
+        margin:{
+            top:number;
+            bottom:number;
+        }
+        post:string;
+    }
 }
 
 export default class PostBackgroundOnExternalScreen extends React.Component<PropsOfPostBackgroundOnExternalScreen> {
     render() {
         const pp = this.props.padding;
-        const styleOfPostBG = {
-            width:`${this.props.width}px`,
-            padding:`${pp.top}px ${pp.leftRight}px ${pp.bottom}px ${pp.leftRight}px`,
-            marginBottom:`${this.props.marginBottom}px`,
-            zIndex:this.props.baseZIndex + 1
-        };   
+        let styleOfPostBG;
+        if (this.props.padding.top != 0) {
+            styleOfPostBG = {
+                width:`${this.props.width}px`,
+                paddingTop:`${this.props.padding.top}px`,
+                paddingLeft:`${pp.leftRight}px`,
+                paddingRight:`${pp.leftRight}px`,
+                paddingBottom:`1px`,
+                marginBottom:`${this.props.marginBottom}px`,
+                zIndex:this.props.baseZIndex + 1
+            };  
+        } else {
+            styleOfPostBG = {
+                width:`${this.props.width}px`,
+                padding:`1px ${pp.leftRight}px`,
+                /* 上下加入 1px 的 padding 以便讓裡面元素的 margin-top, margin-bottom 不會頂到 post bg 外面 */
+                marginBottom:`${this.props.marginBottom}px`,
+                zIndex:this.props.baseZIndex + 1
+            };
+        }
 
-        let tocElement = null, styleRulesAppliedToItems= null;
+        let tocElement = null;
         if (this.props.toc) {
             const styleOfToc = {
                 width:`${this.props.toc.width}px`,
@@ -59,27 +74,18 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
                     <div className="sap"></div>
                     <ol className="content" style={styleOfContent} dangerouslySetInnerHTML={{__html:this.props.toc.content}}></ol>
                 </div>;
-
-            styleRulesAppliedToItems = <style>{`
-            #toc .content ol {
-                margin:0 0 0 ${this.props.toc.item.fontSize}px;
-            }
-            #toc .content li {
-                margin:${this.props.toc.item.margin.topBottom}px 0;
-            }
-            #toc .content > li {
-                margin-left:${this.props.toc.item.margin.left}px;
-                margin-right:${this.props.toc.item.margin.left}px;
-            }
-            `}</style>;
-        }   
-        
+        }
+        const styleOfPostContent = {
+            marginTop:`${this.props.content.margin.top}px`,
+            marginBottom:`${this.props.content.margin.bottom}px`
+        }
         return (
-            <div id="postBg" className={this.props.className} style={styleOfPostBG}>
+            <div id="postBg" className={this.props.className} style={styleOfPostBG}>               
                 {this.props.children}
-                {styleRulesAppliedToItems}
-                {tocElement}
-                <div className="content" dangerouslySetInnerHTML={{__html:this.props.contentOfPost}} ></div>
+                <div className="content" style={styleOfPostContent}>
+                    {tocElement}
+                    <div dangerouslySetInnerHTML={{__html:this.props.content.post}}></div>
+                </div>
             </div>
         );
     }    
