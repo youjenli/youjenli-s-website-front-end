@@ -62,20 +62,25 @@
     }
 }
 
+/* 橫跨所有螢幕的樣式設定 */
 $fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
-#postBg.les, #postBg.es {
+#postBg {
     box-sizing:border-box;
-    font-size:18px;
-    margin:0 auto;
-    background:rgb(255,253,249);
-    box-shadow:0 2px 3px 0 #888888;
     font-family: $fontFamilyOfTextInArticle;
+
     .subject {
         border-style:solid;
         border-color:#F4BA66;
         color:#000000;
-        float:none;
     }
+}
+
+#postBg.les, #postBg.es {    
+    font-size:18px;
+    margin:0 auto;
+    background:rgb(255,253,249);
+    box-shadow:0 2px 3px 0 #888888;
+    
     #toc {
         background:#F9F9F9;
         margin-right:2em;
@@ -87,7 +92,6 @@ $fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/*
             width:100%;
             border-radius:2.5px;
         }
-     
     }
     .content {
         h1,h2,h3,h4,h5 {

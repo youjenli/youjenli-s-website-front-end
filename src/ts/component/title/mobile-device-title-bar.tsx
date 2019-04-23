@@ -171,13 +171,14 @@ export default class MobileDeviceTitleBar extends
         if (!isStickyPositionSupported() && this.state.shouldTitleBeSticky) {
             classesOfHeaderCtx = classesOfHeaderCtx + " sticky";
         }
-
+        
         const headerCtxStyle = {
-            zIndex:this.props.baseZIndex + 4
+            zIndex:this.props.baseZIndex + 2
         }
 
         const headerStyle = {
-            height:this.headerHeight
+            height:this.headerHeight,
+            zIndex:this.props.baseZIndex + 5
         };
 
         let plhdrStyle = {
@@ -195,13 +196,13 @@ export default class MobileDeviceTitleBar extends
             styleOfMenu = {
                 top:`${topShiftOfMenu}px`,
                 maxHeight:`${maxHeightOfMenu}px`,
-                zIndex:this.props.baseZIndex + 3
+                zIndex:this.props.baseZIndex + 4
             }
     
             styleOfShadow = {//畫面陰影會躲在選單後面，因此尺寸和選單相似
                 top:`${topShiftOfMenu}px`,
                 height:`${maxHeightOfMenu}px`,
-                zIndex:this.props.baseZIndex + 2
+                zIndex:this.props.baseZIndex + 3
             }
         }
 
@@ -296,7 +297,7 @@ class ArrowShape extends React.Component {
     render() {
         return (
             <svg className="arrow" width="42px" height="32px" viewBox="0 0 42 32" version="1.1">
-                <g transform="translate(-358.000000, -74.000000)" fill-rule="nonzero">
+                <g transform="translate(-358.000000, -74.000000)" fillRule="nonzero">
                     <g transform="translate(0.000000, 70.000000)">
                         <g transform="translate(358.000000, 4.600000)">
                             <path d="M28.2823118,0.466218047 C27.7101302,-0.155406016 26.7578279,-0.155406016 26.1656399,0.466218047 C25.5934582,1.0668413 25.5934582,2.06647999 26.1656399,2.66570319 L36.8983804,13.9319393 L1.48180375,13.9319393 C0.65620832,13.9333394 0,14.622166 0,15.4887996 C0,16.3554331 0.65620832,17.0666606 1.48180375,17.0666606 L36.8983804,17.0666606 L26.1656399,28.3118959 C25.5934582,28.93352 25.5934582,29.9345588 26.1656399,30.533782 C26.7578279,31.155406 27.711464,31.155406 28.2823118,30.533782 L41.555859,16.6004426 C42.148047,15.9998193 42.148047,15.0001807 41.555859,14.4009575 L28.2823118,0.466218047 Z"></path>

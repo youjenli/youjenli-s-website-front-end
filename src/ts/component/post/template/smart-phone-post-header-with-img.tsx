@@ -4,13 +4,11 @@ import {CategoryIcon, TagIcon, PublishIcon} from '../../home/recentPosts/icons';
 import * as terms from '../../home/recentPosts/terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 
-interface PropsOfTabletPostHeaderWithImg {
-    className?:string;
+interface PropsOfSmartPhonePostHeaderWithImg {
     title:{
         name:string;
         fontSize:number;
     };
-    paddingBottom:number;
     postInfo:{
         fontSize:number;
         categories?:CategoryOfPost[];
@@ -18,7 +16,6 @@ interface PropsOfTabletPostHeaderWithImg {
         date:Date;
         modified:Date;
         wordCount:number;
-        marginBottomOfLastItem:number;
     };
     img:{
         url:string;
@@ -26,11 +23,10 @@ interface PropsOfTabletPostHeaderWithImg {
     }
 }
 
-export default class TabletPostHeaderWithImg extends React.Component<PropsOfTabletPostHeaderWithImg> {
+export default class SmartPhonePostHeaderWithImg extends React.Component<PropsOfSmartPhonePostHeaderWithImg> {
     render() {
         const styleOfPostHeader = {
-            fontSize:`${this.props.title.fontSize}px`,
-            paddingBottom:`${this.props.paddingBottom}px`
+            fontSize:`${this.props.title.fontSize}px`
         };
         const postInfo = {
             fontSize:`${this.props.postInfo.fontSize}px`,
@@ -69,13 +65,8 @@ export default class TabletPostHeaderWithImg extends React.Component<PropsOfTabl
         }
         let msgAboutWordCount = `${terms.clauseSeparater}${terms.wordCount} ${this.props.postInfo.wordCount} ${terms.unitOfWord}${terms.period}`;
 
-        const styleOfPublishInfo = {
-            fontSize:`${this.props.postInfo.fontSize}px`,
-            marginBottom:`${this.props.postInfo.marginBottomOfLastItem}px`
-        }
-
         const publishInfoElement = (
-            <div className="publishInfo" style={styleOfPublishInfo}>
+            <div className="publishInfo" style={postInfo}>
                 <PublishIcon/><span>
                     {terms.published}&nbsp;{this.props.postInfo.date.getFullYear()}/{publishMonth}/{publishDay}
                     {lastUpdate}{msgAboutWordCount}
@@ -87,14 +78,14 @@ export default class TabletPostHeaderWithImg extends React.Component<PropsOfTabl
         };       
 
         return (
-            <div id="post-header" style={styleOfPostHeader} className={this.props.className}>
+            <div id="post-header" style={styleOfPostHeader} className="sp">
                 <div className="titleBg">
                     <div className="title">{this.props.title.name}</div>
+                    <img style={styleOfImg} src={this.props.img.url}/>
                     <div className="categories" style={postInfo}><CategoryIcon/>{categories}</div>
                     <div className="tags" style={postInfo}><TagIcon />{tags}</div>
-                    {publishInfoElement}
-                    <img style={styleOfImg} src={this.props.img.url}/>
-                </div>                
+                    {publishInfoElement}                    
+                </div>
             </div>                         
         );        
     }

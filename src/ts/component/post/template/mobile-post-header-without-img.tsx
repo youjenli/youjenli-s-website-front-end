@@ -7,7 +7,6 @@ import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 interface PropsOfMobilePostHeaderWithoutImg {
     baseZIndex:number;
     className?:string;
-    paddingBottom:number;
     title:{
         name:string;
         fontSize:number;
@@ -19,6 +18,7 @@ interface PropsOfMobilePostHeaderWithoutImg {
         date:Date;
         modified:Date;
         wordCount:number;
+        marginBottomOfLastItem:number;
     }
     heightOfDecoration:number;
 }
@@ -27,7 +27,6 @@ export default class MobilePostHeaderWithoutImg extends React.Component<PropsOfM
     render() {
         const styleOfPostHeader = {
             fontSize:`${this.props.title.fontSize}px`,
-            paddingBottom:`${this.props.paddingBottom}px`,
             zIndex:this.props.baseZIndex + 2
         };
         const postInfo = {
@@ -68,7 +67,8 @@ export default class MobilePostHeaderWithoutImg extends React.Component<PropsOfM
         let msgAboutWordCount = `${terms.clauseSeparater}${terms.wordCount} ${this.props.postInfo.wordCount} ${terms.unitOfWord}${terms.period}`;
 
         const styleOfPublishInfo = {
-            fontSize:`${this.props.postInfo.fontSize}px`
+            fontSize:`${this.props.postInfo.fontSize}px`,
+            marginBottom:`${this.props.postInfo.marginBottomOfLastItem}px`
         }
 
         const publishInfoElement = (
