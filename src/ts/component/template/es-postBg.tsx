@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as termsOfArticle from '../terms';
+import * as termsOfArticle from '../post/terms';
 
 interface PropsOfPostBackgroundOnExternalScreen {
     baseZIndex:number;
@@ -24,7 +24,7 @@ interface PropsOfPostBackgroundOnExternalScreen {
     }
     content:{
         margin:{
-            top:number;
+            top?:number;
             bottom:number;
         }
         post:string;
@@ -76,9 +76,12 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
                 </div>;
         }
         const styleOfPostContent = {
-            marginTop:`${this.props.content.margin.top}px`,
             marginBottom:`${this.props.content.margin.bottom}px`
         }
+        if(this.props.content.margin.top) {
+            styleOfPostContent['marginTop'] = `${this.props.content.margin.top}px`;
+        }
+
         return (
             <div id="postBg" className={this.props.className} style={styleOfPostBG}>               
                 {this.props.children}

@@ -4,18 +4,16 @@
         background:#1B3404;
         box-sizing:border-box;
         box-shadow:0 2px 4px 0 rgba(0,0,0,50);
+        padding:1px 0;/* 加入 1px padding 以免裡面元素的 margin 穿出 titleBg*/
     }
     .postInfo {
         margin:0 auto;
         position:relative;
-        padding-top:1em;
+        padding:1px 0;/* 加入 1px padding 以免裡面元素的 margin 穿出 post info*/
     }
     .title {
         font-size:1em;
-        margin-bottom:1em;
-    }
-    .categories, .tags {
-        margin-bottom:0.75em;
+        margin:1em 0;
     }
     .categories, .tags, .publishInfo {
         font-size:0.5em;
@@ -25,6 +23,10 @@
             margin-right:1em;
         }
     }
+
+    .categories, .tags {
+        margin-bottom:0.75em;
+    }   
 
     .subject {
         border-width:4px;
@@ -42,7 +44,7 @@
 /* 以下是大外接螢幕專用的樣式 */
 #post-header.les {          
     .subject {
-        margin-top:0.94vw;
+        margin:0.94vw 0;
     }
 }
 .les .subject {
@@ -60,7 +62,7 @@
 /* 以下是一般外接螢幕專用的樣式 */
 #post-header.es {          
     .subject {
-        margin-top:30px;
+        margin:30px 0;
     }
 }
 .es .subject {

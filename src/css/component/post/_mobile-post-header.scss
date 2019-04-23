@@ -1,12 +1,16 @@
 #post-header.tb, #post-header.sp {
     position:relative;
-    background:#1B3404;
-    box-shadow:0 2px 4px 0 rgba(0,0,0,50);
-    padding:1px 0; /* 在首尾加入 1px padding 以便讓第一列的 margin-top 和最後一列的 margin-bottom 不會頂出 post-header */
-    
+
     .titleBg {/*給有圖的標題用的類別*/
         position:relative;
-        padding-bottom:1px;/* 同樣是為了讓最後一列內容元素的 margin-bottom 能延伸此元素高度的辦法*/
+        background:#1B3404;
+        box-shadow:0 2px 4px 0 rgba(0,0,0,50);
+        padding:1px 0;/* 是為了讓內容元素的 margin-top, margin-bottom 能延伸此元素高度的辦法*/
+    }    
+
+    .postInfo {
+        position:relative;
+        padding-bottom:1px;/* 是為了讓內容元素的 margin-bottom 能延伸此元素高度的辦法*/               
     }
 
     .title {
@@ -14,15 +18,12 @@
         margin:1em 0;
     }
 
-    img {
-        width:100%;
-    }
-
     .categories, .tags {
         margin-bottom:0.75em;
     }
 
     .categories, .tags, .publishInfo {
+        margin-top:0.75em;
         .icon {
             min-width:1em;
             min-height:1em;
@@ -33,6 +34,7 @@
     }
     #post-dec {
         height:0.33em;
+        position:relative;
     }
 }
 .tb .subject, .sp .subject {
@@ -44,8 +46,11 @@
 }
 
 #post-header.tb {
-    padding-left:18px;
-    padding-right:18px;
+
+    .titleBg {
+        padding-left:18px;
+        padding-right:18px;
+    }    
 
     img {
         position:absolute;
@@ -54,7 +59,7 @@
     }
 
     .categories, .tags, .publishInfo {
-        font-size:0.5em;//todo 不確定這樣式對不對
+        font-size:0.5em;
         .icon {
             margin-right:1em;
         }
@@ -62,8 +67,11 @@
 }
 
 #post-header.sp {
-    padding-left:16px;
-    padding-right:16px;
+    
+    .titleBg {
+        padding-left:16px;
+        padding-right:16px;
+    }
 
     img {
         border-radius:3px;

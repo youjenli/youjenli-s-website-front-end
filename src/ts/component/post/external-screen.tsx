@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Post } from '../../model/post';
-import DefaultPostHeaderWithImg from './template/es-post-header-with-img';
-import DefaultPostHeaderWithoutImg from './template/es-post-header-without-img';
-import PostBackgroundOnExternalScreen from './template/es-postBg';
-import Subject from './template/subject';
+import DefaultHeaderOfArticle from '../template/es-header-of-article';
+import PostInfo from '../template/post-info';
+import PostBackgroundOnExternalScreen from '../template/es-postBg';
+import Subject from './subject';
 import * as Countable from 'countable';
 
 interface PropsOfExternalScreenPostPage {
@@ -65,7 +65,6 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
 
             const contentOfPost = {
                 margin:{
-                    top:marginTopOfPostContent,
                     bottom:marginBottomOfPostContent
                 },
                 post:null//先不擺內容，等接下來可能要移除 subject 的作業結束後再回頭設定此屬性。
@@ -96,22 +95,19 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                 paddingBottom:heightOfImg * 0.618/* 注意，不用加上發佈資訊的下沿，那部分由 postInfo 的樣式來設定 */
             };
             /* 如果畫面上有照片那要為 post info 加上 padding bottom 以便使 post info 跟圖片或裝飾線保持距離 */
-            let postInfo = {
-                categories:this.props.post.categories,
-                tags:this.props.post.tags,
-                date:this.props.post.date,
-                modified:this.props.post.modified,
-                wordCount:countingResult.characters,
-                paddingBottomInEM:0.75
-            };
-            let img = {
-                url:post.imageUrl,
-                height:heightOfImg
+
+            let styleOfImg = {
+                height:`${heightOfImg}px`
             }
             return (
                 <React.Fragment>
-                    <DefaultPostHeaderWithImg baseZIndex={this.props.remFontSize + 1} className="es"
-                        titleBg={titleBg} title={title} postInfo={postInfo} img={img} />
+                    <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
+                        titleBg={titleBg} title={title} appendDecorationLine={false}>
+                        <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
+                            date={this.props.post.date} modified={this.props.post.modified}
+                            wordCount={countingResult.characters} marginBottomOfLastItem='1.5em' />
+                        <img src={post.imageUrl} style={styleOfImg} />
+                    </DefaultHeaderOfArticle>
                     {postBg}
                 </React.Fragment>
             );
@@ -132,37 +128,28 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                     countingResult = counter;
                 });
 
-                let postInfo = {
-                    categories:this.props.post.categories,
-                    tags:this.props.post.tags,
-                    date:this.props.post.date,
-                    modified:this.props.post.modified,
-                    wordCount:countingResult.characters,
-                    paddingBottom:'30px'
-                };
                 postHeader = (
-                    <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1} className="es"
-                        titleBg={titleBg} title={title} postInfo={postInfo}>
-                        <Subject content={subjectElement.innerHTML}/>
-                    </DefaultPostHeaderWithoutImg>
+                    <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
+                        titleBg={titleBg} title={title} appendDecorationLine={true}>
+                        <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
+                            date={this.props.post.date} modified={this.props.post.modified}
+                            wordCount={countingResult.characters} marginBottomOfLastItem='0px'/>
+                        <Subject content={subjectElement.innerHTML} />
+                    </DefaultHeaderOfArticle>
                 ); 
             } else {
                 let countingResult:Countable.CountingResult;
                 Countable.count(doc.body.innerHTML, counter => {
                     countingResult = counter;
                 });
-
-                let postInfo = {
-                    categories:this.props.post.categories,
-                    tags:this.props.post.tags,
-                    date:this.props.post.date,
-                    modified:this.props.post.modified,
-                    wordCount:countingResult.characters,
-                    paddingBottom:'1em'
-                };
+                
                 postHeader = (
-                    <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1} className="es"
-                        titleBg={titleBg} title={title} postInfo={postInfo} />
+                    <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
+                        titleBg={titleBg} title={title} appendDecorationLine={true}>
+                        <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
+                            date={this.props.post.date} modified={this.props.post.modified}
+                            wordCount={countingResult.characters} marginBottomOfLastItem='1.5em' />
+                    </DefaultHeaderOfArticle>
                 );
             }
 

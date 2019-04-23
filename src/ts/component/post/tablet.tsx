@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ParsedPost } from '../../model/post';
-import TabletPostHeaderWithImg from './template/tablet-post-header-with-img';
-import MobilePostHeaderWithoutImg from './template/mobile-post-header-without-img';
-import Subject from './template/subject';
+import MobilePostHeader from '../template/mobile-header-of-article';
+import PostInfo from '../template/post-info';
+import Subject from './subject';
 import * as Countable from 'countable';
 
 interface PropsOfTabletPostPage {
@@ -19,7 +19,8 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
         const fontSizeOfTitle = (5 * vw + 1688) / 148;
         const title = {
             name:this.props.post.title,
-            fontSize:fontSizeOfTitle
+            fontSize:fontSizeOfTitle,
+            maxWidth:maxWidthOfTitle
         };
         const fontSizeOfPostInfo = (vw + 1936)/148;
 
@@ -38,20 +39,11 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
 
         if (this.props.post.imageUrl) {
             const heightOfImg = maxWidthOfTitle * 0.6;
-            const img = {
-                url:post.imageUrl,
-                height:heightOfImg
+            const styleOfImg = {
+                height:`${heightOfImg}px`
             }
-            const postInfo = {
-                fontSize:fontSizeOfPostInfo,
-                categories:post.categories,
-                tags:post.tags,
-                date:post.date,
-                modified:post.modified,
-                wordCount:countingResult.characters,
-                marginBottomOfLastItem:fontSizeOfPostInfo * 1.5
-            };
-            const paddingBottomOfPostHeader = heightOfImg * 0.618;
+
+            const paddingBottomOfTitleBg = heightOfImg * 0.618;
 
             let postCtnrElement = null;
             if (subjectElement) {
@@ -81,57 +73,51 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <div id="postBg" style={styleOfPostBg} className="tb" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>;
             }
+            
             return (
                 <React.Fragment>
-                    <TabletPostHeaderWithImg className="tb" title={title} paddingBottom={paddingBottomOfPostHeader} 
-                        postInfo={postInfo} img={img} />
+                    <MobilePostHeader baseZIndex={this.props.baseZIndex} className="tb" title={title} paddingBottom={paddingBottomOfTitleBg} >
+                        <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
+                            wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} >
+                            <img src={post.imageUrl} style={styleOfImg} />
+                        </PostInfo>                        
+                    </MobilePostHeader>                    
                     {postCtnrElement}                        
                 </React.Fragment>
             );
         } else {
-            const heightOfDecoration = fontSizeOfTitle / 3;
+            const decorationLine = {
+                height:fontSizeOfTitle / 3
+            }
             const styleOfPostBg = {
                 paddingTop:this.props.remFontSize * 1.5
             }
             
             let postHeaderElement = null;
             if (subjectElement) {
-                const postInfo = {
-                    fontSize:fontSizeOfPostInfo,
-                    categories:post.categories,
-                    tags:post.tags,
-                    date:post.date,
-                    modified:post.modified,
-                    wordCount:countingResult.characters,
-                    marginBottomOfLastItem:0
-                };
+                
                 const styleOfSubjectContent = {
                     fontSize:`${fontSizeOfSubjectContent}px`,
-                    margin:`${fontSizeOfSubjectHint * 1.5}px`
+                    margin:`${fontSizeOfSubjectHint * 1.5}px 0`
                 }
                 const styleOfSubjectHint = {
                     fontSize:`${fontSizeOfSubjectHint}px`
                 }
                 postHeaderElement = 
-                    <MobilePostHeaderWithoutImg baseZIndex={this.props.baseZIndex} className="tb" 
-                        title={title} postInfo={postInfo} heightOfDecoration={heightOfDecoration}>
-                            <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} 
-                                        content={subjectElement.innerHTML}/>
-                    </MobilePostHeaderWithoutImg>;
+                    <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
+                        title={title} decorationLine={decorationLine} >
+                        <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
+                            wordCount={countingResult.characters} marginBottomOfLastItem={'0px'} />
+                        <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} 
+                                    content={subjectElement.innerHTML}/>
+                    </MobilePostHeader>
             } else {
-                const postInfo = {
-                    fontSize:fontSizeOfPostInfo,
-                    categories:post.categories,
-                    tags:post.tags,
-                    date:post.date,
-                    modified:post.modified,
-                    wordCount:countingResult.characters,
-                    marginBottomOfLastItem:fontSizeOfPostInfo * 1.5
-                };
-               
                 postHeaderElement = 
-                    <MobilePostHeaderWithoutImg baseZIndex={this.props.baseZIndex} className="tb"
-                        title={title} postInfo={postInfo} heightOfDecoration={heightOfDecoration} />;
+                    <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
+                        title={title} decorationLine={decorationLine} >
+                        <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
+                    wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} />
+                    </MobilePostHeader>;
             }
 
             return (

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Post } from '../../model/post';
-import DefaultPostHeaderWithImg from './template/es-post-header-with-img';
-import DefaultPostHeaderWithoutImg from './template/es-post-header-without-img';
-import PostBackgroundOnExternalScreen from './template/es-postBg';
-import Subject from './template/subject';
+import DefaultHeaderOfArticle from '../template/es-header-of-article';
+import PostInfo from '../template/post-info';
+import Subject from './subject';
+import PostBackgroundOnExternalScreen from '../template/es-postBg';
 import * as Countable from 'countable';
 
 interface PropsOfLargeExternalScreenPostPage {
@@ -96,22 +96,19 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 paddingBottom:heightOfImg * 0.618/* 注意，不用加上發佈資訊的下沿，那部分由 postInfo 的樣式來設定 */
             };
             /* 如果畫面上有照片那要為 post info 加上 padding bottom 以便使 post info 跟圖片或裝飾線保持距離 */
-            let postInfo = {
-                categories:this.props.post.categories,
-                tags:this.props.post.tags,
-                date:this.props.post.date,
-                modified:this.props.post.modified,
-                wordCount:countingResult.characters,
-                paddingBottomInEM:0.75
-            };
-            let img = {
-                url:post.imageUrl,
-                height:heightOfImg
+            
+            let styleOfImg = {
+                height:`${heightOfImg}px`
             }
             return (
                 <React.Fragment>
-                    <DefaultPostHeaderWithImg baseZIndex={this.props.remFontSize + 1} titleBg={titleBg} title={title}
-                         className="les" postInfo={postInfo} img={img} />
+                    <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
+                        titleBg={titleBg} title={title} appendDecorationLine={false}>
+                        <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
+                            date={this.props.post.date} modified={this.props.post.modified}
+                            wordCount={countingResult.characters} marginBottomOfLastItem='2em' />                      
+                        <img src={post.imageUrl} style={styleOfImg} />
+                    </DefaultHeaderOfArticle>
                     {postBgElement}
                 </React.Fragment>
             );
@@ -131,21 +128,15 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 Countable.count(doc.body.innerHTML, counter => {
                     countingResult = counter;
                 });
-
-                let postInfo = {
-                    categories:this.props.post.categories,
-                    tags:this.props.post.tags,
-                    date:this.props.post.date,
-                    modified:this.props.post.modified,
-                    wordCount:countingResult.characters,
-                    paddingBottom:'0.9375vw'
-                };
                 
                 postHeader = (
-                    <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1}  className="les"
-                        titleBg={titleBg} title={title} postInfo={postInfo}>
+                    <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
+                        titleBg={titleBg} title={title} appendDecorationLine={true}>
+                        <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
+                            date={this.props.post.date} modified={this.props.post.modified}
+                            wordCount={countingResult.characters}/>
                         <Subject content={subjectElement.innerHTML}/>
-                    </DefaultPostHeaderWithoutImg>
+                    </DefaultHeaderOfArticle>
                 ); 
             } else {
                 let countingResult:Countable.CountingResult;
@@ -153,17 +144,13 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     countingResult = counter;
                 });
 
-                let postInfo = {
-                    categories:this.props.post.categories,
-                    tags:this.props.post.tags,
-                    date:this.props.post.date,
-                    modified:this.props.post.modified,
-                    wordCount:countingResult.characters,
-                    paddingBottom:'1em'
-                };
                 postHeader = (
-                    <DefaultPostHeaderWithoutImg baseZIndex={this.props.remFontSize + 1} className="les"
-                        titleBg={titleBg} title={title} postInfo={postInfo} />
+                    <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
+                        titleBg={titleBg} title={title} appendDecorationLine={true}>
+                        <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
+                            date={this.props.post.date} modified={this.props.post.modified}
+                            wordCount={countingResult.characters} marginBottomOfLastItem='2em' />
+                    </DefaultHeaderOfArticle>
                 );
             }
 

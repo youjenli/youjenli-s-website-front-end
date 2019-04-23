@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as termsOfArticle from '../terms';
+import * as termsOfArticle from './terms';
 
 interface PropsOfSubject {
     content:string

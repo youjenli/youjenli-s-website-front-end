@@ -42,16 +42,16 @@ export default class PostPage extends React.Component<PropsOfPostPage, StateOfPo
         });
     }
     render () {
-        const headerBaseZIndex = 100;
+        const baseZIndex = 100;
         const vw = this.state.viewportWidth
         if (vw > 1440) {
             return (
                 <React.Fragment>
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
-                        baseZIndex={headerBaseZIndex} />
+                        baseZIndex={baseZIndex + 20} />
                     <LargeExternalScreenPostPage viewportWidth={this.state.viewportWidth}
-                        baseZIndex={headerBaseZIndex - 10} remFontSize={18} post={this.props.post}/>
+                        baseZIndex={baseZIndex} remFontSize={18} post={this.props.post}/>
                 </React.Fragment>
             );
         } else if (vw > 1060) {
@@ -59,9 +59,9 @@ export default class PostPage extends React.Component<PropsOfPostPage, StateOfPo
                 <React.Fragment>
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
-                        baseZIndex={headerBaseZIndex} />
+                        baseZIndex={baseZIndex + 20} />
                     <ExternaScreenPostPage viewportWidth={this.state.viewportWidth}
-                        baseZIndex={headerBaseZIndex - 10} remFontSize={18} post={this.props.post}/>
+                        baseZIndex={baseZIndex} remFontSize={18} post={this.props.post}/>
                 </React.Fragment>
             );
         } else {
@@ -123,21 +123,21 @@ export default class PostPage extends React.Component<PropsOfPostPage, StateOfPo
                 if (vw > 432) {
                     return (
                         <React.Fragment>
-                            <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}>
+                            <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20}>
                                 {tocElement}
                             </MobileDeviceTitleBar>
                             <TabletPostPage viewportWidth={this.state.viewportWidth}
-                                baseZIndex={headerBaseZIndex - 10} remFontSize={18} post={parsedPost}/>
+                                baseZIndex={baseZIndex} remFontSize={18} post={parsedPost}/>
                         </React.Fragment>
                     );
                 } else {
                     return (
                         <React.Fragment>
-                            <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}>
+                            <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20}>
                                 {tocElement}
                             </MobileDeviceTitleBar>
                             <SmartPhonePostPage viewportWidth={this.state.viewportWidth}
-                                    baseZIndex={headerBaseZIndex - 10} remFontSize={16} post={parsedPost}/>
+                                    baseZIndex={baseZIndex} remFontSize={16} post={parsedPost}/>
                         </React.Fragment>
                     );
                 }

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { ParsedPost } from '../../model/post';
-import SmartphoneHeaderWithImg from './template/smart-phone-post-header-with-img';
-import MobilePostHeaderWithoutImg from './template/mobile-post-header-without-img';
-import Subject from './template/subject';
+import MobileHeaderOfArticle from '../template/mobile-header-of-article';
+import PostInfo from '../template/post-info';
+import Subject from './subject';
 import * as Countable from 'countable';
 
 interface PropsOfSmartPhonePostPage {
@@ -19,7 +19,8 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
         const fontSizeOfTitle = (vw + 1024) / 56;
         const title = {
             name:this.props.post.title,
-            fontSize:fontSizeOfTitle
+            fontSize:fontSizeOfTitle,
+            maxWidth:maxWidthOfTitle
         };
         const fontSizeOfPostInfo = (vw + 464)/56;
         
@@ -38,18 +39,9 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
 
         if (this.props.post.imageUrl) {
             const heightOfImg = maxWidthOfTitle * 0.6;
-            const img = {
-                url:post.imageUrl,
-                height:heightOfImg
+            const styleOfImg = {
+                height:`${heightOfImg}px`
             }
-            const postInfo = {
-                fontSize:fontSizeOfPostInfo,
-                categories:post.categories,
-                tags:post.tags,
-                date:post.date,
-                modified:post.modified,
-                wordCount:countingResult.characters
-            };
 
             let postCtnrElement = null;
             if (subjectElement) {
@@ -76,27 +68,24 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
  
             return (
                 <React.Fragment>
-                    <SmartphoneHeaderWithImg title={title} postInfo={postInfo} img={img} />
+                    <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} title={title} className="sp">
+                        <img src={post.imageUrl} style={styleOfImg}/>
+                        <PostInfo categories={post.categories} tags={post.tags}
+                            date={post.date} modified={post.modified} wordCount={countingResult.characters} />
+                        </MobileHeaderOfArticle>
                     {postCtnrElement}                        
                 </React.Fragment>
             );
         } else {
-            const heightOfDecoration = fontSizeOfTitle / 3;
+            const decoration = {
+                height:fontSizeOfTitle / 3
+            }
             const styleOfPostBg = {
                 paddingTop:this.props.remFontSize * 1.5
             }
             
             let postHeaderElement = null;
             if (subjectElement) {
-                const postInfo = {
-                    fontSize:fontSizeOfPostInfo,
-                    categories:post.categories,
-                    tags:post.tags,
-                    date:post.date,
-                    modified:post.modified,
-                    wordCount:countingResult.characters,
-                    marginBottomOfLastItem:0
-                };
                 const styleOfSubjectContent = {
                     fontSize:`${fontSizeOfSubjectContent}px`,
                     margin:`${fontSizeOfSubjectHint * 1.5}px 0`
@@ -105,25 +94,21 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     fontSize:`${fontSizeOfSubjectHint}px`
                 }
                 postHeaderElement = 
-                    <MobilePostHeaderWithoutImg baseZIndex={this.props.baseZIndex} className="sp"
-                        title={title} postInfo={postInfo} heightOfDecoration={heightOfDecoration}>
+                    <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
+                        title={title} decorationLine={decoration}>
+                            <PostInfo categories={post.categories} tags={post.tags}
+                                date={post.date} modified={post.modified} wordCount={countingResult.characters} />
                             <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} 
                                         content={subjectElement.innerHTML}/>
-                    </MobilePostHeaderWithoutImg>;
+                    </MobileHeaderOfArticle>;
             } else {
-                const postInfo = {
-                    fontSize:fontSizeOfPostInfo,
-                    categories:post.categories,
-                    tags:post.tags,
-                    date:post.date,
-                    modified:post.modified,
-                    wordCount:countingResult.characters,
-                    marginBottomOfLastItem:fontSizeOfPostInfo * 1.5
-                };
 
                 postHeaderElement = 
-                    <MobilePostHeaderWithoutImg baseZIndex={this.props.baseZIndex} className="sp" title={title}
-                        postInfo={postInfo} heightOfDecoration={heightOfDecoration} />;
+                <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
+                    title={title} decorationLine={decoration}>
+                        <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
+                            wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`}/>
+                </MobileHeaderOfArticle>;
             }
 
             return (
