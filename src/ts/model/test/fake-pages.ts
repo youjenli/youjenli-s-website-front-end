@@ -109,7 +109,7 @@ const pageWithoutParentButWithfeatureMedia:Page = {
 }
 
 const pageWithParentAndFeatureMedia:Page = {
-    title:'有圖無母頁文章',
+    title:'有圖有母頁文章',
     id:0,
     date:fakeDate,
     modified:fakeDate,
@@ -186,7 +186,7 @@ const pageWithParentButWithoutFeatureMedia:Page = {
 }
 
 const pageWithoutParentAndFeatureMedia:Page = {
-    title:'無圖有母頁文章',
+    title:'無圖無母頁文章',
     id:1,
     date:fakeDate,
     modified:fakeDate,

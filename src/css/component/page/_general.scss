@@ -45,31 +45,45 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
     }
 }
 
-#post-header.tb {
-
-    .titleBg {
-        padding-left:18px;
-        padding-right:18px;
-    }
-
+#post-header.tb, #post-header.sp {
     .pageInfo {
         position:relative;
         padding-bottom:1px;/* 是為了讓內容元素的 margin-bottom 能延伸此元素高度的辦法*/
+    }    
+}
+
+#post-header.tb {
+
+    .pageInfo {
+        .parent {
+            .icon {
+                margin-right:1em;
+            }
+        }
 
         .publishInfo {
             margin-bottom:1.5em;
         }
-    }
 
-    img {
-        position:absolute;
-        top:100%;
-        border-radius:5px;
-    }
-
-    .parent {
-        .icon {
-            margin-right:1em;
+        img {
+            position:absolute;
+            top:100%;
         }
     }
+}
+
+#post-header.sp {
+
+    .pageInfo {
+        .parent {
+            margin-top:1.5em;
+            .icon {
+                margin-right:0.5em;
+            }
+        }
+
+        .publishInfo {
+            margin-bottom:1.5em;
+        }
+    }    
 }

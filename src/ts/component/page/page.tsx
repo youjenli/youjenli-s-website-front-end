@@ -4,7 +4,8 @@ import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import LargeExternalScreenPage from './large-external-screen';
 import ExternalScreenPage from './external-screen';
-import TabletPage from '../page/tablet';
+import TabletPage from './tablet';
+import SmartPhonePage from './smart-phone';
 import { Page as PageModel, ParsedPage } from '../../model/page';
 import * as terms from '../post/terms';
 
@@ -139,6 +140,8 @@ export default class Page extends React.Component<PropsOfPage, StateOfPage> {
                             <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} >
                                 {tocElement}
                             </MobileDeviceTitleBar>
+                            <SmartPhonePage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={16} 
+                                page={parsedPage} />
                         </React.Fragment>
                     );
                 }
