@@ -3,6 +3,7 @@ import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/d
 import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import LargeExternalScreenPage from './large-external-screen';
+import ExternalScreenPage from './external-screen';
 import { Page as PageModel } from '../../model/page';
 
 interface PropsOfPage {
@@ -56,6 +57,8 @@ export default class Page extends React.Component<PropsOfPage, StateOfPage> {
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
+                    <ExternalScreenPage viewportWidth={this.state.viewportWidth} 
+                        baseZIndex={baseZIndex} remFontSize={18} page={this.props.page} />
                 </React.Fragment>
             );
         } else {//套用行動裝置的佈局規則
