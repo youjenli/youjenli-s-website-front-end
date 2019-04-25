@@ -10,7 +10,9 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import HomePage from './component/home/home';
 import PostPage from './component/post/post';
+import Page from './component/page/page';
 import {listOfFakePosts} from  './model/test/fake-posts';
+import {listOfFakePages} from './model/test/fake-pages';
 
 const reactRoot = document.getElementById('react-root');
 
@@ -21,23 +23,38 @@ const routeToHome = () => {
     );
 }
 
-const routeToPage = (params) => {
+const routeToPost = (params) => {
     let postId = 0;
     if (params.id >= 0 && params.id < listOfFakePosts.length) {
         postId = params.id;
     }
-    console.log(`route to post id : ${postId}`)
+    console.log(`route to post id : ${postId}`);
     ReactDOM.render(
         <PostPage post={listOfFakePosts[postId]}/>,
         reactRoot
     );
 }
 
+const routeToPage = (params) => {
+    let pageId = 0;
+    if (params.id >= 0 && params.id < listOfFakePosts.length) {
+        pageId = params.id;
+    }
+    console.log(`route to page id : ${pageId}`);
+    ReactDOM.render(
+        <Page page={listOfFakePages[pageId]} />,
+        reactRoot
+    )
+}
+
 router.on({
        '/':routeToHome,
        '/index.html':routeToHome,
-       '/post/:id':routeToPage,
-       '/post/':routeToPage,//為開發而暫留於此
-       '/post':routeToPage//為開發而暫留於此
+       '/post/:id':routeToPost,
+       '/post/':routeToPost,//為開發而暫留於此
+       '/post':routeToPost,//為開發而暫留於此
+       '/page/:id':routeToPage,
+       '/page/':routeToPage,
+       '/page':routeToPage
     })
     .resolve();

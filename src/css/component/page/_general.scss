@@ -1,0 +1,42 @@
+/* 
+    page 借用了 post 的元件，因此大部份元件的樣式已經定義在 post 的樣式表中，這裡只定義 page 額外增加的樣式。
+*/
+$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
+$backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
+#post-header {
+    .parent {
+        color:#B0CA98;
+        display:flex;
+        align-items: center;
+        font-family: $prioritizedFonts, $backupFonts;
+        margin-bottom:0.75em;
+        
+        a {
+            color:#B0CA98;
+        }
+
+        svg {
+            flex-grow:0;
+            g {
+                fill:#B2B2B2;
+            }
+        }        
+        .name {
+            &:hover {
+                cursor:pointer;
+                text-decoration:underline;
+            }
+        }
+    }
+}
+
+#post-header.les {
+    .parent {
+        font-size:0.5em;
+        .icon {
+            min-width:1em;
+            min-height:1em;
+            margin-right:1em;
+        }
+    }
+}

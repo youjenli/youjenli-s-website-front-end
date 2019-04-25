@@ -37,6 +37,30 @@ export default class PostInfo extends React.Component<PropsOfPostInfo> {
             tags = (<span className="noData" key={0}>{terms.postWasNotTagged}</span>);
         }
 
+        return (
+            <React.Fragment>
+                <div className="postInfo">
+                    <div className="categories"><CategoryIcon/>{categories}</div>
+                    <div className="tags"><TagIcon />{tags}</div>
+                    <PublishInfo date={this.props.date} modified={this.props.modified} 
+                        wordCount={this.props.wordCount} marginBottom={this.props.marginBottomOfLastItem} />
+                    {this.props.children}
+                </div>                
+            </React.Fragment>
+        )
+    }
+}
+
+interface PropsOfPublishInfo {
+    date:Date;
+    modified:Date;
+    wordCount:number;
+    marginBottom?:string;
+}
+
+export class PublishInfo extends React.Component<PropsOfPublishInfo> {
+    
+    render() {
         const publishMonth = formatMonthOrDayTo2Digits(this.props.date.getMonth());
         const publishDay = formatMonthOrDayTo2Digits(this.props.date.getDate());
         
@@ -49,28 +73,17 @@ export default class PostInfo extends React.Component<PropsOfPostInfo> {
         let msgAboutWordCount = `${terms.clauseSeparater}${terms.wordCount} ${this.props.wordCount} ${terms.unitOfWord}${terms.period}`;
 
         const styleOfPublishInfo = {};
-        if (this.props.marginBottomOfLastItem) {
-            styleOfPublishInfo['marginBottom'] = this.props.marginBottomOfLastItem;
+        if (this.props.marginBottom) {
+            styleOfPublishInfo['marginBottom'] = this.props.marginBottom;
         }
             
-        
-        const publishInfoElement = (
+        return (
             <div className="publishInfo" style={styleOfPublishInfo}>
                 <PublishIcon/><span>
                     {terms.published}&nbsp;{this.props.date.getFullYear()}/{publishMonth}/{publishDay}
                     {lastUpdate}{msgAboutWordCount}
                 </span>
-            </div>);
-
-        return (
-            <React.Fragment>
-                <div className="postInfo">
-                    <div className="categories"><CategoryIcon/>{categories}</div>
-                    <div className="tags"><TagIcon />{tags}</div>
-                    {publishInfoElement}
-                    {this.props.children}
-                </div>                
-            </React.Fragment>
-        )
+            </div>
+        );
     }
 }
