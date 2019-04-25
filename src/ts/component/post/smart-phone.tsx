@@ -23,6 +23,9 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             maxWidth:maxWidthOfTitle
         };
         const fontSizeOfPostInfo = (vw + 464)/56;
+        const styleOfPostInfo = {
+            fontSize:`${fontSizeOfPostInfo}px`
+        }
         
         let subjectElement = this.props.post.dom.getElementsByClassName('subject')[0];
         let fontSizeOfSubjectHint = null, fontSizeOfSubjectContent = null;
@@ -61,8 +64,11 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                     </div>;
             } else {
+                const styleOfPostBg = {
+                    paddingTop:'1.5em'
+                }
                 postCtnrElement = 
-                    <div id="postBg" className="sp" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    <div id="postBg" className="sp" style={styleOfPostBg} dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>;
             }
  
@@ -70,7 +76,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                 <React.Fragment>
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} title={title} className="sp">
                         <img src={post.imageUrl} style={styleOfImg}/>
-                        <PostInfo categories={post.categories} tags={post.tags}
+                        <PostInfo categories={post.categories} tags={post.tags} styleOfPostInfo={styleOfPostInfo}
                             date={post.date} modified={post.modified} wordCount={countingResult.characters} />
                         </MobileHeaderOfArticle>
                     {postCtnrElement}                        
@@ -81,7 +87,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                 height:fontSizeOfTitle / 3
             }
             const styleOfPostBg = {
-                paddingTop:this.props.remFontSize * 1.5
+                paddingTop:'1.5em'
             }
             
             let postHeaderElement = null;
@@ -96,10 +102,11 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                 postHeaderElement = 
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
                         title={title} decorationLine={decoration}>
-                            <PostInfo categories={post.categories} tags={post.tags}
-                                date={post.date} modified={post.modified} wordCount={countingResult.characters} />
-                            <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} 
+                            <PostInfo categories={post.categories} tags={post.tags} styleOfPostInfo={styleOfPostInfo}
+                                date={post.date} modified={post.modified} wordCount={countingResult.characters} >
+                                <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} 
                                         content={subjectElement.innerHTML}/>
+                            </PostInfo>
                     </MobileHeaderOfArticle>;
             } else {
 
@@ -107,13 +114,14 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                 <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
                     title={title} decorationLine={decoration}>
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                            wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`}/>
+                            wordCount={countingResult.characters}  styleOfPostInfo={styleOfPostInfo} 
+                            marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`}/>
                 </MobileHeaderOfArticle>;
             }
 
             return (
                 <React.Fragment>
-                    {postHeaderElement}    
+                    {postHeaderElement}
                     <div id="postBg" style={styleOfPostBg} className="sp" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>
                 </React.Fragment>

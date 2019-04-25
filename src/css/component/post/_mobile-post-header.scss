@@ -15,7 +15,6 @@
 
     .title {
         font-size:1em;
-        margin:1em 0;
     }
 
     .categories, .tags {
@@ -52,6 +51,10 @@
         padding-right:18px;
     }
 
+    .title {
+        margin:1em 0;
+    }
+
     img {
         position:absolute;
         top:100%;
@@ -77,6 +80,10 @@
     .titleBg {
         padding-left:16px;
         padding-right:16px;
+    }
+
+    .title {
+        margin:0.75em 0;
     }
 
     img {

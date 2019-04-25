@@ -10,6 +10,7 @@ interface PropsOfPostInfo {
     date:Date;
     modified:Date;
     wordCount:number;
+    styleOfPostInfo?:React.CSSProperties;
     marginBottomOfLastItem?:string;
 }
 
@@ -44,7 +45,7 @@ export default class PostInfo extends React.Component<PropsOfPostInfo> {
 
         return (
             <React.Fragment>
-                <div className="postInfo">
+                <div className="postInfo" style={this.props.styleOfPostInfo}>
                     <div className="categories"><CategoryIcon/>{categories}</div>
                     <div className="tags"><TagIcon />{tags}</div>
                     <PublishInfo date={this.props.date} modified={this.props.modified} 
