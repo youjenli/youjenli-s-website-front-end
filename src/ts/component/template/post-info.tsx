@@ -37,13 +37,18 @@ export default class PostInfo extends React.Component<PropsOfPostInfo> {
             tags = (<span className="noData" key={0}>{terms.postWasNotTagged}</span>);
         }
 
+        let styleOfPublishInfo = {};
+        if (this.props.marginBottomOfLastItem) {
+            styleOfPublishInfo['marginBottom'] = this.props.marginBottomOfLastItem
+        }
+
         return (
             <React.Fragment>
                 <div className="postInfo">
                     <div className="categories"><CategoryIcon/>{categories}</div>
                     <div className="tags"><TagIcon />{tags}</div>
                     <PublishInfo date={this.props.date} modified={this.props.modified} 
-                        wordCount={this.props.wordCount} marginBottom={this.props.marginBottomOfLastItem} />
+                        wordCount={this.props.wordCount} style={styleOfPublishInfo} />
                     {this.props.children}
                 </div>                
             </React.Fragment>
@@ -55,7 +60,7 @@ interface PropsOfPublishInfo {
     date:Date;
     modified:Date;
     wordCount:number;
-    marginBottom?:string;
+    style?:React.CSSProperties;
 }
 
 export class PublishInfo extends React.Component<PropsOfPublishInfo> {
@@ -71,14 +76,9 @@ export class PublishInfo extends React.Component<PropsOfPublishInfo> {
             lastUpdate = `${terms.clauseSeparater}${terms.lastModified} ${this.props.modified.getFullYear()}/${modifiedMonth}/${modifiedDay}`;
         }
         let msgAboutWordCount = `${terms.clauseSeparater}${terms.wordCount} ${this.props.wordCount} ${terms.unitOfWord}${terms.period}`;
-
-        const styleOfPublishInfo = {};
-        if (this.props.marginBottom) {
-            styleOfPublishInfo['marginBottom'] = this.props.marginBottom;
-        }
             
         return (
-            <div className="publishInfo" style={styleOfPublishInfo}>
+            <div className="publishInfo" style={this.props.style}>
                 <PublishIcon/><span>
                     {terms.published}&nbsp;{this.props.date.getFullYear()}/{publishMonth}/{publishDay}
                     {lastUpdate}{msgAboutWordCount}

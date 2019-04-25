@@ -64,6 +64,10 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                 </div>;
         }
 
+        const styleOfPublishInfo = {
+            marginBottom:"1.5em"
+        }
+
         if (page.imageUrl) {
             
             const paddingOfPostBg = {
@@ -98,7 +102,7 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         {parentInfoElement}
                         <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters}
-                            marginBottom={"1.5em"} />
+                            style={styleOfPublishInfo} />
                         <img src={page.imageUrl} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
@@ -135,7 +139,7 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         {parentInfoElement}
                         <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters}
-                            marginBottom={"1.5em"}/>
+                            style={styleOfPublishInfo} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 

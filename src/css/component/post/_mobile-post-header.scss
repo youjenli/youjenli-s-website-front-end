@@ -50,7 +50,7 @@
     .titleBg {
         padding-left:18px;
         padding-right:18px;
-    }    
+    }
 
     img {
         position:absolute;
@@ -58,8 +58,14 @@
         border-radius:5px;
     }
 
+    .postInfo {
+        .categories, .tags, .publishInfo {
+            font-size:0.5em;
+        }
+    }
+    
+
     .categories, .tags, .publishInfo {
-        font-size:0.5em;
         .icon {
             margin-right:1em;
         }

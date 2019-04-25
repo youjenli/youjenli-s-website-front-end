@@ -73,8 +73,8 @@ const defaultToc = `
     <li><a>卻說魯肅、孔明辭了玄德、劉琦，玄</a></li>
 </ol>`;
 
-const pageWithfeatureMedia:Page = {
-    title:'有圖專頁',
+const pageWithoutParentButWithfeatureMedia:Page = {
+    title:'有圖無母頁文章',
     id:0,
     date:fakeDate,
     modified:fakeDate,    
@@ -108,13 +108,52 @@ const pageWithfeatureMedia:Page = {
     李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>`
 }
 
-const pageWithoutfeatureMedia:Page = {
-    title:'無圖專頁',
+const pageWithParentAndFeatureMedia:Page = {
+    title:'有圖無母頁文章',
+    id:0,
+    date:fakeDate,
+    modified:fakeDate,
+    parent:{
+        title:'無圖有母頁文章',
+        url:'https://www.google.com.tw'
+    },
+    imageUrl:'/img/afternoon-tea-time.jpeg',
+    excerpt:'師不必賢於弟子。聞道有先後，術業有專攻，如是而已。',
+    content:`
+    ${defaultToc}
+    <h1 name="p1">師說</h1>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>
+    
+    <h2 name="p2">師說</h2>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>
+    
+    <h3 name="p3">師說</h3>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>
+    
+    <h4 name="p4">師說</h4>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>
+    
+    <h5 name="p5">師說</h5>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>`
+}
+
+const pageWithParentButWithoutFeatureMedia:Page = {
+    title:'無圖有母頁文章',
     id:1,
     date:fakeDate,
     modified:fakeDate,
     parent:{
-        title:'有圖專頁',
+        title:'無圖有母頁文章',
         url:'https://www.google.com.tw'
     },
     excerpt:'師不必賢於弟子。聞道有先後，術業有專攻，如是而已。',
@@ -146,4 +185,39 @@ const pageWithoutfeatureMedia:Page = {
     李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>`
 }
 
-export const listOfFakePages = [pageWithfeatureMedia, pageWithoutfeatureMedia];
+const pageWithoutParentAndFeatureMedia:Page = {
+    title:'無圖有母頁文章',
+    id:1,
+    date:fakeDate,
+    modified:fakeDate,
+    excerpt:'師不必賢於弟子。聞道有先後，術業有專攻，如是而已。',
+    content:`
+    ${defaultToc}
+    <h1 name="p1">師說</h1>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>
+    
+    <h2 name="p2">師說</h2>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>
+    
+    <h3 name="p3">師說</h3>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>
+    
+    <h4 name="p4">師說</h4>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>
+    
+    <h5 name="p5">師說</h5>
+    <p>聖人無常師。孔子師郯子、萇弘、師襄、老聃。郯子之徒，其賢不及孔子。孔子曰：“三人行，則必有我師”。
+    是故弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
+    李氏子蟠，年十七，好古文，六藝經傳皆通習之，不拘於時，學於余。余嘉其能行古道，作《師說》以貽之。</p>`
+}
+
+export const listOfFakePages = [pageWithoutParentButWithfeatureMedia, pageWithParentAndFeatureMedia,
+    pageWithParentButWithoutFeatureMedia, pageWithoutParentAndFeatureMedia];

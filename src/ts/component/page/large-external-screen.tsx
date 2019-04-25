@@ -64,6 +64,10 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
                 </div>;
         }
 
+        const styleOfPublishInfo = {
+            marginBottom:'1.5em'
+        }
+
         if (page.imageUrl) {
             const paddingOfPostBg = {
                 top:0.382 * heightOfImg,
@@ -86,7 +90,7 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
             const titleBg = {
                 paddingBottom:heightOfImg * 0.618/* 注意，不用加上發佈資訊的下沿，那部分由 postInfo 的樣式來設定 */
             };         
-            /* 如果畫面上有照片那要為 post info 加上 padding bottom 以便使 post info 跟圖片或裝飾線保持距離 */
+            /* 如果畫面上有照片那要為 post info 加上 padding bottom 以便使 post info 跟圖片或裝飾線保持距離 */           
 
             let styleOfImg = {
                 height:`${heightOfImg}px`
@@ -98,7 +102,7 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         {parentInfoElement}
                         <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters} 
-                            marginBottom={"1.5em"} />                        
+                            style={styleOfPublishInfo} />                        
                         <img src={page.imageUrl} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
@@ -135,7 +139,7 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         {parentInfoElement}
                         <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters} 
-                            marginBottom={"1.5em"} />                        
+                            style={styleOfPublishInfo} />                        
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}  className="les" 
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 

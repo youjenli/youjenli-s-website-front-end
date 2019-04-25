@@ -11,16 +11,22 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
         font-family: $prioritizedFonts, $backupFonts;
         margin-bottom:0.75em;
         
-        a {
-            color:#B0CA98;
-        }
-
         svg {
             flex-grow:0;
             g {
                 fill:#B2B2B2;
             }
-        }        
+        } 
+
+        .icon {
+            min-width:1em;
+            min-height:1em;
+        }
+        
+        a {
+            color:#B0CA98;
+        }
+              
         .name {
             &:hover {
                 cursor:pointer;
@@ -34,8 +40,35 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
     .parent {
         font-size:0.5em;
         .icon {
-            min-width:1em;
-            min-height:1em;
+            margin-right:1em;
+        }
+    }
+}
+
+#post-header.tb {
+
+    .titleBg {
+        padding-left:18px;
+        padding-right:18px;
+    }
+
+    .pageInfo {
+        position:relative;
+        padding-bottom:1px;/* 是為了讓內容元素的 margin-bottom 能延伸此元素高度的辦法*/
+
+        .publishInfo {
+            margin-bottom:1.5em;
+        }
+    }
+
+    img {
+        position:absolute;
+        top:100%;
+        border-radius:5px;
+    }
+
+    .parent {
+        .icon {
             margin-right:1em;
         }
     }

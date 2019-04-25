@@ -14,3 +14,7 @@ export interface MetaOfPage {
 export interface Page extends MetaOfPage {
     content:string;
 }
+
+export interface ParsedPage extends MetaOfPage {
+    dom:Document;
+}
