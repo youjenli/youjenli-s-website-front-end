@@ -93,7 +93,7 @@ $fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/*
             border-radius:2.5px;
         }
     }
-    .content {
+    .content.post, .content.page {
         h1,h2,h3,h4,h5 {
             margin-top:0;
         }

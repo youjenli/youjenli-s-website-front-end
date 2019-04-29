@@ -1,0 +1,171 @@
+$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
+$backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
+#postBg {
+    .content.search {
+        .heading {
+            font-family:$prioritizedFonts, $backupFonts;
+            font-weight:400;
+            display:flex;
+            align-items: center;
+            svg g {
+                fill:#B2B2B2;
+            }
+        }
+
+        .navbar {
+            a {
+                color:inherit;
+                text-decoration: none;
+                &:hover {
+                    text-decoration:underline;
+                    cursor:pointer;
+                }        
+            }
+            .nav {
+                &:hover {
+                    cursor:pointer;
+                }
+                &.hidden {
+                visibility: hidden;
+                }
+            }
+        }
+
+        .posts {
+            .heading {
+                color:#1B3600;
+            }
+
+            .post {
+                background:#F6F5F4;
+                box-shadow:0 1px 3px #7C7C7C;
+                border-radius:5px;
+                box-sizing:border-box;
+                .date {
+                    color:#6F3737;
+                }
+                .titleBar {
+                    display:flex;
+                    align-items: center;
+                }
+                .title {
+                    color:#323232;
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                    cursor:pointer;
+                }
+                .categories {
+                    color:#667E4D;
+                }
+                .tags {
+                    color:#6F8099;
+                }
+                .categories, .tags {
+                    display:flex;
+                    align-items: center;
+
+                    .icon {
+                        g {
+                            fill:#888888;
+                        }
+                    }
+
+                    & .noData {
+                        color:#888844;
+                    }
+
+                    a {
+                        text-decoration:none;
+                        &:hover {
+                            text-decoration:underline;
+                            cursor:pointer;
+                        }
+                    }
+                }
+
+                .excerpt {
+                    color:#656A60;
+                }
+            }
+
+            .navbar {
+                color:#4A4A4A;
+                svg g {
+                    fill:#4A4A4A;
+                }
+            }
+        }
+
+        .categories {
+            .heading {
+                color:#4C7027;
+            }
+
+            .category {
+                box-sizing:border-box;
+            }
+
+            .navbar {
+                color:#4C7027;
+                svg g {
+                    fill:#4C7027;
+                }
+            }
+        }
+
+        .tags {
+            .heading {
+                color:#6F8099;
+            }
+
+            .tag {
+                box-sizing:border-box;
+            }
+
+            .navbar {
+                color:#6F8099;
+                svg g {
+                    fill:#6F8099;
+                }
+            }
+        }
+
+        .results {
+            display:flex;
+            flex-wrap:wrap;
+            justify-content:space-between;
+        }
+
+        .navbar {
+            display:flex;
+            justify-content: space-between;
+            margin-top:36px; /*2rem*/
+            .nav {
+                svg {
+                    vertical-align: middle;
+                }
+            }
+
+            .indexes {
+                & > * {
+                    text-align:center;
+                    margin:0 0.25em;
+                    /*註: 因為這些元素都是 inline 元素，所以 margin 不會收縮。
+                        為求間距符合設計，這裡的 margin 值取設計值的一半。*/
+                }                        
+                a {
+                    text-decoration:none;
+                    &:hover {
+                        text-decoration:underline;
+                    }
+                }
+                .current {
+                    color:#C73C3C;
+                }
+            }
+        }
+    }
+}
+
+@import './les-postBg.scss';

@@ -11,8 +11,10 @@ import * as ReactDOM from 'react-dom';
 import HomePage from './component/home/home';
 import PostPage from './component/post/post';
 import Page from './component/page/page';
+import PageOfSearchResults from './component/search-result/search-results';
 import {listOfFakePosts} from  './model/test/fake-posts';
 import {listOfFakePages} from './model/test/fake-pages';
+import {fakeSearchResults} from './model/test/fake-search-results';
 
 const reactRoot = document.getElementById('react-root');
 
@@ -47,6 +49,13 @@ const routeToPage = (params) => {
     )
 }
 
+const routeToSearchResult = (params) => {
+    ReactDOM.render(
+        <PageOfSearchResults result={fakeSearchResults}/>,
+        reactRoot
+    )
+}
+
 router.on({
        '/':routeToHome,
        '/index.html':routeToHome,
@@ -55,6 +64,8 @@ router.on({
        '/post':routeToPost,//為開發而暫留於此
        '/page/:id':routeToPage,
        '/page/':routeToPage,
-       '/page':routeToPage
+       '/page':routeToPage,
+       '/search':routeToSearchResult,
+       '/search/:keyword':routeToSearchResult
     })
     .resolve();

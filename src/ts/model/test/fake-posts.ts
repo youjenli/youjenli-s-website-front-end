@@ -1,5 +1,5 @@
 import {Post} from '../post';
-import {fakeDate, fakeCategories, fakeTags} from './fake-meta-of-posts-for-test';
+import {fakeDate, aFewOfFakeCategories, aFewOfFakeTags} from './fake-meta-of-posts-for-test';
 
 const defaultToc = 
 `<ol id="toc">
@@ -76,8 +76,8 @@ const defaultToc =
 export const fakePostWithSubjectAndImg:Post = {
     id:9,
     urlOfPost:'https://www.google.com.tw',
-    categories:fakeCategories,
-    tags:fakeTags,
+    categories:aFewOfFakeCategories,
+    tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
     title:'有主旨且有圖片',
@@ -116,8 +116,8 @@ export const fakePostWithSubjectAndImg:Post = {
 export const fakePostWithSubjectButWithoutImg:Post = {
     id:9,
     urlOfPost:'https://www.google.com.tw',
-    categories:fakeCategories,
-    tags:fakeTags,
+    categories:aFewOfFakeCategories,
+    tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
     title:'有主旨但無圖片',
@@ -155,8 +155,8 @@ export const fakePostWithSubjectButWithoutImg:Post = {
 export const fakePostWithoutSubjectButWithImg:Post = {
     id:9,
     urlOfPost:'https://www.google.com.tw',
-    categories:fakeCategories,
-    tags:fakeTags,
+    categories:aFewOfFakeCategories,
+    tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
     title:'無主旨但有圖片',
@@ -192,8 +192,8 @@ export const fakePostWithoutSubjectButWithImg:Post = {
 export const fakePostWithoutSubjectAndImg:Post = {
     id:9,
     urlOfPost:'https://www.google.com.tw',
-    categories:fakeCategories,
-    tags:fakeTags,
+    categories:aFewOfFakeCategories,
+    tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
     title:'無主旨且無圖片',

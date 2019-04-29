@@ -85,7 +85,7 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
         return (
             <div id="postBg" className={this.props.className} style={styleOfPostBG}>               
                 {this.props.children}
-                <div className="content" style={styleOfPostContent}>
+                <div className="content post" style={styleOfPostContent}>
                     {tocElement}
                     <div dangerouslySetInnerHTML={{__html:this.props.content.post}}></div>
                 </div>

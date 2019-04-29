@@ -59,7 +59,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                 }
 
                 postCtnrElement = 
-                    <div id="postBg" className="sp">
+                    <div id="postBg" className="sp post">
                         <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} content={subjectElement.innerHTML}/>
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                     </div>;
@@ -68,7 +68,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     paddingTop:'1.5em'
                 }
                 postCtnrElement = 
-                    <div id="postBg" className="sp" style={styleOfPostBg} dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    <div id="postBg" className="sp post" style={styleOfPostBg} dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>;
             }
  
@@ -122,7 +122,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             return (
                 <React.Fragment>
                     {postHeaderElement}
-                    <div id="postBg" style={styleOfPostBg} className="sp" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    <div id="postBg" style={styleOfPostBg} className="sp post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>
                 </React.Fragment>
             );

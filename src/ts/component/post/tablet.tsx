@@ -60,7 +60,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 }
 
                 postCtnrElement = 
-                    <div id="postBg" style={styleOfPostBg} className="tb">
+                    <div id="postBg" style={styleOfPostBg} className="tb post">
                         <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} content={subjectElement.innerHTML}/>
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                     </div>;
@@ -70,7 +70,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 }
 
                 postCtnrElement = 
-                    <div id="postBg" style={styleOfPostBg} className="tb" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    <div id="postBg" style={styleOfPostBg} className="tb post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>;
             }
             
@@ -123,7 +123,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
             return (
                 <React.Fragment>
                     {postHeaderElement}    
-                    <div id="postBg" style={styleOfPostBg} className="tb" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    <div id="postBg" style={styleOfPostBg} className="tb post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
                     </div>
                 </React.Fragment>
             );

@@ -4,6 +4,21 @@ interface IconProps {
     style?:React.CSSProperties;
 }
 
+export class ArticleIcon extends React.Component<IconProps> {
+    render() {
+        return (
+            <svg className="icon" style={this.props.style} viewBox="0 0 21 27" version="1.1">
+                <title>文章</title>
+                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                    <g transform="translate(-3.000000, 0.000000)" fill="#B2B2B2" fillRule="nonzero">
+                        <path d="M4.5,0 L22.5,0 C23.0522847,-1.01453063e-16 23.5,0.44771525 23.5,1 L23.5,26 C23.5,26.5522847 23.0522847,27 22.5,27 L4.5,27 C3.94771525,27 3.5,26.5522847 3.5,26 L3.5,1 C3.5,0.44771525 3.94771525,1.01453063e-16 4.5,0 Z M16.5,9 C17.6045695,9 18.5,8.1045695 18.5,7 C18.5,5.8954305 17.6045695,5 16.5,5 C15.3954305,5 14.5,5.8954305 14.5,7 C14.5,8.1045695 15.3954305,9 16.5,9 Z M11,9 L6.5,14 L15.5,14 L11,9 Z M5.5,18 L5.5,20 L21.5,20 L21.5,18 L5.5,18 Z M5.5,22 L5.5,24 L21.5,24 L21.5,22 L5.5,22 Z M5.5,4 L5.5,14 L6.5,14 L6.5,4 L5.5,4 Z M5.5,3 L5.5,4 L21.5,4 L21.5,3 L5.5,3 Z M20.5,4 L20.5,14 L21.5,14 L21.5,4 L20.5,4 Z M5.5,14 L5.5,15 L21.5,15 L21.5,14 L5.5,14 Z"></path>
+                    </g>
+                </g>
+            </svg>
+        );
+    }
+}
+
 export class CategoryIcon extends React.Component<IconProps> {
     render() {
         return (
