@@ -8,7 +8,7 @@ interface PropsOfDefaultHeaderOfArticle {
     }
     title:{
         name:string;
-        fontSize:number;
+        fontSize?:number;
         maxWidth:number;
     }
     appendDecorationLine:boolean;
@@ -17,8 +17,10 @@ interface PropsOfDefaultHeaderOfArticle {
 export default class DefaultHeaderOfArticle extends React.Component<PropsOfDefaultHeaderOfArticle> {
     render() {
         const styleOfPostHeader = {
-            fontSize:`${this.props.title.fontSize}px`,
             zIndex:this.props.baseZIndex + 1
+        }
+        if(this.props.title.fontSize) {
+            styleOfPostHeader['fontSize'] = `${this.props.title.fontSize}px`;
         }
         const styleOfTitleBg = {
             paddingBottom:`${this.props.titleBg.paddingBottom}px`,

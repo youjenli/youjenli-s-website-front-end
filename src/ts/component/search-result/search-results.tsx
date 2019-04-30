@@ -4,6 +4,7 @@ import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import { DataOfSearchResults } from '../../model/search-results';
 import LargeExternalScreenPageOfSearchResults from './large-external-screen';
+import ExternalScreenPageOfSearchResults from './external-screen';
 
 interface PropsOfSearchResults {
     result:DataOfSearchResults
@@ -56,6 +57,8 @@ export default class PageOfSearchResults extends React.Component<PropsOfSearchRe
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
+                    <ExternalScreenPageOfSearchResults viewportWidth={this.state.viewportWidth}
+                        baseZIndex={baseZIndex} remFontSize={18} results={this.props.result} />
                 </React.Fragment>
             );
         } else if (vw > 630) { //採用平板佈局模式

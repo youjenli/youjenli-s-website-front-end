@@ -22,11 +22,9 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
         let marginBottomOfPostBg = this.props.remFontSize * 2;/*數值缺規格，待確認 */
         let widthOfPostBg = this.props.viewportWidth * 0.382 + 632.832;
         let paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;        
-        const fontSizeOfTitle = 45;
         const title = {
             name:post.title,
-            maxWidth:maxWidthOfTitle,
-            fontSize:fontSizeOfTitle
+            maxWidth:maxWidthOfTitle
         };
         
         const heightOfImg = maxWidthOfTitle * 0.6;

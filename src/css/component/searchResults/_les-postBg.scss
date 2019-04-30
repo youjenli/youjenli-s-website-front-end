@@ -1,40 +1,43 @@
-#post-header.les {
+#post-header.les, #post-header.es {
     .summary {
         font-size:0.5em;
         margin-bottom:1em;
         color:#C7C7C7;
     }
 }
-#postBg.les {
+
+#postBg.les, #postBg.es {
     .content.search {
-        padding-bottom:45px;
+        padding-bottom:9px; /*0.5rem  這裡的 0.5 加上 navbar 的 2.5 剛好符合規格的 3rem*/
 
         #types-and-taxo {
-            margin-top:18px;/*1rem*/
+            margin-top:27px;/*1.5rem*/
         }
         #introduction {
-            margin-bottom:18px;/*1rem*/
+            margin-bottom:45px;/*2.5rem*/
         }
 
         .heading {
-            margin:0.75em 0;
+            margin:27px 0;/*1.5rem*/
             svg {
                 height:1em;
                 margin-right:0.5em;
             }
         }
-        
-        $marginBottomOfPost:27px;
+
+        $marginBottomOfPost:27px;/*1.5rem*/
         .posts .results {
             margin-bottom: -$marginBottomOfPost;
-        }
+        }//因為 results 區域以 flexbox 佈局，所以底下要用負的 margin 把下面元素往上拉，這樣底部 margin 才不會太高。
 
         .post {
-            margin-bottom:$marginBottomOfPost;/*1.5rem*/
+            margin-bottom:$marginBottomOfPost;
             padding:1px 18px;/* 上下各加 1px 的原因是要防止內部元素的 margin 頂出外框*/
+
             .date, .title {
                 margin:18px 0;/*1rem*/
             }
+
             .date {
                 margin-right:9px;/*0.5em*/
             }
@@ -63,7 +66,8 @@
         .category, .tag {
             border-radius:8px;
             margin-bottom:1.5em;
-            /*這兩類區塊內的元素之間似乎有斷行記號導致元素無法緊密貼合，因此要使用 display 把它們整合在一起*/
+            /*這兩類區塊內的元素之間似乎有斷行記號導致元素無法緊密貼合，因此要使用 display 把它們整合在一起，
+                然後再使裝飾區域及其外部陰影的寬度與內容等寬，這樣才能實現設計。 */
             display:flex;
             flex-direction:column;
             .content {
@@ -115,6 +119,8 @@
         }
 
         .navbar {
+            margin-top:36px; /*2rem*/
+            margin-bottom:45px;/*2.5rem*/
             .prev {
                 margin-right:0.33em;
             }
