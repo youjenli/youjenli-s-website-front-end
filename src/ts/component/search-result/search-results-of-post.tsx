@@ -124,7 +124,24 @@ export class SearchResultsOfPost extends React.Component<PropsOfSearchResultsOfP
         const styleOfHeading = {
             fontSize:`${this.props.fontSizeOfHeading}px`
         }
-                
+
+        const posts = [];
+        this.props.results.pageContent.forEach((post, idx) => {
+            posts.push(
+                <PostOnPageOfSearchResults key={idx} post={post} width={this.props.width} 
+                    date={{fontSize:this.props.fontSizeOfDate}} title={{fontSize:this.props.fontSizeOfTitle}} />
+            );
+        });
+
+        const styleOfPlaceHoldingElement = {
+            width:`${this.props.width}px`
+        }
+        if (this.props.results.pageContent.length % 2 == 1) {
+            posts.push(
+                <div style={styleOfPlaceHoldingElement}>&nbsp;</div>
+            )
+        }
+
         let contents = null;
         if (this.props.results.totalNumberOfPages > 0) {
             let pages = [], pageIndexes = null;
@@ -194,10 +211,7 @@ export class SearchResultsOfPost extends React.Component<PropsOfSearchResultsOfP
             contents = 
                 <React.Fragment>
                     <div className="results">
-                        {this.props.results.pageContent.map((post, idx) => {
-                            return (<PostOnPageOfSearchResults key={idx} post={post} width={this.props.width} 
-                                    date={{fontSize:this.props.fontSizeOfDate}} title={{fontSize:this.props.fontSizeOfTitle}} />)
-                        })}    
+                        {posts}
                     </div>
                     <nav className="navbar" style={styleOfNavbar}>
                         <span className={"nav" + additionalClassNameOfPrevNav}><directions.LeftDirection style={styleOfDirection}/>{terms.previousPage}</span>

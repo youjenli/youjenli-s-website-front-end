@@ -5,7 +5,7 @@ export const fakeSearchResults:DataOfSearchResults = {
     inquire:'諸葛亮舌戰群儒',
     posts:{
         currentPageNumber:1,
-        pageContent:listOfMetaDataOfFakePosts.slice(0, 4),
+        pageContent:listOfMetaDataOfFakePosts.slice(0, 3),
         totalNumberOfPages:3,
         totalNumberOfResults:listOfMetaDataOfFakePosts.length
     },

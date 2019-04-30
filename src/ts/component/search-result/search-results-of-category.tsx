@@ -55,7 +55,7 @@ interface PropsOfSearchResultsOfCategory {
     inquire:string;
     results:ResultsOfSearch<CategoryOfPost>;
     width:number;
-    numberOfTagsInARow:number;
+    numberOfCategoriesInARow:number;
     fontSizeOfHeading:number;
     fontSizeOfCategoryName?:number;
     fontSizeOfDesc?:number;
@@ -140,7 +140,7 @@ export class SearchResultsOfCategory extends React.Component<PropsOfSearchResult
             const pageContent = this.props.results.pageContent;
 
             for (let i = 0 ; i < pageContent.length ; i ++) {
-                if (i % this.props.numberOfTagsInARow % 2 == 0) {
+                if (i % this.props.numberOfCategoriesInARow % 2 == 0) {
                     categories[i] = 
                         <CategoryOnPageOfSearchResults bgColor={'#FEECB8'} width={this.props.width} category={pageContent[i]} key={i}
                             fontSizeOfName={this.props.fontSizeOfCategoryName} fontSizeOfDesc={this.props.fontSizeOfDesc}>
@@ -153,6 +153,16 @@ export class SearchResultsOfCategory extends React.Component<PropsOfSearchResult
                             <GreenDecorationOfCategory style={styleOfDecoration}/>
                         </CategoryOnPageOfSearchResults>;
                 }
+            }
+
+            const lastIndexOfPlaceHoldingItems = pageContent.length 
+                    + this.props.numberOfCategoriesInARow - (pageContent.length % this.props.numberOfCategoriesInARow);//佔位元素的數量
+            const styleOfPlaceHoldingItem = {
+                width:`${this.props.width}px`
+            }
+            for (let j = pageContent.length ; j < lastIndexOfPlaceHoldingItems ; j ++ ) {
+                categories[j] = 
+                    <div style={styleOfPlaceHoldingItem}>&nbsp;</div>
             }
 
             /* 不知道為什麼，無法直接給 nav 套用 visibility:hidden 樣式，於是只好使用改變類別名稱以套用樣式的做法 */

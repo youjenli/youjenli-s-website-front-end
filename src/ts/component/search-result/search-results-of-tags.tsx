@@ -61,7 +61,7 @@ export class TagOnPageOfSearchResults extends React.Component<PropsOfTagOnPageOf
 interface PropsOfSearchResultsOfTag {
     inquire:string;
     results:ResultsOfSearch<TagOfPost>;
-    widthOfTag:number;
+    width:number;
     numberOfTagsInARow:number;
     fontSizeOfHeading:number;
     fontSizeOfTagName?:number;
@@ -139,7 +139,7 @@ export class SearchResultsOfTag extends React.Component<PropsOfSearchResultsOfTa
             }
             
             const blurOfShadow = 1.8;
-            const widthOfDecoration = this.props.widthOfTag + 2 * blurOfShadow;
+            const widthOfDecoration = this.props.width + 2 * blurOfShadow;
             /* 寬度要加上 2倍陰影的原因是這樣才能跟文字區域無縫接軌在一起。*/
             const styleOfDecoration = {
                 width:`${widthOfDecoration}px`,
@@ -154,20 +154,31 @@ export class SearchResultsOfTag extends React.Component<PropsOfSearchResultsOfTa
             for (let i = 0 ; i < pageContent.length ; i ++) {
                 if (i % this.props.numberOfTagsInARow % 2 == 0) { 
                     tags[i] = 
-                        <TagOnPageOfSearchResults additionalClassesOnContent="blue" width={this.props.widthOfTag} 
+                        <TagOnPageOfSearchResults additionalClassesOnContent="blue" width={this.props.width} 
                            topShiftOfContent={topShiftOfContent} tag={pageContent[i]} key={i}
                            fontSizeOfName={this.props.fontSizeOfTagName} fontSizeOfDesc={this.props.fontSizeOfDesc}>
                            <BlueDecorationOfTag style={styleOfDecoration}/>
                         </TagOnPageOfSearchResults>;
                 } else {
                     tags[i] = 
-                        <TagOnPageOfSearchResults additionalClassesOnContent="red" width={this.props.widthOfTag} 
+                        <TagOnPageOfSearchResults additionalClassesOnContent="red" width={this.props.width} 
                         topShiftOfContent={topShiftOfContent} tag={pageContent[i]} key={i}
                            fontSizeOfName={this.props.fontSizeOfTagName} fontSizeOfDesc={this.props.fontSizeOfDesc}>
                            <RedDecorationOfTag style={styleOfDecoration}/>
                         </TagOnPageOfSearchResults>;
                 }
             }
+
+            const lastIndexOfPlaceHoldingItems = pageContent.length 
+                    + this.props.numberOfTagsInARow - (pageContent.length % this.props.numberOfTagsInARow);//佔位元素的數量
+            const styleOfPlaceHoldingItem = {
+                width:`${this.props.width}px`
+            }
+            for (let j = pageContent.length ; j < lastIndexOfPlaceHoldingItems ; j ++ ) {
+                tags[j] = 
+                    <div style={styleOfPlaceHoldingItem}>&nbsp;</div>
+            }
+
             
             /* 不知道為什麼，無法直接給 nav 套用 visibility:hidden 樣式，於是只好使用改變類別名稱以套用樣式的做法 */
             let additionalClassNameOfPrevNav = '', additionalClassNameOfNextNav = '';

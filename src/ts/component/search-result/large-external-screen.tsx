@@ -74,10 +74,10 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
                             fontSizeOfTitle={fontSizeOfTitleOfPost} heightOfDirectionIcon={heightOfDirectionIcon} 
                             fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
                         <SearchResultsOfCategory inquire={this.props.results.inquire} results={this.props.results.categories}
-                            width={widthOfCategoryAndTag} numberOfTagsInARow={categoryAndTagPerRow} fontSizeOfHeading={fontSizeOfHeading} 
+                            width={widthOfCategoryAndTag} numberOfCategoriesInARow={categoryAndTagPerRow} fontSizeOfHeading={fontSizeOfHeading} 
                             fontSizeOfCategoryName={fontSizeOfName} fontSizeOfDesc={fontSizeOfDesc}
                             heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes}/>
-                        <SearchResultsOfTag inquire={this.props.results.inquire} widthOfTag={widthOfCategoryAndTag} 
+                        <SearchResultsOfTag inquire={this.props.results.inquire} width={widthOfCategoryAndTag} 
                             numberOfTagsInARow={categoryAndTagPerRow} results={this.props.results.tags}
                             fontSizeOfHeading={fontSizeOfHeading} fontSizeOfTagName={fontSizeOfName} fontSizeOfDesc={fontSizeOfDesc}
                             heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
