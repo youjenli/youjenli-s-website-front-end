@@ -5,6 +5,7 @@ import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import { DataOfSearchResults } from '../../model/search-results';
 import LargeExternalScreenPageOfSearchResults from './large-external-screen';
 import ExternalScreenPageOfSearchResults from './external-screen';
+import TabletPageOfSearchResults from './tablet';
 
 interface PropsOfSearchResults {
     result:DataOfSearchResults
@@ -65,6 +66,8 @@ export default class PageOfSearchResults extends React.Component<PropsOfSearchRe
             return (
                 <React.Fragment>
                     <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
+                    <TabletPageOfSearchResults viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
+                        remFontSize={18} results={this.props.result} />
                 </React.Fragment>
             );
         } else {//手機佈局模式

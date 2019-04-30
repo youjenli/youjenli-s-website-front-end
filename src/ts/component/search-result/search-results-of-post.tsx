@@ -10,9 +10,11 @@ import { CategoryIcon, TagIcon } from '../home/recentPosts/icons';
 
 interface PropsOfPostOnPageOfSearchResults {
     post:MetaOfPost;
-    width:number;
+    width?:number;
+    paddingLeftRight?:number;
     date:{
         fontSize?:number;
+        marginRight?:number;
     }
     title?:{
         fontSize?:number;
@@ -27,8 +29,13 @@ interface PropsOfPostOnPageOfSearchResults {
 
 export class PostOnPageOfSearchResults extends React.Component<PropsOfPostOnPageOfSearchResults> {
     render() {
-        const styleOfPost = {
-            width:`${this.props.width}px`
+        let styleOfPost = {};
+        if (this.props.width) {
+            styleOfPost['width'] =`${this.props.width}px`;
+        }
+        if (this.props.paddingLeftRight) {
+            styleOfPost['padding-left'] = `${this.props.paddingLeftRight}px`,
+            styleOfPost['padding-right'] = `${this.props.paddingLeftRight}px`
         }
 
         const month = formatMonthOrDayTo2Digits(this.props.post.date.getMonth());
@@ -37,6 +44,9 @@ export class PostOnPageOfSearchResults extends React.Component<PropsOfPostOnPage
         let styleOfDate = {};
         if (this.props.date.fontSize) {
             styleOfDate['fontSize'] = `${this.props.date.fontSize}px`;
+        }
+        if (this.props.date.marginRight) {
+            styleOfDate['marginRight'] = `${this.props.date.marginRight}px`;
         }
 
         let styleOfTitle = {};
@@ -111,9 +121,12 @@ export class PostOnPageOfSearchResults extends React.Component<PropsOfPostOnPage
 interface PropsOfSearchResultsOfPost {
     inquire:string;
     results:ResultsOfSearch<MetaOfPost>;
-    width:number;
+    width?:number;
+    paddingLeftRight?:number;
+    numberOfPostInARow:number;
     fontSizeOfHeading:number;
     fontSizeOfDate:number;
+    gapBetweenDateAndTitle?:number;
     fontSizeOfTitle:number;
     heightOfDirectionIcon:number;
     fontSizeOfPageIndexes:number;
@@ -125,21 +138,28 @@ export class SearchResultsOfPost extends React.Component<PropsOfSearchResultsOfP
             fontSize:`${this.props.fontSizeOfHeading}px`
         }
 
+        let settingsOfDate = {
+            fontSize:this.props.fontSizeOfDate,
+            marginRight:this.props.gapBetweenDateAndTitle
+        }
+        
         const posts = [];
         this.props.results.pageContent.forEach((post, idx) => {
             posts.push(
-                <PostOnPageOfSearchResults key={idx} post={post} width={this.props.width} 
-                    date={{fontSize:this.props.fontSizeOfDate}} title={{fontSize:this.props.fontSizeOfTitle}} />
+                <PostOnPageOfSearchResults key={idx} post={post} width={this.props.width} paddingLeftRight={this.props.paddingLeftRight}
+                    date={settingsOfDate} title={{fontSize:this.props.fontSizeOfTitle}} />
             );
         });
 
-        const styleOfPlaceHoldingElement = {
-            width:`${this.props.width}px`
-        }
-        if (this.props.results.pageContent.length % 2 == 1) {
-            posts.push(
-                <div style={styleOfPlaceHoldingElement}>&nbsp;</div>
-            )
+        const remainedItemsAtTheLastRow = this.props.results.pageContent.length % this.props.numberOfPostInARow;
+        if (remainedItemsAtTheLastRow > 0) {
+            const numberOfPlaceHoldersWhichShouldBeCreate = this.props.numberOfPostInARow - remainedItemsAtTheLastRow;
+            const styleOfPlaceHoldingElement = {
+                width:`${this.props.width}px`
+            }
+            for (let i = 0 ; i < numberOfPlaceHoldersWhichShouldBeCreate ; i ++) {
+                posts.push(<div style={styleOfPlaceHoldingElement}>&nbsp;</div>);
+            }            
         }
 
         let contents = null;

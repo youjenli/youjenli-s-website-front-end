@@ -1,170 +1,210 @@
 $prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
 $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
-#postBg {
-    .content.search {
+#postBg.search{
+    padding-top:1px;
+    
+    .heading {
+        font-family:$prioritizedFonts, $backupFonts;
+        font-weight:400;
+        display:flex;
+        align-items: center;
+        svg g {
+            fill:#B2B2B2;
+        }
+    }
+
+    .posts {
         .heading {
-            font-family:$prioritizedFonts, $backupFonts;
-            font-weight:400;
-            display:flex;
-            align-items: center;
-            svg g {
-                fill:#B2B2B2;
-            }
+            color:#1B3600;
         }
+        .post {
+            padding-top:1px;
+            padding-bottom:1px;/* 上下各加 1px 的原因是要防止內部元素的 margin 頂出外框*/
+            background:#F6F5F4;
+            box-shadow:0 1px 3px #7C7C7C;
+            border-radius:5px;
+            box-sizing:border-box;
 
-        .navbar {
-            a {
-                color:inherit;
-                text-decoration: none;
+            .date {
+                color:#6F3737;
+            }
+            .titleBar {
+                display:flex;
+                align-items: center;
+            }
+            .title {
+                color:#323232;
                 &:hover {
-                    text-decoration:underline;
-                    cursor:pointer;
-                }        
+                    text-decoration: underline;
+                }
+                cursor:pointer;
             }
-            .nav {
-                &:hover {
-                    cursor:pointer;
-                }
-                &.hidden {
-                visibility: hidden;
-                }
+            .categories {
+                color:#667E4D;
             }
-        }
-
-        .posts {
-            .heading {
-                color:#1B3600;
-            }
-
-            .post {
-                background:#F6F5F4;
-                box-shadow:0 1px 3px #7C7C7C;
-                border-radius:5px;
-                box-sizing:border-box;
-                .date {
-                    color:#6F3737;
-                }
-                .titleBar {
-                    display:flex;
-                    align-items: center;
-                }
-                .title {
-                    color:#323232;
-                    &:hover {
-                        text-decoration: underline;
-                    }
-                    cursor:pointer;
-                }
-                .categories {
-                    color:#667E4D;
-                }
-                .tags {
-                    color:#6F8099;
-                }
-                .categories, .tags {
-                    display:flex;
-                    align-items: center;
-
-                    .icon {
-                        g {
-                            fill:#888888;
-                        }
-                    }
-
-                    & .noData {
-                        color:#888844;
-                    }
-
-                    a {
-                        text-decoration:none;
-                        &:hover {
-                            text-decoration:underline;
-                            cursor:pointer;
-                        }
-                    }
-                }
-
-                .excerpt {
-                    color:#656A60;
-                }
-            }
-
-            .navbar {
-                color:#4A4A4A;
-                svg g {
-                    fill:#4A4A4A;
-                }
-            }
-        }
-
-        .categories {
-            .heading {
-                color:#4C7027;
-            }
-
-            .category {
-                box-sizing:border-box;
-            }
-
-            .navbar {
-                color:#4C7027;
-                svg g {
-                    fill:#4C7027;
-                }
-            }
-        }
-
-        .tags {
-            .heading {
+            .tags {
                 color:#6F8099;
             }
-
-            .tag {
-                box-sizing:border-box;
-            }
-
-            .navbar {
-                color:#6F8099;
-                svg g {
-                    fill:#6F8099;
+            .categories, .tags {
+                display:flex;
+                align-items: center;
+                .icon {
+                    min-height:1em;
+                    min-width:1em;
+                    g {
+                        fill:#888888;
+                    }
                 }
-            }
-        }
-
-        .results {
-            display:flex;
-            flex-wrap:wrap;
-            justify-content:space-between;
-        }
-
-        .navbar {
-            display:flex;
-            justify-content: space-between;
-            .nav {
-                svg {
-                    vertical-align: middle;
+                & .noData {
+                    color:#888844;
                 }
-            }
-
-            .indexes {
-                & > * {
-                    text-align:center;
-                    margin:0 0.25em;
-                    /*註: 因為這些元素都是 inline 元素，所以 margin 不會收縮。
-                        為求間距符合設計，這裡的 margin 值取設計值的一半。*/
-                }                        
                 a {
                     text-decoration:none;
                     &:hover {
                         text-decoration:underline;
+                        cursor:pointer;
                     }
                 }
-                .current {
-                    color:#C73C3C;
+            }
+            .excerpt {
+                color:#656A60;
+            }
+        }
+        .navbar {
+            color:#4A4A4A;
+            svg g {
+                fill:#4A4A4A;
+            }
+        }
+    }
+
+    $marginBottomOfCategoryAndTag:1.5em;
+
+    .categories, .tags {
+        .results {
+            margin-bottom:-$marginBottomOfCategoryAndTag;
+        }        
+    }
+
+    .categories {
+        .heading {
+            color:#4C7027;
+        }
+        .category {
+            box-sizing:border-box;
+            .content {
+                box-shadow:0 0 2px 0 #C7C7C7;
+            }
+        }
+        .navbar {
+            color:#4C7027;
+            svg g {
+                fill:#4C7027;
+            }
+        }
+    }
+    .tags {
+        .heading {
+            color:#6F8099;
+        }
+        .tag {
+            box-sizing:border-box;
+            svg {
+                position:relative;
+                z-index:1;        
+            }
+            .content {
+                position:relative;
+                box-shadow:0 2px 1px 0 #C7C7C7;
+                z-index:2;
+                &.red {
+                    background:#FFD5D6;
                 }
+    
+                &.blue {
+                    background:#C1D6F0;
+                }
+            }
+        }
+        .navbar {
+            color:#6F8099;
+            svg g {
+                fill:#6F8099;
+            }
+        }
+    }
+
+    .category, .tag {
+        /*這兩類區塊內的元素之間似乎有斷行記號導致元素無法緊密貼合，因此要使用 display 把它們整合在一起，
+                然後再使裝飾區域及其外部陰影的寬度與內容等寬，這樣才能實現設計。 */
+        display:flex;
+        flex-direction:column;
+        border-radius:8px;
+        margin-bottom:$marginBottomOfCategoryAndTag;
+
+        .content {
+            padding:1px 0.5em;
+            .name {
+                color:#4A4A4A;
+                text-decoration:underline;
+                text-align:center;
+                margin:0.75em 0;
+                &:hover {
+                    cursor:pointer;
+                }
+            }
+            .desc {
+                margin-bottom:0.75em;
+                color:#666666;
+            }
+        }
+        
+    }
+
+    .results {
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:space-between;
+    }
+
+    .navbar {
+        display:flex;
+        justify-content: space-between;
+        .nav {
+            svg {
+                vertical-align: middle;
+            }
+            &:hover {
+                cursor:pointer;
+            }
+            &.hidden {
+            visibility: hidden;
+            }
+        }
+
+        a {
+            color:inherit;
+            text-decoration: none;
+            &:hover {
+                text-decoration:underline;
+                cursor:pointer;
+            }        
+        }
+
+        .indexes {
+            & > * {
+                vertical-align: middle;
+                text-align:center;
+                margin:0 0.25em;
+                /*註: 因為這些元素都是 inline 元素，所以 margin 不會收縮。
+                    為求間距符合設計，這裡的 margin 值取設計值的一半。*/
+            }                        
+            .current {
+                color:#C73C3C;
             }
         }
     }
 }
 
 @import './les-postBg.scss';
+@import './tabletBg.scss';

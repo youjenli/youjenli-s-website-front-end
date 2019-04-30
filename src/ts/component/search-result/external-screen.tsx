@@ -57,14 +57,14 @@ export default class ExternalScreenPageOfSearchResults extends React.Component<P
                     <div className="summary">{terms.createSummaryOfSearchResults(results.posts.totalNumberOfResults,
                             results.categories.totalNumberOfResults, results.tags.totalNumberOfResults)}</div>
                 </DefaultHeaderOfArticle>
-                <div id="postBg" className="es" style={styleOfPostBg}>
-                    <div className="content search">
+                <div id="postBg" className="es search" style={styleOfPostBg}>
+                    <div className="content">
                         <p id="types-and-taxo">{terms.typesOfSearchResult}</p>
                         <p id="introduction">{terms.introductionOfTypesOfSearchResult}</p>
                         <SearchResultsOfPost inquire={this.props.results.inquire} results={this.props.results.posts}
-                            width={widthOfPost} fontSizeOfHeading={fontSizeOfHeading} fontSizeOfDate={fontSizeOfDateOfPost} 
-                            fontSizeOfTitle={fontSizeOfTitleOfPost} heightOfDirectionIcon={heightOfDirectionIcon} 
-                            fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+                            width={widthOfPost} numberOfPostInARow={2} fontSizeOfHeading={fontSizeOfHeading} 
+                            fontSizeOfDate={fontSizeOfDateOfPost} fontSizeOfTitle={fontSizeOfTitleOfPost} 
+                            heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
                         <SearchResultsOfCategory inquire={this.props.results.inquire} results={this.props.results.categories}
                             width={widthOfCategoryAndTag} numberOfCategoriesInARow={categoryAndTagPerRow} fontSizeOfHeading={fontSizeOfHeading} 
                             fontSizeOfCategoryName={fontSizeOfName} fontSizeOfDesc={fontSizeOfDesc}

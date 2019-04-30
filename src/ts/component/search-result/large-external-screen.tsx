@@ -65,14 +65,14 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
                     <div className="summary">{terms.createSummaryOfSearchResults(results.posts.totalNumberOfResults,
                             results.categories.totalNumberOfResults, results.tags.totalNumberOfResults)}</div>
                 </DefaultHeaderOfArticle>
-                <div id="postBg" className="les" style={styleOfPostBg}>
-                    <div className="content search" style={styleOfPostContent}>
+                <div id="postBg" className="les search" style={styleOfPostBg}>
+                    <div className="content" style={styleOfPostContent}>
                         <p id="types-and-taxo">{terms.typesOfSearchResult}</p>
                         <p id="introduction">{terms.introductionOfTypesOfSearchResult}</p>
                         <SearchResultsOfPost inquire={this.props.results.inquire} results={this.props.results.posts}
-                            width={widthOfPost} fontSizeOfHeading={fontSizeOfHeading} fontSizeOfDate={fontSizeOfDateOfPost} 
-                            fontSizeOfTitle={fontSizeOfTitleOfPost} heightOfDirectionIcon={heightOfDirectionIcon} 
-                            fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+                            width={widthOfPost} numberOfPostInARow={2} fontSizeOfHeading={fontSizeOfHeading} 
+                            fontSizeOfDate={fontSizeOfDateOfPost} fontSizeOfTitle={fontSizeOfTitleOfPost} 
+                            heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
                         <SearchResultsOfCategory inquire={this.props.results.inquire} results={this.props.results.categories}
                             width={widthOfCategoryAndTag} numberOfCategoriesInARow={categoryAndTagPerRow} fontSizeOfHeading={fontSizeOfHeading} 
                             fontSizeOfCategoryName={fontSizeOfName} fontSizeOfDesc={fontSizeOfDesc}
