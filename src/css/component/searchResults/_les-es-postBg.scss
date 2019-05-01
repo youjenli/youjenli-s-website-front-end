@@ -1,18 +1,6 @@
-#post-header.les, #post-header.es, #post-header.tb {
-    .summary {
-        margin-bottom:1em;
-        color:#C7C7C7;
-    }
-}
-
-#post-header.les, #post-header.es {
-    .summary {
-        font-size:0.5em;
-    }
-}
-
 #postBg.les, #postBg.es {
     &.search {
+        padding-top:1px;
         padding-bottom:9px; /*0.5rem  這裡的 0.5 加上 navbar 的 2.5 剛好符合規格的 3rem*/
 
         #types-and-taxo {
@@ -30,13 +18,15 @@
             }
         }
 
-        $marginBottomOfPost:27px;/*1.5rem*/
-        .posts .results {
-            margin-bottom: -$marginBottomOfPost;
+        $marginBottomOfSearchItems:27px;/*1.5rem*/
+        .posts, .categories, .tags {
+            .results {
+                margin-bottom: -$marginBottomOfSearchItems;
+            }        
         }//因為 results 區域以 flexbox 佈局，所以底下要用負的 margin 把下面元素往上拉，這樣底部 margin 才不會太高。
 
         .post {
-            margin-bottom:$marginBottomOfPost;
+            margin-bottom:$marginBottomOfSearchItems;
             padding-left:18px;
             padding-right:18px;
 
@@ -63,15 +53,20 @@
         }
 
         .category {
+            margin-bottom:$marginBottomOfSearchItems;
             svg {
                 margin-top:-2px;
                 margin-left:-1px;
             }
         }
 
+        .tag {
+            margin-bottom:$marginBottomOfSearchItems;
+        }
+
         .navbar {
-            margin-top:36px; /*2rem*/
-            margin-bottom:45px;/*2.5rem*///todo 實作錯誤，要改
+            margin-top:27px;/*1.5em*/
+            margin-bottom:36px;/*2em*/
             .prev {
                 margin-right:0.33em;
             }

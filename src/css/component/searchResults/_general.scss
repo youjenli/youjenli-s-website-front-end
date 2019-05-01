@@ -1,3 +1,16 @@
+#post-header.les, #post-header.es, #post-header.tb, #post-header.sp {
+    .summary {
+        margin-bottom:1em;
+        color:#C7C7C7;
+    }
+}
+
+#post-header.les, #post-header.es {
+    .summary {
+        font-size:0.5em;
+    }
+}
+
 $prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
 $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
 #postBg.search{
@@ -78,14 +91,6 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
         }
     }
 
-    $marginBottomOfCategoryAndTag:1.5em;
-
-    .categories, .tags {
-        .results {
-            margin-bottom:-$marginBottomOfCategoryAndTag;
-        }        
-    }
-
     .categories {
         .heading {
             color:#4C7027;
@@ -140,7 +145,6 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
         display:flex;
         flex-direction:column;
         border-radius:8px;
-        margin-bottom:$marginBottomOfCategoryAndTag;
 
         .content {
             padding:1px 0.5em;
@@ -206,5 +210,6 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
     }
 }
 
-@import './les-postBg.scss';
+@import './les-es-postBg.scss';
 @import './tabletBg.scss';
+@import './smart-phone.scss';

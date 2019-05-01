@@ -2,9 +2,11 @@ import * as React from 'react';
 import { DataOfSearchResults } from '../../model/search-results';
 import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import * as terms from './terms';
-import {SearchResultsOfPost} from  './search-results-of-post';
-import {SearchResultsOfCategory} from './search-results-of-category';
-import {SearchResultsOfTag} from './search-results-of-tags'
+import {SearchResultsOfPost} from  './template/search-results-of-post';
+import {SearchResultsOfCategory} from './template/search-results-of-category';
+import {SearchResultsOfTag} from './template/search-results-of-tags';
+import * as icons from '../home/recentPosts/icons';
+import DefaultNavbarOnPageOfSearchResults from './template/nav-bar';
 
 interface PropsOfLargeExternalScreenPageOfSearchResults {
     viewportWidth:number;
@@ -15,6 +17,7 @@ interface PropsOfLargeExternalScreenPageOfSearchResults {
 
 export default class LargeExternalScreenPageOfSearchResults extends React.Component<PropsOfLargeExternalScreenPageOfSearchResults> {
     render() {
+        const vw = this.props.viewportWidth;
         const results = this.props.results;
         const maxWidthOfTitle = (this.props.viewportWidth >= 1657 ? this.props.viewportWidth * 0.618 : 1024 );
         const fontSizeOfTitle = maxWidthOfTitle / 22.8;
@@ -36,7 +39,8 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
         };
         const styleOfPostBg = {
             width:`${widthOfPostBg}px`,
-            padding:`1px ${paddingLeftRightOfPostBg}px`,/* 上下要加 1px 的 padding 免得 margin 頂出去 */
+            paddingLeft:`${paddingLeftRightOfPostBg}px`,
+            paddingRight:`${paddingLeftRightOfPostBg}px`,
             marginBottom:`${marginBottomOfPostBg}px`
         }
 
@@ -44,19 +48,62 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
             marginTop:`${marginTopOfPostContent}px`,
             marginBottom:`${marginBottomOfPostContent}px`
         }
-
-        const widthOfPost = (maxWidthOfTitle - 2* this.props.remFontSize) / 2;
-        const vw = this.props.viewportWidth;
-        const fontSizeOfHeading = (vw + 2560) /112;
-        const fontSizeOfDateOfPost = (vw + 7936) / 448;
-        const fontSizeOfTitleOfPost = (vw + 8832) / 448;
+        
+        const styleOfHeading = {
+            fontSize:`${(vw + 2560) /112}px`
+        }
         const heightOfDirectionIcon = (-1 * vw + 10880) / 224;
         const fontSizeOfPageIndexes = (-1 * vw + 13568) / 448;
+
+        let posts = null, navbarOfPosts = null;
+        if (this.props.results.posts.totalNumberOfPages > 0) {
+            const widthOfPost = (maxWidthOfTitle - 2* this.props.remFontSize) / 2;
+            const fontSizeOfDateOfPost = (vw + 7936) / 448;
+            const fontSizeOfTitleOfPost = (vw + 8832) / 448;
+            
+        
+            posts = <SearchResultsOfPost results={this.props.results.posts} width={widthOfPost} 
+                        numberOfPostInARow={2} fontSizeOfDate={fontSizeOfDateOfPost} fontSizeOfTitle={fontSizeOfTitleOfPost} />
+            const pageSelectHandler = () => {};//todo        
+            navbarOfPosts = 
+                <DefaultNavbarOnPageOfSearchResults results={this.props.results.posts} onPageSelect={pageSelectHandler} 
+                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+        } else {
+            posts = 
+                <div className="results noData">{terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+        }
 
         const categoryAndTagPerRow = Math.floor((maxWidthOfTitle - 18/*分類名稱左右間隔 1rem */) / 154 /* 分類名稱最小寬度 + 1rem */);      
         const widthOfCategoryAndTag = (maxWidthOfTitle - (categoryAndTagPerRow - 1) * 18) / categoryAndTagPerRow;
         const fontSizeOfName = widthOfCategoryAndTag / 7;
         const fontSizeOfDesc = widthOfCategoryAndTag / 9;
+
+        let categories = null, navbarOfCategories = null;
+        if (this.props.results.categories.pageContent.length > 0) {
+            categories = <SearchResultsOfCategory results={this.props.results.categories} width={widthOfCategoryAndTag}
+                            numberOfCategoriesInARow={categoryAndTagPerRow} fontSizeOfCategoryName={fontSizeOfName}
+                            fontSizeOfDesc={fontSizeOfDesc} />
+            const pageSelectHandler = () => {};//todo
+            navbarOfCategories = 
+                <DefaultNavbarOnPageOfSearchResults results={this.props.results.categories} onPageSelect={pageSelectHandler} 
+                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes}/>
+        } else {
+            categories = 
+                <div className="results noData">{terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+        }
+        
+        let tags = null, navbarOfTags = null;
+        if(this.props.results.tags.pageContent.length > 0) {
+            tags = <SearchResultsOfTag results={this.props.results.tags} width={widthOfCategoryAndTag}
+                    numberOfTagsInARow={categoryAndTagPerRow} fontSizeOfTagName={fontSizeOfName}
+                    fontSizeOfDesc={fontSizeOfDesc} />
+            const pageSelectHandler = () => {};//todo
+            navbarOfTags =
+                <DefaultNavbarOnPageOfSearchResults results={this.props.results.tags} onPageSelect={pageSelectHandler} 
+                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+        } else {
+            tags = <div className="results">{terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
+        }
 
         return (
             <React.Fragment>
@@ -69,18 +116,30 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
                     <div className="content" style={styleOfPostContent}>
                         <p id="types-and-taxo">{terms.typesOfSearchResult}</p>
                         <p id="introduction">{terms.introductionOfTypesOfSearchResult}</p>
-                        <SearchResultsOfPost inquire={this.props.results.inquire} results={this.props.results.posts}
-                            width={widthOfPost} numberOfPostInARow={2} fontSizeOfHeading={fontSizeOfHeading} 
-                            fontSizeOfDate={fontSizeOfDateOfPost} fontSizeOfTitle={fontSizeOfTitleOfPost} 
-                            heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
-                        <SearchResultsOfCategory inquire={this.props.results.inquire} results={this.props.results.categories}
-                            width={widthOfCategoryAndTag} numberOfCategoriesInARow={categoryAndTagPerRow} fontSizeOfHeading={fontSizeOfHeading} 
-                            fontSizeOfCategoryName={fontSizeOfName} fontSizeOfDesc={fontSizeOfDesc}
-                            heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes}/>
-                        <SearchResultsOfTag inquire={this.props.results.inquire} width={widthOfCategoryAndTag} 
-                            numberOfTagsInARow={categoryAndTagPerRow} results={this.props.results.tags}
-                            fontSizeOfHeading={fontSizeOfHeading} fontSizeOfTagName={fontSizeOfName} fontSizeOfDesc={fontSizeOfDesc}
-                            heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+                        <section className="posts">
+                            <h3 className="heading" style={styleOfHeading}>
+                                <icons.ArticleIcon />{terms.headingOfSearchResultsOfPosts}</h3>
+                            <div className="results">
+                                {posts}
+                            </div>
+                            {navbarOfPosts}
+                        </section>
+                        <section className="categories">
+                            <h3 className="heading" style={styleOfHeading}>
+                                <icons.CategoryIcon />{terms.headingOfSearchResultsOfCategories}</h3>
+                            <div className="results">
+                                {categories}
+                            </div>
+                            {navbarOfCategories}
+                        </section>
+                        <section className="tags">
+                            <h3 className="heading" style={styleOfHeading}>
+                                <icons.TagIcon />{terms.headingOfSearchResultsOfTags}</h3>
+                            <div className="results">
+                                {tags}
+                            </div> 
+                            {navbarOfTags}
+                        </section>
                     </div>
                 </div>
             </React.Fragment>

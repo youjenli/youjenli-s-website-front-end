@@ -1,5 +1,16 @@
+$marginBottomOfSearchItems:1em;
 #postBg.tb, #postBg.sp {
     &.search {
+        .posts, .categories, .tags {
+            .results {
+                margin-bottom: -$marginBottomOfSearchItems;
+            }//因為 results 區域以 flexbox 佈局，所以底下要用負的 margin 把下面元素往上拉，這樣底部 margin 才不會太高。
+        }
+
+        .post, .category, .tag {
+            margin-bottom: $marginBottomOfSearchItems;
+        }
+
         .post {
             box-shadow:0 1px 3px 0 #aeaeae;
             background:#FFFDF9;
@@ -35,15 +46,8 @@
         }
     }
 
-    $marginBottomOfPost:18px;/*1rem*/
     .posts {
-        .results {
-            margin-bottom: -$marginBottomOfPost;
-        }//因為 results 區域以 flexbox 佈局，所以底下要用負的 margin 把下面元素往上拉，這樣底部 margin 才不會太高。
-
-        .post {
-            margin-bottom:$marginBottomOfPost;
-    
+        .post {    
             .titleBar {
                 margin:18px 0;/*1rem*/
             }

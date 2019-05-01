@@ -1,0 +1,43 @@
+#postBg.sp.search {
+    padding-top:1px;
+    padding-bottom:9px;
+    
+    #types-and-taxo {
+        margin-top:1.5em;
+    }
+
+    .heading {
+        svg {
+            height:1em;
+            margin-right:0.5em;
+        }
+    }
+
+    .posts {
+        .post {  
+            .titleBar {
+                margin:1em 0;
+            }
+   
+            .categories, .tags {
+                font-size:14px;
+                margin-bottom:0.5em;
+            }
+    
+            $fontSizeOfExcerpt:16px;
+            .excerpt {
+                font-size:$fontSizeOfExcerpt;
+                margin:$fontSizeOfExcerpt 0;/*1rem*/
+            }
+        }
+    }
+
+    .navbar {
+        .prev {
+            margin-right:0.33em;
+        }
+        .next {
+            margin-left:0.33em;
+        }
+    }
+}

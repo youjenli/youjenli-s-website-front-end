@@ -6,6 +6,7 @@ import { DataOfSearchResults } from '../../model/search-results';
 import LargeExternalScreenPageOfSearchResults from './large-external-screen';
 import ExternalScreenPageOfSearchResults from './external-screen';
 import TabletPageOfSearchResults from './tablet';
+import SmartPhonePageOfSearchResults from './smart-phone';
 
 interface PropsOfSearchResults {
     result:DataOfSearchResults
@@ -70,10 +71,20 @@ export default class PageOfSearchResults extends React.Component<PropsOfSearchRe
                         remFontSize={18} results={this.props.result} />
                 </React.Fragment>
             );
-        } else {//手機佈局模式
+        } else if (vw > 432) {//採用手機水平佈局模式
             return (
                 <React.Fragment>
                     <MobileDeviceTitleBar  className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
+                    <SmartPhonePageOfSearchResults viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
+                        remFontSize={18} results={this.props.result} />
+                </React.Fragment>
+            );
+        } else {//採用手機垂直佈局模式
+            return (
+                <React.Fragment>
+                    <MobileDeviceTitleBar  className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
+                    <SmartPhonePageOfSearchResults viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
+                        remFontSize={16} results={this.props.result} />
                 </React.Fragment>
             );
         }

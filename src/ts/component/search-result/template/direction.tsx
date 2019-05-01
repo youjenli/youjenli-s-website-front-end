@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as terms from './terms';
+import * as terms from '../terms';
 
 interface PropsOfDirection {
     style?:React.CSSProperties
