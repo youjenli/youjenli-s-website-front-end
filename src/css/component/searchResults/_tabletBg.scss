@@ -80,7 +80,7 @@ $marginBottomOfSearchItems:1em;
         }
     }
 
-    .noData {
+    & > .noData {
         font-size:20px;
     }
 }

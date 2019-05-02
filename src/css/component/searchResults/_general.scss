@@ -68,7 +68,7 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
                         fill:#888888;
                     }
                 }
-                & .noData {
+                .noData {
                     color:#888844;
                 }
                 a {
@@ -209,7 +209,7 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
         }
     }
 
-    .noData {
+    & > .noData {
         margin-top:1.25em;
         margin-bottom:3.25em;
     }
