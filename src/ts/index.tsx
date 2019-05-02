@@ -14,7 +14,7 @@ import Page from './component/page/page';
 import PageOfSearchResults from './component/search-result/search-results';
 import {listOfFakePosts} from  './model/test/fake-posts';
 import {listOfFakePages} from './model/test/fake-pages';
-import {fakeSearchResults} from './model/test/fake-search-results';
+import {fakeSearchResults, fakeNothingFoundSearchResults} from './model/test/fake-search-results';
 
 const reactRoot = document.getElementById('react-root');
 
@@ -50,10 +50,13 @@ const routeToPage = (params) => {
 }
 
 const routeToSearchResult = (params) => {
-    ReactDOM.render(
-        <PageOfSearchResults result={fakeSearchResults}/>,
-        reactRoot
-    )
+    let results = null;
+    if (params.keyword == '0'){
+        results = <PageOfSearchResults result={fakeNothingFoundSearchResults} />;
+    } else {
+        results = <PageOfSearchResults result={fakeSearchResults} />;
+    }
+    ReactDOM.render(results, reactRoot);
 }
 
 router.on({

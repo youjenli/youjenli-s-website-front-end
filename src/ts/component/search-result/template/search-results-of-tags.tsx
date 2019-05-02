@@ -110,6 +110,6 @@ export class SearchResultsOfTag extends React.Component<PropsOfSearchResultsOfTa
             }
         }
 
-        return <React.Fragment>{tags}</React.Fragment>;
+        return <div className="results">{tags}</div>;
     }
 }

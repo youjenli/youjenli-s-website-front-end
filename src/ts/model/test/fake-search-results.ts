@@ -22,3 +22,25 @@ export const fakeSearchResults:DataOfSearchResults = {
         totalNumberOfResults:plentyOfFakeTags.length
     }    
 }
+
+export const fakeNothingFoundSearchResults = {
+    inquire:'查無任何資料',
+    posts:{
+        currentPageNumber:0,
+        pageContent:[],
+        totalNumberOfPages:0,
+        totalNumberOfResults:0
+    },
+    categories:{
+        currentPageNumber:0,
+        pageContent:[],
+        totalNumberOfPages:0,
+        totalNumberOfResults:0
+    },
+    tags:{
+        currentPageNumber:0,
+        pageContent:[],
+        totalNumberOfPages:0,
+        totalNumberOfResults:0
+    }
+}

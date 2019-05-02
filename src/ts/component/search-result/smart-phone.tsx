@@ -56,6 +56,10 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
             margin:`${(vw + 300) * this.props.remFontSize / 620}px 0`
         }      
         
+        let styleOfNothingFoundInQuery = {
+            fontSize:`${(2 * vw + 1840) / 155}px`
+        }
+
         const heightOfDirectionIcon = (vw + 796)/31;
         const fontSizeOfPageIndexes = 26;
         
@@ -83,7 +87,8 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
                     margin={settingsOfMarginOfNavbar} />
         } else {
             posts = 
-                <div className="results noData">{terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                <div className="noData" style={styleOfNothingFoundInQuery}>
+                    {terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
         }
 
         const categoryAndTagPerRow =
@@ -104,7 +109,8 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
                     margin={settingsOfMarginOfNavbar} />
         } else {
             categories = 
-                <div className="results noData">{terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                <div className="noData" style={styleOfNothingFoundInQuery}>
+                    {terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
         }
         
         let tags = null, navbarOfTags = null;
@@ -118,7 +124,8 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} 
                     margin={settingsOfMarginOfNavbar} />
         } else {
-            tags = <div className="results">{terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
+            tags = <div className="noData" style={styleOfNothingFoundInQuery}>
+                        {terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
         }
 
         return (
@@ -135,25 +142,19 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
                     <section className="posts">
                         <h3 className="heading" style={styleOfHeading}>
                             <icons.ArticleIcon />{terms.headingOfSearchResultsOfPosts}</h3>
-                        <div className="results">
-                            {posts}
-                        </div>
+                        {posts}
                         {navbarOfPosts}
                     </section>
                     <section className="categories">
                         <h3 className="heading" style={styleOfHeading}>
                             <icons.CategoryIcon />{terms.headingOfSearchResultsOfCategories}</h3>
-                        <div className="results">
-                            {categories}
-                        </div>
+                        {categories}
                         {navbarOfCategories}
                     </section>
                     <section className="tags">
                         <h3 className="heading" style={styleOfHeading}>
                             <icons.TagIcon />{terms.headingOfSearchResultsOfTags}</h3>
-                        <div className="results">
-                            {tags}
-                        </div> 
+                        {tags}
                         {navbarOfTags}
                     </section>
                 </div>

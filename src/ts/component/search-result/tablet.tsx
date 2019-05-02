@@ -65,7 +65,7 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
             posts = 
-                <div className="results noData">{terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                <div className="noData">{terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
         }
 
         const categoryAndTagPerRow = 
@@ -85,7 +85,7 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes}/>
         } else {
             categories = 
-                <div className="results noData">{terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                <div className="noData">{terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
         }
         
         let tags = null, navbarOfTags = null;
@@ -98,7 +98,7 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
                 <DefaultNavbarOnPageOfSearchResults results={this.props.results.tags} onPageSelect={pageSelectHandler} 
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
-            tags = <div className="results">{terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
+            tags = <div className="noData">{terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
         }
 
         return (
@@ -115,25 +115,19 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
                     <section className="posts">
                         <h3 className="heading" style={styleOfHeading}>
                             <icons.ArticleIcon />{terms.headingOfSearchResultsOfPosts}</h3>
-                        <div className="results">
-                            {posts}
-                        </div>
+                        {posts}
                         {navbarOfPosts}
                     </section>
                     <section className="categories">
                         <h3 className="heading" style={styleOfHeading}>
                             <icons.CategoryIcon />{terms.headingOfSearchResultsOfCategories}</h3>
-                        <div className="results">
-                            {categories}
-                        </div>
+                        {categories}
                         {navbarOfCategories}
                     </section>
                     <section className="tags">
                         <h3 className="heading" style={styleOfHeading}>
                             <icons.TagIcon />{terms.headingOfSearchResultsOfTags}</h3>
-                        <div className="results">
-                            {tags}
-                        </div> 
+                        {tags}
                         {navbarOfTags}
                     </section>
                 </div>

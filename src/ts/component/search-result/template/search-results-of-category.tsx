@@ -93,6 +93,6 @@ export class SearchResultsOfCategory extends React.Component<PropsOfSearchResult
             }
         }
         
-        return <React.Fragment>{categories}</React.Fragment>;
+        return <div className="results">{categories}</div>;
     }
 }

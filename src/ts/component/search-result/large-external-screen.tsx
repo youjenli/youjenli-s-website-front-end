@@ -52,6 +52,9 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
         const styleOfHeading = {
             fontSize:`${(vw + 2560) /112}px`
         }
+        let styleOfNothingFoundInQuery = {
+            fontSize:`${(vw + 7936) / 448}px`
+        }
         const heightOfDirectionIcon = (-1 * vw + 10880) / 224;
         const fontSizeOfPageIndexes = (-1 * vw + 13568) / 448;
 
@@ -70,7 +73,8 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
             posts = 
-                <div className="results noData">{terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                <div className="noData" style={styleOfNothingFoundInQuery}>
+                    {terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
         }
 
         const categoryAndTagPerRow = Math.floor((maxWidthOfTitle - 18/*分類名稱左右間隔 1rem */) / 154 /* 分類名稱最小寬度 + 1rem */);      
@@ -89,7 +93,8 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes}/>
         } else {
             categories = 
-                <div className="results noData">{terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                <div className="noData" style={styleOfNothingFoundInQuery}>
+                    {terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
         }
         
         let tags = null, navbarOfTags = null;
@@ -102,7 +107,8 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
                 <DefaultNavbarOnPageOfSearchResults results={this.props.results.tags} onPageSelect={pageSelectHandler} 
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
-            tags = <div className="results">{terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
+            tags = <div className="noData" style={styleOfNothingFoundInQuery}>
+                        {terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
         }
 
         return (
@@ -119,25 +125,19 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
                         <section className="posts">
                             <h3 className="heading" style={styleOfHeading}>
                                 <icons.ArticleIcon />{terms.headingOfSearchResultsOfPosts}</h3>
-                            <div className="results">
-                                {posts}
-                            </div>
+                            {posts}
                             {navbarOfPosts}
                         </section>
                         <section className="categories">
                             <h3 className="heading" style={styleOfHeading}>
                                 <icons.CategoryIcon />{terms.headingOfSearchResultsOfCategories}</h3>
-                            <div className="results">
-                                {categories}
-                            </div>
+                            {categories}
                             {navbarOfCategories}
                         </section>
                         <section className="tags">
                             <h3 className="heading" style={styleOfHeading}>
                                 <icons.TagIcon />{terms.headingOfSearchResultsOfTags}</h3>
-                            <div className="results">
-                                {tags}
-                            </div> 
+                            {tags}
                             {navbarOfTags}
                         </section>
                     </div>

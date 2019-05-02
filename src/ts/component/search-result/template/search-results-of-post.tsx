@@ -162,7 +162,7 @@ export class SearchResultsOfPost extends React.Component<PropsOfSearchResultsOfP
                     <div key={j} style={styleOfPlaceHoldingItem}>&nbsp;</div>
             }           
         }
-        return <React.Fragment>{posts}</React.Fragment>;
+        return <div className="results">{posts}</div>;
     }
 }
 
