@@ -4,8 +4,8 @@ import {listOfMetaDataOfFakePosts, plentyOfFakeCategories, plentyOfFakeTags} fro
 export const fakeSearchResults:DataOfSearchResults = {
     inquire:'諸葛亮舌戰群儒',
     posts:{
-        currentPageNumber:1,
-        pageContent:listOfMetaDataOfFakePosts.slice(0, 3),
+        currentPageNumber:2,
+        pageContent:listOfMetaDataOfFakePosts.slice(3, 6),
         totalNumberOfPages:3,
         totalNumberOfResults:listOfMetaDataOfFakePosts.length
     },
@@ -16,8 +16,8 @@ export const fakeSearchResults:DataOfSearchResults = {
         totalNumberOfResults:plentyOfFakeCategories.length
     },
     tags:{
-        currentPageNumber:1,
-        pageContent:plentyOfFakeTags.slice(0, 22),
+        currentPageNumber:2,
+        pageContent:plentyOfFakeTags.slice(22, plentyOfFakeTags.length),
         totalNumberOfPages:2,
         totalNumberOfResults:plentyOfFakeTags.length
     }    
