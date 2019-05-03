@@ -1,7 +1,7 @@
 import * as React from 'react';
 import MobilePostHeader from '../template/mobile-header-of-article';
 import * as terms from './terms';
-import { DataOfSearchResults } from '../../model/search-results';
+import { SummaryOfResultsOfSearch } from '../../model/search-results';
 import {SearchResultsOfPost} from  './template/search-results-of-post';
 import {SearchResultsOfCategory} from './template/search-results-of-category';
 import {SearchResultsOfTag} from './template/search-results-of-tags'
@@ -12,7 +12,7 @@ interface PropsOfTabletPageOfSearchResults {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    results:DataOfSearchResults;
+    results:SummaryOfResultsOfSearch;
 }
 
 export default class TabletPageOfSearchResults extends React.Component<PropsOfTabletPageOfSearchResults> {
@@ -22,7 +22,7 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
         const maxWidthOfTitle = vw - 2 * this.props.remFontSize;
         const fontSizeOfTitle = (5 * vw + 1688) / 148;
         const title = {
-            name:terms.createTitleOfPageOfSearchResults(results.inquire),
+            name:terms.createTitleOfPageOfSearchResults(results.query),
             fontSize:fontSizeOfTitle,
             maxWidth:maxWidthOfTitle
         };
@@ -48,24 +48,27 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
         const fontSizeOfPageIndexes = (vw + 4492)/197;
 
         let posts = null, navbarOfPosts = null;
-        if (this.props.results.posts.totalNumberOfPages > 0) {
+        if (this.props.results.posts.numberOfPages > 0) {
             const gapBetweenTwoPosts = (0.5 * vw + 115) * this.props.remFontSize / 430;
             const widthOfPost = (maxWidthOfTitle - gapBetweenTwoPosts) / 2;
-            const fontSizeOfDateOfPost = (vw + 2322) / 193;
             const fontSizeOfTitleOfPost = (vw + 2708) / 193;
             const gapBetweenDateAndTitle = (3 * fontSizeOfTitleOfPost - 40) / 2;//todo
-            const paddingLeftRightOfPost = (0.5 * vw + 709) * this.props.remFontSize / 788;  
-        
-            posts = <SearchResultsOfPost results={this.props.results.posts} width={widthOfPost} paddingLeftRight={paddingLeftRightOfPost}
-                        numberOfPostInARow={2} fontSizeOfDate={fontSizeOfDateOfPost} fontSizeOfTitle={fontSizeOfTitleOfPost} 
-                        gapBetweenDateAndTitle={gapBetweenDateAndTitle} />
+            const settingsOfPost = {
+                paddingLeftRightOfPost:(0.5 * vw + 709) * this.props.remFontSize / 788,
+                fontSizeOfDate:(vw + 2322) / 193,
+                gapBetweenDateAndTitle:gapBetweenDateAndTitle,
+                fontSizeOfTitle:fontSizeOfTitleOfPost
+            }
+
+            posts = <SearchResultsOfPost results={this.props.results.posts} width={widthOfPost} numberOfPostInARow={2} 
+                        post={settingsOfPost} />
             const pageSelectHandler = () => {};//todo        
             navbarOfPosts = 
                 <DefaultNavbarOnPageOfSearchResults results={this.props.results.posts} onPageSelect={pageSelectHandler} 
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
             posts = 
-                <div className="noData">{terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                <div className="noData">{terms.generatePostsNotFoundNotificationMsg(this.props.results.query)}</div>;
         }
 
         const categoryAndTagPerRow = 
@@ -85,7 +88,7 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes}/>
         } else {
             categories = 
-                <div className="noData">{terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                <div className="noData">{terms.generateCategoriesNotFoundNotificationMsg(this.props.results.query)}</div>;
         }
         
         let tags = null, navbarOfTags = null;
@@ -98,7 +101,7 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
                 <DefaultNavbarOnPageOfSearchResults results={this.props.results.tags} onPageSelect={pageSelectHandler} 
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
-            tags = <div className="noData">{terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
+            tags = <div className="noData">{terms.generateTagsNotFoundNotificationMsg(this.props.results.query)}</div>
         }
 
         return (
@@ -106,8 +109,8 @@ export default class TabletPageOfSearchResults extends React.Component<PropsOfTa
                 <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                     title={title} decorationLine={decorationLine} >
                     <div style={styleOfSummary} className="summary">{
-                        terms.createSummaryOfSearchResults(results.posts.totalNumberOfResults,
-                        results.categories.totalNumberOfResults, results.tags.totalNumberOfResults)}</div>
+                        terms.createSummaryOfSearchResults(results.posts.numberOfResults,
+                        results.categories.numberOfResults, results.tags.numberOfResults)}</div>
                 </MobilePostHeader>
                 <div id="postBg" style={styleOfPostBg} className="tb search">
                     <p id="types-and-taxo">{terms.typesOfSearchResult}</p>

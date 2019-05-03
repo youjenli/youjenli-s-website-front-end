@@ -1,3 +1,4 @@
+@import './post/les-post.scss';
 #postBg.les, #postBg.es {
     &.search {
         padding-top:1px;
@@ -25,32 +26,7 @@
             }        
         }//因為 results 區域以 flexbox 佈局，所以底下要用負的 margin 把下面元素往上拉，這樣底部 margin 才不會太高。
 
-        .post {
-            margin-bottom:$marginBottomOfSearchItems;
-            padding-left:18px;
-            padding-right:18px;
-
-            .titleBar {
-                margin:18px 0;/*1rem*/
-            }
-
-            .date {
-                margin-right:9px;/*0.5em*/
-            }
-            .categories, .tags {
-                font-size:14px;
-                margin-bottom:0.5em;
-                .icon {
-                    margin-right:1em;
-                    min-height:1em;
-                    min-width:1em;
-                }
-            }
-            .excerpt {
-                font-size:16px;
-                margin:18px 0;/*1rem*/
-            }
-        }
+        @include styleOfPost($marginBottomOfSearchItems);
 
         .category {
             margin-bottom:$marginBottomOfSearchItems;

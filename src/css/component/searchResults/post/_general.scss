@@ -1,0 +1,52 @@
+.post {
+    padding-top:1px;
+    padding-bottom:1px;/* 上下各加 1px 的原因是要防止內部元素的 margin 頂出外框*/
+    background:#F6F5F4;
+    box-shadow:0 1px 3px #7C7C7C;
+    border-radius:5px;
+    box-sizing:border-box;
+    .date {
+        color:#6F3737;
+    }
+    .titleBar {
+        display:flex;
+        align-items: center;
+    }
+    .title {
+        color:#323232;
+        &:hover {
+            text-decoration: underline;
+        }
+        cursor:pointer;
+    }
+    .categories {
+        color:#667E4D;
+    }
+    .tags {
+        color:#6F8099;
+    }
+    .categories, .tags {
+        display:flex;
+        align-items: center;
+        .icon {
+            min-height:1em;
+            min-width:1em;
+            g {
+                fill:#888888;
+            }
+        }
+        .noData {
+            color:#888844;
+        }
+        a {
+            text-decoration:none;
+            &:hover {
+                text-decoration:underline;
+                cursor:pointer;
+            }
+        }
+    }
+    .excerpt {
+        color:#656A60;
+    }
+}

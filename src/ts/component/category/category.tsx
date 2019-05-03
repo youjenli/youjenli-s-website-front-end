@@ -2,22 +2,20 @@ import * as React from 'react';
 import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/dimensionsCalculator';
 import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
-import { SummaryOfResultsOfSearch } from '../../model/search-results';
-import LargeExternalScreenPageOfSearchResults from './large-external-screen';
-import ExternalScreenPageOfSearchResults from './external-screen';
-import TabletPageOfSearchResults from './tablet';
-import SmartPhonePageOfSearchResults from './smart-phone';
+import { CategoryOfPost } from '../../model/post';
+import { AnswerOfQueryPostsByTaxonomy } from '../../model/search-results';
+import PageOfCategoryOnLargeExternalScreen from './large-external-screen';
 
-interface PropsOfSearchResults {
-    result:SummaryOfResultsOfSearch
+interface PropsOfPageOfCategory {
+    answer:AnswerOfQueryPostsByTaxonomy<CategoryOfPost>
 }
 
-interface StateOfPageOfSearchResults {
+interface StateOfPageOfCategory {
     viewportWidth:number;
     viewportHeight:number;    
 }
 
-export default class PageOfSearchResults extends React.Component<PropsOfSearchResults, StateOfPageOfSearchResults> {
+export default class PageOfCategory extends React.Component<PropsOfPageOfCategory, StateOfPageOfCategory> {
     constructor(props){
         super(props);
         this.calculateViewPortDimensions = this.calculateViewPortDimensions.bind(this);
@@ -49,8 +47,8 @@ export default class PageOfSearchResults extends React.Component<PropsOfSearchRe
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
-                    <LargeExternalScreenPageOfSearchResults viewportWidth={this.state.viewportWidth}
-                        baseZIndex={baseZIndex} remFontSize={18} results={this.props.result} />
+                    <PageOfCategoryOnLargeExternalScreen viewportWidth={this.state.viewportWidth}
+                        baseZIndex={baseZIndex} remFontSize={18} answer={this.props.answer} />
                 </React.Fragment>
             );
         } else if (vw > 1060) { //採用外接螢幕佈局模式
@@ -59,32 +57,24 @@ export default class PageOfSearchResults extends React.Component<PropsOfSearchRe
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
-                    <ExternalScreenPageOfSearchResults viewportWidth={this.state.viewportWidth}
-                        baseZIndex={baseZIndex} remFontSize={18} results={this.props.result} />
                 </React.Fragment>
             );
         } else if (vw > 630) { //採用平板佈局模式
             return (
                 <React.Fragment>
                     <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
-                    <TabletPageOfSearchResults viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
-                        remFontSize={18} results={this.props.result} />
                 </React.Fragment>
             );
         } else if (vw > 432) {//採用手機水平佈局模式
             return (
                 <React.Fragment>
                     <MobileDeviceTitleBar  className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
-                    <SmartPhonePageOfSearchResults viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
-                        remFontSize={18} results={this.props.result} />
                 </React.Fragment>
             );
         } else {//採用手機垂直佈局模式
             return (
                 <React.Fragment>
                     <MobileDeviceTitleBar  className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
-                    <SmartPhonePageOfSearchResults viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
-                        remFontSize={16} results={this.props.result} />
                 </React.Fragment>
             );
         }

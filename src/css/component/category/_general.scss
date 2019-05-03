@@ -1,0 +1,66 @@
+@import '../searchResults/post/les-post.scss';
+
+#post-header.les, #post-header.es {
+
+    .desc, .parent, .count {
+        display:flex;
+        align-items:center;
+        font-size:0.5em;
+        margin-top:0.75em;
+        .icon {
+            min-width:1em;
+            min-height:1em;
+            margin-right:1em;
+        }
+    }
+
+    .desc, .parent {
+        margin-bottom:0.75em 0;
+    }
+
+    .count {
+        margin-bottom:1.5em;
+    }
+
+    .desc {
+        color:#B0CA98;
+        .noData {
+            color:#739971;
+        }
+    }
+
+    .parent {
+        color:#CDB28A;
+        .noData {
+            color:#9A9C66;
+        }
+    }
+
+    .count {
+        color:#C7C7C7;
+    }
+}
+
+#postBg.les.categoryP {
+    padding:1px 0;
+
+    $marginBottomOfPosts:27px;
+    .content {       
+        @import '../searchResults/post/general.scss';
+        @include styleOfPost($marginBottomOfPosts);
+        .results {
+            margin-bottom:-$marginBottomOfPosts;
+        }
+
+        .navbar {
+            margin-top:27px;/*1.5em*/
+            margin-bottom:36px;/*2em*/
+            .prev {
+                margin-right:0.33em;
+            }
+            .next {
+                margin-left:0.33em;
+            }
+        }
+    }
+}

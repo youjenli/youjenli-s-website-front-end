@@ -19,7 +19,7 @@ export class NavbarOnPageOfSearchResultsInNarrowDevices extends React.Component<
     render() {
         let pages = [];
         const current = this.props.results.currentPageNumber;
-        const total = this.props.results.totalNumberOfPages;
+        const total = this.props.results.numberOfPages;
 
         if (current > 3) {
             pages.push(<a key={1} onClick={() => { this.props.onPageSelect(1) }}>{1}</a>);
@@ -71,7 +71,7 @@ export class NavbarOnPageOfSearchResultsInNarrowDevices extends React.Component<
         if (this.props.results.currentPageNumber == 1) {
             additionalClassNameOfPrevNav = ' hidden';
         }
-        if (this.props.results.currentPageNumber == this.props.results.totalNumberOfPages) {
+        if (this.props.results.currentPageNumber == this.props.results.numberOfPages) {
             additionalClassNameOfNextNav = ' hidden';
         }
 
@@ -90,8 +90,8 @@ export class NavbarOnPageOfSearchResultsInNarrowDevices extends React.Component<
 export default class DefaultNavbarOnPageOfSearchResults extends React.Component<PropsOfDefaultNavbarOnPageOfSearchResults> {
     render() {
         let pages = [];
-        if (this.props.results.totalNumberOfPages <= 10) {
-            for (let i = 1 ; i <= this.props.results.totalNumberOfPages ; i ++) {
+        if (this.props.results.numberOfPages <= 10) {
+            for (let i = 1 ; i <= this.props.results.numberOfPages ; i ++) {
                 if (i == this.props.results.currentPageNumber) {
                     pages.push(<span className="current" key={i}><a>{i}</a></span>);
                 } else {
@@ -102,7 +102,7 @@ export default class DefaultNavbarOnPageOfSearchResults extends React.Component<
             let foundCurrentPage = false;
             let loopEnd = 3;
             const current = this.props.results.currentPageNumber;
-            const total = this.props.results.totalNumberOfPages;
+            const total = this.props.results.numberOfPages;
             for (let i = 1 ; i <= loopEnd ; i ++) {
                 if (i == current) {
                     pages.push(<a className="current" key={i}>{i}</a>);
@@ -155,7 +155,7 @@ export default class DefaultNavbarOnPageOfSearchResults extends React.Component<
         if (this.props.results.currentPageNumber == 1) {
             additionalClassNameOfPrevNav = ' hidden';
         }
-        if (this.props.results.currentPageNumber == this.props.results.totalNumberOfPages) {
+        if (this.props.results.currentPageNumber == this.props.results.numberOfPages) {
             additionalClassNameOfNextNav = ' hidden';
         }
 

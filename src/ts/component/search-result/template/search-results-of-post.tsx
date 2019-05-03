@@ -124,29 +124,31 @@ export class PostOnPageOfSearchResults extends React.Component<PropsOfPostOnPage
 interface PropsOfSearchResultsOfPost {
     results:ResultsOfSearch<MetaOfPost>;
     width?:number;
-    paddingLeftRight?:number;
     numberOfPostInARow:number;
-    fontSizeOfDate:number;
-    gapBetweenDateAndTitle?:number;
-    fontSizeOfTitle:number;
-    gapBetweenIconAndCategories?:number;
+    post:{
+        paddingLeftRightOfPost?:number;
+        fontSizeOfDate:number;
+        gapBetweenDateAndTitle?:number;
+        fontSizeOfTitle:number;
+        gapBetweenIconAndCategories?:number;
+    }
 }
 
 export class SearchResultsOfPost extends React.Component<PropsOfSearchResultsOfPost> {
     render() {       
         let settingsOfDate = {
-            fontSize:this.props.fontSizeOfDate,
-            marginRight:this.props.gapBetweenDateAndTitle
+            fontSize:this.props.post.fontSizeOfDate,
+            marginRight:this.props.post.gapBetweenDateAndTitle
         }
         
         let settingsOfPostInfo = {
-            marginRightOfIcon:this.props.gapBetweenIconAndCategories
+            marginRightOfIcon:this.props.post.gapBetweenIconAndCategories
         }
         const posts = [];
         this.props.results.pageContent.forEach((post, idx) => {
             posts.push(
-                <PostOnPageOfSearchResults key={idx} post={post} width={this.props.width} paddingLeftRight={this.props.paddingLeftRight}
-                    date={settingsOfDate} title={{fontSize:this.props.fontSizeOfTitle}} postInfo={settingsOfPostInfo } />
+                <PostOnPageOfSearchResults key={idx} post={post} width={this.props.width} paddingLeftRight={this.props.post.paddingLeftRightOfPost}
+                    date={settingsOfDate} title={{fontSize:this.props.post.fontSizeOfTitle}} postInfo={settingsOfPostInfo } />
             );
         });
 

@@ -1,0 +1,28 @@
+@mixin styleOfPost($marginBottomOfPost) {
+    .post {
+        margin-bottom:$marginBottomOfPost;
+        padding-left:18px;
+        padding-right:18px;
+
+        .titleBar {
+            margin:18px 0;/*1rem*/
+        }
+
+        .date {
+            margin-right:9px;/*0.5em*/
+        }
+        .categories, .tags {
+            font-size:14px;
+            margin-bottom:0.5em;
+            .icon {
+                margin-right:1em;
+                min-height:1em;
+                min-width:1em;
+            }
+        }
+        .excerpt {
+            font-size:16px;
+            margin:18px 0;/*1rem*/
+        }
+    }
+}

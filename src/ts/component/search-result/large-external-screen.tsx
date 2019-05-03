@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DataOfSearchResults } from '../../model/search-results';
+import { SummaryOfResultsOfSearch } from '../../model/search-results';
 import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import * as terms from './terms';
 import {SearchResultsOfPost} from  './template/search-results-of-post';
@@ -12,7 +12,7 @@ interface PropsOfLargeExternalScreenPageOfSearchResults {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    results:DataOfSearchResults;
+    results:SummaryOfResultsOfSearch;
 }
 
 export default class LargeExternalScreenPageOfSearchResults extends React.Component<PropsOfLargeExternalScreenPageOfSearchResults> {
@@ -23,7 +23,7 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
         const fontSizeOfTitle = maxWidthOfTitle / 22.8;
         
         const title = {
-            name:terms.createTitleOfPageOfSearchResults(results.inquire),
+            name:terms.createTitleOfPageOfSearchResults(results.query),
             maxWidth:maxWidthOfTitle,
             fontSize:fontSizeOfTitle
         };
@@ -59,14 +59,15 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
         const fontSizeOfPageIndexes = (-1 * vw + 13568) / 448;
 
         let posts = null, navbarOfPosts = null;
-        if (this.props.results.posts.totalNumberOfPages > 0) {
+        if (this.props.results.posts.numberOfPages > 0) {
             const widthOfPost = (maxWidthOfTitle - 2* this.props.remFontSize) / 2;
-            const fontSizeOfDateOfPost = (vw + 7936) / 448;
-            const fontSizeOfTitleOfPost = (vw + 8832) / 448;
-            
+            const settingsOfPost = {
+                fontSizeOfDate:(vw + 7936) / 448,
+                fontSizeOfTitle:(vw + 8832) / 448
+            }
         
             posts = <SearchResultsOfPost results={this.props.results.posts} width={widthOfPost} 
-                        numberOfPostInARow={2} fontSizeOfDate={fontSizeOfDateOfPost} fontSizeOfTitle={fontSizeOfTitleOfPost} />
+                        numberOfPostInARow={2} post={settingsOfPost} />
             const pageSelectHandler = () => {};//todo        
             navbarOfPosts = 
                 <DefaultNavbarOnPageOfSearchResults results={this.props.results.posts} onPageSelect={pageSelectHandler} 
@@ -74,7 +75,7 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
         } else {
             posts = 
                 <div className="noData" style={styleOfNothingFoundInQuery}>
-                    {terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                    {terms.generatePostsNotFoundNotificationMsg(this.props.results.query)}</div>;
         }
 
         const categoryAndTagPerRow = Math.floor((maxWidthOfTitle - 18/*分類名稱左右間隔 1rem */) / 154 /* 分類名稱最小寬度 + 1rem */);      
@@ -94,7 +95,7 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
         } else {
             categories = 
                 <div className="noData" style={styleOfNothingFoundInQuery}>
-                    {terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                    {terms.generateCategoriesNotFoundNotificationMsg(this.props.results.query)}</div>;
         }
         
         let tags = null, navbarOfTags = null;
@@ -108,15 +109,15 @@ export default class LargeExternalScreenPageOfSearchResults extends React.Compon
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
             tags = <div className="noData" style={styleOfNothingFoundInQuery}>
-                        {terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
+                        {terms.generateTagsNotFoundNotificationMsg(this.props.results.query)}</div>
         }
 
         return (
             <React.Fragment>
                 <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                     titleBg={titleBg} title={title} appendDecorationLine={true}>
-                    <div className="summary">{terms.createSummaryOfSearchResults(results.posts.totalNumberOfResults,
-                            results.categories.totalNumberOfResults, results.tags.totalNumberOfResults)}</div>
+                    <div className="summary">{terms.createSummaryOfSearchResults(results.posts.numberOfResults,
+                            results.categories.numberOfResults, results.tags.numberOfResults)}</div>
                 </DefaultHeaderOfArticle>
                 <div id="postBg" className="les search" style={styleOfPostBg}>
                     <div className="content" style={styleOfPostContent}>

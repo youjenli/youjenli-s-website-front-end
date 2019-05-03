@@ -2,7 +2,8 @@ export interface CategoryOfPost {
     id:number,
     name:string,
     url:string,
-    description?:string
+    description?:string,
+    parent?:CategoryOfPost
 }
 
 export type TagOfPost = CategoryOfPost;

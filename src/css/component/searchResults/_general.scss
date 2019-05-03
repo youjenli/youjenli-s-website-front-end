@@ -11,6 +11,52 @@
     }
 }
 
+#postBg.search, #postBg.categoryP {
+    .results {
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:space-between;
+    }
+
+    .navbar {
+        display:flex;
+        justify-content: space-between;
+        .nav {
+            svg {
+                vertical-align: middle;
+            }
+            &:hover {
+                cursor:pointer;
+            }
+            &.hidden {
+            visibility: hidden;
+            }
+        }
+
+        a {
+            color:inherit;
+            text-decoration: none;
+            &:hover {
+                text-decoration:underline;
+                cursor:pointer;
+            }        
+        }
+
+        .indexes {
+            & > * {
+                vertical-align: middle;
+                text-align:center;
+                margin:0 0.25em;
+                /*註: 因為這些元素都是 inline 元素，所以 margin 不會收縮。
+                    為求間距符合設計，這裡的 margin 值取設計值的一半。*/
+            }                        
+            .current {
+                color:#C73C3C;
+            }
+        }
+    }
+}
+
 $prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
 $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
 #postBg.search{
@@ -30,59 +76,9 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
         .heading {
             color:#1B3600;
         }
-        .post {
-            padding-top:1px;
-            padding-bottom:1px;/* 上下各加 1px 的原因是要防止內部元素的 margin 頂出外框*/
-            background:#F6F5F4;
-            box-shadow:0 1px 3px #7C7C7C;
-            border-radius:5px;
-            box-sizing:border-box;
 
-            .date {
-                color:#6F3737;
-            }
-            .titleBar {
-                display:flex;
-                align-items: center;
-            }
-            .title {
-                color:#323232;
-                &:hover {
-                    text-decoration: underline;
-                }
-                cursor:pointer;
-            }
-            .categories {
-                color:#667E4D;
-            }
-            .tags {
-                color:#6F8099;
-            }
-            .categories, .tags {
-                display:flex;
-                align-items: center;
-                .icon {
-                    min-height:1em;
-                    min-width:1em;
-                    g {
-                        fill:#888888;
-                    }
-                }
-                .noData {
-                    color:#888844;
-                }
-                a {
-                    text-decoration:none;
-                    &:hover {
-                        text-decoration:underline;
-                        cursor:pointer;
-                    }
-                }
-            }
-            .excerpt {
-                color:#656A60;
-            }
-        }
+        @import './post/general.scss';
+
         .navbar {
             color:#4A4A4A;
             svg g {
@@ -163,50 +159,6 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
             }
         }
         
-    }
-
-    .results {
-        display:flex;
-        flex-wrap:wrap;
-        justify-content:space-between;
-    }
-
-    .navbar {
-        display:flex;
-        justify-content: space-between;
-        .nav {
-            svg {
-                vertical-align: middle;
-            }
-            &:hover {
-                cursor:pointer;
-            }
-            &.hidden {
-            visibility: hidden;
-            }
-        }
-
-        a {
-            color:inherit;
-            text-decoration: none;
-            &:hover {
-                text-decoration:underline;
-                cursor:pointer;
-            }        
-        }
-
-        .indexes {
-            & > * {
-                vertical-align: middle;
-                text-align:center;
-                margin:0 0.25em;
-                /*註: 因為這些元素都是 inline 元素，所以 margin 不會收縮。
-                    為求間距符合設計，這裡的 margin 值取設計值的一半。*/
-            }                        
-            .current {
-                color:#C73C3C;
-            }
-        }
     }
 
     & > .noData {

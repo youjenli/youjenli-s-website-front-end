@@ -1,7 +1,7 @@
 import * as React from 'react';
 import MobilePostHeader from '../template/mobile-header-of-article';
 import * as terms from './terms';
-import { DataOfSearchResults } from '../../model/search-results';
+import { SummaryOfResultsOfSearch } from '../../model/search-results';
 import {SearchResultsOfPost} from  './template/search-results-of-post';
 import {SearchResultsOfCategory} from './template/search-results-of-category';
 import {SearchResultsOfTag} from './template/search-results-of-tags';
@@ -12,7 +12,7 @@ interface PropsOfSmartPhonePageOfSearchResults {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    results:DataOfSearchResults;
+    results:SummaryOfResultsOfSearch;
 }
 
 export default class SmartPhonePageOfSearchResults extends React.Component<PropsOfSmartPhonePageOfSearchResults> {
@@ -22,7 +22,7 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
         const maxWidthOfTitle = vw - 2 * this.props.remFontSize;
         const fontSizeOfTitle = (2 * vw + 3080) / 155;
         const title = {
-            name:terms.createTitleOfPageOfSearchResults(results.inquire),
+            name:terms.createTitleOfPageOfSearchResults(results.query),
             fontSize:fontSizeOfTitle,
             maxWidth:maxWidthOfTitle
         };
@@ -69,17 +69,18 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
         }
 
         let posts = null, navbarOfPosts = null;
-        if (this.props.results.posts.totalNumberOfPages > 0) {
-            const fontSizeOfDateOfPost = (vw + 2466) / 153;
+        if (this.props.results.posts.numberOfPages > 0) {
             const fontSizeOfTitleOfPost = (vw + 2772) / 153;
             const gapBetweenDateAndTitle = 4 * fontSizeOfTitleOfPost - 70;
-            const gapBetweenIconAndCategories = (vw - 10) * 14 /* 分類與標籤字體大小 */ / 620;
-            const paddingLeftRightOfPost = (0.5 * vw - 5) * this.props.remFontSize / 310;
-        
+            const settingsOfPost = {
+                paddingLeftRightOfPost:(0.5 * vw - 5) * this.props.remFontSize / 310,
+                fontSizeOfDate:(vw + 2466) / 153,
+                gapBetweenDateAndTitle:gapBetweenDateAndTitle,
+                fontSizeOfTitle:fontSizeOfTitleOfPost,
+                gapBetweenIconAndCategories:(vw - 10) * 14 /* 分類與標籤字體大小 */ / 620
+            }
             posts = <SearchResultsOfPost results={this.props.results.posts} numberOfPostInARow={1} 
-                       paddingLeftRight={paddingLeftRightOfPost} fontSizeOfDate={fontSizeOfDateOfPost} 
-                       fontSizeOfTitle={fontSizeOfTitleOfPost} gapBetweenDateAndTitle={gapBetweenDateAndTitle} 
-                       gapBetweenIconAndCategories={gapBetweenIconAndCategories} />
+                       post={settingsOfPost} />
             const pageSelectHandler = () => {};//todo        
             navbarOfPosts = 
                 <NavbarOnPageOfSearchResultsInNarrowDevices results={this.props.results.posts} onPageSelect={pageSelectHandler} 
@@ -88,7 +89,7 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
         } else {
             posts = 
                 <div className="noData" style={styleOfNothingFoundInQuery}>
-                    {terms.generatePostsNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                    {terms.generatePostsNotFoundNotificationMsg(this.props.results.query)}</div>;
         }
 
         const categoryAndTagPerRow =
@@ -110,7 +111,7 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
         } else {
             categories = 
                 <div className="noData" style={styleOfNothingFoundInQuery}>
-                    {terms.generateCategoriesNotFoundNotificationMsg(this.props.results.inquire)}</div>;
+                    {terms.generateCategoriesNotFoundNotificationMsg(this.props.results.query)}</div>;
         }
         
         let tags = null, navbarOfTags = null;
@@ -125,7 +126,7 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
                     margin={settingsOfMarginOfNavbar} />
         } else {
             tags = <div className="noData" style={styleOfNothingFoundInQuery}>
-                        {terms.generateTagsNotFoundNotificationMsg(this.props.results.inquire)}</div>
+                        {terms.generateTagsNotFoundNotificationMsg(this.props.results.query)}</div>
         }
 
         return (
@@ -133,8 +134,8 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
                 <MobilePostHeader className="sp" baseZIndex={this.props.baseZIndex} 
                     title={title} decorationLine={decorationLine} >
                     <div style={styleOfSummary} className="summary">{
-                        terms.createSummaryOfSearchResults(results.posts.totalNumberOfResults,
-                        results.categories.totalNumberOfResults, results.tags.totalNumberOfResults)}</div>
+                        terms.createSummaryOfSearchResults(results.posts.numberOfResults,
+                        results.categories.numberOfResults, results.tags.numberOfResults)}</div>
                 </MobilePostHeader>
                 <div id="postBg" style={styleOfPostBg} className="sp search">
                     <p id="types-and-taxo" style={styleOfTypesAndTaxo}>{terms.typesOfSearchResult}</p>
