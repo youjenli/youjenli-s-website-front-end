@@ -31,6 +31,13 @@ export const fakeResultsOfsearch:ResultsOfSearch<MetaOfPost> = {
     numberOfResults:listOfMetaDataOfFakePosts.length
 }
 
+export const fakeResultsOfsearch_noPost:ResultsOfSearch<MetaOfPost> = {
+    currentPageNumber:0,
+    pageContent:[],
+    numberOfPages:0,
+    numberOfResults:0
+}
+
 export const fakeAnswerOfQueryPostsByTaxonomy:AnswerOfQueryPostsByTaxonomy<CategoryOfPost> = 
     {
         taxonomy:fakeCategory,
@@ -41,4 +48,10 @@ export const fakeAnswerOfQueryPostsByTaxonomyWithoutDesc:AnswerOfQueryPostsByTax
     {
         taxonomy:fakeCategoryWithoutDesc,
         results:fakeResultsOfsearch
+    }
+
+export const fakeAnswerOfQueryPostsByTaxonomyWithoutAnyPost:AnswerOfQueryPostsByTaxonomy<CategoryOfPost> = 
+    {
+        taxonomy:fakeCategory,
+        results:fakeResultsOfsearch_noPost
     }

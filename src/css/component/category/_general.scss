@@ -66,8 +66,12 @@
 #postBg.tb, #postBg.sp {
     &.categoryP {
         padding:1px 0;
-
         @import '../searchResults/post/general.scss';
+
+        .noPost {
+            text-align: center;
+            margin:2em 0;
+        }
     }
 }
 

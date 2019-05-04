@@ -39,20 +39,37 @@ export default class PageOfCategoryOnTabletScreen extends React.Component<PropsO
             paddingRight:`${this.props.remFontSize}px`
         }       
 
-        const gapBetweenTwoPosts = (0.5 * vw + 115) * this.props.remFontSize / 430;
-        const widthOfPost = (maxWidthOfTitle - gapBetweenTwoPosts) / 2;
-        const fontSizeOfTitleOfPost = (vw + 2708) / 193;
-        const gapBetweenDateAndTitle = (3 * fontSizeOfTitleOfPost - 40) / 2;
-        const settingsOfPost = {
-            paddingLeftRightOfPost:(0.5 * vw + 709) * this.props.remFontSize / 788,
-            fontSizeOfDate:(vw + 2322) / 193,
-            gapBetweenDateAndTitle:gapBetweenDateAndTitle,
-            fontSizeOfTitle:fontSizeOfTitleOfPost
-        }
-        const pageSelectHandler = () => {};//todo  
+        let results = null;
+        if (this.props.answer.results.numberOfResults > 0) {
+            const gapBetweenTwoPosts = (0.5 * vw + 115) * this.props.remFontSize / 430;
+            const widthOfPost = (maxWidthOfTitle - gapBetweenTwoPosts) / 2;
+            const fontSizeOfTitleOfPost = (vw + 2708) / 193;
+            const gapBetweenDateAndTitle = (3 * fontSizeOfTitleOfPost - 40) / 2;
+            const settingsOfPost = {
+                paddingLeftRightOfPost:(0.5 * vw + 709) * this.props.remFontSize / 788,
+                fontSizeOfDate:(vw + 2322) / 193,
+                gapBetweenDateAndTitle:gapBetweenDateAndTitle,
+                fontSizeOfTitle:fontSizeOfTitleOfPost
+            }
+            const pageSelectHandler = () => {};//todo  
+            const heightOfDirectionIcon = 44;
+            const fontSizeOfPageIndexes = (vw + 4492)/197;
 
-        const heightOfDirectionIcon = 44;
-        const fontSizeOfPageIndexes = (vw + 4492)/197;       
+            results = 
+                <React.Fragment>
+                    <SearchResultsOfPost results={this.props.answer.results} width={widthOfPost} numberOfPostInARow={2} 
+                        post={settingsOfPost} />
+                    <DefaultNavbarOnPageOfSearchResults results={this.props.answer.results} onPageSelect={pageSelectHandler} 
+                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+                </React.Fragment>
+        } else {
+            const styleOfNoPostUnderThisCategory = {
+                fontSize:`${(3 * vw + 2050) / 197}px`
+            }
+
+            results = 
+                <div style={styleOfNoPostUnderThisCategory} className="noPost">{terms.noPostUnderThisCategory}</div>;
+        }           
 
         return (
             <React.Fragment>
@@ -62,10 +79,7 @@ export default class PageOfCategoryOnTabletScreen extends React.Component<PropsO
                         numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults} />
                 </MobilePostHeader>
                 <div id="postBg" style={styleOfPostBg} className="tb categoryP">
-                    <SearchResultsOfPost results={this.props.answer.results} width={widthOfPost} numberOfPostInARow={2} 
-                        post={settingsOfPost} />
-                    <DefaultNavbarOnPageOfSearchResults results={this.props.answer.results} onPageSelect={pageSelectHandler} 
-                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+                    {results}
                 </div>
             </React.Fragment>
         );

@@ -39,23 +39,43 @@ export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfP
             paddingRight:`${this.props.remFontSize}px`
         }       
         
-        const fontSizeOfTitleOfPost = (vw + 2772) / 153;
-        const gapBetweenDateAndTitle = 4 * fontSizeOfTitleOfPost - 70;
-        const settingsOfPost = {
-            paddingLeftRightOfPost:(0.5 * vw - 5) * this.props.remFontSize / 310,
-            fontSizeOfDate:(vw + 2466) / 153,
-            gapBetweenDateAndTitle:gapBetweenDateAndTitle,
-            fontSizeOfTitle:fontSizeOfTitleOfPost,
-            gapBetweenIconAndCategories:(vw - 10) * 14 /* 分類與標籤字體大小 */ / 620
-        }
-        const pageSelectHandler = () => {};//todo  
+        let results = null;
+        if (this.props.answer.results.numberOfResults > 0) {
+            const fontSizeOfTitleOfPost = (vw + 2772) / 153;
+            const gapBetweenDateAndTitle = 4 * fontSizeOfTitleOfPost - 70;
+            const settingsOfPost = {
+                paddingLeftRightOfPost:(0.5 * vw - 5) * this.props.remFontSize / 310,
+                fontSizeOfDate:(vw + 2466) / 153,
+                gapBetweenDateAndTitle:gapBetweenDateAndTitle,
+                fontSizeOfTitle:fontSizeOfTitleOfPost,
+                gapBetweenIconAndCategories:(vw - 10) * 14 /* 分類與標籤字體大小 */ / 620
+            }
+            const pageSelectHandler = () => {};//todo  
 
-        const heightOfDirectionIcon = (vw + 796)/31;
-        const fontSizeOfPageIndexes = 26;
-        const settingsOfMarginOfNavbar = {
-            top:(0.5 * vw + 305) * this.props.remFontSize / 310,//todo 演算法要重推，距離要拉近
-            bottom:(vw + 920) * this.props.remFontSize / 620//todo 演算法要重推，距離要放遠一點
+            const heightOfDirectionIcon = (vw + 796)/31;
+            const fontSizeOfPageIndexes = 26;
+            const settingsOfMarginOfNavbar = {
+                top:(0.5 * vw + 305) * this.props.remFontSize / 310,//todo 演算法要重推，距離要拉近
+                bottom:(vw + 920) * this.props.remFontSize / 620//todo 演算法要重推，距離要放遠一點
+            }
+
+            results = 
+                <React.Fragment>
+                    <SearchResultsOfPost results={this.props.answer.results} numberOfPostInARow={1} 
+                        post={settingsOfPost} />
+                    <NavbarOnPageOfSearchResultsInNarrowDevices results={this.props.answer.results} onPageSelect={pageSelectHandler} 
+                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} 
+                        margin={settingsOfMarginOfNavbar} />
+                </React.Fragment>
+        } else {
+            const styleOfNoPostUnderThisCategory = {
+                fontSize:`${(vw + 2470) / 155}px`
+            }
+
+            results = 
+                <div style={styleOfNoPostUnderThisCategory} className="noPost">{terms.noPostUnderThisCategory}</div>;
         }
+        
 
         return (
             <React.Fragment>
@@ -65,11 +85,7 @@ export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfP
                         numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults} />
                 </MobilePostHeader>
                 <div id="postBg" style={styleOfPostBg} className="tb categoryP">
-                    <SearchResultsOfPost results={this.props.answer.results} numberOfPostInARow={1} 
-                        post={settingsOfPost} />
-                    <NavbarOnPageOfSearchResultsInNarrowDevices results={this.props.answer.results} onPageSelect={pageSelectHandler} 
-                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} 
-                        margin={settingsOfMarginOfNavbar} />
+                    {results}
                 </div>
             </React.Fragment>
         );

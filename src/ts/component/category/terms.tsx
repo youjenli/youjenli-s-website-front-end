@@ -21,3 +21,5 @@ export function categoryDoesNotHaveParent() {
 export function countOfArticlesSubjectToCategoryOrTag(categoryName:string, count:number):string {
     return `共有 ${count} 篇分類到「${categoryName}」的文章。`;
 }
+
+export let noPostUnderThisCategory = '目前沒有隸屬於此分類的文章。';

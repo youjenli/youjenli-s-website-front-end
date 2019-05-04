@@ -16,7 +16,7 @@ import PageOfCategory from './component/category/category';
 import {listOfFakePosts} from  './model/test/fake-posts';
 import {listOfFakePages} from './model/test/fake-pages';
 import {fakeSearchResults, fakeNothingFoundSearchResults, } from './model/test/fake-search-results';
-import {fakeAnswerOfQueryPostsByTaxonomy, fakeAnswerOfQueryPostsByTaxonomyWithoutDesc} from './model/test/fake-answer-of-query-posts-by-taxonomy';
+import {fakeAnswerOfQueryPostsByTaxonomy, fakeAnswerOfQueryPostsByTaxonomyWithoutDesc, fakeAnswerOfQueryPostsByTaxonomyWithoutAnyPost} from './model/test/fake-answer-of-query-posts-by-taxonomy';
 
 const reactRoot = document.getElementById('react-root');
 
@@ -64,7 +64,11 @@ const routeToSearchResult = (params) => {
 const routeToPageOfCategory = (params) => {
     let pageOfCategory = null;
     if (params && params.name) {
-        pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByTaxonomy}/>;
+        if (params.name == '0') {
+            pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByTaxonomyWithoutAnyPost} />;
+        } else {
+            pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByTaxonomy}/>;    
+        }        
     } else {
         pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByTaxonomyWithoutDesc} />;
     }

@@ -46,15 +46,33 @@ export default class PageOfCategoryOnLargeExternalScreen extends React.Component
             marginTop:`${marginTopOfPostContent}px`,
             marginBottom:`${marginBottomOfPostContent}px`
         }
-        
-        const widthOfPost = (maxWidthOfTitle - 2* this.props.remFontSize) / 2;
-        const settingsOfPost = {
-            fontSizeOfDate:(vw + 7936) / 448,
-            fontSizeOfTitle:(vw + 8832) / 448
+
+        let results = null;
+        if (this.props.answer.results.numberOfResults > 0) {
+            const widthOfPost = (maxWidthOfTitle - 2* this.props.remFontSize) / 2;
+            const settingsOfPost = {
+                fontSizeOfDate:(vw + 7936) / 448,
+                fontSizeOfTitle:(vw + 8832) / 448
+            }
+            const heightOfDirectionIcon = (-1 * vw + 10880) / 224;
+            const fontSizeOfPageIndexes = (-1 * vw + 13568) / 448;
+            const pageSelectHandler = () => {};//todo
+
+            results = 
+                <React.Fragment>
+                    <SearchResultsOfPost results={this.props.answer.results} width={widthOfPost}
+                        numberOfPostInARow={2} post={settingsOfPost} />
+                    <DefaultNavbarOnPageOfSearchResults results={this.props.answer.results} onPageSelect={pageSelectHandler} 
+                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+                </React.Fragment>
+        } else {
+            const styleOfNoPostUnderThisCategory = {
+                fontSize:`${(vw + 4800) / 224}px`
+            }
+
+            results = 
+                <div style={styleOfNoPostUnderThisCategory} className="noPost">{terms.noPostUnderThisCategory}</div>
         }
-        const heightOfDirectionIcon = (-1 * vw + 10880) / 224;
-        const fontSizeOfPageIndexes = (-1 * vw + 13568) / 448;
-        const pageSelectHandler = () => {};//todo
 
         return (
             <React.Fragment>
@@ -65,10 +83,7 @@ export default class PageOfCategoryOnLargeExternalScreen extends React.Component
                 </DefaultHeaderOfArticle>
                 <div id="postBg" className="les categoryP" style={styleOfPostBg}>
                     <div className="content" style={styleOfPostContent}>
-                        <SearchResultsOfPost results={this.props.answer.results} width={widthOfPost}
-                            numberOfPostInARow={2} post={settingsOfPost} />
-                        <DefaultNavbarOnPageOfSearchResults results={this.props.answer.results} onPageSelect={pageSelectHandler} 
-                            heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+                        {results}
                     </div>                    
                 </div>
             </React.Fragment>
