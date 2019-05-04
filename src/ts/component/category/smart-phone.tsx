@@ -5,20 +5,20 @@ import { CategoryOfPost } from '../../model/post';
 import { AnswerOfQueryPostsByTaxonomy } from '../../model/search-results';
 import {InformationOfCategory} from './categoryInfo';
 import {SearchResultsOfPost} from '../search-result/template/search-results-of-post';
-import DefaultNavbarOnPageOfSearchResults from '../search-result/template/nav-bar';
+import {NavbarOnPageOfSearchResultsInNarrowDevices} from '../search-result/template/nav-bar';
 
-interface PropsOfPageOfCategoryOnTabletScreen {
+interface PropsOfPageOfCategoryOnSmartPhone {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
     answer:AnswerOfQueryPostsByTaxonomy<CategoryOfPost>;
 }
 
-export default class PageOfCategoryOnTabletScreen extends React.Component<PropsOfPageOfCategoryOnTabletScreen> {
+export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfPageOfCategoryOnSmartPhone> {
     render() {
         const vw = this.props.viewportWidth;
         const maxWidthOfTitle = vw - 2 * this.props.remFontSize;
-        const fontSizeOfTitle = (5 * vw + 1688) / 148;
+        const fontSizeOfTitle = (vw + 1024) / 56;
         const title = {
             name:terms.titleOfPageOfCategory(this.props.answer.taxonomy.name),
             fontSize:fontSizeOfTitle,
@@ -26,7 +26,7 @@ export default class PageOfCategoryOnTabletScreen extends React.Component<PropsO
         };
 
         const styleOfInfoOfCategory = {
-            fontSize:`${(vw + 1936) / 148}px`
+            fontSize:`${(vw + 464)/56}px`
         }
 
         const decorationLine = {
@@ -38,21 +38,24 @@ export default class PageOfCategoryOnTabletScreen extends React.Component<PropsO
             paddingLeft:`${this.props.remFontSize}px`,
             paddingRight:`${this.props.remFontSize}px`
         }       
-
-        const gapBetweenTwoPosts = (0.5 * vw + 115) * this.props.remFontSize / 430;
-        const widthOfPost = (maxWidthOfTitle - gapBetweenTwoPosts) / 2;
-        const fontSizeOfTitleOfPost = (vw + 2708) / 193;
-        const gapBetweenDateAndTitle = (3 * fontSizeOfTitleOfPost - 40) / 2;
+        
+        const fontSizeOfTitleOfPost = (vw + 2772) / 153;
+        const gapBetweenDateAndTitle = 4 * fontSizeOfTitleOfPost - 70;
         const settingsOfPost = {
-            paddingLeftRightOfPost:(0.5 * vw + 709) * this.props.remFontSize / 788,
-            fontSizeOfDate:(vw + 2322) / 193,
+            paddingLeftRightOfPost:(0.5 * vw - 5) * this.props.remFontSize / 310,
+            fontSizeOfDate:(vw + 2466) / 153,
             gapBetweenDateAndTitle:gapBetweenDateAndTitle,
-            fontSizeOfTitle:fontSizeOfTitleOfPost
+            fontSizeOfTitle:fontSizeOfTitleOfPost,
+            gapBetweenIconAndCategories:(vw - 10) * 14 /* 分類與標籤字體大小 */ / 620
         }
         const pageSelectHandler = () => {};//todo  
 
-        const heightOfDirectionIcon = 44;
-        const fontSizeOfPageIndexes = (vw + 4492)/197;       
+        const heightOfDirectionIcon = (vw + 796)/31;
+        const fontSizeOfPageIndexes = 26;
+        const settingsOfMarginOfNavbar = {
+            top:(0.5 * vw + 305) * this.props.remFontSize / 310,//todo 演算法要重推，距離要拉近
+            bottom:(vw + 920) * this.props.remFontSize / 620//todo 演算法要重推，距離要放遠一點
+        }
 
         return (
             <React.Fragment>
@@ -62,10 +65,11 @@ export default class PageOfCategoryOnTabletScreen extends React.Component<PropsO
                         numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults} />
                 </MobilePostHeader>
                 <div id="postBg" style={styleOfPostBg} className="tb categoryP">
-                    <SearchResultsOfPost results={this.props.answer.results} width={widthOfPost} numberOfPostInARow={2} 
+                    <SearchResultsOfPost results={this.props.answer.results} numberOfPostInARow={1} 
                         post={settingsOfPost} />
-                    <DefaultNavbarOnPageOfSearchResults results={this.props.answer.results} onPageSelect={pageSelectHandler} 
-                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
+                    <NavbarOnPageOfSearchResultsInNarrowDevices results={this.props.answer.results} onPageSelect={pageSelectHandler} 
+                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} 
+                        margin={settingsOfMarginOfNavbar} />
                 </div>
             </React.Fragment>
         );
