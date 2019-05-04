@@ -1,11 +1,10 @@
 @import '../searchResults/post/les-post.scss';
+@import '../searchResults/post/tb-post.scss';
 
-#post-header.les, #post-header.es {
-
+#post-header.les, #post-header.es, #post-header.tb {
     .desc, .parent, .count {
         display:flex;
         align-items:center;
-        font-size:0.5em;
         margin-top:0.75em;
         .icon {
             min-width:1em;
@@ -13,15 +12,9 @@
             margin-right:1em;
         }
     }
-
     .desc, .parent {
-        margin-bottom:0.75em 0;
+        margin-bottom:0.75em;
     }
-
-    .count {
-        margin-bottom:1.5em;
-    }
-
     .desc {
         color:#B0CA98;
         .noData {
@@ -37,30 +30,62 @@
     }
 
     .count {
+        margin-bottom:1.5em;
         color:#C7C7C7;
     }
 }
 
-#postBg.les.categoryP, #postBg.es.categoryP {
-    padding:1px 0;
+#post-header.les, #post-header.es {
+    .desc, .parent, .count {
+        font-size:0.5em;        
+    }    
+}
 
-    $marginBottomOfPosts:27px;
-    .content {       
+#postBg.categoryP {
+    .navbar {
+        color:#4A4A4A;
+        .current {
+            color:#C73C3C;
+        }
+        .prev, .next {
+            g {
+                fill:#1B3600;
+            }
+        }
+    }
+}
+
+#postBg.les.categoryP, #postBg.es.categoryP, #postBg.tb {
+    &.categoryP {
+        padding:1px 0;
+
+        $marginBottomOfPosts:27px;
+
         @import '../searchResults/post/general.scss';
-        @include styleOfPost($marginBottomOfPosts);
+        @include commonStyleOfPostOnExternalScreenAndTablet($marginBottomOfPosts);
         .results {
             margin-bottom:-$marginBottomOfPosts;
         }
-
         .navbar {
             margin-top:27px;/*1.5em*/
             margin-bottom:36px;/*2em*/
             .prev {
-                margin-right:0.33em;
+                margin-right:0.33em; 
             }
             .next {
                 margin-left:0.33em;
             }
-        }
-    }
+        }       
+    }    
+}
+
+
+#postBg.tb.categoryP {
+    $marginBottomOfPostsOnTablet:1em;
+    
+    .results {
+        margin-top:27px;/*與上面裝飾線保持 1.5em 的距離*/
+        @include commonStyleOfPostOnMobileDevices($marginBottomOfPostsOnTablet);
+        @include styleOfPostOnTablet();
+    }   
 }

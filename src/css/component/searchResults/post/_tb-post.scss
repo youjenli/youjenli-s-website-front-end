@@ -1,0 +1,39 @@
+@mixin commonStyleOfPostOnMobileDevices($marginBottomOfPost) {
+    .post {
+        box-shadow:0 1px 3px 0 #aeaeae;
+        background:#FFFDF9;
+        margin-bottom:$marginBottomOfPost;
+
+        .categories, .tags { 
+            margin-bottom:0.5em;
+            svg g {
+                min-height:1em;
+                min-width:1em;
+                margin-right:0.5em;
+            }
+        }
+    }
+}
+
+@mixin styleOfPostOnTablet {
+    .post {    
+        .titleBar {
+            margin:18px 0;/*1rem*/
+        }
+
+        .categories, .tags {
+            font-size:14px;
+            margin-bottom:0.5em;
+
+            svg {
+                margin-right:0.5em;
+            }
+        }
+
+        $fontSizeOfExcerpt:16px;
+        .excerpt {
+            font-size:$fontSizeOfExcerpt;
+            margin:$fontSizeOfExcerpt 0;/*1rem*/
+        }
+    }
+}

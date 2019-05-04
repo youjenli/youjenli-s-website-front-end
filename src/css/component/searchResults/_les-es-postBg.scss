@@ -1,14 +1,11 @@
 @import './post/les-post.scss';
-#postBg.les, #postBg.es {
+
+#postBg.les, #postBg.es, #postBg.tb {
     &.search {
-        padding-top:1px;
-        padding-bottom:9px; /*0.5rem  這裡的 0.5 加上 navbar 的 2.5 剛好符合規格的 3rem*/
+        padding-bottom:9px;/*0.5rem  這裡的 0.5 加上 navbar 的 2.5 剛好符合規格的 3rem*/
 
         #types-and-taxo {
             margin-top:27px;/*1.5rem*/
-        }
-        #introduction {
-            margin-bottom:45px;/*2.5rem*/
         }
 
         .heading {
@@ -17,27 +14,6 @@
                 height:1em;
                 margin-right:0.5em;
             }
-        }
-
-        $marginBottomOfSearchItems:27px;/*1.5rem*/
-        .posts, .categories, .tags {
-            .results {
-                margin-bottom: -$marginBottomOfSearchItems;
-            }        
-        }//因為 results 區域以 flexbox 佈局，所以底下要用負的 margin 把下面元素往上拉，這樣底部 margin 才不會太高。
-
-        @include styleOfPost($marginBottomOfSearchItems);
-
-        .category {
-            margin-bottom:$marginBottomOfSearchItems;
-            svg {
-                margin-top:-2px;
-                margin-left:-1px;
-            }
-        }
-
-        .tag {
-            margin-bottom:$marginBottomOfSearchItems;
         }
 
         .navbar {
@@ -49,6 +25,40 @@
             .next {
                 margin-left:0.33em;
             }
+        }
+    }
+}
+
+#postBg.les, #postBg.es {
+    &.search {
+        padding-top:1px;
+        
+        #introduction {
+            margin-bottom:45px;/*2.5rem*/
+        }
+
+        $marginBottomOfSearchItems:27px;/*1.5rem*/
+        .posts, .categories, .tags {
+            .results {
+                margin-bottom: -$marginBottomOfSearchItems;
+            }        
+        }//因為 results 區域以 flexbox 佈局，所以底下要用負的 margin 把下面元素往上拉，這樣底部 margin 才不會太高。
+
+        @include commonStyleOfPostOnExternalScreenAndTablet($marginBottomOfSearchItems);
+        .post {
+            background:#F6F5F4;
+        }
+
+        .category {
+            margin-bottom:$marginBottomOfSearchItems;
+            svg {
+                margin-top:-2px;
+                margin-left:-1px;
+            }
+        }
+
+        .tag {
+            margin-bottom:$marginBottomOfSearchItems;
         }
     }
 }

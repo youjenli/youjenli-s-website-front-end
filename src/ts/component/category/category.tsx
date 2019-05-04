@@ -6,6 +6,7 @@ import { CategoryOfPost } from '../../model/post';
 import { AnswerOfQueryPostsByTaxonomy } from '../../model/search-results';
 import PageOfCategoryOnLargeExternalScreen from './large-external-screen';
 import PageOfCategoryOnExternalScreen from './external-screen';
+import PageOfCategoryOnTabletScreen from './tablet';
 
 interface PropsOfPageOfCategory {
     answer:AnswerOfQueryPostsByTaxonomy<CategoryOfPost>
@@ -66,6 +67,8 @@ export default class PageOfCategory extends React.Component<PropsOfPageOfCategor
             return (
                 <React.Fragment>
                     <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
+                    <PageOfCategoryOnTabletScreen viewportWidth={this.state.viewportWidth}
+                        baseZIndex={baseZIndex} remFontSize={18} answer={this.props.answer} />
                 </React.Fragment>
             );
         } else if (vw > 432) {//採用手機水平佈局模式

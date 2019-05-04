@@ -1,4 +1,4 @@
-@mixin styleOfPost($marginBottomOfPost) {
+@mixin commonStyleOfPostOnExternalScreenAndTablet($marginBottomOfPost) {
     .post {
         margin-bottom:$marginBottomOfPost;
         padding-left:18px;

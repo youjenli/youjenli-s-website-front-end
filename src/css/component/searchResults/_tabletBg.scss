@@ -1,3 +1,5 @@
+@import './post/tb-post.scss';
+
 $marginBottomOfSearchItems:1em;
 #postBg.tb, #postBg.sp {
     &.search {
@@ -7,77 +9,22 @@ $marginBottomOfSearchItems:1em;
             }//因為 results 區域以 flexbox 佈局，所以底下要用負的 margin 把下面元素往上拉，這樣底部 margin 才不會太高。
         }
 
-        .post, .category, .tag {
+        .category, .tag {
             margin-bottom: $marginBottomOfSearchItems;
         }
 
-        .post {
-            box-shadow:0 1px 3px 0 #aeaeae;
-            background:#FFFDF9;
-
-            .categories, .tags { 
-                margin-bottom:0.5em;
-                svg g {
-                    min-height:1em;
-                    min-width:1em;
-                    margin-right:0.5em;
-                }
-            }
-        }
+        @include commonStyleOfPostOnExternalScreenAndTablet($marginBottomOfSearchItems);
     }
 }
 
 #postBg.tb.search {
-    padding-bottom:9px;
-    
-    #types-and-taxo {
-        margin-top:27px;/*1.5rem*/
-    }
 
     #introduction {
         margin-bottom:27px;/*1.5rem*/
     }
 
-    .heading {
-        margin:27px 0;/*1.5rem*/
-        svg {
-            height:1em;
-            margin-right:0.5em;
-        }
-    }
-
     .posts {
-        .post {    
-            .titleBar {
-                margin:18px 0;/*1rem*/
-            }
-    
-            .categories, .tags {
-                font-size:14px;
-                margin-bottom:0.5em;
-    
-                svg {
-                    margin-right:0.5em;
-                }
-            }
-    
-            $fontSizeOfExcerpt:16px;
-            .excerpt {
-                font-size:$fontSizeOfExcerpt;
-                margin:$fontSizeOfExcerpt 0;/*1rem*/
-            }
-        }
-    }
-
-    .navbar {
-        margin-top:27px; /*1.5rem*/
-        margin-bottom:36px; /*2rem*/
-        .prev {
-            margin-right:0.33em;
-        }
-        .next {
-            margin-left:0.33em;
-        }
+        @include styleOfPostOnTablet();
     }
 
     & > .noData {

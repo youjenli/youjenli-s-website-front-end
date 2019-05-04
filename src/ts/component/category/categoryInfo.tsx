@@ -6,6 +6,7 @@ import * as terms from './terms';
 interface PropsOfInformationOfCategory {
     category:CategoryOfPost;
     numberOfCategoriesSubjectToThisCategory:number;
+    style?:React.CSSProperties;
 }
 
 export class InformationOfCategory extends React.Component<PropsOfInformationOfCategory> {
@@ -33,7 +34,7 @@ export class InformationOfCategory extends React.Component<PropsOfInformationOfC
             </div>;
 
         return (
-            <div>{descElement}{parentElement}{countElement}</div>
+            <div style={this.props.style}>{descElement}{parentElement}{countElement}</div>
         );
     }
 }
