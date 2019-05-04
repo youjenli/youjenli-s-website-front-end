@@ -54,18 +54,13 @@ export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfP
 
             const heightOfDirectionIcon = (vw + 796)/31;
             const fontSizeOfPageIndexes = 26;
-            const settingsOfMarginOfNavbar = {
-                top:(0.5 * vw + 305) * this.props.remFontSize / 310,//todo 演算法要重推，距離要拉近
-                bottom:(vw + 920) * this.props.remFontSize / 620//todo 演算法要重推，距離要放遠一點
-            }
-
+            
             results = 
                 <React.Fragment>
                     <SearchResultsOfPost results={this.props.answer.results} numberOfPostInARow={1} 
                         post={settingsOfPost} />
                     <NavbarOnPageOfSearchResultsInNarrowDevices results={this.props.answer.results} onPageSelect={pageSelectHandler} 
-                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} 
-                        margin={settingsOfMarginOfNavbar} />
+                        heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
                 </React.Fragment>
         } else {
             const styleOfNoPostUnderThisCategory = {
@@ -79,12 +74,12 @@ export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfP
 
         return (
             <React.Fragment>
-                <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
+                <MobilePostHeader className="sp" baseZIndex={this.props.baseZIndex} 
                     title={title} decorationLine={decorationLine} >
                     <InformationOfCategory style={styleOfInfoOfCategory} category={this.props.answer.taxonomy} 
                         numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults} />
                 </MobilePostHeader>
-                <div id="postBg" style={styleOfPostBg} className="tb categoryP">
+                <div id="postBg" style={styleOfPostBg} className="sp categoryP">
                     {results}
                 </div>
             </React.Fragment>

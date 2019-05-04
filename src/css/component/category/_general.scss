@@ -1,5 +1,6 @@
 @import '../searchResults/post/les-post.scss';
 @import '../searchResults/post/tb-post.scss';
+@import '../searchResults/post/sp-post.scss';
 
 #post-header.les, #post-header.es, #post-header.tb {
     .desc, .parent, .count {
@@ -98,21 +99,19 @@
 
 #postBg.tb, #post.sp {
     &.categoryP {
-        $marginBottomOfPostsOnTablet:1em;
+        $marginBottomOfPostOnTablet:1em;
         .results {
-            @include commonStyleOfPostOnMobileDevices($marginBottomOfPostsOnTablet);
+            margin-bottom:-$marginBottomOfPostOnTablet;
+            @include commonStyleOfPostOnMobileDevices($marginBottomOfPostOnTablet);
             @include styleOfPostOnTablet();
         }
     }  
 }
 
 #postBg.sp.categoryP {
-    .navbar {
-        .prev {
-            margin-right:0.33em;
-        }
-        .next {
-            margin-left:0.33em;
-        }
-    }
+    $marginBottomOfPostOnSmartPhone:1em;
+    .results {
+        @include styleOfPostOnSmartPhone($marginBottomOfPostOnSmartPhone);
+        @include styleOfNavbarOnSmartPhone();
+    }    
 }

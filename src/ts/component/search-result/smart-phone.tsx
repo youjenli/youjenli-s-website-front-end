@@ -62,11 +62,6 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
 
         const heightOfDirectionIcon = (vw + 796)/31;
         const fontSizeOfPageIndexes = 26;
-        
-        const settingsOfMarginOfNavbar = {
-            top:(0.5 * vw + 305) * this.props.remFontSize / 310,//todo 演算法要重推，距離要拉近
-            bottom:(vw + 920) * this.props.remFontSize / 620//todo 演算法要重推，距離要放遠一點
-        }
 
         let posts = null, navbarOfPosts = null;
         if (this.props.results.posts.numberOfPages > 0) {
@@ -84,8 +79,7 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
             const pageSelectHandler = () => {};//todo        
             navbarOfPosts = 
                 <NavbarOnPageOfSearchResultsInNarrowDevices results={this.props.results.posts} onPageSelect={pageSelectHandler} 
-                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} 
-                    margin={settingsOfMarginOfNavbar} />
+                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
             posts = 
                 <div className="noData" style={styleOfNothingFoundInQuery}>
@@ -106,8 +100,7 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
             const pageSelectHandler = () => {};//todo
             navbarOfCategories = 
                 <NavbarOnPageOfSearchResultsInNarrowDevices results={this.props.results.categories} onPageSelect={pageSelectHandler} 
-                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes}
-                    margin={settingsOfMarginOfNavbar} />
+                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
             categories = 
                 <div className="noData" style={styleOfNothingFoundInQuery}>
@@ -122,8 +115,7 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
             const pageSelectHandler = () => {};//todo
             navbarOfTags =
                 <NavbarOnPageOfSearchResultsInNarrowDevices results={this.props.results.tags} onPageSelect={pageSelectHandler} 
-                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} 
-                    margin={settingsOfMarginOfNavbar} />
+                    heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
         } else {
             tags = <div className="noData" style={styleOfNothingFoundInQuery}>
                         {terms.generateTagsNotFoundNotificationMsg(this.props.results.query)}</div>

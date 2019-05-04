@@ -1,0 +1,32 @@
+@mixin styleOfPostOnSmartPhone($marginBottomOfPost) {
+    .post {
+        margin-bottom:$marginBottomOfPost;
+        .titleBar {
+            margin:1em 0;
+        }
+
+        .categories, .tags {
+            font-size:14px;
+            margin-bottom:0.5em;
+        }
+
+        $fontSizeOfExcerpt:16px;/*1rem*/
+        .excerpt {
+            font-size:$fontSizeOfExcerpt;
+            margin:$fontSizeOfExcerpt 0;
+        }
+    }
+}
+
+@mixin styleOfNavbarOnSmartPhone() {
+    .navbar {
+        margin-top:1em;
+        margin-bottom:1.5em;
+        .prev {
+            margin-right:0.33em;
+        }
+        .next {
+            margin-left:0.33em;
+        }
+    }
+}
