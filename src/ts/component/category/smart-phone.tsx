@@ -34,6 +34,7 @@ export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfP
         }
         
         const styleOfPostBg = {
+            fontSize:this.props.remFontSize,
             paddingTop:`${this.props.remFontSize * 1.5}px`,
             paddingLeft:`${this.props.remFontSize}px`,
             paddingRight:`${this.props.remFontSize}px`

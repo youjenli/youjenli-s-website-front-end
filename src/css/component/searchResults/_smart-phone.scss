@@ -17,8 +17,11 @@
 
     $marginBottomOfPostOnSmartPhone:1em;
     .posts {
-        @include styleOfPostOnSmartPhone($marginBottomOfPostOnSmartPhone);
-    }
-
-    @include styleOfNavbarOnSmartPhone();
+        .results {
+            //因為已經在手機搜尋頁模板中的 postBg 注入字體大小，所以這邊可以安心使用 em。
+            margin-bottom: -$marginBottomOfPostOnSmartPhone;
+            @include styleOfPostOnSmartPhone($marginBottomOfPostOnSmartPhone);
+        }
+        @include styleOfNavbarOnSmartPhone();  
+    }    
 }

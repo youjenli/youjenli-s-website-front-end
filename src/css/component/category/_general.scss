@@ -97,21 +97,20 @@
     }    
 }
 
-#postBg.tb, #post.sp {
-    &.categoryP {
-        $marginBottomOfPostOnTablet:1em;
-        .results {
-            margin-bottom:-$marginBottomOfPostOnTablet;
-            @include commonStyleOfPostOnMobileDevices($marginBottomOfPostOnTablet);
-            @include styleOfPostOnTablet();
-        }
+#postBg.tb.categoryP {
+    $marginBottomOfPostOnTablet:18px;
+    .results {
+        margin-bottom:-$marginBottomOfPostOnTablet;
+        @include commonStyleOfPostOnMobileDevices($marginBottomOfPostOnTablet);
+        @include styleOfPostOnTablet();
     }  
 }
 
 #postBg.sp.categoryP {
     $marginBottomOfPostOnSmartPhone:1em;
     .results {
+        margin-bottom:-$marginBottomOfPostOnSmartPhone;
         @include styleOfPostOnSmartPhone($marginBottomOfPostOnSmartPhone);
-        @include styleOfNavbarOnSmartPhone();
-    }    
+    }
+    @include styleOfNavbarOnSmartPhone(); 
 }
