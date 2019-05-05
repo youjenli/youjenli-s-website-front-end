@@ -23,6 +23,9 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
             maxWidth:maxWidthOfTitle
         };
         const fontSizeOfPostInfo = (vw + 1936)/148;
+        const styleOfPostInfo = {
+            fontSize:`${fontSizeOfPostInfo}px`
+        }
 
         let subjectElement = this.props.post.dom.getElementsByClassName('subject')[0];
         let fontSizeOfSubjectHint = null, fontSizeOfSubjectContent;
@@ -77,8 +80,8 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
             return (
                 <React.Fragment>
                     <MobilePostHeader baseZIndex={this.props.baseZIndex} className="tb" title={title} paddingBottom={paddingBottomOfTitleBg} >
-                        <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                            wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} >
+                        <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified}
+                            styleOfPostInfo={styleOfPostInfo} wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} >
                             <img src={post.imageUrl} style={styleOfImg} />
                         </PostInfo>                        
                     </MobilePostHeader>                    
@@ -107,7 +110,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                         title={title} decorationLine={decorationLine} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                            wordCount={countingResult.characters} marginBottomOfLastItem={'0px'} />
+                            styleOfPostInfo={styleOfPostInfo} wordCount={countingResult.characters} marginBottomOfLastItem={'0px'} />
                         <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} 
                                     content={subjectElement.innerHTML}/>
                     </MobilePostHeader>
@@ -116,7 +119,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                         title={title} decorationLine={decorationLine} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                    wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} />
+                            styleOfPostInfo={styleOfPostInfo} wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} />
                     </MobilePostHeader>;
             }
 
