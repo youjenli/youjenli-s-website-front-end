@@ -32,14 +32,7 @@ export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfP
         const decorationLine = {
             height:fontSizeOfTitle / 3
         }
-        
-        const styleOfPostBg = {
-            fontSize:this.props.remFontSize,
-            paddingTop:`${this.props.remFontSize * 1.5}px`,
-            paddingLeft:`${this.props.remFontSize}px`,
-            paddingRight:`${this.props.remFontSize}px`
-        }       
-        
+
         let results = null;
         if (this.props.answer.results.numberOfResults > 0) {
             const fontSizeOfTitleOfPost = (vw + 2772) / 153;
@@ -80,10 +73,27 @@ export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfP
                     <InformationOfCategory style={styleOfInfoOfCategory} category={this.props.answer.taxonomy} 
                         numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults} />
                 </MobilePostHeader>
-                <div id="postBg" style={styleOfPostBg} className="sp categoryP">
+                <ContentOfTaxonomyOnSmartPhone remFontSize={this.props.remFontSize}>
                     {results}
-                </div>
+                </ContentOfTaxonomyOnSmartPhone>
             </React.Fragment>
+        );
+    }
+}
+
+export class ContentOfTaxonomyOnSmartPhone extends React.Component<{remFontSize:number}> {
+    render() {
+        const styleOfPostBg = {
+            fontSize:this.props.remFontSize,
+            paddingTop:`${this.props.remFontSize * 1.5}px`,
+            paddingLeft:`${this.props.remFontSize}px`,
+            paddingRight:`${this.props.remFontSize}px`
+        }
+
+        return (
+            <div id="postBg" style={styleOfPostBg} className="sp categoryP">
+                {this.props.children}
+            </div>
         );
     }
 }

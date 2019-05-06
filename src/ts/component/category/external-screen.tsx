@@ -22,29 +22,11 @@ export default class PageOfCategoryOnExternalScreen extends React.Component<Prop
         const title = {
             name:terms.titleOfPageOfCategory(answer.taxonomy.name),
             maxWidth:maxWidthOfTitle,
-        };
-
-        let widthOfPostBg = this.props.viewportWidth * 0.382 + 632.832;
-        let marginTopOfPostContent = this.props.remFontSize * 1.5;    
-        let marginBottomOfPostContent = this.props.remFontSize * 1.5;
-        let marginBottomOfPostBg = this.props.remFontSize * 2;/*數值缺規格，待確認 */        
-        let paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;        
+        };     
            
         let titleBg = {
             paddingBottom:0
         };
-        
-        const styleOfPostBg = {
-            width:`${widthOfPostBg}px`,
-            paddingLeft:`${paddingLeftRightOfPosgBg}px`,
-            paddingRight:`${paddingLeftRightOfPosgBg}px`,
-            marginBottom:`${marginBottomOfPostBg}px`
-        }
-
-        const styleOfPostContent = {
-            marginTop:`${marginTopOfPostContent}px`,
-            marginBottom:`${marginBottomOfPostContent}px`
-        }
 
         let results = null;
         if (this.props.answer.results.numberOfResults > 0) {
@@ -81,12 +63,46 @@ export default class PageOfCategoryOnExternalScreen extends React.Component<Prop
                     <InformationOfCategory category={answer.taxonomy} 
                         numberOfCategoriesSubjectToThisCategory={answer.results.numberOfResults} />
                 </DefaultHeaderOfArticle>
-                <div id="postBg" className="es categoryP" style={styleOfPostBg}>
-                    <div className="content" style={styleOfPostContent}>
-                        {results}
-                    </div>
-                </div>
+                <ContentOfTaxonomyOnExternalScreen viewportWidth={this.props.viewportWidth} remFontSize={this.props.remFontSize} 
+                    maxWidthOfTitle={maxWidthOfTitle} >
+                    {results}
+                </ContentOfTaxonomyOnExternalScreen>
             </React.Fragment>
+        );
+    }
+}
+
+interface PropsOfContentOfTaxonomyOnExternalScreen {
+    viewportWidth:number;
+    remFontSize:number;
+    maxWidthOfTitle:number;
+}
+
+export class ContentOfTaxonomyOnExternalScreen extends React.Component<PropsOfContentOfTaxonomyOnExternalScreen> {
+    render() {
+        let widthOfPostBg = this.props.viewportWidth * 0.382 + 632.832;
+        let marginTopOfPostContent = this.props.remFontSize * 1.5;    
+        let marginBottomOfPostContent = this.props.remFontSize * 1.5;
+        let marginBottomOfPostBg = this.props.remFontSize * 2;/*數值缺規格，待確認 */        
+        let paddingLeftRightOfPosgBg = (widthOfPostBg - this.props.maxWidthOfTitle) / 2;  
+
+        const styleOfPostBg = {
+            width:`${widthOfPostBg}px`,
+            paddingLeft:`${paddingLeftRightOfPosgBg}px`,
+            paddingRight:`${paddingLeftRightOfPosgBg}px`,
+            marginBottom:`${marginBottomOfPostBg}px`
+        }
+
+        const styleOfPostContent = {
+            marginTop:`${marginTopOfPostContent}px`,
+            marginBottom:`${marginBottomOfPostContent}px`
+        }
+        return (
+            <div id="postBg" className="es categoryP" style={styleOfPostBg}>
+                <div className="content" style={styleOfPostContent}>
+                    {this.props.children}
+                </div>
+            </div>
         );
     }
 }

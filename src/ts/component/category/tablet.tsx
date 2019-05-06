@@ -32,12 +32,6 @@ export default class PageOfCategoryOnTabletScreen extends React.Component<PropsO
         const decorationLine = {
             height:fontSizeOfTitle / 3
         }
-        
-        const styleOfPostBg = {
-            paddingTop:`${this.props.remFontSize * 1.5}px`,
-            paddingLeft:`${this.props.remFontSize}px`,
-            paddingRight:`${this.props.remFontSize}px`
-        }       
 
         let results = null;
         if (this.props.answer.results.numberOfResults > 0) {
@@ -78,10 +72,26 @@ export default class PageOfCategoryOnTabletScreen extends React.Component<PropsO
                     <InformationOfCategory style={styleOfInfoOfCategory} category={this.props.answer.taxonomy} 
                         numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults} />
                 </MobilePostHeader>
-                <div id="postBg" style={styleOfPostBg} className="tb categoryP">
+                <ContentOfTaxonomyOnTablet remFontSize={this.props.remFontSize} >
                     {results}
-                </div>
+                </ContentOfTaxonomyOnTablet>
             </React.Fragment>
+        );
+    }
+}
+
+export class ContentOfTaxonomyOnTablet extends React.Component<{remFontSize:number}> {
+    render() {
+        const styleOfPostBg = {
+            paddingTop:`${this.props.remFontSize * 1.5}px`,
+            paddingLeft:`${this.props.remFontSize}px`,
+            paddingRight:`${this.props.remFontSize}px`
+        }
+
+        return (
+            <div id="postBg" style={styleOfPostBg} className="tb categoryP">
+                {this.props.children}
+            </div>
         );
     }
 }

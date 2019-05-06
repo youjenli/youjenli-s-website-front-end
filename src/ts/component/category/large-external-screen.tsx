@@ -26,26 +26,9 @@ export default class PageOfCategoryOnLargeExternalScreen extends React.Component
             fontSize:fontSizeOfTitle
         };
         
-        const widthOfPostBg = 0.764 * this.props.viewportWidth;
-        const marginTopOfPostContent = this.props.remFontSize * 2;
-        const marginBottomOfPostContent = this.props.remFontSize * 2;
-        const paddingLeftRightOfPostBg = (widthOfPostBg - maxWidthOfTitle) / 2;        
-        const marginBottomOfPostBg = this.props.remFontSize * 2;       
-
         let titleBg = {
             paddingBottom:0
         };
-        const styleOfPostBg = {
-            width:`${widthOfPostBg}px`,
-            paddingLeft:`${paddingLeftRightOfPostBg}px`,
-            paddingRight:`${paddingLeftRightOfPostBg}px`,
-            marginBottom:`${marginBottomOfPostBg}px`
-        }
-
-        const styleOfPostContent = {
-            marginTop:`${marginTopOfPostContent}px`,
-            marginBottom:`${marginBottomOfPostContent}px`
-        }
 
         let results = null;
         if (this.props.answer.results.numberOfResults > 0) {
@@ -81,12 +64,48 @@ export default class PageOfCategoryOnLargeExternalScreen extends React.Component
                     <InformationOfCategory category={this.props.answer.taxonomy} 
                         numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults}/>
                 </DefaultHeaderOfArticle>
-                <div id="postBg" className="les categoryP" style={styleOfPostBg}>
-                    <div className="content" style={styleOfPostContent}>
-                        {results}
-                    </div>                    
-                </div>
+                <ContentOfTaxonomyOnLargeExternalScreen viewportWidth={this.props.viewportWidth} remFontSize={this.props.remFontSize} 
+                    maxWidthOfTitle={maxWidthOfTitle}>
+                    {results}
+                </ContentOfTaxonomyOnLargeExternalScreen>
             </React.Fragment>
         );        
+    }
+}
+
+interface PropsOfContentOfTaxonomyOnLargeExternalScreen {
+    viewportWidth:number;
+    remFontSize:number;
+    maxWidthOfTitle:number;
+}
+
+export class ContentOfTaxonomyOnLargeExternalScreen extends React.Component<PropsOfContentOfTaxonomyOnLargeExternalScreen> {
+    render () {
+
+        const widthOfPostBg = 0.764 * this.props.viewportWidth;
+        const marginTopOfPostContent = this.props.remFontSize * 2;
+        const marginBottomOfPostContent = this.props.remFontSize * 2;
+        const paddingLeftRightOfPostBg = (widthOfPostBg - this.props.maxWidthOfTitle) / 2;        
+        const marginBottomOfPostBg = this.props.remFontSize * 2;   
+
+        const styleOfPostBg = {
+            width:`${widthOfPostBg}px`,
+            paddingLeft:`${paddingLeftRightOfPostBg}px`,
+            paddingRight:`${paddingLeftRightOfPostBg}px`,
+            marginBottom:`${marginBottomOfPostBg}px`
+        }
+
+        const styleOfPostContent = {
+            marginTop:`${marginTopOfPostContent}px`,
+            marginBottom:`${marginBottomOfPostContent}px`
+        }
+
+        return (
+            <div id="postBg" className="les categoryP" style={styleOfPostBg}>
+                <div className="content" style={styleOfPostContent}>
+                    {this.props.children}
+                </div>                    
+            </div>
+        );
     }
 }
