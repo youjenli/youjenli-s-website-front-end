@@ -36,7 +36,6 @@
     "gulp-connect": "^5.7.0",
     "gulp-print": "^5.0.2",
     "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.5",
     "gulp-zip": "^4.2.0",
     "navigo": "^7.1.2",
     "node-sass": "^4.11.0",

@@ -6,7 +6,6 @@ const tsify = require("tsify");
 const sass = require('gulp-sass');
 sass.compiler = require('node-sass');
 const cleanCSS = require('gulp-clean-css');
-const sourcemaps = require('gulp-sourcemaps');
 const print = require('gulp-print').default;
 //註: gulp-webserver 已經四年沒有更新了，現在 jetbrains 好像接手開發這專案並改名為 gulp-connect，最後更新時間是四個月前。
 const connect = require('gulp-connect');
@@ -117,7 +116,7 @@ const scssEntryFiles = scssEntryNames.map((name) => {
         未來要正式輸出生產級別的資源時，還會再引入 sourcemap 並啟用壓縮機制。
 */
 function transpileSCSS() {
-    return gulp.src(scssEntryFiles)
+    return gulp.src(scssEntryFiles)    
                 .pipe(sass())
                 .pipe(gulp.dest(pathOfIntermediates));
 }
@@ -129,9 +128,7 @@ const cssIntermediateEntryFiles = scssEntryNames.map((name) => {
 let cleanCSSConfig = require('./clean-css-config');
 function optimizeCSS(){
     return gulp.src(cssIntermediateEntryFiles)
-                //.pipe(sourcemaps.init())
                 .pipe(cleanCSS(cleanCSSConfig))
-                //.pipe(sourcemaps.write())
                 .pipe(gulp.dest(distRoot));
 }
 
