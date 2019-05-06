@@ -6,6 +6,9 @@ node_modules
 #暫時存放開發用，但不會提交的檔案
 /temp
 
+#用來建立ssh連線以部署程式的資訊
+/ssh-config.js
+
 # OS generated files #
 ######################
 .DS_Store

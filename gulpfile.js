@@ -11,6 +11,7 @@ const print = require('gulp-print').default;
 const connect = require('gulp-connect');
 const dateFormat = require('dateformat');
 const zip = require('gulp-zip');
+const GulpSSH = require('gulp-ssh');
 const path = require('path');
 
 const distRoot = './dist'; //輸出建置成品的路徑
@@ -211,3 +212,16 @@ const archiveTask = gulp.series(defaultTask,
                 .pipe(gulp.dest(distRoot));
     });
 gulp.task('archive', archiveTask);
+
+const deployTask = gulp.series(() => {
+        const sshConfig = require('./ssh-config');
+        const gulpSSH = new GulpSSH({
+            ignoreErrors:false,
+            sshConfig:sshConfig
+        });
+    
+        return  gulpSSH.exec(['uptime', 'ls -al', 'pwd'], {filePath: 'commands.log'})
+                        .pipe(gulp.dest(distRoot));
+    });
+
+gulp.task('deploy', deployTask);
