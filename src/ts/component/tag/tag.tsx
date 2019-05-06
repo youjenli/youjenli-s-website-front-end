@@ -7,6 +7,7 @@ import { AnswerOfQueryPostsByTaxonomy } from '../../model/search-results';
 import PageOfTagOnLargeExternalScreen from './large-external-screen';
 import PageOfTagOnExternalScreen from './external-screen';
 import PageOfTagOnTabletScreen from './tablet';
+import PageOfTagOnSmartPhone from './smart-phone';
 
 interface PropsOfPageOfCategory {
     answer:AnswerOfQueryPostsByTaxonomy<TagOfPost>
@@ -75,12 +76,16 @@ export default class PageOfTag extends React.Component<PropsOfPageOfCategory, St
             return (
                 <React.Fragment>
                     <MobileDeviceTitleBar  className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
+                    <PageOfTagOnSmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} 
+                        remFontSize={18} answer={this.props.answer} />
                 </React.Fragment>
             );
         } else {//採用手機垂直佈局模式
             return (
                 <React.Fragment>
                     <MobileDeviceTitleBar  className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
+                    <PageOfTagOnSmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} 
+                        remFontSize={16} answer={this.props.answer} />
                 </React.Fragment>
             );
         }

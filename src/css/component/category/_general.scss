@@ -2,14 +2,6 @@
 @import '../searchResults/post/tb-post.scss';
 @import '../searchResults/post/sp-post.scss';
 
-#post-header.les, #post-header.es, #post-header.tb {
-    .desc, .parent, .count {
-        .icon {
-            margin-right:1em;
-        }
-    }
-}
-
 #post-header.les, #post-header.es, #post-header.tb, #post-header.sp {
     .desc, .parent, .count {
         display:flex;
@@ -40,6 +32,22 @@
     .count {
         margin-bottom:1.5em;
         color:#C7C7C7;
+    }
+}
+
+#post-header.les, #post-header.es, #post-header.tb {
+    .desc, .parent, .count {
+        .icon {
+            margin-right:1em;
+        }
+    }
+}
+
+#post-header.sp {
+    .desc, .parent, .count {
+        .icon {
+            margin-right:0.5em;
+        }
     }
 }
 
