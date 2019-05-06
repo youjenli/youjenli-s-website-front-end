@@ -8,14 +8,14 @@ import {SearchResultsOfPost} from '../search-result/template/search-results-of-p
 import DefaultNavbarOnPageOfSearchResults from '../search-result/template/nav-bar';
 import {ContentOfTaxonomyOnExternalScreen} from '../category/external-screen';
 
-interface PropsOfPageOfCategoryOnExternalScreen {
+interface PropsOfPageOfTagOnExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
     answer:AnswerOfQueryPostsByTaxonomy<TagOfPost>;
 }
 
-export default class PageOfCategoryOnExternalScreen extends React.Component<PropsOfPageOfCategoryOnExternalScreen> {
+export default class PageOfTagOnExternalScreen extends React.Component<PropsOfPageOfTagOnExternalScreen> {
     render() {
         const vw = this.props.viewportWidth;
         const answer = this.props.answer;
