@@ -5,6 +5,7 @@ import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import { TagOfPost } from '../../model/post';
 import { AnswerOfQueryPostsByTaxonomy } from '../../model/search-results';
 import PageOfTagOnLargeExternalScreen from './large-external-screen';
+import PageOfTagOnExternalScreen from './external-screen';
 
 interface PropsOfPageOfCategory {
     answer:AnswerOfQueryPostsByTaxonomy<TagOfPost>
@@ -47,7 +48,7 @@ export default class PageOfTag extends React.Component<PropsOfPageOfCategory, St
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
-                    <PageOfTagOnLargeExternalScreen  viewportWidth={this.state.viewportWidth}
+                    <PageOfTagOnLargeExternalScreen viewportWidth={this.state.viewportWidth}
                         baseZIndex={baseZIndex} remFontSize={18} answer={this.props.answer} />
                 </React.Fragment>
             );
@@ -57,6 +58,8 @@ export default class PageOfTag extends React.Component<PropsOfPageOfCategory, St
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
+                    <PageOfTagOnExternalScreen viewportWidth={this.state.viewportWidth}
+                        baseZIndex={baseZIndex} remFontSize={18} answer={this.props.answer} />
                 </React.Fragment>
             );
         } else if (vw > 630) { //採用平板佈局模式
