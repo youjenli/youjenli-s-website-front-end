@@ -70,7 +70,7 @@ export default class PageOfCategoryOnTabletScreen extends React.Component<PropsO
                 <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                     title={title} decorationLine={decorationLine} >
                     <InformationOfCategory style={styleOfInfoOfCategory} category={this.props.answer.taxonomy} 
-                        numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults} />
+                        numberOfPostsSubjectToThisCategory={this.props.answer.results.numberOfResults} />
                 </MobilePostHeader>
                 <ContentOfTaxonomyOnTablet remFontSize={this.props.remFontSize} >
                     {results}

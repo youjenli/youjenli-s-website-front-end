@@ -71,7 +71,7 @@ export default class PageOfCategoryOnSmartPhone extends React.Component<PropsOfP
                 <MobilePostHeader className="sp" baseZIndex={this.props.baseZIndex} 
                     title={title} decorationLine={decorationLine} >
                     <InformationOfCategory style={styleOfInfoOfCategory} category={this.props.answer.taxonomy} 
-                        numberOfCategoriesSubjectToThisCategory={this.props.answer.results.numberOfResults} />
+                        numberOfPostsSubjectToThisCategory={this.props.answer.results.numberOfResults} />
                 </MobilePostHeader>
                 <ContentOfTaxonomyOnSmartPhone remFontSize={this.props.remFontSize}>
                     {results}

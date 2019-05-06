@@ -1,27 +1,28 @@
 import * as React from 'react';
 import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import * as terms from './terms';
-import { CategoryOfPost } from '../../model/post';
+import { TagOfPost } from '../../model/post';
 import { AnswerOfQueryPostsByTaxonomy } from '../../model/search-results';
+import {InformationOfTag} from './tagInfo';
 import {SearchResultsOfPost} from '../search-result/template/search-results-of-post';
 import DefaultNavbarOnPageOfSearchResults from '../search-result/template/nav-bar';
-import {InformationOfCategory} from './categoryInfo';
+import {ContentOfTaxonomyOnLargeExternalScreen} from '../category/large-external-screen';
 
-interface PropsOfPageOfCategoryOnLargeExternalScreen {
+interface PropsOfPageOfTagOnLargeExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    answer:AnswerOfQueryPostsByTaxonomy<CategoryOfPost>;
+    answer:AnswerOfQueryPostsByTaxonomy<TagOfPost>;
 }
 
-export default class PageOfCategoryOnLargeExternalScreen extends React.Component<PropsOfPageOfCategoryOnLargeExternalScreen> {
+export default class PageOfTagOnLargeExternalScreen extends React.Component<PropsOfPageOfTagOnLargeExternalScreen> {
     render() {
         const vw = this.props.viewportWidth;
         const maxWidthOfTitle = (this.props.viewportWidth >= 1657 ? this.props.viewportWidth * 0.618 : 1024 );
         const fontSizeOfTitle = maxWidthOfTitle / 22.8;
         
         const title = {
-            name:terms.titleOfPageOfCategory(this.props.answer.taxonomy.name),
+            name:terms.titleOfPageOfTag(this.props.answer.taxonomy.name),
             maxWidth:maxWidthOfTitle,
             fontSize:fontSizeOfTitle
         };
@@ -32,7 +33,7 @@ export default class PageOfCategoryOnLargeExternalScreen extends React.Component
 
         let results = null;
         if (this.props.answer.results.numberOfResults > 0) {
-            const widthOfPost = (maxWidthOfTitle - 2* this.props.remFontSize) / 2;
+            const widthOfPost = (maxWidthOfTitle - 2 * this.props.remFontSize) / 2;
             const settingsOfPost = {
                 fontSizeOfDate:(vw + 7936) / 448,
                 fontSizeOfTitle:(vw + 8832) / 448
@@ -49,63 +50,26 @@ export default class PageOfCategoryOnLargeExternalScreen extends React.Component
                         heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} />
                 </React.Fragment>
         } else {
-            const styleOfNoPostUnderThisCategory = {
+            const styleOfNoPostUnderThisTag = {
                 fontSize:`${(vw + 4800) / 224}px`
             }
 
             results = 
-                <div style={styleOfNoPostUnderThisCategory} className="noPost">{terms.noPostUnderThisCategory}</div>
+                <div style={styleOfNoPostUnderThisTag} className="noPost">{terms.noPostMarkedByThisTag}</div>
         }
 
         return (
             <React.Fragment>
                 <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                     titleBg={titleBg} title={title} appendDecorationLine={true}>
-                    <InformationOfCategory category={this.props.answer.taxonomy} 
-                        numberOfPostsSubjectToThisCategory={this.props.answer.results.numberOfResults}/>
-                </DefaultHeaderOfArticle>
+                    <InformationOfTag tag={this.props.answer.taxonomy} 
+                        numberOfPostsMarkedByThisTag={this.props.answer.results.numberOfResults} /> 
+               </DefaultHeaderOfArticle>
                 <ContentOfTaxonomyOnLargeExternalScreen viewportWidth={this.props.viewportWidth} remFontSize={this.props.remFontSize} 
                     maxWidthOfTitle={maxWidthOfTitle}>
                     {results}
                 </ContentOfTaxonomyOnLargeExternalScreen>
             </React.Fragment>
         );        
-    }
-}
-
-interface PropsOfContentOfTaxonomyOnLargeExternalScreen {
-    viewportWidth:number;
-    remFontSize:number;
-    maxWidthOfTitle:number;
-}
-
-export class ContentOfTaxonomyOnLargeExternalScreen extends React.Component<PropsOfContentOfTaxonomyOnLargeExternalScreen> {
-    render () {
-
-        const widthOfPostBg = 0.764 * this.props.viewportWidth;
-        const marginTopOfPostContent = this.props.remFontSize * 2;
-        const marginBottomOfPostContent = this.props.remFontSize * 2;
-        const paddingLeftRightOfPostBg = (widthOfPostBg - this.props.maxWidthOfTitle) / 2;        
-        const marginBottomOfPostBg = this.props.remFontSize * 2;   
-
-        const styleOfPostBg = {
-            width:`${widthOfPostBg}px`,
-            paddingLeft:`${paddingLeftRightOfPostBg}px`,
-            paddingRight:`${paddingLeftRightOfPostBg}px`,
-            marginBottom:`${marginBottomOfPostBg}px`
-        }
-
-        const styleOfPostContent = {
-            marginTop:`${marginTopOfPostContent}px`,
-            marginBottom:`${marginBottomOfPostContent}px`
-        }
-
-        return (
-            <div id="postBg" className="les categoryP" style={styleOfPostBg}>
-                <div className="content" style={styleOfPostContent}>
-                    {this.props.children}
-                </div>                    
-            </div>
-        );
     }
 }

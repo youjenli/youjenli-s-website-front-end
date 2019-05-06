@@ -61,7 +61,7 @@ export default class PageOfCategoryOnExternalScreen extends React.Component<Prop
                 <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
                     titleBg={titleBg} title={title} appendDecorationLine={true}>
                     <InformationOfCategory category={answer.taxonomy} 
-                        numberOfCategoriesSubjectToThisCategory={answer.results.numberOfResults} />
+                        numberOfPostsSubjectToThisCategory={answer.results.numberOfResults} />
                 </DefaultHeaderOfArticle>
                 <ContentOfTaxonomyOnExternalScreen viewportWidth={this.props.viewportWidth} remFontSize={this.props.remFontSize} 
                     maxWidthOfTitle={maxWidthOfTitle} >

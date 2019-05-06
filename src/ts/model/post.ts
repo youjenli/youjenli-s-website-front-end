@@ -1,12 +1,15 @@
-export interface CategoryOfPost {
+interface CommonPropertiesOfTaxonomy {
     id:number,
     name:string,
     url:string,
     description?:string,
+}
+
+export interface CategoryOfPost extends CommonPropertiesOfTaxonomy{
     parent?:CategoryOfPost
 }
 
-export type TagOfPost = CategoryOfPost;
+export type TagOfPost = CommonPropertiesOfTaxonomy;
 
 export interface MetaOfPost {
     id:number,

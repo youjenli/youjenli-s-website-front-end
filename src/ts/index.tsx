@@ -13,10 +13,13 @@ import PostPage from './component/post/post';
 import Page from './component/page/page';
 import PageOfSearchResults from './component/search-result/search-results';
 import PageOfCategory from './component/category/category';
+import PageOfTag from './component/tag/tag';
 import {listOfFakePosts} from  './model/test/fake-posts';
 import {listOfFakePages} from './model/test/fake-pages';
 import {fakeSearchResults, fakeNothingFoundSearchResults, } from './model/test/fake-search-results';
-import {fakeAnswerOfQueryPostsByTaxonomy, fakeAnswerOfQueryPostsByTaxonomyWithoutDesc, fakeAnswerOfQueryPostsByTaxonomyWithoutAnyPost} from './model/test/fake-answer-of-query-posts-by-taxonomy';
+import {fakeAnswerOfQueryPostsByTag, fakeAnswerOfQueryPostsByTagWithoutDesc, fakeAnswerOfQueryPostsByTagWithoutAnyPost,
+        fakeAnswerOfQueryPostsByCategory, fakeAnswerOfQueryPostsByCategoryWithoutDesc, fakeAnswerOfQueryPostsByCategoryWithoutAnyPost
+        } from './model/test/fake-answer-of-query-posts-by-taxonomy';
 
 const reactRoot = document.getElementById('react-root');
 
@@ -65,14 +68,28 @@ const routeToPageOfCategory = (params) => {
     let pageOfCategory = null;
     if (params && params.name) {
         if (params.name == '0') {
-            pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByTaxonomyWithoutAnyPost} />;
+            pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByCategoryWithoutAnyPost} />;
         } else {
-            pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByTaxonomy}/>;    
+            pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByCategory}/>;    
         }        
     } else {
-        pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByTaxonomyWithoutDesc} />;
+        pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByCategoryWithoutDesc} />;
     }
     ReactDOM.render(pageOfCategory, reactRoot);    
+}
+
+const routeToPageOfTag = (params) => {
+    let pageOfTag = null;
+    if (params && params.name) {
+        if (params.name == '0') {
+            pageOfTag = <PageOfTag answer={fakeAnswerOfQueryPostsByTagWithoutAnyPost} />;
+        } else {
+            pageOfTag = <PageOfTag answer={fakeAnswerOfQueryPostsByTag}/>;    
+        }        
+    } else {
+        pageOfTag = <PageOfTag answer={fakeAnswerOfQueryPostsByTagWithoutDesc} />;
+    }
+    ReactDOM.render(pageOfTag, reactRoot);
 }
 
 router.on({
@@ -88,6 +105,9 @@ router.on({
        '/search/:keyword':routeToSearchResult,
        '/category':routeToPageOfCategory,
        '/category/':routeToPageOfCategory,
-       '/category/:name':routeToPageOfCategory       
+       '/category/:name':routeToPageOfCategory,
+       '/tag':routeToPageOfTag,
+       '/tag/':routeToPageOfTag,
+       '/tag/:name':routeToPageOfTag
     })
     .resolve();

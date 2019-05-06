@@ -5,7 +5,7 @@ import * as terms from './terms';
 
 interface PropsOfInformationOfCategory {
     category:CategoryOfPost;
-    numberOfCategoriesSubjectToThisCategory:number;
+    numberOfPostsSubjectToThisCategory:number;
     style?:React.CSSProperties;
 }
 
@@ -15,7 +15,7 @@ export class InformationOfCategory extends React.Component<PropsOfInformationOfC
         if (this.props.category.description) {
             desc = terms.descriptionOfCategory(this.props.category.name, this.props.category.description);
         } else {
-            desc = <span className="noData">{terms.categoryDoesNotHaveDescription()}</span>;
+            desc = <span className="noData">{terms.categoryDoesNotHaveDescription}</span>;
         }
         const descElement = <div className="desc"><icons.Information />{desc}</div>;
 
@@ -23,14 +23,14 @@ export class InformationOfCategory extends React.Component<PropsOfInformationOfC
         if (this.props.category.parent) {
             parent = terms.parentOfCategoryOrTag(this.props.category.parent.name);
         } else {
-            parent = <span className="noData">{terms.categoryDoesNotHaveParent()}</span>;
+            parent = <span className="noData">{terms.categoryDoesNotHaveParent}</span>;
         }
         let parentElement = <div className="parent"><icons.ParentCategory />{parent}</div>
 
         let countElement = 
             <div className="count"><icons.Count />
-                {terms.countOfArticlesSubjectToCategoryOrTag(
-                    this.props.category.name,this.props.numberOfCategoriesSubjectToThisCategory)}
+                {terms.countOfArticlesSubjectToCategory(
+                    this.props.category.name,this.props.numberOfPostsSubjectToThisCategory)}
             </div>;
 
         return (

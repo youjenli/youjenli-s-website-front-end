@@ -50,22 +50,23 @@
 }
 
 #postBg.categoryP {
-    .navbar {
-        color:#4A4A4A;
-        .current {
-            color:#C73C3C;
-        }
-        .prev, .next {
-            g {
-                fill:#1B3600;
+    &.categoryP, &.tagP {
+        .navbar {
+            color:#4A4A4A;
+            .current {
+                color:#C73C3C;
+            }
+            .prev, .next {
+                g {
+                    fill:#1B3600;
+                }
             }
         }
-    }
+    }    
 }
 
-#postBg.les.categoryP, #postBg.es.categoryP, 
-#postBg.tb, #postBg.sp {
-    &.categoryP {
+#postBg.les, #postBg.es, #postBg.tb, #postBg.sp {
+    &.categoryP, &.tagP {
         padding:1px 0;
         @import '../searchResults/post/general.scss';
 
@@ -77,7 +78,7 @@
 }
 
 #postBg.les.categoryP, #postBg.es.categoryP, #postBg.tb {
-    &.categoryP {
+    &.categoryP, &.tagP {
         $marginBottomOfPosts:27px;
 
         @include commonStyleOfPostOnExternalScreenAndTablet($marginBottomOfPosts);
@@ -97,20 +98,24 @@
     }    
 }
 
-#postBg.tb.categoryP {
-    $marginBottomOfPostOnTablet:18px;
-    .results {
-        margin-bottom:-$marginBottomOfPostOnTablet;
-        @include commonStyleOfPostOnMobileDevices($marginBottomOfPostOnTablet);
-        @include styleOfPostOnTablet();
-    }  
+#postBg.tb {
+    &.categoryP, &.tagP {
+        $marginBottomOfPostOnTablet:18px;
+        .results {
+            margin-bottom:-$marginBottomOfPostOnTablet;
+            @include commonStyleOfPostOnMobileDevices($marginBottomOfPostOnTablet);
+            @include styleOfPostOnTablet();
+        }
+    }
 }
 
-#postBg.sp.categoryP {
-    $marginBottomOfPostOnSmartPhone:1em;
-    .results {
-        margin-bottom:-$marginBottomOfPostOnSmartPhone;
-        @include styleOfPostOnSmartPhone($marginBottomOfPostOnSmartPhone);
+#postBg.sp {
+    &.categoryP, &.tagP {
+        $marginBottomOfPostOnSmartPhone:1em;
+        .results {
+            margin-bottom:-$marginBottomOfPostOnSmartPhone;
+            @include styleOfPostOnSmartPhone($marginBottomOfPostOnSmartPhone);
+        }
+        @include styleOfNavbarOnSmartPhone();
     }
-    @include styleOfNavbarOnSmartPhone(); 
 }
