@@ -3,7 +3,7 @@ import { Page } from '../../model/page';
 import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import PostBackgroundOnExternalScreen from '../template/es-postBg';
 import { PublishInfo } from '../template/post-info';
-import {CategoryIcon} from '../home/recentPosts/icons';
+import {CategoryIcon} from '../template/icons';
 import * as Countable from 'countable';
 import {LinkOfParent} from './terms';
 

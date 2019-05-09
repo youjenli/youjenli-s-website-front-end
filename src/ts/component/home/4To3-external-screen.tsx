@@ -3,11 +3,13 @@ import * as terms from './slogan/terms';
 import {MetaOfPost} from '../../model/post';
 import SloganOnExternalScreen from './slogan/external-screen-slogan';
 import ListOfRecentPostsOnExternalScreen from './listOfPosts/external-screen';
+import {DisposableWidget} from './error-and-warning/disposable-widget';
 
 interface PropsOfHomeOf4To3ExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
     posts:MetaOfPost[];
+    errorMsg?:string;
 }
 
 export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHomeOf4To3ExternalScreen> {
@@ -42,6 +44,16 @@ export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHom
         const bottomShiftOfIconChain_basedOnDescPanel = -1 * ((0.25 * this.props.viewportWidth + 56)/416 + 1) * heightOfTallToolIcon;
         const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomOfL1bgAndPortrait * 2;
         
+        let disposableWidget = null;
+        if (this.props.errorMsg) {
+            const styleOfWidget = {
+                fontSize:`${(4.5 * this.props.viewportWidth + 2048) / 416}px`,
+                padding:`1px ${this.props.viewportWidth * marginLeftRightOfBgOfPostsInPercent / 100}px`
+            }
+            disposableWidget = 
+                <DisposableWidget style={styleOfWidget} msg={this.props.errorMsg} shouldFlashAfterMount={true}/>;
+        }
+
         const l2bg = {
             height:l2bgHeight,
             picAndGtCtnr:{
@@ -114,12 +126,16 @@ export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHom
         const estimatedWidthOfContainer = this.props.viewportWidth - 2 * marginLeftRightOfBgOfPostsInPercent;
 
         return (
-            <SloganOnExternalScreen viewportWidth={this.props.viewportWidth} l2bg={l2bg} descPanel={descPanel}
-                bgOfPost={bgOfPost} baseZIndex={this.props.baseZIndex + 1}>
-                <ListOfRecentPostsOnExternalScreen estimatedWidthOfContainer={estimatedWidthOfContainer}
-                    baseZIndex={this.props.baseZIndex + 10} remFontSize={18} posts={this.props.posts}
-                    marginTopOfPost={distanceBetweenTheBottomOfL1bgAndPortrait} />
-            </SloganOnExternalScreen>
+            <React.Fragment>
+                {disposableWidget}
+                <SloganOnExternalScreen viewportWidth={this.props.viewportWidth} l2bg={l2bg} descPanel={descPanel}
+                    bgOfPost={bgOfPost} baseZIndex={this.props.baseZIndex + 1}>
+                    <ListOfRecentPostsOnExternalScreen estimatedWidthOfContainer={estimatedWidthOfContainer}
+                        baseZIndex={this.props.baseZIndex + 10} remFontSize={18} posts={this.props.posts}
+                        marginTopOfPost={distanceBetweenTheBottomOfL1bgAndPortrait} />
+                </SloganOnExternalScreen>
+            </React.Fragment>
+            
         );
     }
 }

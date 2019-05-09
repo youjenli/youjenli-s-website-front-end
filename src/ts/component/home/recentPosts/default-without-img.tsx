@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {CategoryOfPost, TagOfPost} from '../../../model/post';
-import {CategoryIcon, TagIcon} from './icons';
+import {CategoryIcon, TagIcon} from '../../template/icons';
 import * as terms from './terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
 

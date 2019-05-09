@@ -1,37 +1,92 @@
 /*
-  寬度 > 1024px 或寬度 = 1024px 且水平模式的螢幕採用行動裝置的佈局方式
+  寬度 > 1024px 的螢幕採用外接螢幕的佈局方式
 */
-@media (min-width:1024px){
+@media (min-width:1025px){
     body {
-        background-color: rgb(255,248,238);
+        background-color: #FBFBFB;
     }
 }
 
 /*
-    當寬度在臨介點時，這部分的樣式要獨立出來做成多層次的處理，
-    否則實測發現 chrome 似乎會套用最後一個相對符合設定的樣式。
-*/
-@media (width:1024px) {
-    @media (orentation: landscape) {
-        body {
-            background-color:#FBFBFB;
-        }
-    }
-
-    @media (orentation: portrait) {
-        body {
-            background-color: rgb(255,248,238);
-        }
-    }
-}
-
-/*
-    寬度 < 1024px 或寬度 = 1024px 且為垂直模式的螢幕採用外接螢幕的佈局方式
+    寬度 < 1024px 採用平板或手機的佈局方式
 */
 @media (max-width:1024px){
     body {
         background-color: rgb(255,248,238);
     }
+}
+
+#http-error {
+    transition:opacity 200ms ease-out;
+    box-sizing:border-box;
+    display:flex;
+    align-items:center;    
+    .icon {
+        width:1em;
+        height:1em;
+    }
+    .msg {
+        margin:1em 0;
+    }
+    &.fadeOut {
+        opacity:0;
+    }
+}
+
+@keyframes flash { 
+    50% {
+        opacity:0.75;
+    }
+    
+    100% {
+        opacity:1;
+    }
+}
+
+//顯示寬度 > 640 的螢幕之錯誤訊息都套用深綠色的樣式
+@media (min-width:641px) {
+    #http-error {
+        background:#042802;
+        color:#D7D1CC;
+        .icon {
+            margin-right:1em;
+            g {
+                fill:#D7D1CC;
+            }
+        }
+        &.flash {
+            animation:flash 300ms ease-in;
+        }
+    }
+}
+
+//顯示寬度 < 640 的螢幕之錯誤訊息都套用手機的樣式
+@mixin styleOfHttpErrorMsgOnSmartPhone($marginRightOfIcon) {
+    #http-error {
+        background:#343434;
+        opacity:0.8;
+        color:#EEEEEE;
+        position:fixed;
+        bottom:0;
+        left:0;
+        .icon {
+            margin-right:$marginRightOfIcon;
+            g {
+                fill:#EEEEEE;
+            }
+        }
+        &.flash {
+            animation:flash 300ms ease-in;
+        }
+    }
+}
+
+@media (max-width:640px) {
+    @include styleOfHttpErrorMsgOnSmartPhone(1em);
+}
+
+@media (max-width:432px) {
+    @include styleOfHttpErrorMsgOnSmartPhone(0.5em);
 }
 
 /* 這是用來在行動版網頁展開選單時，負責確保後面內容不產生捲軸的類別 */

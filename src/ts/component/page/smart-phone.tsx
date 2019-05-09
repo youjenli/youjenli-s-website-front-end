@@ -3,7 +3,7 @@ import { ParsedPage } from '../../model/page';
 import MobileHeaderOfArticle from '../template/mobile-header-of-article';
 import {LinkOfParent} from './terms';
 import {PublishInfo} from '../template/post-info';
-import {CategoryIcon} from '../home/recentPosts/icons';
+import {CategoryIcon} from '../template/icons';
 import * as Countable from 'countable';
 
 interface PropsOfSmartPhonePage {

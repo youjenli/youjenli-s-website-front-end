@@ -5,7 +5,7 @@ import { SummaryOfResultsOfSearch } from '../../model/search-results';
 import {SearchResultsOfPost} from  './template/search-results-of-post';
 import {SearchResultsOfCategory} from './template/search-results-of-category';
 import {SearchResultsOfTag} from './template/search-results-of-tags'
-import * as icons from '../home/recentPosts/icons';
+import * as icons from '../template/icons';
 import DefaultNavbarOnPageOfSearchResults from './template/nav-bar';
 
 interface PropsOfTabletPageOfSearchResults {

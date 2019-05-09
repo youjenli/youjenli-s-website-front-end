@@ -3,7 +3,7 @@ import {ResultsOfSearch} from '../../../model/search-results';
 import * as termsOfPost from '../../home/recentPosts/terms';
 import {MetaOfPost } from '../../../model/post';
 import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
-import { CategoryIcon, TagIcon } from '../../home/recentPosts/icons';
+import { CategoryIcon, TagIcon } from '../../template/icons';
 
 interface PropsOfPostOnPageOfSearchResults {
     post:MetaOfPost;

@@ -20,12 +20,14 @@ import {fakeSearchResults, fakeNothingFoundSearchResults, } from './model/test/f
 import {fakeAnswerOfQueryPostsByTag, fakeAnswerOfQueryPostsByTagWithoutDesc, fakeAnswerOfQueryPostsByTagWithoutAnyPost,
         fakeAnswerOfQueryPostsByCategory, fakeAnswerOfQueryPostsByCategoryWithoutDesc, fakeAnswerOfQueryPostsByCategoryWithoutAnyPost
         } from './model/test/fake-answer-of-query-posts-by-taxonomy';
+import { listOfMetaDataOfFakePosts } from './model/test/fake-meta-of-posts-for-test';
 
 const reactRoot = document.getElementById('react-root');
 
 const routeToHome = () => {
+    const errorMsg = '未在您存取的位置 /path/to/your/uri 找到對應的資源 (http 代碼 404)，系統改以首頁替代。';
     ReactDOM.render(
-        <HomePage />,
+        <HomePage posts={listOfMetaDataOfFakePosts} errorMsg={errorMsg}/>,
         reactRoot
     );
 }
