@@ -128,7 +128,8 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
                 if (page.parent) {
                     parsedPage['parent'] = {
                         title:page.parent.title,
-                        url:page.parent.url
+                        url:page.parent.url,
+                        slug:page.parent.slug
                     }
                 }
 
