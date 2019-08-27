@@ -1,5 +1,8 @@
 import * as React from 'react';
+import { isString } from '../../service/validator';
+import { MenuItem } from '../../model/menu';
 import SiteName from './site-name';
+import {loadMenuItems} from './menu-items-loader';
 import ExternalScreenSearchBar from './external-screen-search-bar';
 import HintOfFeatureLink from './hint-of-feature-link';
 import base64EncodedTitle from './site-name-2_5x_base64';
@@ -13,38 +16,33 @@ interface ExternalScreenTitleBarProps {
 
 interface ExternalScreenTitleBarState {
     isSearchBarFocused:boolean;
-    showHintOfSelfIntroduction:boolean;
-    showHintOfCatagoryOfArticles:boolean;
-    showHintOfAboutThisSite:boolean;
+    statusOfHints:boolean[];
 }
 
 export default class ExternalScreenTitleBar extends React.Component<ExternalScreenTitleBarProps, ExternalScreenTitleBarState> {
     constructor(props){
         super(props);
+        this.toggleSearchBarState = this.toggleSearchBarState.bind(this);
+        this.menuItems = loadMenuItems();
+        this.toggleStateOfHint = this.toggleStateOfHint.bind(this);
+        let statusOfHints = this.menuItems.map(() => { return false; });
         this.state = {
             isSearchBarFocused:false,
-            showHintOfAboutThisSite:false,
-            showHintOfCatagoryOfArticles:false,
-            showHintOfSelfIntroduction:false
+            statusOfHints:statusOfHints
         };
-        this.toggleSearchBarState = this.toggleSearchBarState.bind(this);
-        this.toggleSelfIntroductionLinkHoverState = this.toggleSelfIntroductionLinkHoverState.bind(this);
-        this.toggleCatagoryOfArticlesHoverState = this.toggleCatagoryOfArticlesHoverState.bind(this);
-        this.toggleAboutThisSiteHoverState = this.toggleAboutThisSiteHoverState.bind(this);
     }
+    menuItems:MenuItem[];
     toggleSearchBarState() {
         this.setState({
             isSearchBarFocused:!this.state.isSearchBarFocused
         })
     }
-    toggleSelfIntroductionLinkHoverState() {
-        this.setState({showHintOfSelfIntroduction:!this.state.showHintOfSelfIntroduction});
-    }
-    toggleCatagoryOfArticlesHoverState() {
-        this.setState({showHintOfCatagoryOfArticles:!this.state.showHintOfCatagoryOfArticles});
-    }
-    toggleAboutThisSiteHoverState() {
-        this.setState({showHintOfAboutThisSite:!this.state.showHintOfAboutThisSite});
+    toggleStateOfHint(idx:number) {
+        const newStatus = this.state.statusOfHints;
+        this.state.statusOfHints[idx] = !this.state.statusOfHints[idx];
+        this.setState({
+            statusOfHints:newStatus
+        });
     }
     render() {
         /*
@@ -66,7 +64,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
             searchFieldBorderRadius = 10;
             searchBarHeight = (0.11 * this.props.viewportWidth + 1.6) / 5;
             searchBarWidth = 13 * searchHintFontSize * (this.state.isSearchBarFocused ? 1.5 : 1);
-        } else if (this.props.viewportWidth >= 1024) {//小螢幕或水平大行動裝置
+        } else {//小螢幕或水平大行動裝置
             if (this.props.aspectRatio > 0.7) { //4:3 螢幕
                 siteNameFontSize = this.props.viewportWidth / 50;
                 headerHeight = 2.045 * siteNameFontSize;
@@ -93,8 +91,6 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
                 searchBarWidth = 13 * searchHintFontSize * (this.state.isSearchBarFocused ? 1.5 : 1);
             }
             searchFieldBorderRadius = 8;   
-        } else {//行動裝置或垂直的大行動裝置
-            //todo 拋出例外
         }
         siteNameLeftPosition = siteNameFontSize;
         siteNameTopPosition = (headerHeight - siteNameFontSize)/2
@@ -116,49 +112,34 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
             top:groupOfFeatureLinkTop + "px"            
         }
 
+        let featureLinks = this.menuItems.map((item, idx) => {
+            return (
+                <a style={featureLinkStyle} className="featureLink" key={idx}
+                    onMouseEnter={() => this.toggleStateOfHint(idx)}
+                    onMouseLeave={() => this.toggleStateOfHint(idx)}
+                    >{item.name}
+                    { this.state.statusOfHints[idx] && isString(item.hint) ?
+                    <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
+                        charactersOfFeatureLink={item.hint.length} 
+                        hint={item.hint} fontSizeOfHint={featureHintFontSize} />
+                    : null }
+                </a>
+            );
+        });
+
         return (
             <div id="header-ctx" style={headerCtxStyle}>
                 <header id="header-bar" style={headerBarStyle}>
                     <SiteName name={terms.siteName} base64EncodedTitle={base64EncodedTitle}
                         fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
-
                     <ExternalScreenSearchBar width={searchBarWidth} height={searchBarHeight} 
                         top={searchBarTop} right={siteNameFontSize} borderRadius={searchFieldBorderRadius}
                         fontSizeOfFeatureLink={featureLinkFontSize} fontSizeOfSearchHint={searchHintFontSize}
                         toggleSearchBarState={this.toggleSearchBarState}>
                        <nav id="groupOfFeatureLinks" style={groupOfFeatureLinkStyle}>
-                            <a style={featureLinkStyle} className="featureLink" 
-                                onMouseEnter={this.toggleSelfIntroductionLinkHoverState}
-                                onMouseLeave={this.toggleSelfIntroductionLinkHoverState}
-                                >{terms.selfIntroduction}
-                                { this.state.showHintOfSelfIntroduction ?
-                                <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                    charactersOfFeatureLink={terms.selfIntroduction.length} 
-                                    hint={terms.hintOfSelfIntroduction} fontSizeOfHint={featureHintFontSize} />
-                                : null }
-                            </a>
-                            <a style={featureLinkStyle} className="featureLink"
-                                onMouseEnter={this.toggleCatagoryOfArticlesHoverState}
-                                onMouseLeave={this.toggleCatagoryOfArticlesHoverState}
-                                >{terms.catagoryOfArticles}
-                                { this.state.showHintOfCatagoryOfArticles ?
-                                <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                    charactersOfFeatureLink={terms.catagoryOfArticles.length} 
-                                    hint={terms.hintOfCatagoryOfArticles} fontSizeOfHint={featureHintFontSize} />
-                                : null }
-                            </a>
-                            <a style={featureLinkStyle} className="featureLink"
-                                onMouseEnter={this.toggleAboutThisSiteHoverState}
-                                onMouseLeave={this.toggleAboutThisSiteHoverState}
-                                >{terms.aboutThisSite}
-                                { this.state.showHintOfAboutThisSite ?
-                                <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                                    charactersOfFeatureLink={terms.aboutThisSite.length} 
-                                    hint={terms.hintOfAboutThisSite} fontSizeOfHint={featureHintFontSize} />
-                                : null }
-                            </a>
+                            {featureLinks}
                         </nav> 
-                    </ExternalScreenSearchBar>             
+                    </ExternalScreenSearchBar>
                 </header>
             </div>
         );

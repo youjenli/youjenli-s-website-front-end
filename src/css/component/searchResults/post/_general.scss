@@ -13,23 +13,30 @@
     }
     .title {
         color:#323232;
+        text-decoration:none;
         &:hover {
             text-decoration: underline;
         }
         cursor:pointer;
     }
-    .categories {
+    .categories, .parent {
         color:#667E4D;
     }
     .tags {
         color:#6F8099;
     }
-    .categories, .tags {
+    .categories, .tags, .parent {
         display:flex;
         align-items: center;
         .icon {
+            /*
+              實驗發現若要把 svg 圖示的尺吋設定為 1em，
+              則 chrome 上面要藉由 min-width, min-height 完成，firefox 上面要透過 width, height 完成，故兩套設定缺一不可。
+            */
             min-height:1em;
             min-width:1em;
+            height:1em;
+            width:1em;
             g {
                 fill:#888888;
             }
@@ -39,13 +46,19 @@
         }
         a {
             text-decoration:none;
+            color:inherit;
             &:hover {
                 text-decoration:underline;
-                cursor:pointer;
             }
         }
     }
     .excerpt {
-        color:#656A60;
+        a {
+            color:#656A60;
+            text-decoration: none;
+            &:hover {
+                text-decoration:underline;
+            }
+        }
     }
 }

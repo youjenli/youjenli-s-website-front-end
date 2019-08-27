@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {CategoryOfPost, TagOfPost} from '../../../model/post';
+import {Category, Tag} from '../../../model/terms';
 import {CategoryIcon, TagIcon, PublishIcon} from '../../template/icons';
 import * as terms from './terms';
-import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
+import {formatMonthOrDayTo2Digits} from '../../../service/formatters';
 
 interface MobileHorizontalRecentPostWithoutImgProps {
     width:number;
@@ -28,8 +28,8 @@ interface MobileHorizontalRecentPostWithoutImgProps {
             fontSizeOfDateAndTitle:number,
             marginBottom:number
         },
-        categories:CategoryOfPost[],
-        tags:TagOfPost[],
+        categories:Category[],
+        tags:Tag[],
         date:Date,
         modified:Date,
         marginRightOfIcon:number,
@@ -38,14 +38,15 @@ interface MobileHorizontalRecentPostWithoutImgProps {
         
     }
     excerpt:{
-        fontSize:number,
+        fontSize:number;
         margin:{
             top:number;
             leftRight:number;
             bottom:number;
         },        
-        zIndexOfReadArticle:number,
-        content:string
+        zIndexOfReadArticle:number;
+        content:string;
+        urlOfPost:string;
     }
 }
 
@@ -66,26 +67,35 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
         const styleOfTitle = {
             fontSize:`${this.props.postInfoBar.title.fontSizeOfDateAndTitle}px`,
             marginBottom:`${this.props.postInfoBar.title.marginBottom}px`
-        }        
+        }
+        const widthOfIcon = `${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`;
+        const heightOfIcon = `${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`;
         const styleOfIcon = {
-            /* icon 的長寬必須透過 minWidth, minHeight 設定，否則當分類或標籤列使用 flex 來分配欄寬時，icon 的尺寸會被壓縮。
-                為什麼會壓縮的原因還不是很清楚，只知道照以下這樣設定可以解決此問題。
+            /* icon 的長寬在 chrome 上面必須透過 minWidth, minHeight 設定，
+               否則當分類或標籤列使用 flex 來分配欄寬時，icon 的尺寸會被壓縮。
+               為什麼會壓縮的原因還不是很清楚，只知道照以下這樣設定可以解決此問題。
             */
-            minWidth:`${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`,
-            minHeight:`${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`,
+            minWidth:widthOfIcon,
+            minHeight:heightOfIcon,
+            width:widthOfIcon,
+            height:heightOfIcon,
             marginRight:`${this.props.postInfoBar.marginRightOfIcon}px`
         };
         let styleOfCategories = {
             fontSize:`${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`
         }
-        let categories;
-        if (this.props.postInfoBar.categories && this.props.postInfoBar.categories.length > 0) {
-            categories = this.props.postInfoBar.categories.map(
-                (category, idx, array) => {
-                return (<span key={idx}><a className="category">{category.name}</a>
-                    { idx != array.length - 1 ? 
-                        '﹒' : null }
-                </span>);
+
+        let categories = null;
+        let dataOfCategories = this.props.postInfoBar.categories;
+        if (dataOfCategories === null) {
+            categories = <span className="dataNotFound">{terms.cannotFoundTaxonomies}</span>;
+        } else if (dataOfCategories.length > 0) {
+            categories = dataOfCategories.map((category, idx, array) => {
+                return (
+                <span key={idx}>
+                    <a className="category" href={category.url} data-navigo>{category.name}</a>
+                    { idx < array.length - 1 ? '．' : null }
+                </span>)
             });
         } else {
             categories = (<span className="noData" key={0}>{terms.postWasNotCategorized}</span>);
@@ -95,12 +105,15 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
             fontSize:`${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`,
             marginTop:`${this.props.postInfoBar.marginTopOfTags}px`
         };
+        
         let tags;
-        if (this.props.postInfoBar.tags && this.props.postInfoBar.tags.length > 0) {
+        if (this.props.postInfoBar.tags === null) {
+            tags = <span className="dataNotFound">{terms.cannotFoundTaxonomies}</span>;
+            //todo 實作這裡的異常處理方式
+        } else if (this.props.postInfoBar.tags.length > 0) {
             tags = this.props.postInfoBar.tags.map((tag, idx, array) => {
-                return (<span key={idx}><a className="tag">{tag.name}</a>
-                    { idx != array.length - 1 ? 
-                        '﹒' : null }
+                return (<span key={idx}><a className="tag" href={tag.url} data-navigo>{tag.name}</a>
+                    { idx < array.length - 1 ? '．' : null }
                 </span>);
             });
         } else {
@@ -143,7 +156,7 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
             <article className="rPost plain" style={styleOfPost}>
                 <div className="postInfoBg" style={styleOfPostInfoBg}>
                     <div className="title" style={styleOfTitle}>
-                        {this.props.postInfoBar.title.titleName}</div>
+                        <a href={this.props.excerpt.urlOfPost} data-navigo>{this.props.postInfoBar.title.titleName}</a></div>
                     <div style={styleOfCategories} className="categories">
                         <CategoryIcon style={styleOfIcon}/>
                         <span>{categories}</span>                        
@@ -160,7 +173,8 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
                     <p className="noExcerpt" style={styleOfExcerpt}>{terms.postDoesNotHaveExcerpt}</p>
                     /* 當畫面上沒有摘抄時，要顯示替代內容，否則會把繼續閱讀的連結擠上去 */
                 }
-                <a className="read" style={styleOfReadArticle}>{terms.readArticle}</a>
+                <a className="read" href={this.props.excerpt.urlOfPost} data-navigo
+                    style={styleOfReadArticle}>{terms.readArticle}</a>
             </article>
         )
     }

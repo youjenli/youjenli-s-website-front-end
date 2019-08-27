@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ParsedPost } from '../../model/post';
+import { ParsedPost } from '../../model/posts';
 import MobileHeaderOfArticle from '../template/mobile-header-of-article';
 import PostInfo from '../template/post-info';
 import Subject from './subject';
@@ -40,7 +40,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             countingResult = counter;
         });
 
-        if (this.props.post.imageUrl) {
+        if (this.props.post.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
             const styleOfImg = {
                 height:`${heightOfImg}px`
@@ -75,7 +75,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             return (
                 <React.Fragment>
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} title={title} className="sp">
-                        <img src={post.imageUrl} style={styleOfImg}/>
+                        <img src={post.thumbnail.url} style={styleOfImg}/>
                         <PostInfo categories={post.categories} tags={post.tags} styleOfPostInfo={styleOfPostInfo}
                             date={post.date} modified={post.modified} wordCount={countingResult.characters} />
                         </MobileHeaderOfArticle>

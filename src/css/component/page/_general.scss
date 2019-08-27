@@ -1,10 +1,10 @@
 /* 
     page 借用了 post 的元件，因此大部份元件的樣式已經定義在 post 的樣式表中，這裡只定義 page 額外增加的樣式。
 */
-$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
-$backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
+$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體";
+$backupFonts:'PingFangTC-Regular', 'Microsoft JhengHei', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
 #post-header {
-    .parent {
+    .parentPage {
         color:#B0CA98;
         display:flex;
         align-items: center;
@@ -19,8 +19,14 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
         } 
 
         .icon {
+            /*
+              實驗發現若要把 svg 圖示的尺吋設定為 1em，
+              則 chrome 上面要藉由 min-width, min-height 完成，firefox 上面要透過 width, height 完成，故兩套設定缺一不可。
+            */
             min-width:1em;
             min-height:1em;
+            width:1em;
+            height:1em;
         }
         
         a {
@@ -37,7 +43,7 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
 }
 
 #post-header.les, #post-header.es{
-    .parent {
+    .parentPage {
         font-size:0.5em;
         .icon {
             margin-right:1em;
@@ -45,45 +51,32 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
     }
 }
 
-#post-header.tb, #post-header.sp {
-    .pageInfo {
-        position:relative;
-        padding-bottom:1px;/* 是為了讓內容元素的 margin-bottom 能延伸此元素高度的辦法*/
-    }    
-}
-
 #post-header.tb {
-
-    .pageInfo {
-        .parent {
-            .icon {
-                margin-right:1em;
-            }
+    .parentPage {
+        .icon {
+            margin-right:1em;
         }
+    }
 
-        .publishInfo {
-            margin-bottom:1.5em;
-        }
+    .publishInfo {
+        margin-bottom:1.5em;
+    }
 
-        img {
-            position:absolute;
-            top:100%;
-        }
+    img {
+        position:absolute;
+        top:100%;
     }
 }
 
 #post-header.sp {
-
-    .pageInfo {
-        .parent {
-            margin-top:1.5em;
-            .icon {
-                margin-right:0.5em;
-            }
+    .parentPage {
+        margin-top:1.5em;
+        .icon {
+            margin-right:0.5em;
         }
+    }
 
-        .publishInfo {
-            margin-bottom:1.5em;
-        }
-    }    
+    .publishInfo {
+        margin-bottom:1.5em;
+    }
 }

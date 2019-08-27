@@ -22,6 +22,9 @@
         display:flex;
         justify-content: space-between;
         .nav {
+            a {
+                text-decoration: none;
+            }
             svg {
                 vertical-align: middle;
             }
@@ -31,15 +34,6 @@
             &.hidden {
             visibility: hidden;
             }
-        }
-
-        a {
-            color:inherit;
-            text-decoration: none;
-            &:hover {
-                text-decoration:underline;
-                cursor:pointer;
-            }        
         }
 
         .indexes {
@@ -53,17 +47,25 @@
             .current {
                 color:#C73C3C;
             }
+
+            a {
+                color:inherit;
+                text-decoration: none;
+                &:hover {
+                    text-decoration:underline;
+                    cursor:pointer;
+                }
+            }
         }
     }
 }
 
-$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
-$backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
 #postBg.search{
     padding-top:1px;
     
     .heading {
-        font-family:$prioritizedFonts, $backupFonts;
+        font-family:'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體", 'PingFangTC-Regular', 
+                    'Microsoft JhengHei', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
         font-weight:400;
         display:flex;
         align-items: center;
@@ -71,7 +73,9 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
             fill:#B2B2B2;
         }
     }
-
+    /*
+      todo .posts, .categories, .tags 最好要改名，這樣才不會跟查詢結果裡面的類別名稱混淆。
+    */
     .posts {
         .heading {
             color:#1B3600;

@@ -37,6 +37,9 @@
             margin-bottom:45px;/*2.5rem*/
         }
 
+        /*
+            todo .posts, .categories, .tags 最好要改名，這樣才不會跟查詢結果裡面的類別名稱混淆。
+        */
         $marginBottomOfSearchItems:27px;/*1.5rem*/
         .posts, .categories, .tags {
             .results {

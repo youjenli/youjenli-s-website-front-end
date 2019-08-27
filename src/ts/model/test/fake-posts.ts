@@ -1,4 +1,4 @@
-import {Post} from '../post';
+import {Post} from '../posts';
 import {fakeDate, aFewOfFakeCategories, aFewOfFakeTags} from './fake-meta-of-posts-for-test';
 
 const defaultToc = 
@@ -75,13 +75,15 @@ const defaultToc =
 
 export const fakePostWithSubjectAndImg:Post = {
     id:9,
-    urlOfPost:'https://www.google.com.tw',
+    url:'https://www.google.com.tw',
     categories:aFewOfFakeCategories,
     tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
     title:'有主旨且有圖片',
-    imageUrl:'/img/afternoon-tea-time.jpeg',
+    thumbnail:{
+        url:'img/afternoon-tea-time.jpeg'
+    },
     content:`
     <div class="subject">
     弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
@@ -115,7 +117,7 @@ export const fakePostWithSubjectAndImg:Post = {
 
 export const fakePostWithSubjectButWithoutImg:Post = {
     id:9,
-    urlOfPost:'https://www.google.com.tw',
+    url:'https://www.google.com.tw',
     categories:aFewOfFakeCategories,
     tags:aFewOfFakeTags,
     date:fakeDate,
@@ -154,13 +156,15 @@ export const fakePostWithSubjectButWithoutImg:Post = {
 
 export const fakePostWithoutSubjectButWithImg:Post = {
     id:9,
-    urlOfPost:'https://www.google.com.tw',
+    url:'https://www.google.com.tw',
     categories:aFewOfFakeCategories,
     tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
     title:'無主旨但有圖片',
-    imageUrl:'/img/afternoon-tea-time.jpeg',
+    thumbnail:{
+        url:'img/afternoon-tea-time.jpeg'
+    },
     content:`
     ${defaultToc}
     <h1 name="p1">師說</h1>
@@ -191,7 +195,7 @@ export const fakePostWithoutSubjectButWithImg:Post = {
 
 export const fakePostWithoutSubjectAndImg:Post = {
     id:9,
-    urlOfPost:'https://www.google.com.tw',
+    url:'https://www.google.com.tw',
     categories:aFewOfFakeCategories,
     tags:aFewOfFakeTags,
     date:fakeDate,

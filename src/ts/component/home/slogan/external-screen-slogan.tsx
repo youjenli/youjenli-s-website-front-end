@@ -28,7 +28,6 @@ export interface PropsOfSloganOnExternalScreen {
             marginLeft:number;
             greetings:{
                 fontSize:number;
-                width:number;
             };
             sm:{
                 width:number;
@@ -113,8 +112,7 @@ export default class SloganOnExternalScreen extends React.Component<PropsOfSloga
             marginRight:`${this.props.l2bg.portrait.l1bg.leftShift}px`
         }
         const styleOfGreetings = {
-            fontSize:`${this.props.l2bg.gtPanel.greetings.fontSize}px`,
-            width:`${this.props.l2bg.gtPanel.greetings.width}px`
+            fontSize:`${this.props.l2bg.gtPanel.greetings.fontSize}px`
         }
         const styleOfSMIcon = {
             width:`${this.props.l2bg.gtPanel.sm.width}px`,

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as terms from './terms';
-import {CategoryOfPost} from '../../../model/post';
-import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
+import {Category} from '../../../model/terms';
+import {formatMonthOrDayTo2Digits} from '../../../service/formatters';
 
 interface PropsOfMobileRecentPostWithImg {
     width:number;
@@ -28,8 +28,9 @@ interface PropsOfMobileRecentPostWithImg {
         marginBottom:number
     }
     date:Date;
-    categories:CategoryOfPost[];
+    categories:Category[];
     imgUrl:string;
+    urlOfPost:string;
 }
 
 export default class MobileRecentPostWithImg extends React.Component<PropsOfMobileRecentPostWithImg> {
@@ -57,32 +58,36 @@ export default class MobileRecentPostWithImg extends React.Component<PropsOfMobi
         };
 
         let categories = null;
-        if (this.props.categories && this.props.categories.length > 0) {
-            categories = this.props.categories.map((category, idx, array) => {
+        let dataOfCategories = this.props.categories;
+        if (dataOfCategories === null) {
+            categories = <span className="dataNotFound">{terms.cannotFoundTaxonomies}</span>;
+        } else if (dataOfCategories.length > 0) {
+            categories = dataOfCategories.map((category, idx, array) => {
                 return (
                 <span key={idx}>
-                    <a className="category">{category.name}</a>
-                    { idx != array.length - 1 ? '﹒' : null }
+                    <a className="category" href={category.url} data-navigo>{category.name}</a>
+                    { idx < array.length - 1 ? '．' : null }
                 </span>)
             });
         } else {
             categories = (<span className="noData" key={0}>{terms.postWasNotCategorized}</span>);
-        }      
+        }
         
         const widthOfImg = this.props.width - 2 * this.props.padding.leftRight;
         let styleOfImg = {
             width:`${widthOfImg}px`,
             height:`${widthOfImg * 3/5}px`
         }
-                
+
         return (
             <article className="rPost img" style={styleOfPost} title={this.props.title.name}>
-                <div style={styleOfTitle} className="title">{this.props.title.name}</div>
+                <div style={styleOfTitle} className="title">
+                    <a href={this.props.urlOfPost} data-navigo>{this.props.title.name}</a></div>
                 <div style={styleOfPostProps} className="postProps">
-                    <span className="date">{this.props.date.getFullYear()}/{month}/{day}﹒</span>
+                    <span className="date">{this.props.date.getFullYear()}/{month}/{day}．</span>
                     <span className="categories">{categories}</span>
                 </div>                
-                <img style={styleOfImg} src={this.props.imgUrl} />
+                <a href={this.props.urlOfPost} data-navigo><img style={styleOfImg} src={this.props.imgUrl} /></a>
             </article>
         );
     }

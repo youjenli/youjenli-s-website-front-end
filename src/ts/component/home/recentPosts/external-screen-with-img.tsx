@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as terms from './terms';
-import {CategoryOfPost} from '../../../model/post';
-import {formatMonthOrDayTo2Digits} from '../../../service/date-formatter';
+import {Category} from '../../../model/terms';
+import {formatMonthOrDayTo2Digits} from '../../../service/formatters';
 
 interface ExternalScreenRecentPostWithImgProps {
     width:number;
@@ -20,7 +20,7 @@ interface ExternalScreenRecentPostWithImgProps {
         marginTop:number
     }
     date:Date;
-    categories:CategoryOfPost[];
+    categories:Category[];
     title:{
         margin:{
             top:number;
@@ -28,7 +28,8 @@ interface ExternalScreenRecentPostWithImgProps {
         }
         name:string,
         fontSize:number;
-    }
+    };
+    urlOfPost:string;
 }
 
 export default class ExternalScreenRecentPostWithImg extends React.Component<ExternalScreenRecentPostWithImgProps> {
@@ -37,12 +38,15 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
         const day = formatMonthOrDayTo2Digits(this.props.date.getDate());
 
         let categories = null;
-        if (this.props.categories && this.props.categories.length > 0) {
-            categories = this.props.categories.map((category, idx, array) => {
+        let dataOfCategories = this.props.categories;
+        if (dataOfCategories === null) {
+            categories = <span className="dataNotFound">{terms.cannotFoundTaxonomies}</span>;
+        } else if (dataOfCategories.length > 0) {
+            categories = dataOfCategories.map((category, idx, array) => {
                 return (
                 <span key={idx}>
-                    <a className="category">{category.name}</a>
-                    { idx != array.length - 1 ? '﹒' : null }
+                    <a className="category" href={category.url} data-navigo>{category.name}</a>
+                    { idx < array.length - 1 ? '．' : null }
                 </span>)
             });
         } else {
@@ -73,12 +77,13 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
         }
         return (
             <article className="rPost img" style={styleOfPost} title={this.props.title.name}>
-                <img style={styleOfImg} src={this.props.imgUrl} />
+                <a href={this.props.urlOfPost} data-navigo><img style={styleOfImg} src={this.props.imgUrl} /></a>
                 <div style={styleOfPostProps} className="postProps">
-                    <span className="date">{this.props.date.getFullYear()}/{month}/{day}﹒</span>
+                    <span className="date">{this.props.date.getFullYear()}/{month}/{day}．</span>
                     <span className="categories">{categories}</span>
                 </div>
-                <div style={styleOfTitle} className="title">{this.props.title.name}</div>               
+                <div style={styleOfTitle} className="title">
+                    <a href={this.props.urlOfPost} data-navigo>{this.props.title.name}</a></div>
             </article>
         );
     }

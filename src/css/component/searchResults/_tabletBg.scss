@@ -3,6 +3,9 @@
 $marginBottomOfSearchItems:1em;
 #postBg.tb, #postBg.sp {
     &.search {
+        /*
+          todo .posts, .categories, .tags 最好要改名，這樣才不會跟查詢結果裡面的類別名稱混淆。
+        */
         .posts, .categories, .tags {
             .results {
                 margin-bottom: -$marginBottomOfSearchItems;

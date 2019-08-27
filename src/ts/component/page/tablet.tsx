@@ -1,7 +1,7 @@
 import * as React from 'react';
 import MobilePostHeader from '../template/mobile-header-of-article';
-import { ParsedPage } from '../../model/page';
-import {LinkOfParent} from './terms';
+import { ParsedPage } from '../../model/posts';
+import {LinkOfParent} from '../template/terms';
 import {PublishInfo} from '../template/post-info';
 import {CategoryIcon} from '../template/icons';
 import * as Countable from 'countable';
@@ -36,7 +36,7 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
         let parentElement = null;
         if (page.parent) {
             parentElement = 
-                <div className="parent">
+                <div className="parentPage">
                     <CategoryIcon />
                     <LinkOfParent name={this.props.page.parent.title} url={this.props.page.parent.url}/>
                 </div>;
@@ -44,7 +44,7 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
         
         const publishInfo = <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters} />
 
-        if (this.props.page.imageUrl) {
+        if (this.props.page.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
             const styleOfImg = {
                 height:`${heightOfImg}px`
@@ -58,15 +58,15 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
             return (
                 <React.Fragment>
                     <MobilePostHeader baseZIndex={this.props.baseZIndex} className="tb" title={title} paddingBottom={paddingBottomOfTitleBg} >
-                        <div className="pageInfo" style={styleOfPageInfo}>
+                        <div className="postInfo" style={styleOfPageInfo}>
                             {parentElement}
                             {publishInfo}
-                            <img src={page.imageUrl} style={styleOfImg} />
-                        </div>                
-                    </MobilePostHeader>                    
+                            <img src={page.thumbnail.url} style={styleOfImg} />
+                        </div>
+                    </MobilePostHeader>
                     <div id="postBg" style={styleOfPostBg} className="tb" 
                         dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}>
-                    </div>                       
+                    </div>
                 </React.Fragment>
             );
         } else {
@@ -81,7 +81,7 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
                 <React.Fragment>
                     <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                         title={title} decorationLine={decorationLine} >
-                        <div className="pageInfo" style={styleOfPageInfo}>
+                        <div className="postInfo" style={styleOfPageInfo}>
                             {parentElement}
                             {publishInfo}
                         </div>

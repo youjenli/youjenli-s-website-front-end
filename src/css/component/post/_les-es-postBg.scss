@@ -63,7 +63,7 @@
 }
 
 /* 橫跨所有螢幕的樣式設定 */
-$fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+$fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, "Microsoft JhengHei", system-ui;
 #postBg {
     box-sizing:border-box;
     font-family: $fontFamilyOfTextInArticle;

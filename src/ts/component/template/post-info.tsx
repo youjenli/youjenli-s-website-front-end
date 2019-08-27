@@ -1,12 +1,12 @@
 import * as React from 'react';
-import {CategoryOfPost, TagOfPost} from '../../model/post';
+import {Category, Tag} from '../../model/terms';
 import {CategoryIcon, TagIcon, PublishIcon} from './icons';
 import * as terms from '../home/recentPosts/terms';
-import {formatMonthOrDayTo2Digits} from '../../service/date-formatter';
+import {formatMonthOrDayTo2Digits} from '../../service/formatters';
 
 interface PropsOfPostInfo {
-    categories?:CategoryOfPost[];
-    tags?:TagOfPost[];
+    categories?:Category[];
+    tags?:Tag[];
     date:Date;
     modified:Date;
     wordCount:number;
@@ -21,8 +21,8 @@ export default class PostInfo extends React.Component<PropsOfPostInfo> {
             categories = this.props.categories.map(
                 (category, idx, array) => {
                 return (
-                    <span key={idx}><a className="category">{category.name}</a>
-                      { idx != array.length - 1 ? '﹒' : null }</span>);
+                    <span key={idx}><a className="category" href={category.url} data-navigo>{category.name}</a>
+                      { idx < array.length - 1 ? '．' : null }</span>);
             });
         } else {
             categories = (<span className="noData" key={0}>{terms.postWasNotCategorized}</span>);
@@ -31,8 +31,8 @@ export default class PostInfo extends React.Component<PropsOfPostInfo> {
         let tags;
         if (this.props.tags && this.props.tags.length > 0) {
             tags = this.props.tags.map((tag, idx, array) => {
-                return (<span key={idx}><a className="tag">{tag.name}</a>
-                    { idx != array.length - 1 ? '﹒' : null }</span>);
+                return (<span key={idx}><a className="tag" href={tag.url} data-navigo>{tag.name}</a>
+                    { idx < array.length - 1 ? '．' : null }</span>);
             });
         } else {
             tags = (<span className="noData" key={0}>{terms.postWasNotTagged}</span>);
@@ -71,7 +71,7 @@ export class PublishInfo extends React.Component<PropsOfPublishInfo> {
         const publishDay = formatMonthOrDayTo2Digits(this.props.date.getDate());
         
         let lastUpdate = null;
-        if (this.props.modified) {
+        if (this.props.modified !== this.props.date) {//若發佈日期和修改日期相同，則不顯示最後修改日期
             const modifiedMonth = formatMonthOrDayTo2Digits(this.props.modified.getMonth());
             const modifiedDay = formatMonthOrDayTo2Digits(this.props.modified.getDate());
             lastUpdate = `${terms.clauseSeparater}${terms.lastModified} ${this.props.modified.getFullYear()}/${modifiedMonth}/${modifiedDay}`;

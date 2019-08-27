@@ -1,5 +1,5 @@
-$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light';
-$backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
+$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體";
+$backupFonts:'PingFangTC-Regular', 'Microsoft JhengHei', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
 #post-header {
     width:100%;
     /*react 元件裡會設定 #post-header 的寬度，然後下面再用 em 來求相對尺寸*/
@@ -23,6 +23,8 @@ $backupFonts:'PingFangTC-Regular', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT
         }
         font-family: $prioritizedFonts, $backupFonts;
         .tag, .category {
+            color:inherit;
+            text-decoration:none;
             &:hover {
                 cursor:pointer;
                 text-decoration:underline;

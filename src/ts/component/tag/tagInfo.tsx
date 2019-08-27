@@ -1,11 +1,11 @@
 import * as React from 'react';
-import {TagOfPost} from '../../model/post';
+import {Tag} from '../../model/terms';
 import * as icons from '../category/icons';
 import * as terms from './terms';
 
 interface PropsOfInformationOfTag {
-    tag:TagOfPost;
-    numberOfPostsMarkedByThisTag:number;
+    tag:Tag;
+    numberOfPostsMarkedByThisTag?:number;
     style?:React.CSSProperties;
 }
 
@@ -19,11 +19,13 @@ export class InformationOfTag extends React.Component<PropsOfInformationOfTag> {
         }
         const descElement = <div className="desc"><icons.Information />{desc}</div>;
 
-        let countElement = 
-            <div className="count"><icons.Count />
-                {terms.countOfArticlesMarkedByThisTag(
-                    this.props.tag.name, this.props.numberOfPostsMarkedByThisTag)}
-            </div>;
+        let countElement = null;
+        if (this.props.numberOfPostsMarkedByThisTag) {
+            countElement = <div className="count"><icons.Count />
+                               {terms.countOfArticlesMarkedByThisTag(
+                                   this.props.tag.name, this.props.numberOfPostsMarkedByThisTag)}
+                           </div>;
+        }
 
         return (
             <div style={this.props.style}>{descElement}{countElement}</div>

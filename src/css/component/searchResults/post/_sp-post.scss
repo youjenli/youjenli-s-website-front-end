@@ -1,11 +1,14 @@
 @mixin styleOfPostOnSmartPhone($marginBottomOfPost) {
     .post {
         margin-bottom:$marginBottomOfPost;
+        min-width:51%;
+        flex-grow:1;
+
         .titleBar {
             margin:1em 0;
         }
 
-        .categories, .tags {
+        .categories, .tags, .parent {
             font-size:14px;
             margin-bottom:0.5em;
         }

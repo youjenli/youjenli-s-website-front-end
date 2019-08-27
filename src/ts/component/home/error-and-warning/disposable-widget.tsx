@@ -2,10 +2,11 @@ import * as React from 'react';
 import { ExclamationMarkIcon } from '../../template/icons';
 
 interface PropsOfDisposableWidget {
-    msg:string;
+    msg:string[];
     shouldFlashAfterMount?:boolean
     onClick?:() => void;
     style?:React.CSSProperties;
+    onDismissed?:() => void;
 }
 
 interface StateOfDisposableWidget {
@@ -31,6 +32,9 @@ export class DisposableWidget extends React.Component<PropsOfDisposableWidget, S
             this.setState({
                 widgetOfErrorShouldExists:false
             });
+            if (this.props.onDismissed) {
+                this.props.onDismissed();
+            }
         }, 200);
     }
     componentDidMount() {
@@ -47,9 +51,12 @@ export class DisposableWidget extends React.Component<PropsOfDisposableWidget, S
     render() {
         if (this.state.widgetOfErrorShouldExists) {
             const callback = (this.props.onClick ? this.props.onClick : this.onWidgetClicked);
+            const msgList = this.props.msg.map((msg, idx) => {
+                return <div className="msg" key={idx}>{msg}</div>;
+            });
             return (
                 <div id="http-error" style={this.props.style} onClick={callback} ref={this.ref}>
-                    <ExclamationMarkIcon /><span className="msg">{this.props.msg}</span></div>
+                    <ExclamationMarkIcon /><span className="msgList">{msgList}</span></div>
             );
         } else {
             return null;

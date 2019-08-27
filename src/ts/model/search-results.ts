@@ -1,20 +1,71 @@
-import {MetaOfPost, CategoryOfPost, TagOfPost} from './post';
+import {Category, Tag} from './terms';
+import {Pagination} from './pagination';
+import {TypesOfContent} from './types-of-content';
+import {Post, Page} from './posts';
 
-export interface ResultsOfSearch<T> {
-    currentPageNumber:number;
-    numberOfPages:number;
+export type FoundPublication = FoundPost | FoundPage;
+
+export interface ResultOfQuery<T extends FoundPost | FoundPage | Category | Tag | FoundPublication> {
     numberOfResults:number;
     pageContent:T[];
+    pagination:Pagination;
 }
 
-export interface AnswerOfQueryPostsByTaxonomy<T extends CategoryOfPost | TagOfPost> {
-    taxonomy:T;
-    results:ResultsOfSearch<MetaOfPost>;
-}
-
-export interface SummaryOfResultsOfSearch {
+export interface ResultOfSearch {
     query:string;
-    posts:ResultsOfSearch<MetaOfPost>;
-    categories:ResultsOfSearch<CategoryOfPost>;
-    tags:ResultsOfSearch<TagOfPost>;
+    publications:ResultOfQuery<FoundPublication>;
+    categories:ResultOfQuery<Category>;
+    tags:ResultOfQuery<Tag>;
+}
+
+export interface CacheRecordOfResultOfSearch {
+    query:string;
+    publications:{
+        foundPublications:number;
+        pageContent:{
+            [page:number]:FoundPublication[]
+        },
+        pagination:{
+            baseUrl?:string;
+            endSize:number;
+            midSize:number;
+            totalPages:number;
+            itemsPerPage?:number;
+            lastVisitedPage:number;
+        }
+    },
+    categories:{
+        foundCategories:number;
+        pageContent:{
+            [page:number]:Category[]
+        },
+        pagination:{
+            endSize:number;
+            midSize:number;
+            totalPages:number;
+            itemsPerPage?:number;
+            lastVisitedPage:number;
+        }
+    },
+    tags:{
+        foundTags:number;
+        pageContent:{
+            [page:number]:Tag[]
+        },
+        pagination:{
+            endSize:number;
+            midSize:number;
+            totalPages:number;
+            itemsPerPage?:number;
+            lastVisitedPage:number;
+        }
+    }
+}
+
+export interface FoundPost extends Post {
+    type:TypesOfContent.Post
+}
+
+export interface FoundPage extends Page {
+    type:TypesOfContent.Page
 }

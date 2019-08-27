@@ -1,67 +1,78 @@
 const gulp = require('gulp');
 const del = require('del');
+const clean = require('gulp-clean');
 const browserify = require("browserify");
 const source = require('vinyl-source-stream');
 const tsify = require("tsify");
+const minify = require('gulp-minify');
+const sourcemaps = require('gulp-sourcemaps');
+const buffer = require('vinyl-buffer');
 const sass = require('gulp-sass');
 sass.compiler = require('node-sass');
 const cleanCSS = require('gulp-clean-css');
+const flatten = require('gulp-flatten');
+/*
+  雖然 gulp-template 背後使用的樣板引擎 Lodash/Underscore 似乎不是目前 js 社群評價最好的樣板，
+  但我還是選用它，原因是 gulp-template 的說明簡單易懂，而且剛好可以簡單的解決我的問題。
+*/
+const template = require('gulp-template');
 const print = require('gulp-print').default;
 //註: gulp-webserver 已經四年沒有更新了，現在 jetbrains 好像接手開發這專案並改名為 gulp-connect，最後更新時間是四個月前。
 const connect = require('gulp-connect');
 const dateFormat = require('dateformat');
 const zip = require('gulp-zip');
+const decompress = require('gulp-decompress');
 const GulpSSH = require('gulp-ssh');
 const path = require('path');
 
-const distRoot = './dist'; //輸出建置成品的路徑
-
-const jsArtifact = 'index.js';
-const cssArtifact = 'style.css';
-const htmlArtifact = '*.html';
-const imgAssets = ['img/*.png', 'img/*.svg', 'img/*.jpeg'];
-
-function removeHtmlArtifact(done) {
-    del(path.join(distRoot, htmlArtifact))
-        .then(() => {
-            done();
-        });
-}
-function removeJSArtifact(done) {
-    del(path.join(distRoot, jsArtifact))
-        .then(() => {
-            done();
-        });
+let isProductionBuild = false;
+if (process.env.prod && process.env.prod == 'true') {
+    isProductionBuild = true;
 }
 
-const pathOfIntermediates = path.join(distRoot, 'intermediate');
-function removeCSSSemiProduct(done) {
-    del(pathOfIntermediates)
-        .then(() => {
-            done();
-        });
+const srcRoot = path.join(__dirname, 'src');
+const distRoot = path.join(__dirname, 'dist'); //輸出建置成品的路徑
+const jsBundleName = 'index';
+const jsArtifacts = [`**/${jsBundleName}.js`, `**/${jsBundleName}.js.map`];
+const nameOfhtmlSrcFile = ['**/*.php', '**/*.html'];
+const cssArtifacts = ['**/*.css', '**/*.css.map'];
+const nameOfImgAssets = ['*.png', '*.svg', '*.jpeg'].map(filePattern => path.join('img', filePattern));
+const deploymentConfig = require('./settings-of-deployment');
+const prefixOfArchive = `wp-${deploymentConfig.nameOfTheme ? deploymentConfig.nameOfTheme : 'youjenli' }-theme`;
+
+function removeHtmlArtifact() {
+    return gulp.src(
+                    nameOfhtmlSrcFile.map(filePattern => path.join(distRoot, filePattern)), {read:false})
+                .pipe(clean());
+}
+function removeJSArtifact() {
+    return gulp.src(
+                    jsArtifacts.map(filePattern => path.join(distRoot, filePattern)), {read:false})
+                .pipe(clean());
 }
 
-const removeCSSArtifactTask = gulp.parallel(removeCSSSemiProduct, function removeCSSArtifact(done){
-    del(path.join(distRoot, cssArtifact))
-        .then(() => {
-            done();
-        });
+const removeCSSArtifactTask = gulp.series(function removeCSSArtifact(){
+    return gulp.src(cssArtifacts.map(filePattern => path.join(distRoot, filePattern)), {read:false})
+                .pipe(clean());
 });
 
-function removeImgArtifact(done) {
-    Promise.all(
-        imgAssets.map((srcFiles) =>{
-            return del(path.join(distRoot, srcFiles))
-        })
-    ).then(() => {
-        done();
-    });    
+function removeImgArtifact() {
+    return gulp.src(nameOfImgAssets.map(srcFiles => path.join(distRoot, srcFiles)), {
+                        read:false,
+                         //註：加入 allowEmpty 以免 gulp 因為讀不到目錄而報錯
+                         allowEmpty:true
+                    })
+                .pipe(clean());
 }
 
 //清空輸出打包成品的資料夾
-const cleanTask = gulp.parallel(removeHtmlArtifact, removeCSSArtifactTask, removeJSArtifact, removeImgArtifact);
+const cleanTask = gulp.series(removeHtmlArtifact, removeJSArtifact, removeCSSArtifactTask, removeImgArtifact);
 gulp.task('clean', cleanTask);
+
+gulp.task('cleanArchives', gulp.series(function cleanArchivesTask(){
+    return gulp.src(path.join(distRoot, `${prefixOfArchive}*.zip`), {read:false})
+                .pipe(clean());
+}));
 
 const tsEntryFiles = ['src/ts/index.tsx'];
 const tsConfig = require('./tsconfig.json');
@@ -84,59 +95,100 @@ function transpileTS() {
         而且 browserify 根本不需要透過 event-stream 整併所有 js 檔案的內容，只要照下面的方式設定並調用對應的擴充套件即可。
         欲了解詳情可參閱以下使用說明
         https://github.com/browserify/browserify#usage
-    */
-    return browserify(tsEntryFiles, { //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
-            basedir: '.',
-            debug: true //是否包含 sourcemap
-    }).plugin(tsify, //使用 tsify 呼叫 typescript 轉譯器轉譯 typescript 原始碼
-        transpileConfig
-    ).bundle()
-    //必須要使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
-    //source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
-    .pipe(source(jsArtifact)) // 透過 vinyl-source-stream 轉換前面的建置成果為 gulp 可輸出的串流
-    .pipe(gulp.dest(distRoot)); 
 
-    /* gulp 4.0 的任務函式仍支持兩種結束方式: 1. 回傳 gulp 串流 2. 呼叫 gulp 注入給任務函式的 done 函式。*/
+        註：gulp 4.0 的任務函式仍支援兩種結束方式: 1. 回傳 gulp 串流 2. 呼叫 gulp 注入給任務函式的 done 函式。
+    */
+    let transpile = 
+            browserify({ //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
+                  basedir: '.',
+                  entries: tsEntryFiles,
+                  cache:{},
+                  packageCache:{},
+                  debug: !isProductionBuild //是否包含 sourcemap
+              })
+              .plugin(tsify, transpileConfig)
+              .bundle()
+              //必須要使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
+              //source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
+              .pipe(source(`${jsBundleName}.js`)) // 透過 vinyl-source-stream 轉換前面的建置成果為 gulp 可輸出的串流
+              //這裡應該可以寫死檔名沒有關係，因為這是打包所有 js 模組的檔名。
+              //欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
+              .pipe(buffer());
+
+    if (isProductionBuild) {
+        //如果要建置生產環境的場景，那就壓縮 js 檔
+        transpile = 
+            transpile.pipe(minify({
+                         noSource:true,
+                         ext:{
+                             min:'.js'
+                         }
+                     }))
+                     .pipe(gulp.dest(distRoot)); 
+    } else {
+        //如果要建置開發環境的場景，那就輸出 sourcemap
+        transpile =
+            transpile.pipe(sourcemaps.init({loadMaps: true}))
+                     .pipe(sourcemaps.write('./'));
+    }
+    return transpile.pipe(gulp.dest(distRoot));
 }
 const prepareJSTask = gulp.series(removeJSArtifact, transpileTS);
 
 gulp.task('prepareJS', prepareJSTask);
 
-const scssEntryNames = ['style'];
-const scssEntryFiles = scssEntryNames.map((name) => {
-    return path.join('src/css', name + '.scss');
-});
-/*
-    因為一直沒辦法順利把 scss 轉譯好的檔案交給其他 gulp 可調用的 css 整併函式，
-    所以現在把 css 的準備作業分成兩個步驟:
-    1. 轉譯 scss
-        這部分包含利用 scss 自訂的 css import 語法機制將其他 css 檔案合併到主要的 css 檔案裡
-        轉譯完成後會先送 ${distRoot}/intermediates 資料匣中
-    2. 優化 css 語法
-        包含整併其他 css 資源，以及利用功能相同但是更簡短的語法替代原本的 css 語法。
-        未來要正式輸出生產級別的資源時，還會再引入 sourcemap 並啟用壓縮機制。
-*/
+const cssSrcRoot = path.join(srcRoot, 'css');
+let cleanCSSConfig = null;
+if (isProductionBuild) {
+    cleanCSSConfig = require('./clean-css-config');
+} else {
+    cleanCSSConfig = require('./clean-css-config-debug');
+}
 function transpileSCSS() {
-    return gulp.src(scssEntryFiles)    
-                .pipe(sass())
-                .pipe(gulp.dest(pathOfIntermediates));
+    if (isProductionBuild) {
+        return gulp.src([path.join(cssSrcRoot, 'style.scss')], {base:cssSrcRoot})
+                    /*
+                    sass() 這部分除了包含轉譯 scss，它還會利用 scss 自訂的 css import 語法機制將其他 css 檔案
+                    合併到主要的 css 檔案裡，但是不包含把 css 檔案串連起來。
+                    */
+                   .pipe(sass())
+                   .pipe(buffer())
+                   /*
+                     cleanCSS() 包含合併 css 檔案、簡化或壓縮 css 語法，例如使用功能相同但是更簡短的語法替代原本的 css 語法。
+                   */
+                  .pipe(cleanCSS(cleanCSSConfig))
+                  .pipe(gulp.dest(distRoot));
+    } else {
+        return gulp.src([path.join(cssSrcRoot, 'style.scss')], {base:'.'})
+                   .pipe(sourcemaps.init())
+                   /*
+                    sass() 這部分除了包含轉譯 scss，它還會利用 scss 自訂的 css import 語法機制將其他 css 檔案
+                    合併到主要的 css 檔案裡，但是不包含把 css 檔案串連起來。
+                    */
+                   .pipe(sass())
+                   .pipe(buffer())
+                   /*
+                     cleanCSS() 包含合併 css 檔案、簡化或壓縮 css 語法，例如使用功能相同但是更簡短的語法替代原本的 css 語法。
+                   */
+                   .pipe(cleanCSS(cleanCSSConfig))
+                   .pipe(sourcemaps.write('./'))
+                   /*
+                     如果以上作業的 gulp 基礎路徑不像現在一樣是「.」，那最後輸出樣式到 distRoot 時，
+                     gulp 就會在 distRoot 裡面重建 . 到原始碼之間的階層，導致 gulp 後續要打包成場景時找不到樣式檔案，
+                     或是讓場景無法照原先的規劃在場景根目錄找到樣式。
+                     但如果把 gulp 基礎路徑設定為 cssSrcRoot，那又會導致 scss 樣式檔案在瀏覽器 debugger 裡面出現的目錄階層
+                     與專案目錄和 js 原始碼目錄階層不同。
+                     為解決這個問題，這邊使用 flatten 在 sourcemap 輸出之後打平路徑階層，最後才輸出至 distRoot。
+                   */
+                   .pipe(flatten())
+                   .pipe(gulp.dest(distRoot));
+    }
 }
 
-const cssIntermediateEntryFiles = scssEntryNames.map((name) => {
-    return path.join(pathOfIntermediates, name + ".css");
-});
-
-let cleanCSSConfig = require('./clean-css-config');
-function optimizeCSS(){
-    return gulp.src(cssIntermediateEntryFiles)
-                .pipe(cleanCSS(cleanCSSConfig))
-                .pipe(gulp.dest(distRoot));
-}
-
-const prepareCSSTask = gulp.series(removeCSSArtifactTask, transpileSCSS, optimizeCSS);
+const prepareCSSTask = gulp.series(removeCSSArtifactTask, transpileSCSS);
 gulp.task('prepareCSS', prepareCSSTask);
 
-const imgSrcFiles = imgAssets.map((img) => {
+const imgSrcFiles = nameOfImgAssets.map((img) => {
     return path.join('src', img);
 });
 const prepareImgTask = gulp.series(removeImgArtifact, 
@@ -146,26 +198,124 @@ const prepareImgTask = gulp.series(removeImgArtifact,
     });
 gulp.task('prepareImg', prepareImgTask);
 
-const htmlSrcFiles = ['src/html/**/*.html'];
-const prepareHtmlTask = gulp.series(removeHtmlArtifact, function copyHtmlFiles() {
-    return gulp.src(htmlSrcFiles, { base: 'src/html'})
-        .pipe(gulp.dest(distRoot));
-});
+const htmlSrcRoot = path.join(srcRoot, 'html');
+const pathOfHtmlSrcFiles = nameOfhtmlSrcFile.map(filePattern => path.join(htmlSrcRoot, filePattern));
+const pathOfHeaderTemplate = `${htmlSrcRoot}/template-parts/general-header.php`;
+function copyHtmlFilesTask(){
+    /*
+      這邊之所以要排除 general-header.php 的原因是我們稍後要根據建置模式產生對應的樣板內容
+    */
+    return gulp.src([...pathOfHtmlSrcFiles, `!${pathOfHeaderTemplate}`], { base: htmlSrcRoot})
+               .pipe(gulp.dest(distRoot));
+}
 
-gulp.task('prepareHTML', prepareHtmlTask);
+/*
+  客戶端的 navigo router 必須擁有包含通訊協定的完整 host name，因此我得透過 wordpress 的 api 輸出此資訊到客戶端
+  然而我必須在呼叫 wordpress 的 api 時，指定網站的通訊協定；在此同時，開發模式和生產模式的通訊協定又不同，
+  因此要透過以下作業替換呼叫 wordpress api 提供網站名稱的函式之參數。
+*/
+let replacement = {
+    protocol:isProductionBuild? 'https' : 'http'
+}
+function generateTemplateTask() {
+    return gulp.src(pathOfHeaderTemplate, {base:htmlSrcRoot})
+               .pipe(template(replacement))
+               .pipe(gulp.dest(distRoot))
+}
+
+const prepareHtmlTask = gulp.series(removeHtmlArtifact, gulp.parallel(copyHtmlFilesTask, generateTemplateTask));
+
+gulp.task('prepareHtml', prepareHtmlTask);
 
 const defaultTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask);
 gulp.task('default', defaultTask);
 
+let nameOfArchive = null;
+const itemsToArchive = ['**/*.php'].concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
+                        .map(filePattern => path.join(distRoot, filePattern));
+
+function packArtifactTask() {
+    const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
+    nameOfArchive = `${prefixOfArchive}-${createDate}.zip`;
+    return gulp.src(itemsToArchive, {base:distRoot})
+            .pipe(zip(nameOfArchive))
+            .pipe(print(filePath => `File ${filePath} has been pack to wordpress theme.`))
+            .pipe(gulp.dest(distRoot));
+}
+
+const archiveTask = gulp.series(defaultTask, packArtifactTask);
+gulp.task('archive', archiveTask);
+
+const deployTask = gulp.series(function copyArchive() {
+        
+        if (!deploymentConfig) {
+            throw new Error('Configuration of deployment does not exists!');
+        }
+        if (!deploymentConfig.target) {
+            throw new Error(`Target of deployment is a mandatory setting for deployment task.`);
+        }
+        if (!deploymentConfig.target.host) {
+            throw new Error(`Host name is a mandatory setting for deployment task.`);
+        }
+        if (!deploymentConfig.dest) {
+            throw new Error('Destination path of archive is a mandatory setting for deployment task.');
+        }
+        const destPath = path.join(deploymentConfig.dest, deploymentConfig.nameOfTheme);
+        if (!deploymentConfig.nameOfTheme) {
+            throw new Error('The name of theme is a mandatory setting for deployment task.');
+        }
+        
+        let pathToArchive = null;
+        if (nameOfArchive) {
+            pathToArchive = path.join(distRoot, nameOfArchive);
+        } else if (deploymentConfig.archive) {
+            pathToArchive = deploymentConfig.archive;
+        } else {
+            throw new Error('Did not found any archive that is ready for deploy.');
+        }
+
+        const targetName = deploymentConfig.target.host;
+        if (targetName == 'local') {
+            /* 若部署目標是本地端的目錄，那直接解壓縮場景檔到目的地即可。
+            */
+           return del(destPath, {force:true})
+                    .then(() => {
+                        gulp.src(pathToArchive)
+                            .pipe(decompress())
+                            .pipe(gulp.dest(destPath));
+                    });
+            /*註：
+                gulp 允許作業回傳 promise 通知它作業結束，不一定要呼叫它會提供的 done callback
+                https://gulpjs.com/docs/en/getting-started/async-completion
+            */
+        } else {
+            /* 若部署目標不在本地，那就建立 SSH 連線。
+             */
+            const gulpSSH = new GulpSSH({
+                ignoreErrors:false,
+                sshConfig:deploymentConfig.target
+            });
+            return gulp.src(pathToArchive)
+                        .pipe(decompress())
+                        .pipe(gulpSSH.dest(destPath));
+        }
+    });
+
+gulp.task('deploy', deployTask);
+
 const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
-const cssSrcFiles = ['src/css/**/*.css','src/css/**/*.scss'];
-const watchTask = function() {
-            gulp.watch(htmlSrcFiles, prepareHtmlTask),
+const cssSrcFiles = ['src/css/**/*.css', 'src/css/**/*.scss'];
+/*
+  注意，雖然前面程式的路徑都已經改由 path 產生以便適應 windows 工作環境，
+  但是因為這邊 gulp watch 只接受 unix-like 系統格式的路徑，所以這邊不需要透過 path 重新產生路徑。
+  */
+
+const monitorSrcAndRebuildTask = function rebuild() {
+            gulp.watch(pathOfHtmlSrcFiles, prepareHtmlTask),
             gulp.watch(cssSrcFiles, prepareCSSTask),
             gulp.watch(tsSrcFiles, prepareJSTask),
             gulp.watch(imgSrcFiles, prepareImgTask)
 };
-gulp.task('watch', watchTask);
 /*
     註: 以上寫法是參考自下面網址中的範例
     https://gist.github.com/demisx/beef93591edc1521330a
@@ -173,55 +323,4 @@ gulp.task('watch', watchTask);
     檔案變動後不會觸發重新編譯，因此最後決定不再用。
     試來試去，最後發現 gulp 3 之前的做法才能滿足目前的需求。
 */
-
-const runDevServerTask = gulp.series(defaultTask, gulp.parallel(watchTask ,function runDevServer(done) {
-        /*return gulp.src(distRoot)
-            .pipe(webserver({
-                "livereload": true,
-                "direcotryListing": true,
-                "port": 8000,
-                "fallback": "index.html"
-                })
-            );
-            
-        實測過後發現上面那樣的寫法已不再有效，改用 gulp-connect 建議的做法再加上非同步通知才可以既正確顯示執行所有任務，
-        同時又不會在中斷伺服器的時候出現 gulp 錯誤訊息。
-        https://www.npmjs.com/package/gulp-connect
-        */
-
-        connect.server({
-            "root": distRoot,
-            "livereload": true,
-            "host": "localhost",
-            "port": 8000,
-            /* gulp-connect 的 fallback 路徑必須是以 gulpfile 的位置為起點去找檔案，
-                否則當請求路徑是類似 /post/12 這樣的多層路徑時，gulp-connect 就會找不到檔案 */
-            "fallback": path.join(distRoot, 'index.html')
-            });
-        done();
-    })
-);
-gulp.task('serve', runDevServerTask);
-
-const archiveTask = gulp.series(defaultTask, 
-    function packArtifacts(){
-        const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
-        return gulp.src(`${distRoot}/*`)
-                .pipe(print(filePath => `Packing file ${filePath} to wordpress theme.`))
-                .pipe(zip('wp-youjenli-website-' + createDate + '.zip'))
-                .pipe(gulp.dest(distRoot));
-    });
-gulp.task('archive', archiveTask);
-
-const deployTask = gulp.series(() => {
-        const sshConfig = require('./ssh-config');
-        const gulpSSH = new GulpSSH({
-            ignoreErrors:false,
-            sshConfig:sshConfig
-        });
-    
-        return  gulpSSH.exec(['uptime', 'ls -al', 'pwd'], {filePath: 'commands.log'})
-                        .pipe(gulp.dest(distRoot));
-    });
-
-gulp.task('deploy', deployTask);
+gulp.task('watch', gulp.series(monitorSrcAndRebuildTask, packArtifactTask, deployTask));

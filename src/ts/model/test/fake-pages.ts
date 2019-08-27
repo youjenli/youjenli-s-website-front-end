@@ -1,5 +1,5 @@
 import {fakeDate} from '../test/fake-meta-of-posts-for-test';
-import {Page} from '../page';
+import {Page} from '../posts';
 
 const defaultToc = `
 <ol id="toc">
@@ -77,8 +77,13 @@ const pageWithoutParentButWithfeatureMedia:Page = {
     title:'有圖無母頁文章',
     id:0,
     date:fakeDate,
-    modified:fakeDate,    
-    imageUrl:'/img/afternoon-tea-time.jpeg',
+    modified:fakeDate,
+    slug:'thumbnailIncludedPage',
+    url:'https://www.google.com.tw',
+    thumbnail:{
+        caption:'fake caption',
+        url:'img/afternoon-tea-time.jpeg'
+    },
     excerpt:'師不必賢於弟子。聞道有先後，術業有專攻，如是而已。',
     content:`
     ${defaultToc}
@@ -112,12 +117,17 @@ const pageWithParentAndFeatureMedia:Page = {
     title:'有圖有母頁文章',
     id:0,
     date:fakeDate,
+    slug:'parentPageAndThumbnailIncludedPage',
     modified:fakeDate,
+    url:'https://www.google.com.tw',
     parent:{
         title:'無圖有母頁文章',
         url:'https://www.google.com.tw'
     },
-    imageUrl:'/img/afternoon-tea-time.jpeg',
+    thumbnail:{
+        url:'img/afternoon-tea-time.jpeg',
+        caption:'有圖有母頁文章 caption'
+    },
     excerpt:'師不必賢於弟子。聞道有先後，術業有專攻，如是而已。',
     content:`
     ${defaultToc}
@@ -152,6 +162,8 @@ const pageWithParentButWithoutFeatureMedia:Page = {
     id:1,
     date:fakeDate,
     modified:fakeDate,
+    slug:'parentIncludedPage',
+    url:'https://www.google.com.tw',
     parent:{
         title:'無圖有母頁文章',
         url:'https://www.google.com.tw'
@@ -190,6 +202,8 @@ const pageWithoutParentAndFeatureMedia:Page = {
     id:1,
     date:fakeDate,
     modified:fakeDate,
+    url:'https://www.google.com.tw',
+    slug:'pageWithoutParentAndThumbnail',
     excerpt:'師不必賢於弟子。聞道有先後，術業有專攻，如是而已。',
     content:`
     ${defaultToc}

@@ -1,5 +1,4 @@
 module.exports = {
-    "format":"beautify",
     "inline":["local"],
-    "level":0
+    "level":1
 };

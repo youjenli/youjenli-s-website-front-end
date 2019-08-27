@@ -1,13 +1,15 @@
 import * as React from 'react';
 import DefaultRecentPostWithoutImg from '../recentPosts/default-without-img';
 import ExternalScreenRecentPostWithImg from '../recentPosts/external-screen-with-img';
-import {MetaOfPost} from '../../../model/post';
+import {MetaDataOfPost} from '../../../model/posts';
+import { addRegistryOfPostOrPage } from '../../post-page-routeWrapper';
+import { TypesOfContent } from '../../../model/types-of-content';
 
 interface PropsOfListOfRecentPostsOnLargeExternalScreen {
     estimatedWidthOfContainer:number;
     baseZIndex:number;
     remFontSize:number;
-    posts:MetaOfPost[];
+    posts:MetaDataOfPost[];
     marginTopOfPost:number;
 }
 
@@ -17,7 +19,11 @@ export default class ListOfRecentPostsOnLargeExternalScreen extends React.Compon
         const fontSizeOfDateAndTitle = 22;
         const minMarginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
         let reactElementsOfPosts = this.props.posts.map((post) => {
-            if (post.imageUrl) {
+
+            //要記得在 index.tsx 的紀錄中註冊此發文頁，這樣它才有辦法在接到請求的時候委派合適的模組取得並呈現對應內容
+            addRegistryOfPostOrPage(post.slug, TypesOfContent.Post);
+
+            if (post.thumbnail != null) {
                 const fontSizeOfPostProps = 16;
                 const postProps = {
                     fontSize:fontSizeOfPostProps,
@@ -44,8 +50,8 @@ export default class ListOfRecentPostsOnLargeExternalScreen extends React.Compon
                 }
                 return (
                     <ExternalScreenRecentPostWithImg key={post.id} width={widthOfExternalScreenRecentPost} 
-                        margin={margin} padding={padding} imgUrl={post.imageUrl} 
-                        postProps={postProps} date={post.date} categories={post.categories} title={title} />
+                        margin={margin} padding={padding} imgUrl={post.thumbnail.url} postProps={postProps} 
+                        date={post.date} categories={post.categories} title={title} urlOfPost={post.url} />
                 );
             } else {
                 const fontSizeOfCategoriesAndTags = 14;
@@ -90,7 +96,8 @@ export default class ListOfRecentPostsOnLargeExternalScreen extends React.Compon
                         bottom:this.props.remFontSize * 0.5
                     },
                     zIndexOfReadArticle:this.props.baseZIndex + 1,
-                    content:post.excerpt
+                    content:post.excerpt,
+                    urlOfPost:post.url
                 };
                 return (
                     <DefaultRecentPostWithoutImg key={post.id} width={widthOfExternalScreenRecentPost} 

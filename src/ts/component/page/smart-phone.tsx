@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ParsedPage } from '../../model/page';
+import { ParsedPage } from '../../model/posts';
 import MobileHeaderOfArticle from '../template/mobile-header-of-article';
-import {LinkOfParent} from './terms';
+import {LinkOfParent} from '../template/terms';
 import {PublishInfo} from '../template/post-info';
 import {CategoryIcon} from '../template/icons';
 import * as Countable from 'countable';
@@ -31,7 +31,7 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
         let parentElement = null;
         if (page.parent) {
             parentElement = 
-            <div className="parent">
+            <div className="parentPage">
                 <CategoryIcon />
                 <LinkOfParent name={page.parent.title} url={page.parent.url} />
             </div>;            
@@ -49,7 +49,7 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
             paddingTop:this.props.remFontSize * 1.5
         }
 
-        if (this.props.page.imageUrl) {
+        if (this.props.page.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
             const styleOfImg = {
                 height:`${heightOfImg}px`
@@ -58,8 +58,8 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
             return (
                 <React.Fragment>
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} title={title} className="sp">
-                        <img src={page.imageUrl} style={styleOfImg}/>
-                        <div className="pageInfo" style={styleOfPageInfo}>
+                        <img src={page.thumbnail.url} style={styleOfImg}/>
+                        <div className="postInfo" style={styleOfPageInfo}>
                             {parentElement}
                             {publishInfo}
                         </div>
@@ -69,6 +69,9 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
                 </React.Fragment>
             );
         } else {
+            /*  
+                這包含沒有意象圖，以及意象圖載入失敗的處理情境。
+            */
             const decoration = {
                 height:fontSizeOfTitle / 3
             }
@@ -77,10 +80,10 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
                 <React.Fragment>
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
                         title={title} decorationLine={decoration}>
-                        <div className="pageInfo" style={styleOfPageInfo}>
+                        <div className="postInfo" style={styleOfPageInfo}>
                             {parentElement}
                             {publishInfo}
-                        </div>                        
+                        </div>
                     </MobileHeaderOfArticle> 
                     <div id="postBg" className="sp" style={styleOfPostBg} dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}>
                     </div>

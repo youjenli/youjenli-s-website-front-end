@@ -20,13 +20,17 @@
     transition:opacity 200ms ease-out;
     box-sizing:border-box;
     display:flex;
-    align-items:center;    
+    align-items:center;
+    font-family: "PingFangTC-Regular", "標楷體", "Microsoft JhengHei", "ArialMT", "Arial", system-ui;
     .icon {
         width:1em;
         height:1em;
     }
-    .msg {
+    .msgList {
         margin:1em 0;
+        .msg {
+            line-height:1.25;
+        }
     }
     &.fadeOut {
         opacity:0;

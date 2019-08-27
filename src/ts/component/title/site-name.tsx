@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as terms from './terms';
 
 interface SiteNameProps {
     name:string,
@@ -26,10 +27,20 @@ export default class SiteName extends React.Component<SiteNameProps, SiteNameSta
         const test = document.createElement('span');
         test.style.fontFamily = "'HanziPen SC', 'HanziPenSC-W5'";
         test.style.fontSize = `${this.props.fontSize}px`;
+        /*
+            註 20190520 發現這套檢驗方法只在 zoom level 是 100% 的情況下有用。
+            因此必須在這裡透過 transform scale(1) 規定大小，這樣才不會因為瀏覽器 zoom level 不是 100% 而判斷失準。
+            //todo 結果還是有問題
+        */
+        test.style.transform = 'scale(1)';
         test.innerHTML = testStr;
         document.getElementsByTagName('body')[0].appendChild(test);
-        if (test.offsetWidth > testStr.length * this.props.fontSize) {
-            //表示支援我要用的字體，不要以 png 替代標題
+        /*
+            因為對測試用的元素套用 transform scale 之後與原尺寸相比還是有小數點誤差，
+            所以這邊兩項數值在比較前都要先以 Math.round 處理過。
+        */
+        if (Math.round(test.offsetWidth) > Math.round(testStr.length * this.props.fontSize)) {
+            //表示支援我要用的字體，因此不要以 png 圖片替代標題
             this.state = {
                 showSiteNameWithPNG:false
             }
@@ -42,7 +53,6 @@ export default class SiteName extends React.Component<SiteNameProps, SiteNameSta
         test.parentElement.removeChild(test);
     }
     render () {
-        const title = "網站標題";
         let basicStyle = {
             top:this.props.top + "px",
             left:this.props.left + "px"
@@ -50,14 +60,16 @@ export default class SiteName extends React.Component<SiteNameProps, SiteNameSta
         if (this.state.showSiteNameWithPNG) {
             basicStyle["height"] = `${this.props.fontSize * 1.15}px`;//1.15 是 html 文字預設的行高。
             return (
-                <img id="site-name" src={this.props.base64EncodedTitle} style={basicStyle} 
-                alt={this.props.name} title={title}/>
+                <a id="site-name" className="backToHome" href="/" title={terms.backToHome} data-navigo>
+                    <img src={this.props.base64EncodedTitle} style={basicStyle} alt={this.props.name}/></a>
             );
         } else {
             basicStyle["fontFamily"] = "'HanziPen SC', 'HanziPenSC-W5', 'Arial'";
             basicStyle["fontSize"] = `${this.props.fontSize}px`;
             return (
-                <span id="site-name" style={basicStyle} title={title}>{this.props.name}</span>
+                <span id="site-name" style={basicStyle}>
+                    <a className="backToHome" href="/" title={terms.backToHome} data-navigo>{this.props.name}</a>
+                </span>
             );
         }
     }

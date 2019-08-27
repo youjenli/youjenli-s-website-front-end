@@ -1,0 +1,2 @@
+set prod=true
+gulp %*

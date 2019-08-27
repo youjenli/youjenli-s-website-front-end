@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as terms from './slogan/terms';
-import {MetaOfPost} from '../../model/post';
+import {MetaDataOfPost} from '../../model/posts';
 import SloganOnExternalScreen from './slogan/external-screen-slogan';
 import ListOfRecentPostsOnLargeExternalScreen from './listOfPosts/large-external-screen';
 import {DisposableWidget} from './error-and-warning/disposable-widget';
@@ -8,8 +8,9 @@ import {DisposableWidget} from './error-and-warning/disposable-widget';
 interface PropsOfHomeOf16To9LargeExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
-    posts:MetaOfPost[];
-    errorMsg?:string;
+    posts:MetaDataOfPost[];
+    errorMsg:string[];
+    onWidgetOfErrorMsgDismissed?:() => void;
 }
 
 export default class HomeOf16To9LargeExternalScreen extends React.Component<PropsOfHomeOf16To9LargeExternalScreen> {
@@ -45,13 +46,14 @@ export default class HomeOf16To9LargeExternalScreen extends React.Component<Prop
         const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomsOfL1bgAndPortrait * 2;
         
         let disposableWidget = null;
-        if (this.props.errorMsg) {
+        if (this.props.errorMsg.length > 0) {
             const styleOfWidget = {
                 fontSize:`${(5.5 * this.props.viewportWidth + 1920) / 480}px`,
                 padding:`1px ${this.props.viewportWidth * marginLeftRightOfBgOfPostsInPercent / 100}px`
             }
             disposableWidget = 
-                <DisposableWidget style={styleOfWidget} msg={this.props.errorMsg} shouldFlashAfterMount={true}/>;
+                <DisposableWidget style={styleOfWidget} msg={this.props.errorMsg} shouldFlashAfterMount={true}
+                    onDismissed={this.props.onWidgetOfErrorMsgDismissed} />;
         }
 
         const l2bg = {
@@ -61,7 +63,7 @@ export default class HomeOf16To9LargeExternalScreen extends React.Component<Prop
                 paddingLeft:paddingLeftOfPicAndGtPanelCtnr
             },
             portrait:{
-                imgUrl:"img/portrait-16-9th.png",
+                imgUrl:'img/portrait-16-9th.png',
                 width:portraitWidth,
                 height:portraitHeight,
                 l1bg:{
@@ -75,8 +77,7 @@ export default class HomeOf16To9LargeExternalScreen extends React.Component<Prop
                 marginTop:marginTopOfGtPanel,
                 marginLeft:marginLeftOfGtPanel,
                 greetings:{
-                    fontSize:fontSizeOfGreetings,
-                    width:widthOfGreetings
+                    fontSize:fontSizeOfGreetings
                 },
                 sm:{
                     width:socialMediaLinkWidth,
@@ -135,7 +136,7 @@ export default class HomeOf16To9LargeExternalScreen extends React.Component<Prop
                         marginTopOfPost={distanceBetweenTheBottomsOfL1bgAndPortrait} />
                 </SloganOnExternalScreen>
             </React.Fragment>
-            
+
         );
     }
 }

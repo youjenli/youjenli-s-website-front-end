@@ -3,16 +3,22 @@
 @import '../searchResults/post/sp-post.scss';
 
 #post-header.les, #post-header.es, #post-header.tb, #post-header.sp {
-    .desc, .parent, .count {
+    .desc, .parentCat, .count {
         display:flex;
         align-items:center;
         margin-top:0.75em;
         .icon {
+            /*
+              實驗發現若要把 svg 圖示的尺吋設定為 1em，
+              則 chrome 上面要藉由 min-width, min-height 完成，firefox 上面要透過 width, height 完成，故兩套設定缺一不可。
+            */
             min-width:1em;
             min-height:1em;
+            width:1em;
+            height:1em;
         }
     }
-    .desc, .parent {
+    .desc, .parentCat {
         margin-bottom:0.75em;
     }
     .desc {
@@ -22,8 +28,15 @@
         }
     }
 
-    .parent {
+    .parentCat {
         color:#CDB28A;
+        a {
+            color:inherit;
+            text-decoration:none;
+            &:hover {
+                text-decoration:underline;
+            }
+        }
         .noData {
             color:#9A9C66;
         }
@@ -36,7 +49,7 @@
 }
 
 #post-header.les, #post-header.es, #post-header.tb {
-    .desc, .parent, .count {
+    .desc, .parentCat, .count {
         .icon {
             margin-right:1em;
         }
@@ -44,7 +57,7 @@
 }
 
 #post-header.sp {
-    .desc, .parent, .count {
+    .desc, .parentCat, .count {
         .icon {
             margin-right:0.5em;
         }
@@ -52,12 +65,12 @@
 }
 
 #post-header.les, #post-header.es {
-    .desc, .parent, .count {
-        font-size:0.5em;        
-    }    
+    .desc, .parentCat, .count {
+        font-size:0.5em;
+    }
 }
 
-#postBg.categoryP {
+#postBg {
     &.categoryP, &.tagP {
         .navbar {
             color:#4A4A4A;
@@ -70,7 +83,7 @@
                 }
             }
         }
-    }    
+    }
 }
 
 #postBg.les, #postBg.es, #postBg.tb, #postBg.sp {
@@ -85,7 +98,7 @@
     }
 }
 
-#postBg.les.categoryP, #postBg.es.categoryP, #postBg.tb {
+#postBg.les, #postBg.es, #postBg.tb {
     &.categoryP, &.tagP {
         $marginBottomOfPosts:27px;
 
@@ -102,8 +115,8 @@
             .next {
                 margin-left:0.33em;
             }
-        }       
-    }    
+        }
+    }
 }
 
 #postBg.tb {

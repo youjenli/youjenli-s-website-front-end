@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Page } from '../../model/page';
+import { Page } from '../../model/posts';
 import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import PostBackgroundOnExternalScreen from '../template/es-postBg';
 import { PublishInfo } from '../template/post-info';
 import {CategoryIcon} from '../template/icons';
 import * as Countable from 'countable';
-import {LinkOfParent} from './terms';
+import {LinkOfParent} from '../template/terms';
 
 interface PropsOfLargeExternalScreenPage {
     viewportWidth:number;
@@ -58,7 +58,7 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
         let parentInfoElement = null;
         if (this.props.page.parent) {
             parentInfoElement = 
-                <div className="parent">
+                <div className="parentPage">
                     <CategoryIcon />
                     <LinkOfParent name={this.props.page.parent.title} url={this.props.page.parent.url} />
                 </div>;
@@ -68,7 +68,7 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
             marginBottom:'1.5em'
         }
 
-        if (page.imageUrl) {
+        if (page.thumbnail) {
             const paddingOfPostBg = {
                 top:0.382 * heightOfImg,
                 leftRight:paddingLeftRightOfPosgBg
@@ -102,8 +102,8 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         {parentInfoElement}
                         <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters} 
-                            style={styleOfPublishInfo} />                        
-                        <img src={page.imageUrl} style={styleOfImg} />
+                            style={styleOfPublishInfo} />
+                        <img src={page.thumbnail.url} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
                             width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
@@ -111,6 +111,7 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
                 </React.Fragment>
             );
         } else {
+            /* 這包含沒有意象圖，以及意象圖載入失敗的處理情境。 */
             let titleBg = {
                 paddingBottom:0
             };
@@ -139,7 +140,7 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         {parentInfoElement}
                         <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters} 
-                            style={styleOfPublishInfo} />                        
+                            style={styleOfPublishInfo} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}  className="les" 
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 

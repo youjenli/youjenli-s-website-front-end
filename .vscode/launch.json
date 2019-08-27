@@ -1,0 +1,161 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome -> home",
+            "url": "http://127.0.0.1",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome -> post",
+            "url": "http://127.0.0.1/twelfth-post",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome -> page",
+            "url": "http://127.0.0.1/resume",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome -> archive of category",
+            "url": "http://127.0.0.1/category/it-tech/it-tech-note/",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome -> archive of parent category",
+            "url": "http://127.0.0.1/category/it-tech/",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome -> archive of tag",
+            "url": "http://127.0.0.1/tag/demo/",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
+        {/*
+            使用 firefox debug 的前提是有安裝第三方套件 Debugger for firefox。
+            除此之外，還需要到 firefox debugger 在 vscode 增加的設定項目 firefox.executable 指定 firefox 的位置，
+            這不像 chrome debugger 會去猜 chrome 的位置。
+
+            要注意的是，這個位置要填絕對路徑，而且路徑分隔符號要填寫為斜線「/」，適用的 debugger 版本是 1.8.0。
+            若使用反斜線則 debugger 會找不到 firefox，而且也不回提報任何錯誤資訊。
+
+            另外，瀏覽器第一次啟動時，有時候不會在中斷點停止，這問題可能如同 chrome debugger 會遇上的問題──網頁載入速度比 debugger 連接速度還快。
+            此時只要重新讀取即可。
+         */
+            "type": "firefox",
+            "request":"launch",
+            "name": "Firefox -> home",
+            "url": "http://127.0.0.1",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                /* 注意：除了網站根路徑以外，此處 url　必須按照 firefox debugger　範例展示的樣子填寫絕對路徑，不能填相對路徑。
+                　　另外，host name 部分也必須和網頁上面的 js 檔案路徑完成相同，即便兩者指的 ip 位置一樣。
+                　　也就是說，當網頁上指的位置是 127.0.0.1，那填 localhost 就不會有效。
+                    
+                   以上狀況適用於 firefox debugger 1.8.0。
+                */
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        },
+        {
+            "type": "firefox",
+            "request":"launch",
+            "name": "Firefox -> parent category",
+            "url": "http://127.0.0.1/category/it-tech/",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                /* 注意：除了網站根路徑以外，此處 url　必須按照 firefox debugger　範例展示的樣子填寫絕對路徑，不能填相對路徑。
+                　　另外，host name 部分也必須和網頁上面的 js 檔案路徑完成相同，即便兩者指的 ip 位置一樣。
+                　　也就是說，當網頁上指的位置是 127.0.0.1，那填 localhost 就不會有效。
+                    
+                   以上狀況適用於 firefox debugger 1.8.0。
+                */
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        },
+        {
+            "type": "firefox",
+            "request":"launch",
+            "name": "Firefox -> tag",
+            "url": "http://127.0.0.1/tag/first/",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        },
+        {
+            "type": "firefox",
+            "request":"launch",
+            "name": "Firefox -> search",
+            "url": "http://127.0.0.1/search/second",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }],
+            "profileDir":"${workspaceFolder}/firefox-profile-for-test"
+        },
+        {
+            "type": "firefox",
+            "request":"launch",
+            "name": "Firefox -> page with parent page",
+            "url": "http://127.0.0.1/resume/sample-page/",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        }
+    ]
+}

@@ -1,13 +1,15 @@
 import * as React from 'react';
 import DefaultRecentPostWithoutImg from '../recentPosts/default-without-img';
 import MobileRecentPostWithImg from '../recentPosts/mobile-default-with-img';
-import {MetaOfPost} from '../../../model/post';
+import {MetaDataOfPost} from '../../../model/posts';
+import { addRegistryOfPostOrPage } from '../../post-page-routeWrapper';
+import { TypesOfContent } from '../../../model/types-of-content';
 
 interface PropsOfListOfRecentPostsOnTablet {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    posts:MetaOfPost[];
+    posts:MetaDataOfPost[];
 }
 
 export default class ListOfRecentPostsOnTablet extends React.Component<PropsOfListOfRecentPostsOnTablet> {
@@ -20,7 +22,11 @@ export default class ListOfRecentPostsOnTablet extends React.Component<PropsOfLi
             bottom:marginTopBottomOfPost
         };
         let postElements = this.props.posts.map((post) => {
-            if (post.imageUrl) {
+
+            //要記得在 index.tsx 的紀錄中註冊此發文頁，這樣它才有辦法在接到請求的時候委派合適的模組取得並呈現對應內容
+            addRegistryOfPostOrPage(post.slug, TypesOfContent.Post);
+
+            if (post.thumbnail != null) {
                 const fontSizeOfDateAndTitle = (this.props.viewportWidth + 512) / 64;
                 const marginTopBottomOfTitle = fontSizeOfDateAndTitle * 0.75;
                 const paddingTopOfPost = marginTopBottomOfTitle;
@@ -47,7 +53,7 @@ export default class ListOfRecentPostsOnTablet extends React.Component<PropsOfLi
                 return (
                     <MobileRecentPostWithImg key={post.id} width={widthOfRecentPost} margin={marginOfPost} padding={paddingOfPost}
                         title={title} postProps={postProps} date={post.date} categories={post.categories} 
-                        imgUrl={post.imageUrl} />
+                        imgUrl={post.thumbnail.url} urlOfPost={post.url}/>
                 );
             } else {
                 const marginTopRightLeftOfPostInfoBar = this.props.remFontSize * 0.5;
@@ -91,7 +97,8 @@ export default class ListOfRecentPostsOnTablet extends React.Component<PropsOfLi
                         bottom:marginLeftRightBottom
                     },        
                     zIndexOfReadArticle:this.props.baseZIndex + 1,
-                    content:post.excerpt
+                    content:post.excerpt,
+                    urlOfPost:post.url
                 };
                 
                 return (

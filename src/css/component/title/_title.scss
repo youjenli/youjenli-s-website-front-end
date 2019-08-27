@@ -11,9 +11,18 @@
     box-shadow: 0 1px 2px 0 #505050;
 }
 
+#header-bar .backToHome {
+    text-decoration: none;
+    font-size:inherit;
+    font-family: inherit;
+}
+
 #header-bar #site-name {
     position: absolute;
     color:white;
+    & > img {
+        position:relative;
+    }
 }
 
 #header-ctx .search-bar {

@@ -11,13 +11,19 @@
         .date {
             margin-right:9px;/*0.5em*/
         }
-        .categories, .tags {
+        .categories, .tags, .parent {
             font-size:14px;
             margin-bottom:0.5em;
             .icon {
                 margin-right:1em;
+                /*
+                  實驗發現若要把 svg 圖示的尺吋設定為 1em，
+                  則 chrome 上面要藉由 min-width, min-height 完成，firefox 上面要透過 width, height 完成，故兩套設定缺一不可。
+                */
                 min-height:1em;
                 min-width:1em;
+                height:1em;
+                width:1em;
             }
         }
         .excerpt {

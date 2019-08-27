@@ -1,7 +1,6 @@
 #slogan {
     width:100%;  
     position:relative;
-
     .l2bg {
         background-color:#1B3404;
         position:relative;
@@ -10,7 +9,8 @@
         .greetings {
             margin:0;
             color:#FFFFFF;
-            font-family:"YuppyTC-Regular", "STYuanti-TC-Light", "HannotateTC-W5", "PingFangTC-Light", "PTSerif-Regular","ArialMT", "Arial";
+            font-family:"YuppyTC-Regular", "STYuanti-TC-Light", "HannotateTC-W5", "PingFangTC-Light",
+                        "PTSerif-Regular","ArialMT", "Arial", system-ui;
         }
     }
     .descPanel{
@@ -20,12 +20,12 @@
         .welcome {
             color:#354255;
             margin:0;
-            font-family: "Klee-Demibold", "ArialMT", "Arial";
+            font-family: "Klee-Demibold", "Microsoft JhengHei", "ArialMT", "Arial", system-ui;
         }
         .desc {
             margin:0;
             color:#000000;
-            font-family: "PingFangTC-Regular","ArialMT", "Arial";
+            font-family: "PingFangTC-Regular", "Microsoft JhengHei", "ArialMT", "Arial", system-ui;
         }
     }
 

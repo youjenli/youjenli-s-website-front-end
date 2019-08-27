@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as terms from './slogan/terms';
-import {MetaOfPost} from '../../model/post';
+import {MetaDataOfPost} from '../../model/posts';
 import SloganOnExternalScreen from './slogan/external-screen-slogan';
 import ListOfRecentPostsOnExternalScreen from './listOfPosts/external-screen';
 import {DisposableWidget} from './error-and-warning/disposable-widget';
@@ -8,8 +8,9 @@ import {DisposableWidget} from './error-and-warning/disposable-widget';
 interface PropsOfHomeOf16To9ExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
-    posts:MetaOfPost[];
-    errorMsg?:string;
+    posts:MetaDataOfPost[];
+    errorMsg:string[];
+    onWidgetOfErrorMsgDismissed?:() => void;
 }
 
 export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHomeOf16To9ExternalScreen> {
@@ -47,13 +48,14 @@ export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHo
                 *((0.434 * this.props.viewportWidth + 9.024) / 416 + 1);
         
         let disposableWidget = null;
-        if (this.props.errorMsg) {
+        if (this.props.errorMsg.length > 0) {
             const styleOfWidget = {
                 fontSize:`${(4.5 * this.props.viewportWidth + 2048) / 416}px`,
                 padding:`1px ${this.props.viewportWidth * marginLeftRightOfBgOfPostsInPercent / 100}px`
             }
             disposableWidget = 
-                <DisposableWidget style={styleOfWidget} msg={this.props.errorMsg} shouldFlashAfterMount={true}/>;
+                <DisposableWidget style={styleOfWidget} msg={this.props.errorMsg} shouldFlashAfterMount={true}
+                    onDismissed={this.props.onWidgetOfErrorMsgDismissed} />;
         }
 
         const l2bg = {
@@ -77,8 +79,7 @@ export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHo
                 marginTop:marginTopOfGtPanel,
                 marginLeft:marginLeftOfGtPanel,
                 greetings:{
-                    fontSize:fontSizeOfGreetings,
-                    width:widthOfGreetings
+                    fontSize:fontSizeOfGreetings
                 },
                 sm:{
                     width:socialMediaLinkWidth,

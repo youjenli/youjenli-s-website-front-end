@@ -18,14 +18,25 @@
             }
         }
         .category, .tag, .read {
+            text-decoration:none;
             &:hover {
                 text-decoration: underline;
                 cursor:pointer;
-            }           
+            }
+        }
+        .category, .tag {
+            color:inherit;
         }
         .title {
-            cursor:pointer;
             font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, Helvetica-Light, system-ui;
+            a {
+                cursor:pointer;
+                text-decoration:none;
+                color:inherit;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
         &.img {
             display:flex;

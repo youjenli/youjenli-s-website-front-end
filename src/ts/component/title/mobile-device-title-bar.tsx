@@ -1,9 +1,12 @@
 import * as React from 'react';
+import { isString } from '../../service/validator';
+import { MenuItem } from '../../model/menu';
 import SiteName from './site-name';
 import base64EncodedTitle from './site-name-2_5x_base64';
 import MobileDeviceSearchBar from './mobile-device-search-bar';
 import { calculateViewPortHeight } from '../../service/dimensionsCalculator';
 import { isStickyPositionSupported } from '../../service/featureDetection';
+import {loadMenuItems} from './menu-items-loader';
 import debounce from '../../service/debounce';
 import * as terms from './terms';
 import * as socialMediaTerms from '../home/slogan/socialMedia/terms';
@@ -29,7 +32,9 @@ export default class MobileDeviceTitleBar extends
             shouldTitleBeSticky:false
         };
         this.toggleMenuState = this.toggleMenuState.bind(this);
+        this.menuItems = loadMenuItems();
     }
+    menuItems:MenuItem[]
     headerHeight:number
     onWindowScroll
     toggleMenuState() {
@@ -60,10 +65,11 @@ export default class MobileDeviceTitleBar extends
         let topShiftOfMenuButton, rightShiftOfMenuButton, spaceBetweenTwoBars;
         let topShiftOfMenu, maxHeightOfMenu;
         let searchBarWidth, searchBarHeight, fontSizeOfSearchHint, searchIconWidth, searchIconHeight;
-        let spaceBetweenMenuItems;
+        let paddingOfMenuItems;
         const borderWidthOfLink = 1;
         let featureLinkIconWidth, spaceBetweenIconAndLink, fontSizeOfFeatureLink;
-        let styleOfSelfIntroduction, styleOfCatagoryOfArticles, styleOfAboutThisSite, styleOfSocialMediaGrp;
+        let commonStyleOfLinkOnMenu = null, menuItemsPerRow = 2, shouldSocialMediaGrpSpanTheWholeRow = false;
+        let styleOfSocialMediaGrp = null;
         let styleOfLinkIcon, styleOfSocialMediaBtn;
 
         const remFontSize = ( this.props.viewportWidth > 432 ? 18 : 16);
@@ -77,38 +83,30 @@ export default class MobileDeviceTitleBar extends
             searchBarWidth = this.props.viewportWidth * 0.75;
             fontSizeOfSearchHint = (this.props.viewportWidth + 1664) / 96;
             searchBarHeight = (fontSizeOfSearchHint * 9.5 - 16)/4;
-            spaceBetweenMenuItems = remFontSize * 0.75;
+            paddingOfMenuItems = remFontSize * 0.75;
             searchIconWidth = (this.props.viewportWidth + 3008) / 96;
             searchIconHeight = searchIconWidth;
             featureLinkIconWidth = (this.props.viewportWidth + 1376) / 48;
             fontSizeOfFeatureLink = (this.props.viewportWidth + 896) / 64;
             spaceBetweenIconAndLink = (this.props.viewportWidth + 128) / 768 * fontSizeOfFeatureLink;
-            const commonStyleOfFeatureLink = {
+            commonStyleOfLinkOnMenu = {
                 flexBasis:'50%',
+                fontSize:`${fontSizeOfFeatureLink}px`,
+            }
+            styleOfSocialMediaGrp = {
+                flexBasis:'50%',
+                paddingTop:`${paddingOfMenuItems}px`
+            }
+            menuItemsPerRow = 2;
+        } else {//套用手機的佈局規則
+            paddingOfMenuItems = remFontSize * 0.5;
+            fontSizeOfFeatureLink = 24;
+            commonStyleOfLinkOnMenu = {
                 fontSize:`${fontSizeOfFeatureLink}px`
             }
-            styleOfSelfIntroduction = Object.assign({}, commonStyleOfFeatureLink);
-            styleOfSelfIntroduction['padding'] = `${spaceBetweenMenuItems}px 0`;
-
-            styleOfCatagoryOfArticles = Object.assign({}, styleOfSelfIntroduction);
-            styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
-            styleOfCatagoryOfArticles['borderLeft'] = `${borderWidthOfLink}px solid #979797`;
-
-            styleOfAboutThisSite = Object.assign({}, commonStyleOfFeatureLink);
-            styleOfAboutThisSite['paddingTop'] = `${spaceBetweenMenuItems}px`;
-            
-            styleOfSocialMediaGrp = Object.assign({}, styleOfAboutThisSite);
-        } else {//套用手機的佈局規則
-            spaceBetweenMenuItems = remFontSize * 0.5;
-            fontSizeOfFeatureLink = 24;
-            const commonStyleOfFeatureLink = {
-                fontSize:`${fontSizeOfFeatureLink}px`
-            };
-            styleOfSelfIntroduction = Object.assign({}, commonStyleOfFeatureLink);
-            styleOfSelfIntroduction['padding'] = `${spaceBetweenMenuItems}px 0`;
-            
-            styleOfSocialMediaGrp = Object.assign({}, commonStyleOfFeatureLink);
-            styleOfSocialMediaGrp['paddingTop'] = `${spaceBetweenMenuItems}px`;
+            styleOfSocialMediaGrp = {
+                paddingTop:`${paddingOfMenuItems}px`
+            }
             //圖示寬度要移到這邊，這樣手機版的邏輯區域才可以判斷是否要把 social media grp 展到第三層。
             featureLinkIconWidth = 42;
             if (this.props.viewportWidth > 432) { //顯示寬度超過 432 即視為手機水平模式
@@ -120,20 +118,14 @@ export default class MobileDeviceTitleBar extends
                 menuButtonBarWidth = 1.4 * fontSizeOfSiteName;
                 searchBarWidth = (21 * this.props.viewportWidth + 11520) / 52;
                 fontSizeOfSearchHint = 24;
-                styleOfSelfIntroduction['flexBasis'] = '50%';
-                styleOfCatagoryOfArticles = Object.assign({}, styleOfSelfIntroduction);
-                if ((searchBarWidth / 2 - 4 * featureLinkIconWidth) / 3 < featureLinkIconWidth * 0.5) {//社群網站連結區域太窄
-                    styleOfCatagoryOfArticles['borderBottom'] = `${borderWidthOfLink}px solid #979797`;
-                    styleOfAboutThisSite = Object.assign({}, styleOfSelfIntroduction); 
+                commonStyleOfLinkOnMenu['flexBasis'] = '50%';
+                menuItemsPerRow = 2;
+                if ((searchBarWidth / 2 - 4 * featureLinkIconWidth) / 3 < featureLinkIconWidth * 0.5) {//社群網站連結區域比較窄
                     styleOfSocialMediaGrp['flexBasis'] = '100%';
+                    shouldSocialMediaGrpSpanTheWholeRow = true;
                 } else {//社群網站連結不會太窄
-                    styleOfAboutThisSite = Object.assign({}, commonStyleOfFeatureLink);
-                    styleOfAboutThisSite['paddingTop'] = `${spaceBetweenMenuItems}px`;
-                    styleOfAboutThisSite['flexBasis'] = '50%';
                     styleOfSocialMediaGrp['flexBasis'] = '50%';
                 }
-                styleOfCatagoryOfArticles['paddingLeft'] = `${spaceBetweenMenuItems}px`;
-                styleOfCatagoryOfArticles['borderLeft'] = `${borderWidthOfLink}px solid #979797`;
             } else {//顯示寬度小於 432 即視為手機垂直模式
                 fontSizeOfSiteName = (this.props.viewportWidth + 352) / 28;
                 this.headerHeight = (5 * this.props.viewportWidth + 4336) / 112;
@@ -143,10 +135,11 @@ export default class MobileDeviceTitleBar extends
                 menuButtonBarWidth = 1.5 * fontSizeOfSiteName;
                 searchBarWidth = this.props.viewportWidth - 2 * remFontSize;
                 fontSizeOfSearchHint = (this.props.viewportWidth * 3 + 48) / 56;
-                styleOfSelfIntroduction['flexBasis'] = '100%';
-                styleOfCatagoryOfArticles = styleOfSelfIntroduction;
-                styleOfAboutThisSite = styleOfSelfIntroduction;
-                styleOfSocialMediaGrp['flexBasis'] = '100%';          
+
+                commonStyleOfLinkOnMenu['flexBasis'] = '100%';
+                menuItemsPerRow = 1;
+                styleOfSocialMediaGrp['flexBasis'] = '100%';
+                shouldSocialMediaGrpSpanTheWholeRow = true;
             }
             searchBarHeight = 53;
             searchIconWidth = 42;
@@ -236,6 +229,192 @@ export default class MobileDeviceTitleBar extends
             width:`${featureLinkIconWidth}px`
         }
 
+        let featureLinks = null;
+        if (this.state.isMenuOpened && this.menuItems.length > 0) {
+            const arrowShape = this.props.viewportWidth <= 432 ? <ArrowShape /> : null;
+            featureLinks = [];
+
+            const createMenuItemElement = function(dataOfItem, keyOfItem:number, styleOfItem:React.CSSProperties) {
+                let id = null, additionalClass = '';
+                if (isString(dataOfItem.id)) {
+                    id = dataOfItem.id;
+                } else {
+                    additionalClass = 'others';
+                }
+                const urlOfIcon = isString(dataOfItem.pathOfIcon) ? dataOfItem.pathOfIcon : 'img/terms-category.svg';
+                return (
+                    <a className={`link item ${additionalClass}`} style={styleOfItem} 
+                        key={keyOfItem} href={dataOfItem.url} id={id}>
+                        <img className="icon" style={styleOfLinkIcon} src={urlOfIcon} />
+                        <span>{dataOfItem.name}</span>{arrowShape}
+                    </a>
+                );
+            }
+            
+            let gridItems = this.menuItems.length;
+            if (!shouldSocialMediaGrpSpanTheWholeRow || menuItemsPerRow == 1) {
+                /* 注意，這裡要一併考慮 menuItemsPerRow 是 1 的情況，否則最後會多產生一道連結。
+                 */
+                gridItems ++;
+            }
+
+            //先處理不用考慮 padding-bottom 和 border-bottom 的連結
+            let styleOfFirstChild = Object.assign({}, commonStyleOfLinkOnMenu);
+                styleOfFirstChild['padding'] = `${paddingOfMenuItems}px 0`;
+            let styleOfChildrenWhichIsNotFirstChild = Object.assign({}, commonStyleOfLinkOnMenu);
+                styleOfChildrenWhichIsNotFirstChild['borderLeft'] = `${borderWidthOfLink}px solid #979797`;
+                styleOfChildrenWhichIsNotFirstChild['padding'] = 
+                    `${paddingOfMenuItems}px 0 ${paddingOfMenuItems}px ${paddingOfMenuItems}px`;
+            let startIndex = gridItems - menuItemsPerRow;//todo 變數名稱取得不好，要改成更貼切的
+            if (startIndex < 0) {
+                startIndex = 0;
+            }
+            const normalItems = this.menuItems.slice(0, startIndex);//todo 變數名稱取得不好，要改成更貼切的
+            for (let k = 0 ; k < normalItems.length ; k ++) {
+                 const item = this.menuItems[k];
+                 if (k % menuItemsPerRow == 0) {
+                     featureLinks.push(
+                         createMenuItemElement(item, k, styleOfFirstChild)
+                     );
+                 } else {
+                     featureLinks.push(
+                         createMenuItemElement(item, k, styleOfChildrenWhichIsNotFirstChild)
+                     );
+                 }
+            }
+            
+            /* 再來考慮最後幾道連結的處置方式。
+               首先判斷是否要繼續處理，若不用的話就結束作業，不要浪費資源產生樣式設定。
+             */
+            if (startIndex < this.menuItems.length) {
+                if (shouldSocialMediaGrpSpanTheWholeRow) {
+                    /*
+                       這意謂
+                       1. 每一道連結都有 padding-bottom 
+                       2. 若最後一列沒塞滿，那倒數第二列下面沒有東西的連結有 border-bottom
+                    */
+                    let styleOfChildrenWhichDoesNotHaveSiblingsBelow = null;
+                    if (gridItems > menuItemsPerRow && gridItems % menuItemsPerRow > 0 ) {
+                        /* 這意謂倒數第二列有些連結下面沒東西，要為他們加上 border-bottom。
+                        */
+                       styleOfChildrenWhichDoesNotHaveSiblingsBelow = 
+                            Object.assign({}, styleOfChildrenWhichIsNotFirstChild);
+                       styleOfChildrenWhichDoesNotHaveSiblingsBelow['borderBottom'] = 
+                            `${borderWidthOfLink}px solid #979797`;
+    
+                       const demarcation = startIndex % menuItemsPerRow;
+                       for (let i = startIndex ; i < this.menuItems.length ; i ++) {
+                          const item = this.menuItems[i];
+                          const remainder = i % menuItemsPerRow;
+                          if (remainder >= demarcation) {
+                            featureLinks.push(
+                                createMenuItemElement(item, i, styleOfChildrenWhichDoesNotHaveSiblingsBelow)
+                            );
+                          } else if (remainder == 0) {
+                            featureLinks.push(
+                                createMenuItemElement(item, i, styleOfFirstChild)
+                            );
+                          } else {
+                            featureLinks.push(
+                                createMenuItemElement(item, i, styleOfChildrenWhichIsNotFirstChild)
+                            );
+                          }
+                       }
+                    } else {
+                        /* 其他情況意謂沒有連結需要加上 border-bottom，
+                           因此直接套用前面準備好的樣式產生元素即可 */
+                        for (let j = 0 ; j < this.menuItems.length ; j ++) {
+                            const item = this.menuItems[j];
+                            if (j % menuItemsPerRow == 0) {
+                                featureLinks.push(
+                                    createMenuItemElement(item, j , styleOfFirstChild)
+                                );
+                            } else {
+                                featureLinks.push(
+                                    createMenuItemElement(item, j, styleOfChildrenWhichIsNotFirstChild)
+                                )
+                            }
+                        }
+                    }
+                } else {//!shouldSocialMediaGrpSpanTheWholeRow
+                   const remainder = gridItems % menuItemsPerRow;
+                   if (remainder > 1) {
+                       /* 最後一列的一般連結和社群網站連結塞不滿最後一列，
+                          那倒數第二列部分連結既有 padding-bottom，也有 border-bottom。
+                          此外，最後一列連結通通沒有 padding-bottom，當然也沒有 border-bottom。
+                        */
+                       let styleOfChildrenWhichIsNotFirstChildInSecondLastRow = 
+                            Object.assign({}, styleOfChildrenWhichIsNotFirstChild);
+                           styleOfChildrenWhichIsNotFirstChildInSecondLastRow['borderBottom'] = `${borderWidthOfLink}px solid #979797`;
+                       let styleOfFirstChildAtLastRow = Object.assign({}, commonStyleOfLinkOnMenu);
+                           styleOfFirstChildAtLastRow['paddingTop'] = `${paddingOfMenuItems}px`;
+                       let styleOfChildrenWhichIsNotFirstChildInTheLastRow = Object.assign({}, commonStyleOfLinkOnMenu);
+                           styleOfChildrenWhichIsNotFirstChildInTheLastRow['padding'] = 
+                                `${paddingOfMenuItems}px 0 0 ${paddingOfMenuItems}px`;
+                           styleOfChildrenWhichIsNotFirstChildInTheLastRow['borderLeft'] = `${borderWidthOfLink}px solid #979797`;
+                       
+                       const demarcation = (startIndex + 1) % menuItemsPerRow;
+                       for (let i = startIndex ; i < gridItems ; i ++) {
+                            const item = this.menuItems[i];
+                            const remainder = i % menuItemsPerRow;
+                            if (remainder >= demarcation) {
+                              featureLinks.push(
+                                  createMenuItemElement(item, i, styleOfChildrenWhichIsNotFirstChildInSecondLastRow)
+                              );
+                            } else if (remainder == 0) {
+                              featureLinks.push(
+                                  createMenuItemElement(item, i, styleOfFirstChild)
+                              );
+                            } else {
+                              featureLinks.push(
+                                  createMenuItemElement(item, i, styleOfChildrenWhichIsNotFirstChildInTheLastRow)
+                              );
+                            }
+                       }
+                   } else if (remainder == 1) {
+                        /* 一般連結塞滿最後一列，使社群網站連結獨立到新的一列去，
+                           最後一列連結除了第一個以外，其他都會有 padding-bottom 和 border-bottom。
+                           至於一般連結的倒數第二列會在前面的步驟就視同一般連結來處理掉。
+                        */
+                        const styleOfChildrenWhichIsNotFirstChildInTheLastRow = 
+                                Object.assign({}, styleOfChildrenWhichIsNotFirstChild);
+                        styleOfChildrenWhichIsNotFirstChildInTheLastRow['borderBottom'] = 
+                                `${borderWidthOfLink}px solid #979797`;
+                        for (let j = startIndex ; j < this.menuItems.length ; j ++ ) {
+                            const item = this.menuItems[j];
+                            featureLinks.push(
+                                createMenuItemElement(item, j, styleOfChildrenWhichIsNotFirstChildInTheLastRow)
+                            )
+                        }
+                   } else {//remainderOfTheLastRow = 0
+                        /* 一般連結和社群網站連結剛好塞滿最後一列，
+                           一般連結通通就沒有 padding-bottom，也沒有 border-bottom。
+                           至於一般連結的倒數第二列會在前面的步驟就視同一般連結來處理掉。
+                        */
+                       const styleOfFirstChildInTheLastRow = Object.assign({}, commonStyleOfLinkOnMenu);
+                       styleOfFirstChildInTheLastRow['paddingTop'] = `${paddingOfMenuItems}px`;
+                       const styleOfChildrenWhichIsNotFirstChildInTheLastRow = Object.assign({}, commonStyleOfLinkOnMenu);
+                       styleOfChildrenWhichIsNotFirstChildInTheLastRow['paddingTop'] = `${paddingOfMenuItems}px`;
+                       styleOfChildrenWhichIsNotFirstChildInTheLastRow['borderLeft'] = `${borderWidthOfLink}px solid #979797`;
+                       
+                       for (let k = startIndex ; k < this.menuItems.length ; k++ ) {
+                            const item = this.menuItems[k];
+                            const remainder = k % menuItemsPerRow;
+                            if (remainder == 0) {
+                                featureLinks.push(
+                                    createMenuItemElement(item, k, styleOfFirstChildInTheLastRow)
+                                )
+                            } else {
+                                featureLinks.push(
+                                    createMenuItemElement(item, k, styleOfChildrenWhichIsNotFirstChildInTheLastRow)
+                                )
+                            }
+                       }
+                   }
+                }
+            }
+        }
+        
         return (
             <React.Fragment>
             { (!isStickyPositionSupported() && this.state.shouldTitleBeSticky) ?
@@ -259,18 +438,7 @@ export default class MobileDeviceTitleBar extends
                                 <MobileDeviceSearchBar height={searchBarHeight} width={searchBarWidth}
                                      fontSizeOfSearchHint={fontSizeOfSearchHint}
                                      searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
-                                <a className="link" style={styleOfSelfIntroduction} id="cv">
-                                    <img className="icon" style={styleOfLinkIcon} src="/img/curriculum-vitae.svg" />
-                                    <span>{terms.selfIntroduction}</span>{this.props.viewportWidth <= 432 ? <ArrowShape /> : null}
-                                </a>
-                                <a className="link" style={styleOfCatagoryOfArticles} id="catagory">
-                                    <img className="icon" style={styleOfLinkIcon} src="/img/terms-catagory.svg" />
-                                    <span>{terms.catagoryOfArticles}</span>{this.props.viewportWidth <= 432 ? <ArrowShape /> : null}
-                                </a>
-                                <a className="link" style={styleOfAboutThisSite} id="about">
-                                    <img className="icon" style={styleOfLinkIcon} src="/img/programming-code.svg" />
-                                    <span>{terms.aboutThisSite}</span>{this.props.viewportWidth <= 432 ? <ArrowShape /> : null}
-                                </a>
+                                {featureLinks}
                                 <div id="socialMediaGrp" className="link"  style={styleOfSocialMediaGrp}>
                                     <a href={socialMediaTerms.facebookPersonalPage} target="_blank" title={socialMediaTerms.facebookIconTitle}>
                                         <icons.FaceBookIcon style={styleOfSocialMediaBtn} /></a>

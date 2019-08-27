@@ -1,115 +1,76 @@
+/// <reference path="./model/global-vars.d.ts"/>
 /* 此頁程式負責的事務
    對應路徑與路徑處理函式
 */
+import { router } from './service/router';
+import { placeHolderForPage, pageIndicator, removePageIndicatorFromUrl } from './model/pagination';
+import { queryParametersOfHome } from './component/home/routeHandler';
+import * as termsOfCategory from './component/category/terms';
+import { renderHomePage, routeEventHandlers as routeEventHandlersOfHome } from './component/home/routeHandler';
+import { renderArchiveOfCategory } from './component/category/routeHandler';
+import { renderArchiveOfTag, routeEventHandlersOfTag } from './component/tag/routerHandler';
+import { generalHooksForPostAndPage, generalHandlerForPostAndPage } from './component/post-page-routeWrapper';
+import { renderResultOfSearch, routeEventHandlers as routeEventHandlersOfSearch } from './component/search-result/routeHandler';
+
+export const reactRoot = document.getElementById('react-root');
+
 /*
-    因為 Navigo 是以 UMD 模組格式輸出，而裡面 commonjs 的部分又是以 Navigo 建構函式取代 commonjs 預設 export 物件，
-    所以 TypeScript 型態定義檔要採用 export = module 的方式輸出。這使得我們要用下面的方法載入 Navigo 模組。
+  注意，不管未來是否需要在 index.tsx 處理模組路徑問題，都應該在這個模組載入 pagination 模組。
+  這樣它才能早在其他頁面模組取得分頁列的資訊並刪除分頁設定之前就先保留分頁介面的設定。
 */
-import router from './router';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import HomePage from './component/home/home';
-import PostPage from './component/post/post';
-import Page from './component/page/page';
-import PageOfSearchResults from './component/search-result/search-results';
-import PageOfCategory from './component/category/category';
-import PageOfTag from './component/tag/tag';
-import {listOfFakePosts} from  './model/test/fake-posts';
-import {listOfFakePages} from './model/test/fake-pages';
-import {fakeSearchResults, fakeNothingFoundSearchResults, } from './model/test/fake-search-results';
-import {fakeAnswerOfQueryPostsByTag, fakeAnswerOfQueryPostsByTagWithoutDesc, fakeAnswerOfQueryPostsByTagWithoutAnyPost,
-        fakeAnswerOfQueryPostsByCategory, fakeAnswerOfQueryPostsByCategoryWithoutDesc, fakeAnswerOfQueryPostsByCategoryWithoutAnyPost
-        } from './model/test/fake-answer-of-query-posts-by-taxonomy';
-import { listOfMetaDataOfFakePosts } from './model/test/fake-meta-of-posts-for-test';
+const paginationPath = pageIndicator.replace(placeHolderForPage, ':page');
 
-const reactRoot = document.getElementById('react-root');
+/*
+  實驗發現如果想要指定根路徑的 route，那就要透過「/」來表達，而不能只填寫 ''，否則會變成萬用 route 的設定。
+  另外，因為 navigo 會在根路徑以外的路徑前面加上「/」，所以表達根路徑以外的路徑時，開頭不用加上「/」，
+  也不需要在產生 navigo 實例的時候在 root (host name) 後面加上「/」，否則 navigo 會重覆為路徑加上斜線，導致問題。
+*/
+router.on(renderHomePage, routeEventHandlersOfHome);
+/*
+  之所以加入 home 這個 route 的原因是 navigo 的 navigate 函式不能傳參數，
+  而我又試不出方法讓它導向至根目錄並傳遞錯誤訊息參數。
+  試來試去只有當路徑不是根路徑的情況下才能順利傳遞參數，
+  因此才另外定義這個 route。
+*/
+router.on('home', renderHomePage, routeEventHandlersOfHome);
 
-const routeToHome = () => {
-    const errorMsg = '未在您存取的位置 /path/to/your/uri 找到對應的資源 (http 代碼 404)，系統改以首頁替代。';
-    ReactDOM.render(
-        <HomePage posts={listOfMetaDataOfFakePosts} errorMsg={errorMsg}/>,
-        reactRoot
-    );
-}
-
-const routeToPost = (params) => {
-    let postId = 0;
-    if (params && params.id >= 0 && params.id < listOfFakePosts.length) {
-        postId = params.id;
-    }
-    console.log(`route to post id : ${postId}`);
-    ReactDOM.render(
-        <PostPage post={listOfFakePosts[postId]}/>,
-        reactRoot
-    );
-}
-
-const routeToPage = (params) => {
-    let pageId = 0;
-    if (params && params.id >= 0 && params.id < listOfFakePosts.length) {
-        pageId = params.id;
-    }
-    console.log(`route to page id : ${pageId}`);
-    ReactDOM.render(
-        <Page page={listOfFakePages[pageId]} />,
-        reactRoot
-    )
-}
-
-const routeToSearchResult = (params) => {
-    let results = null;
-    if (params && params.keyword){
-        results = <PageOfSearchResults result={fakeNothingFoundSearchResults} />;
+const generalHandlerOfCategory = (params) => {
+    let paramsOfCategory = {};
+    let route = router.lastRouteResolved().url;
+    route = removePageIndicatorFromUrl(route);
+    let slugs = route.split('/').slice(1);//因為 navigo 會在路徑開頭加上「/」導致分拆之後第一個元素必為空字串，所以要彈出開頭第一個元素
+    let filteredSlugs = slugs.filter( token => token !== '' );
+    if (filteredSlugs.length == slugs.length && filteredSlugs.length >= 2) {
+        /*
+          當解析出來的元串組都沒有空白的部分，而且長度超過基準路徑的階層數（b c 也是 category 那樣一層），此時路徑格式正確。
+          接下來要繼續解析其他參數
+        */
+        paramsOfCategory['slug'] = filteredSlugs.pop();
+        if (params && params['page']) {
+            let page = parseInt(params['page']);
+            if (!isNaN(page)) {
+                paramsOfCategory['page'] = page;
+            } else {
+                paramsOfCategory['page'] = 1;
+            }
+        }
+        
+        renderArchiveOfCategory(paramsOfCategory);
     } else {
-        results = <PageOfSearchResults result={fakeSearchResults} />;
+        /* 若路徑格式不正確，則轉發往首頁 */
+        router.navigate(
+            `home?${queryParametersOfHome.ERROR_MSG}=${termsOfCategory.invalidPathForArchiveOfCategory(router.lastRouteResolved().url)}`);
     }
-    ReactDOM.render(results, reactRoot);
-}
+};
 
-const routeToPageOfCategory = (params) => {
-    let pageOfCategory = null;
-    if (params && params.name) {
-        if (params.name == '0') {
-            pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByCategoryWithoutAnyPost} />;
-        } else {
-            pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByCategory}/>;    
-        }        
-    } else {
-        pageOfCategory = <PageOfCategory answer={fakeAnswerOfQueryPostsByCategoryWithoutDesc} />;
-    }
-    ReactDOM.render(pageOfCategory, reactRoot);    
-}
-
-const routeToPageOfTag = (params) => {
-    let pageOfTag = null;
-    if (params && params.name) {
-        if (params.name == '0') {
-            pageOfTag = <PageOfTag answer={fakeAnswerOfQueryPostsByTagWithoutAnyPost} />;
-        } else {
-            pageOfTag = <PageOfTag answer={fakeAnswerOfQueryPostsByTag}/>;    
-        }        
-    } else {
-        pageOfTag = <PageOfTag answer={fakeAnswerOfQueryPostsByTagWithoutDesc} />;
-    }
-    ReactDOM.render(pageOfTag, reactRoot);
-}
-
-router.on({
-       '/':routeToHome,
-       '/index.html':routeToHome,
-       '/post/:id':routeToPost,
-       '/post/':routeToPost,//為開發而暫留於此
-       '/post':routeToPost,//為開發而暫留於此
-       '/page/:id':routeToPage,
-       '/page/':routeToPage,
-       '/page':routeToPage,
-       '/search':routeToSearchResult,
-       '/search/:keyword':routeToSearchResult,
-       '/category':routeToPageOfCategory,
-       '/category/':routeToPageOfCategory,
-       '/category/:name':routeToPageOfCategory,
-       '/tag':routeToPageOfTag,
-       '/tag/':routeToPageOfTag,
-       '/tag/:name':routeToPageOfTag
-    })
+router
+    .on(`category/*/${paginationPath}`, generalHandlerOfCategory)
+    .on(`category/*`, generalHandlerOfCategory)
+    .on(`tag/:slug`, renderArchiveOfTag, routeEventHandlersOfTag)
+    .on(`tag/:slug/${paginationPath}`, renderArchiveOfTag, routeEventHandlersOfTag)
+    .on(`${paginationPath}`, renderHomePage, routeEventHandlersOfHome)
+    .on(`search/:keyword`, renderResultOfSearch, routeEventHandlersOfSearch)
+    .on(`search/:keyword/${paginationPath}`, renderResultOfSearch, routeEventHandlersOfSearch)
+    .on(':slug', generalHandlerForPostAndPage, generalHooksForPostAndPage)
+    .on(`:slug/${paginationPath}`, generalHandlerForPostAndPage, generalHooksForPostAndPage)
     .resolve();

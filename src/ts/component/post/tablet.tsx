@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ParsedPost } from '../../model/post';
+import { ParsedPost } from '../../model/posts';
 import MobilePostHeader from '../template/mobile-header-of-article';
 import PostInfo from '../template/post-info';
 import Subject from './subject';
@@ -40,7 +40,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
             countingResult = counter;
         });
 
-        if (this.props.post.imageUrl) {
+        if (this.props.post.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
             const styleOfImg = {
                 height:`${heightOfImg}px`
@@ -82,7 +82,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <MobilePostHeader baseZIndex={this.props.baseZIndex} className="tb" title={title} paddingBottom={paddingBottomOfTitleBg} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified}
                             styleOfPostInfo={styleOfPostInfo} wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} >
-                            <img src={post.imageUrl} style={styleOfImg} />
+                            <img src={post.thumbnail.url} style={styleOfImg} />
                         </PostInfo>                        
                     </MobilePostHeader>                    
                     {postCtnrElement}                        

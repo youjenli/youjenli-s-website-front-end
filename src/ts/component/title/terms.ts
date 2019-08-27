@@ -1,10 +1,5 @@
 export let siteName = '祐任的個人網站';
-export let selfIntroduction = '自我介紹';
-export let hintOfSelfIntroduction = '公開的簡單自我介紹，說說自己的學經歷、情感、志向、嗜好與興趣。';
-export let catagoryOfArticles = '文章分類';
-export let hintOfCatagoryOfArticles = '列出這個網站的文章類型，讓您一目了然。';
-export let aboutThisSite = '關於這網站';
-export let hintOfAboutThisSite = '說明用來開發這個網站的工具、網站架構與感謝名單。';
+export let backToHome = '回到首頁';
 export let searchFieldPlaceHolder = '搜尋文章、分類、標籤...';
 export let titleOfSearchBtn = '點此按鈕搜尋網站的內容';
 export let altOfSearchIcon = '搜尋網站內容';

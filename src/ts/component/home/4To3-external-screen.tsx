@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as terms from './slogan/terms';
-import {MetaOfPost} from '../../model/post';
+import {MetaDataOfPost} from '../../model/posts';
 import SloganOnExternalScreen from './slogan/external-screen-slogan';
 import ListOfRecentPostsOnExternalScreen from './listOfPosts/external-screen';
 import {DisposableWidget} from './error-and-warning/disposable-widget';
@@ -8,8 +8,9 @@ import {DisposableWidget} from './error-and-warning/disposable-widget';
 interface PropsOfHomeOf4To3ExternalScreen {
     viewportWidth:number;
     baseZIndex:number;
-    posts:MetaOfPost[];
-    errorMsg?:string;
+    posts:MetaDataOfPost[];
+    errorMsg:string[];
+    onWidgetOfErrorMsgDismissed?:() => void;
 }
 
 export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHomeOf4To3ExternalScreen> {
@@ -45,13 +46,14 @@ export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHom
         const distanceFromTopOfBgOfPosts = portraitHeight * 0.5 + distanceBetweenTheBottomOfL1bgAndPortrait * 2;
         
         let disposableWidget = null;
-        if (this.props.errorMsg) {
+        if (this.props.errorMsg.length > 0) {
             const styleOfWidget = {
                 fontSize:`${(4.5 * this.props.viewportWidth + 2048) / 416}px`,
                 padding:`1px ${this.props.viewportWidth * marginLeftRightOfBgOfPostsInPercent / 100}px`
             }
             disposableWidget = 
-                <DisposableWidget style={styleOfWidget} msg={this.props.errorMsg} shouldFlashAfterMount={true}/>;
+                <DisposableWidget style={styleOfWidget} msg={this.props.errorMsg} shouldFlashAfterMount={true}
+                    onDismissed={this.props.onWidgetOfErrorMsgDismissed} />;
         }
 
         const l2bg = {
@@ -75,8 +77,7 @@ export default class HomeOf4To3ExternalScreen extends React.Component<PropsOfHom
                 marginTop:marginTopOfGtPanel,
                 marginLeft:marginLeftOfGtPanel,
                 greetings:{
-                    fontSize:fontSizeOfGreetings,
-                    width:widthOfGreetings
+                    fontSize:fontSizeOfGreetings
                 },
                 sm:{
                     width:socialMediaLinkHeight,
