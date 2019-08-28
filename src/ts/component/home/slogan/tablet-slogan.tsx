@@ -3,7 +3,6 @@ import * as terms from './terms';
 
 interface PropsOfSloganOnTable {
     viewportWidth:number;
-    baseZIndex:number;
 }
 
 /*
@@ -27,7 +26,7 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
             paddingTop:`${paddingTopOfL2bg}px`,
             paddingLeft:`${paddingLeftOfL2bg}px`,
             paddingRight:`${paddingRightOfL2bg}px`,
-            height:`${halfOfTheHeightOfPic + paddingTopOfL2bg}px`
+            height:`${halfOfTheHeightOfPic + paddingTopOfL2bg}px`,
         }
 
         const styleOfMyPic = {
@@ -53,20 +52,21 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
             left:`${-shiftOfL1bg}px`,
             bottom:`${-shiftOfL1bg}px`,
             width:`${widthOfL1bg}px`,
-            height:`${heightOfL1bg}px`
+            height:`${heightOfL1bg}px`,
         }
 
         const heightOfDescPanel = halfOfTheHeightOfPic + shiftOfL1bg + 1.4 * remFontSize;
         const paddingLeftOfDescPanel = paddingLeftOfL2bg + widthOfPic + marginLeftOfGtPanel;
-        const marginTopBottomOfWelMsg = (0.09 * remFontSize + 195.84) / 384;
+        const maxWidthOfWelMsg = this.props.viewportWidth - paddingLeftOfDescPanel - paddingRightOfL2bg;
+        const fontSizeOfWelMsg = maxWidthOfWelMsg / terms.welcomeMsg.length;
+        const marginTopBottomOfWelMsg = (0.09 * remFontSize + 195.84) * fontSizeOfWelMsg / 384;
         const styleOfDescPanel ={
             minHeight:`${heightOfDescPanel}px`,
-            padding:`${marginTopBottomOfWelMsg}px ${paddingLeftOfDescPanel}px 0 ${paddingRightOfL2bg}px`
+            padding:`${marginTopBottomOfWelMsg}px ${paddingRightOfL2bg}px 0 ${paddingLeftOfDescPanel}px`,
         }
 
-        const maxWidthOfWelMsg = this.props.viewportWidth - paddingLeftOfDescPanel - paddingRightOfL2bg;
         const styleOfWelMsg = {
-            fontSize:`${maxWidthOfWelMsg / terms.welcomeMsg.length}px`,
+            fontSize:`${fontSizeOfWelMsg}px`,
             marginBottom:`${marginTopBottomOfWelMsg}px`
         }
 

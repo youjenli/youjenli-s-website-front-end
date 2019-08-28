@@ -134,7 +134,7 @@ export default class GenericHomePage extends React.Component<PropsOfHome, StateO
                 <React.Fragment>
                     <MobileDeviceTitleBar className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                     {disposableWidget}
-                    <SloganOnTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
+                    <SloganOnTablet viewportWidth={this.state.viewportWidth} />
                     <ListOfRecentPostsOnTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
                         remFontSize={18} posts={this.props.posts}/>
                 </React.Fragment>
