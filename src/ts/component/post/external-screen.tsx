@@ -63,6 +63,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
 
             const contentOfPost = {
                 margin:{
+                    top:marginBottomOfPostContent,
                     bottom:marginBottomOfPostContent
                 },
                 post:null//先不擺內容，等接下來可能要移除 subject 的作業結束後再回頭設定此屬性。

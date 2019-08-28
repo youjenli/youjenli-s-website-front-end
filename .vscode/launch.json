@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "chrome",
             "request": "launch",
@@ -148,6 +149,20 @@
             "request":"launch",
             "name": "Firefox -> page with parent page",
             "url": "http://127.0.0.1/resume/sample-page/",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        },
+        {
+            "type": "firefox",
+            "request": "launch",
+            "name": "Firefox -> post",
+            "url": "http://127.0.0.1/twelfth-post",
             "reAttach": true,
             "pathMappings": [{
                 "url":"/",
