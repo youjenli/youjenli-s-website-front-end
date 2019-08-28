@@ -122,6 +122,7 @@ const pageWithParentAndFeatureMedia:Page = {
     url:'https://www.google.com.tw',
     parent:{
         title:'無圖有母頁文章',
+        slug:'parentOfParentPageAndThumbnailIncludedPage',
         url:'https://www.google.com.tw'
     },
     thumbnail:{
@@ -166,6 +167,7 @@ const pageWithParentButWithoutFeatureMedia:Page = {
     url:'https://www.google.com.tw',
     parent:{
         title:'無圖有母頁文章',
+        slug:'parentOfParentIncludedPage',
         url:'https://www.google.com.tw'
     },
     excerpt:'師不必賢於弟子。聞道有先後，術業有專攻，如是而已。',

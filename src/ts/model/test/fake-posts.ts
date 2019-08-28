@@ -75,12 +75,13 @@ const defaultToc =
 
 export const fakePostWithSubjectAndImg:Post = {
     id:9,
+    title:'有主旨且有圖片',
     url:'https://www.google.com.tw',
+    slug:'fakePostWithSubjectAndImg',
     categories:aFewOfFakeCategories,
     tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
-    title:'有主旨且有圖片',
     thumbnail:{
         url:'img/afternoon-tea-time.jpeg'
     },
@@ -117,12 +118,13 @@ export const fakePostWithSubjectAndImg:Post = {
 
 export const fakePostWithSubjectButWithoutImg:Post = {
     id:9,
+    title:'有主旨但無圖片',
+    slug:'fakePostWithSubjectButWithoutImg',
     url:'https://www.google.com.tw',
     categories:aFewOfFakeCategories,
     tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
-    title:'有主旨但無圖片',
     content:`
     <div class="subject">
     弟子不必不如師，師不必賢於弟子。聞道有先後，術業有專攻，如是而已。
@@ -156,12 +158,13 @@ export const fakePostWithSubjectButWithoutImg:Post = {
 
 export const fakePostWithoutSubjectButWithImg:Post = {
     id:9,
+    title:'無主旨但有圖片',
+    slug:'fakePostWithoutSubjectButWithImg',
     url:'https://www.google.com.tw',
     categories:aFewOfFakeCategories,
     tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
-    title:'無主旨但有圖片',
     thumbnail:{
         url:'img/afternoon-tea-time.jpeg'
     },
@@ -195,12 +198,13 @@ export const fakePostWithoutSubjectButWithImg:Post = {
 
 export const fakePostWithoutSubjectAndImg:Post = {
     id:9,
+    title:'無主旨且無圖片',
+    slug:'fakePostWithoutSubjectAndImg',
     url:'https://www.google.com.tw',
     categories:aFewOfFakeCategories,
     tags:aFewOfFakeTags,
     date:fakeDate,
     modified:fakeDate,
-    title:'無主旨且無圖片',
     content:`
     ${defaultToc}
     <h1 name="p1">師說</h1>

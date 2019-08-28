@@ -74,12 +74,13 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                 const post = this.props.post;
                 const parsedPost:ParsedPost = {
                     id:post.id,
+                    title:post.title,
+                    slug:post.slug,
                     url:post.url,
                     date:post.date,
                     modified:post.modified,
                     categories:post.categories,
                     tags:post.tags,
-                    title:post.title,
                     thumbnail:post.thumbnail,
                     excerpt:post.excerpt,
                     dom:doc
