@@ -68,9 +68,16 @@ router
     .on(`category/*`, generalHandlerOfCategory)
     .on(`tag/:slug`, renderArchiveOfTag, routeEventHandlersOfTag)
     .on(`tag/:slug/${paginationPath}`, renderArchiveOfTag, routeEventHandlersOfTag)
-    .on(`${paginationPath}`, renderHomePage, routeEventHandlersOfHome)
     .on(`search/:keyword`, renderResultOfSearch, routeEventHandlersOfSearch)
     .on(`search/:keyword/${paginationPath}`, renderResultOfSearch, routeEventHandlersOfSearch)
     .on(':slug', generalHandlerForPostAndPage, generalHooksForPostAndPage)
     .on(`:slug/${paginationPath}`, generalHandlerForPostAndPage, generalHooksForPostAndPage)
+    /*
+       重要注意事項：
+       像這樣把 paginationPath 放在根路徑的路由一定要擺在最後，
+       否則 navigo 會提早把結尾是分頁路徑，但是整體而言來說並不是根路徑的請求委派給這部分函式處理，而且他還會漏接參數。
+       例如：navigo 會將發送到 search/:keyword/page/2 的請求委派給 routeEventHandlersOfHome 和 renderHomePage 處理，
+       然後請求參數只包括 page:2，而沒有 keyword。
+    */
+    .on(`${paginationPath}`, renderHomePage, routeEventHandlersOfHome)
     .resolve();

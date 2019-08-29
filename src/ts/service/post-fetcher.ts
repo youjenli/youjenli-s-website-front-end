@@ -241,11 +241,6 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                             
                         
                             if (featuredMediaAppearedInFrontPage.length > 0) {
-                                const config = {
-                                    params:{
-                                        include:featuredMediaAppearedInFrontPage.toString()
-                                    }
-                                }
                                 const promiseOfFeaturedMediaReq = 
                                         fetchMedia({include:featuredMediaAppearedInFrontPage})
                                             .then((response) => {

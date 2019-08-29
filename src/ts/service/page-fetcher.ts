@@ -128,7 +128,7 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                     }
                 })
                 .catch((error) => {
-                    //查詢作業失敗，回報給 fetchPosts 函式的使用者
+                    //查詢作業失敗，回報給 fetchPages 函式的使用者
                     reject(error);
                 });
     });

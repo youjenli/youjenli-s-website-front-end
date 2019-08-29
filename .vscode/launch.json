@@ -59,11 +59,23 @@
             "type": "chrome",
             "request": "launch",
             "name": "Chrome -> archive of tag",
-            "url": "http://127.0.0.1/tag/demo/",
+            "url": "http://127.0.0.1/tag/first/",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
             }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome -> search",
+            "url": "http://127.0.0.1/search/second",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            },
+            //關閉快取以便診斷問題
+            "disableNetworkCache":true
         },
         {/*
             使用 firefox debug 的前提是有安裝第三方套件 Debugger for firefox。
@@ -141,8 +153,7 @@
             },{
                 "url":"http://127.0.0.1/wp-content/themes/youjenli/",
                 "path": "${workspaceFolder}"
-            }],
-            "profileDir":"${workspaceFolder}/firefox-profile-for-test"
+            }]
         },
         {
             "type": "firefox",
