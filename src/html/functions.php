@@ -1,5 +1,12 @@
 <?php 
 	/*
+		Wordpress 的專頁預設沒有摘要功能，要執行以下指令才能啟用該功能。
+		欲了解詳情可參閱以下說明：
+		https://www.wpentire.com/excerpt-field-in-wordpress-post-page/
+	*/
+	add_post_type_support( 'page', 'excerpt' );
+	
+	/*
 		Wordpress 預設在 wp-includes/default-filters.php 裡面為 the_content 和 the_excerpt 註冊了 wpautop 這個 filter。
 		https://codex.wordpress.org/Function_Reference/wpautop
 

@@ -22,7 +22,6 @@ declare global {
             errorMsg?:string;
             titleBar:{
                 menuItems:MenuItem[];
-                searchLink:string;
             };
             paginationSettings:SettingsOfPagination;
             pagination:Pagination;

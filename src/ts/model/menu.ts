@@ -2,6 +2,6 @@ export interface MenuItem {
     name:string;
     url:string;
     hint:string;
-    id?:string;
+    slug?:string;
     pathOfIcon?:string;
 }
