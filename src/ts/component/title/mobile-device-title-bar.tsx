@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isString } from '../../service/validator';
+import { isString, isNotBlank } from '../../service/validator';
 import { MenuItem } from '../../model/global-vars';
 import SiteName from './site-name';
 import base64EncodedTitle from './site-name-2_5x_base64';
@@ -241,10 +241,10 @@ export default class MobileDeviceTitleBar extends
                 } else {
                     additionalClass = 'others';
                 }
-                const urlOfIcon = isString(dataOfItem.pathOfIcon) ? dataOfItem.pathOfIcon : 'img/terms-category.svg';
+                const urlOfIcon = isNotBlank(dataOfItem.pathOfIcon) ? dataOfItem.pathOfIcon : 'img/terms-category.svg';
                 return (
                     <a className={`link item ${additionalClass}`} style={styleOfItem} 
-                        key={keyOfItem} href={dataOfItem.url} id={id}>
+                        key={keyOfItem} href={dataOfItem.url} id={id} data-navigo>
                         <img className="icon" style={styleOfLinkIcon} src={urlOfIcon} />
                         <span>{dataOfItem.name}</span>{arrowShape}
                     </a>

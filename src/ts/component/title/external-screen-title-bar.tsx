@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { isString } from '../../service/validator';
+import { isNotBlank } from '../../service/validator';
 import { MenuItem } from '../../model/global-vars';
 import SiteName from './site-name';
 import {loadMenuItems} from './menu-items-loader';
@@ -90,7 +90,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
                 searchBarHeight = (2.6 * this.props.viewportWidth + 7737.6) / 416;
                 searchBarWidth = 13 * searchHintFontSize * (this.state.isSearchBarFocused ? 1.5 : 1);
             }
-            searchFieldBorderRadius = 8;   
+            searchFieldBorderRadius = 8;
         }
         siteNameLeftPosition = siteNameFontSize;
         siteNameTopPosition = (headerHeight - siteNameFontSize)/2
@@ -102,26 +102,26 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
             zIndex:this.props.baseZIndex + 1
         }
         const headerBarStyle = {
-            height:headerHeight + "px"            
+            height:headerHeight + "px"
         };
-        const featureLinkStyle = {
-            fontSize:featureLinkFontSize + "px",
-            marginRight:featureLinkMarginRight + "px"
+        const styleOfFeatureLink = {
+            marginRight:featureLinkMarginRight + "px",
+            fontSize:featureLinkFontSize + "px"
         }
         const groupOfFeatureLinkStyle = {
-            top:groupOfFeatureLinkTop + "px"            
+            top:groupOfFeatureLinkTop + "px"
         }
 
-        let featureLinks = this.menuItems.map((item, idx) => {
+        let navMenuItems = this.menuItems.map((item, idx) => {
             return (
-                <a style={featureLinkStyle} className="featureLink" key={idx}
+                <a className="featureLink" key={idx} style={styleOfFeatureLink} data-navigo
                     onMouseEnter={() => this.toggleStateOfHint(idx)}
                     onMouseLeave={() => this.toggleStateOfHint(idx)}
-                    >{item.name}
-                    { this.state.statusOfHints[idx] && isString(item.hint) ?
-                    <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                        charactersOfFeatureLink={item.hint.length} 
-                        hint={item.hint} fontSizeOfHint={featureHintFontSize} />
+                    href={item.url} >{item.name}
+                    { this.state.statusOfHints[idx] && isNotBlank(item.hint) ?
+                        <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
+                            charactersOfFeatureLink={item.name.length} 
+                            hint={item.hint} fontSizeOfHint={featureHintFontSize} />
                     : null }
                 </a>
             );
@@ -137,7 +137,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
                         fontSizeOfFeatureLink={featureLinkFontSize} fontSizeOfSearchHint={searchHintFontSize}
                         toggleSearchBarState={this.toggleSearchBarState}>
                        <nav id="groupOfFeatureLinks" style={groupOfFeatureLinkStyle}>
-                            {featureLinks}
+                            {navMenuItems}
                         </nav> 
                     </ExternalScreenSearchBar>
                 </header>
