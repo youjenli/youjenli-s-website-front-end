@@ -11,6 +11,7 @@ import { renderArchiveOfCategory } from './component/category/routeHandler';
 import { renderArchiveOfTag, routeEventHandlersOfTag } from './component/tag/routerHandler';
 import { generalHooksForPostAndPage, generalHandlerForPostAndPage } from './component/post-page-routeWrapper';
 import { renderResultOfSearch, routeEventHandlers as routeEventHandlersOfSearch } from './component/search-result/routeHandler';
+import { isNum } from './service/validator';
 
 export const reactRoot = document.getElementById('react-root');
 
@@ -46,13 +47,10 @@ const generalHandlerOfCategory = (params) => {
           接下來要繼續解析其他參數
         */
         paramsOfCategory['slug'] = filteredSlugs.pop();
-        if (params && params['page']) {
-            let page = parseInt(params['page']);
-            if (!isNaN(page)) {
-                paramsOfCategory['page'] = page;
-            } else {
-                paramsOfCategory['page'] = 1;
-            }
+        if (params && isNum(params['page'])) {
+            paramsOfCategory['page'] = parseInt(params['page']);
+        } else {
+            paramsOfCategory['page'] = 1;
         }
         
         renderArchiveOfCategory(paramsOfCategory);

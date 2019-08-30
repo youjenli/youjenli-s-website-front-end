@@ -36,14 +36,16 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                 page:page
             }
         }
+        if (config) {
+            if (isNotBlank(config.search)) {
+                reqConfigOfPosts.params['search'] = config.search;
+            } else {
+                //todo reject
+            }
 
-        if (isNotBlank(config.search)) {
-            reqConfigOfPosts.params['search'] = config.search;
-        } else {
-            //todo
-        }
-        if (!isNaN(config.per_page)) {
-            reqConfigOfPosts.params['per_page'] = config.per_page;
+            if (config.per_page) {
+                reqConfigOfPosts.params['per_page'] = config.per_page;
+            }
         }
         
         return new Promise<ResultOfQuery<FoundPublication>>((resolve, reject) => {
@@ -205,22 +207,24 @@ export function searchTag(config:ConfigurationOfTagFetching, baseUrl:string):Pro
 
 export function search(config:ConfigurationOfSearch):Promise<ResultOfSearch> {
 
-    const page = !isNaN(config.page) ? config.page : 1;
-
-    const reqConfigOfPosts = {
-        search:config.keyword,
-        page:page
-    }
-    if (!isNaN(config.publicationsPerPage)) {
-        reqConfigOfPosts['per_page'] = config.publicationsPerPage;
-    }
-
-    const reqConfigOfTaxonomy = {
-        search:config.keyword,
-        page:1
-    }
-    if (!isNaN(config.taxonomiesPerPage)) {
-        reqConfigOfTaxonomy['per_page'] = config.taxonomiesPerPage;
+    let reqConfigOfPosts = null;
+    let reqConfigOfTaxonomy = null;
+    if (config) {
+        /*
+          注意，因為後續函式會檢查請求參數的型態，所以這邊就不再浪費運算力檢查。
+        */
+        reqConfigOfPosts = {
+            search:config.keyword,
+            page:config.page,
+            per_page:config.publicationsPerPage
+        }
+        reqConfigOfTaxonomy = {
+            search:config.keyword,
+            page:1,
+            per_page:config.taxonomiesPerPage
+        }
+    } else {
+        //todo reject
     }
 
     /*

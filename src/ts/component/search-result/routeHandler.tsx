@@ -13,6 +13,7 @@ import { ConfigurationOfPublicationFetching } from '../../service/search';
 import { ConfigurationOfFetching as ConfigurationOfCategoryFetching } from '../../service/category-fetcher';
 import { ConfigurationOfFetching as ConfigurationOfTagFetching } from '../../service/tag-fetcher';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import { isNum } from '../../service/validator';
 
 let DEFAULT_PUBLICATIONS_PER_PAGE = 10;
 let DEFAULT_TAXONOMIES_PER_PAGE = 14;
@@ -37,7 +38,7 @@ const onPageOfFoundCategoriesChanged:PageClickedHandler = (page:number):void => 
                 }
             }
         } else {
-            const perPage = !isNaN(resultOfSearch.categories.pagination.itemsPerPage) ? 
+            const perPage = resultOfSearch.categories.pagination.itemsPerPage ? 
                 resultOfSearch.categories.pagination.itemsPerPage : DEFAULT_TAXONOMIES_PER_PAGE;
             searchCategory({
                 page:page,
@@ -111,7 +112,7 @@ const onPageOfFoundTagsChanged:PageClickedHandler = (page:number):void => {
                 }
             }
         } else {
-            const perPage = !isNaN(resultOfSearch.tags.pagination.itemsPerPage) ? 
+            const perPage = resultOfSearch.tags.pagination.itemsPerPage ? 
                 resultOfSearch.tags.pagination.itemsPerPage : DEFAULT_TAXONOMIES_PER_PAGE;
             searchTag({
                 page:page,
@@ -184,8 +185,8 @@ export const routeEventHandlers = {
     before:(done, params) => {
 
         let page = 1;
-        if (!isNaN(params['page'])) {
-            page = params['page'];
+        if (isNum(params['page'])) {
+            page = parseInt(params['page']);
         }
         if (window.wp.search) {
             const search = window.wp.search;

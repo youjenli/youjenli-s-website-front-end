@@ -4,7 +4,7 @@ import * as terms from './terms';
 import { PostEntity, CategoryEntityInEmbedContext, TagEntityInEmbedContext, ResultOfFetching } from '../model/wp-rest-api';
 import { fetchMedia } from '../service/media-fetcher';
 import { Post } from '../model/posts';
-import {isNotBlank, isString} from './validator';
+import { isNotBlank } from './validator';
 
 export interface ConfigurationOfFetching {
     page?:number;
@@ -20,28 +20,32 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
     const reqConfig = {
         params:{}
     };
-    if (isNotBlank(params.slug)) {
-        reqConfig.params['slug'] = params.slug;
-    } else if (Array.isArray(params.include) && params.include) {
-        reqConfig.params['include'] = params.include.toString()
-    }
-    let targetPage = 1;
-    if ((params && !isNaN(params.page))) {
-        targetPage = params.page;
-    }
-    reqConfig.params['page'] = targetPage;
-    if (Array.isArray(params.categories)) {
-        reqConfig.params['categories'] = params.categories.toString();
-    }
-    if (Array.isArray(params.tags)) {
-        reqConfig.params['tags'] = params.tags.toString();
-    }
-    if (!isNaN(params.per_page)) {
-        reqConfig.params['per_page'] = params.per_page;
-    }
+    if (params) {
+        if (isNotBlank(params.slug)) {
+            reqConfig.params['slug'] = params.slug;
+        }
+        
+        if (Array.isArray(params.include) && params.include) {
+            reqConfig.params['include'] = params.include.toString()
+        }
 
-    if (isString(params.search)) {
-        reqConfig.params['search'] = params.search;
+        reqConfig.params['page'] = params.page || 1;
+
+        if (Array.isArray(params.categories)) {
+            reqConfig.params['categories'] = params.categories.toString();
+        }
+    
+        if (Array.isArray(params.tags)) {
+            reqConfig.params['tags'] = params.tags.toString();
+        }
+
+        if (params.per_page) {
+            reqConfig.params['per_page'] = params.per_page;
+        }
+
+        if (isNotBlank(params.search)) {
+            reqConfig.params['search'] = params.search;
+        }
     }
 
     return new Promise<ResultOfFetching<Post>>((resolve, reject) => {
@@ -116,7 +120,7 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                 } else {
                                     metaDataOfPost['tags'] = [];
                                 }
-                                if (!isNaN(post.featured_media) && post.featured_media > 0) {
+                                if (post.featured_media && post.featured_media > 0) {
                                     featuredMediaAppearedInFrontPage.push(post.featured_media);
                                     if (Array.isArray(mappingsOfFeaturedMediaIdAndPost[post.featured_media])) {
                                         mappingsOfFeaturedMediaIdAndPost[post.featured_media].push(metaDataOfPost);

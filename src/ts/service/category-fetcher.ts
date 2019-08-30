@@ -27,13 +27,10 @@ export function fetchCategories(params:ConfigurationOfFetching):Promise<ResultOf
     if (isNotBlank(params['slug'])) {
         reqConfig.params['slug'] = params['slug'];
     }
-    let targetPage = 1;
-    if (!isNaN(params['page'])) {
-        targetPage = params.page;
-    }
-    reqConfig.params['page'] = targetPage;
+    
+    reqConfig.params['page'] = params['page'] || 1;
 
-    if (!isNaN(params['per_page'])) {
+    if (params['per_page']) {
         reqConfig.params['per_page'] = params['per_page'];
     }
 

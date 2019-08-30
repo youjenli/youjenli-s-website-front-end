@@ -1,7 +1,7 @@
 /// <reference path="./global-vars.d.ts"/>
 import {escapeRegexCharacters, trailingSlashIt} from '../service/formatters';
 import {router} from '../service/router';
-import { isNotBlank } from '../service/validator';
+import { isNotBlank, isNum } from '../service/validator';
 
 /* 分頁連結的設定 */
 export interface SettingsOfPagination {
@@ -77,12 +77,14 @@ let midSize = 2;
 
 if (window.wp.pagination) {
     const settings = window.wp.pagination;
-    if (!isNaN(settings.endSize)) {
+    if (isNum(settings.endSize)) {
         endSize = settings.endSize;
     }
-    if (!isNaN(settings.midSize)) {
+    delete settings.endSize;
+    if (isNum(settings.midSize)) {
         midSize = settings.midSize;
     }
+    delete settings.midSize;
 }
 
 export const defaultEndSize = endSize;
@@ -100,25 +102,18 @@ export function getPagination():Pagination {
     if (window.wp.pagination) {
         const settings = window.wp.pagination;
         
-        if (!isNaN(settings.endSize)) {
-            data['endSize'] = settings.endSize;
-        }
-
-        if (!isNaN(settings.midSize)) {
-            data['midSize'] = settings.midSize;
-        }
-
-        if (!isNaN(settings.totalPages)) {
+        if (isNum(settings.totalPages)) {
             data['totalPages'] = settings.totalPages;
         }
 
-        if (!isNaN(settings.currentPage)) {
+        if (isNum(settings.currentPage)) {
             data['currentPage'] = settings.currentPage;
         }
         
-        if (!isNaN(settings.itemsPerPage)) {
+        if (!isNum(settings.itemsPerPage)) {
             data['itemsPerPage'] = settings.itemsPerPage;
         }
+        delete window.wp.pagination;
     }
 
     return data;

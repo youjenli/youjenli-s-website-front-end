@@ -13,6 +13,7 @@ import { queryParametersOfHome } from '../home/routeHandler';
 import * as terms from './terms';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import { isNum } from '../../service/validator';
 
 const DEFAULT_POSTS_PER_PAGE = 10;
 let postsPerPage = 0;
@@ -53,8 +54,8 @@ export const routeEventHandlersOfTag = {
         
         const slug = params['slug'];
         let page = 1;
-        if (!isNaN(params['page'])) {
-            page = params['page'];
+        if (isNum(params['page'])) {
+            page = parseInt(params['page']);
         }
         //判斷是否要另外發送請求才能取得標籤頁的資料
         if (window.wp.archive && window.wp.archive.tag) {

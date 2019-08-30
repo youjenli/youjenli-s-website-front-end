@@ -11,6 +11,7 @@ import debounce from '../../service/debounce';
 import {interpretQueryString} from '../../service/interpreter';
 import {convertGMTDateToLocalDate} from '../../service/formatters';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import { isNum } from '../../service/validator';
 
 let postsShouldBeRender:MetaDataOfPost[] = null;
 let currentPage:number = 0;
@@ -120,8 +121,8 @@ export const routeEventHandlers = {
         } else {
             setupStateOfHomePage();
             let targetPage = 1;
-            if (params && !isNaN(params.page)) {
-                targetPage = params.page;
+            if (params && isNum(params.page)) {
+                targetPage = parseInt(params.page);
             }
             const config = {
                 page:targetPage

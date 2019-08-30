@@ -3,7 +3,6 @@ import { Tag } from '../model/terms';
 import { TagEntityInViewContext,ResultOfFetching } from '../model/wp-rest-api';
 import {isNotBlank} from './validator';
 import * as terms from './terms';
-import { isString } from 'util';
 
 export interface ConfigurationOfFetching {
     slug?:string;
@@ -17,21 +16,19 @@ export function fetchTags(params:ConfigurationOfFetching):Promise<ResultOfFetchi
     const reqConfig = {
         params:{}
     };
-    if (isNotBlank(params['slug'])) {
-        reqConfig.params['slug'] = params['slug'];
-    }
-    let targetPage = 1;
-    if (!isNaN(params['page'])) {
-        targetPage = params.page;
-    }
-    reqConfig.params['page'] = targetPage;
-    
-    if (!isNaN(params['per_page'])) {
-        reqConfig.params['per_page'] = params['per_page'];
-    }
+    if (params) {
+        if (isNotBlank(params['slug'])) {
+            reqConfig.params['slug'] = params['slug'];
+        }
+        reqConfig.params['page'] = params['page'] || 1;
 
-    if (isString(params['search'])) {
-        reqConfig.params['search'] = params['search'];
+        if (params['per_page']) {
+            reqConfig.params['per_page'] = params['per_page'];
+        }
+
+        if (isNotBlank(params['search'])) {
+            reqConfig.params['search'] = params['search'];
+        }
     }
 
     return new Promise<ResultOfFetching<Tag>>((resolve, reject) => {

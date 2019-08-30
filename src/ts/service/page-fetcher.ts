@@ -18,25 +18,24 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
     const reqConfig = {
         params:{}
     };
-    if (!isNaN(params.id)) {
-        reqConfig.params['id'] = params.id;
-    }
-    if (isNotBlank(params.slug)) {
-        reqConfig.params['slug'] = params.slug;
-    }
+    if (params) {
+        if (params.id) {
+            reqConfig.params['id'] = params.id;
+        }
 
-    let targetPage = 1;
-    if ((params && !isNaN(params.page))) {
-        targetPage = params.page;
-    }
-    reqConfig.params['page'] = targetPage;
+        if (isNotBlank(params.slug)) {
+            reqConfig.params['slug'] = params.slug;
+        }
+        
+        reqConfig.params['page'] = params.page || 1;
+        
+        if (params.per_page) {
+            reqConfig.params['per_page'] = params.per_page;
+        }
     
-    if (!isNaN(params.per_page)) {
-        reqConfig.params['per_page'] = params.per_page;
-    }
-
-    if (Array.isArray(params.include)) {
-        reqConfig.params['include'] = params.include.toString();
+        if (Array.isArray(params.include)) {
+            reqConfig.params['include'] = params.include.toString();
+        }
     }
 
     return  new Promise((resolve, reject) => {
@@ -77,7 +76,7 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                         })
                                 );
                             }
-                            if (!isNaN(rawDataOfPage.parent) && rawDataOfPage.parent > 0) {
+                            if (rawDataOfPage.parent && rawDataOfPage.parent > 0) {
                                 additionalPromises.push(
                                     Axios.get<PageEntity[]>('/wp-json/wp/v2/pages', reqConfig)
                                         .then(result => {
