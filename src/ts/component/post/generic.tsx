@@ -73,6 +73,7 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
             if (doc) {
                 const post = this.props.post;
                 const parsedPost:ParsedPost = {
+                    type:post.type,
                     id:post.id,
                     title:post.title,
                     slug:post.slug,

@@ -27,6 +27,7 @@
         if ( count($me) > 0 ) {
             $me = $me[0];
             $menuItems[] = array(
+                'type' => get_post_type($me),
                 'name' => get_the_title($me),
                 'url' => get_permalink($me),
                 'hint' => get_the_excerpt($me),
@@ -43,6 +44,7 @@
         if ( count($mySite) > 0 ) {
             $mySite = $mySite[0];
             $menuItems[] = array(
+                'type' => get_post_type($mySite),
                 'name' => get_the_title($mySite),
                 'url' => get_permalink($mySite),
                 'hint' => get_the_excerpt($mySite),

@@ -2,8 +2,6 @@ import * as React from 'react';
 import MobileHorizontalRecentPostWithoutImg from '../recentPosts/mobile-horizontal-without-img';
 import MobileRecentPostWithImg from '../recentPosts/mobile-default-with-img';
 import {MetaDataOfPost} from '../../../model/posts';
-import { addRegistryOfPostOrPage} from '../../post-page-routeWrapper';
-import { TypesOfContent } from '../../../model/types-of-content';
 
 interface PropsOfListOfRecentPostsOn16To9SmartPhone {
     viewportWidth:number;
@@ -22,9 +20,6 @@ export default class ListOfRecentPostsOn16To9SmartPhone extends React.Component<
             bottom:marginTopBottomOfPost
         };
         let postElements = this.props.posts.map((post) => {
-
-            //要記得在 index.tsx 的紀錄中註冊此發文頁，這樣它才有辦法在接到請求的時候委派合適的模組取得並呈現對應內容
-            addRegistryOfPostOrPage(post.slug, TypesOfContent.Post);
 
             if (post.thumbnail != null) {
                 const fontSizeOfDateAndTitle = widthOfRecentPost / 18;

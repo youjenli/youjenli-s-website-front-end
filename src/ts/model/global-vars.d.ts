@@ -3,9 +3,18 @@ import { Term, Category, Tag } from './terms';
 import { Page } from './posts';
 import { FoundPublication } from './search-results';
 import { SettingsOfPagination, Pagination} from './pagination';
-import {MenuItem} from './menu';
+import { TypeOfContent } from './general-types';
 
-interface Archive<T extends Term> {
+export interface MenuItem {
+    type:TypeOfContent;
+    name:string;
+    url:string;
+    hint:string;
+    slug?:string;
+    pathOfIcon?:string;
+}
+
+export interface Archive<T extends Term> {
     taxonomy:T;
     postsPerPage:number;
     foundPosts:number;

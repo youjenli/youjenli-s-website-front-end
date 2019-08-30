@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FoundPage, FoundPost, FoundPublication } from '../../../model/search-results';
 import { TemplateOfFoundPage } from '../../template/found-page';
 import { TemplateOfFoundPost } from '../../template/found-post';
-import { TypesOfContent } from '../../../model/types-of-content';
+import { TypeOfContent } from '../../../model/general-types';
 
 interface PropsOfPublicationsAmongSearchResult {
     pageContent:FoundPublication[];
@@ -30,13 +30,13 @@ export class PublicationsAmongSearchResult extends React.Component<PropsOfPublic
         }
         const publications = [];
         this.props.pageContent.forEach((pub, idx) => {
-            if (pub.type == TypesOfContent.Post) {
+            if (pub.type == TypeOfContent.Post) {
                 publications.push(
                     <TemplateOfFoundPost key={idx} post={pub as FoundPost} width={this.props.width} 
                         paddingLeftRight={this.props.post.paddingLeftRight} date={settingsOfDate} 
                         title={{fontSize:this.props.post.fontSizeOfTitle}} postInfo={settingsOfPostInfo } />
                 );
-            } else if (pub.type == TypesOfContent.Page) {
+            } else if (pub.type == TypeOfContent.Page) {
                 publications.push(
                     <TemplateOfFoundPage key={idx} page={pub as FoundPage} width={this.props.width} 
                         paddingLeftRight={this.props.post.paddingLeftRight} date={settingsOfDate} 

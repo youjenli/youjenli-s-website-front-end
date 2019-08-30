@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { isString } from '../../service/validator';
-import { MenuItem } from '../../model/menu';
+import { MenuItem } from '../../model/global-vars';
 import SiteName from './site-name';
 import base64EncodedTitle from './site-name-2_5x_base64';
 import MobileDeviceSearchBar from './mobile-device-search-bar';

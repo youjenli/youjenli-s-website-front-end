@@ -9,10 +9,12 @@ import GenericPage from './generic';
 import { fetchPages, ConfigurationOfFetching } from '../../service/page-fetcher';
 import { queryParametersOfHome } from '../home/routeHandler';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
+import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 
 let pageShouldBeRendered:Page = null;
 
 export function renderPage() {
+    addRegistryOfPostOrPage(pageShouldBeRendered.slug, pageShouldBeRendered.type);
     if (pageShouldBeRendered != null) {
         ReactDOM.render(
             <GenericPage page={pageShouldBeRendered} />,

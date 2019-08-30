@@ -1,5 +1,6 @@
 import {Post} from '../posts';
 import {fakeDate, aFewOfFakeCategories, aFewOfFakeTags} from './fake-meta-of-posts-for-test';
+import { TypeOfContent } from '../general-types';
 
 const defaultToc = 
 `<ol id="toc">
@@ -74,6 +75,7 @@ const defaultToc =
 </ol>`;
 
 export const fakePostWithSubjectAndImg:Post = {
+    type:TypeOfContent.Post,
     id:9,
     title:'有主旨且有圖片',
     url:'https://www.google.com.tw',
@@ -117,6 +119,7 @@ export const fakePostWithSubjectAndImg:Post = {
 }
 
 export const fakePostWithSubjectButWithoutImg:Post = {
+    type:TypeOfContent.Post,
     id:9,
     title:'有主旨但無圖片',
     slug:'fakePostWithSubjectButWithoutImg',
@@ -157,6 +160,7 @@ export const fakePostWithSubjectButWithoutImg:Post = {
 }
 
 export const fakePostWithoutSubjectButWithImg:Post = {
+    type:TypeOfContent.Post,
     id:9,
     title:'無主旨但有圖片',
     slug:'fakePostWithoutSubjectButWithImg',
@@ -197,6 +201,7 @@ export const fakePostWithoutSubjectButWithImg:Post = {
 }
 
 export const fakePostWithoutSubjectAndImg:Post = {
+    type:TypeOfContent.Post,
     id:9,
     title:'無主旨且無圖片',
     slug:'fakePostWithoutSubjectAndImg',

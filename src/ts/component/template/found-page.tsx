@@ -4,9 +4,6 @@ import * as termsOfPost from '../home/recentPosts/terms';
 import * as terms from './terms';
 import {formatMonthOrDayTo2Digits} from '../../service/formatters';
 import { CategoryIcon } from './icons';
-import { TypesOfContent } from '../../model/types-of-content';
-import {addRegistryOfPostOrPage} from '../post-page-routeWrapper';
-import { isString } from '../../service/validator';
 
 interface PropsOfTemplateOfFoundPage {
     page:MetaDataOfPage;
@@ -29,13 +26,6 @@ interface PropsOfTemplateOfFoundPage {
 }
 
 export class TemplateOfFoundPage extends React.Component<PropsOfTemplateOfFoundPage> {
-    constructor(props) {
-        super(props);
-        addRegistryOfPostOrPage(this.props.page.slug, TypesOfContent.Page);
-        if (this.props.page.parent && isString(this.props.page.parent.slug)) {
-            addRegistryOfPostOrPage(this.props.page.parent.slug, TypesOfContent.Page);
-        }
-    }
     render() {
         let styleOfPost = {};
         if (this.props.width) {

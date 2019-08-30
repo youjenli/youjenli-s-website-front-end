@@ -8,8 +8,6 @@ import TabletPage from './tablet';
 import SmartPhonePage from './smart-phone';
 import { Page as PageModel, ParsedPage } from '../../model/posts';
 import * as terms from '../post/terms';
-import { TypesOfContent } from '../../model/types-of-content';
-import {addRegistryOfPostOrPage} from '../post-page-routeWrapper';
 
 interface PropsOfGenericPage {
     page:PageModel
@@ -27,10 +25,6 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
         this.state = {
             viewportWidth:calculateViewPortWidth(),
             viewportHeight:calculateViewPortHeight()
-        }
-        /* 在這裡統一處理父母專頁連結註冊紀錄的問題 */
-        if (this.props.page.parent && this.props.page.parent.slug) {
-            addRegistryOfPostOrPage(this.props.page.parent.slug, TypesOfContent.Page);
         }
     }
     componentDidMount() {
@@ -110,6 +104,7 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
                 
                 const page = this.props.page;
                 const parsedPage:ParsedPage = {
+                    type:page.type,
                     title:page.title,
                     id:page.id,
                     slug:page.slug,

@@ -1,5 +1,6 @@
 import {fakeDate} from '../test/fake-meta-of-posts-for-test';
 import {Page} from '../posts';
+import { TypeOfContent } from '../general-types';
 
 const defaultToc = `
 <ol id="toc">
@@ -74,8 +75,9 @@ const defaultToc = `
 </ol>`;
 
 const pageWithoutParentButWithfeatureMedia:Page = {
-    title:'有圖無母頁文章',
+    type:TypeOfContent.Page,
     id:0,
+    title:'有圖無母頁文章',
     date:fakeDate,
     modified:fakeDate,
     slug:'thumbnailIncludedPage',
@@ -114,8 +116,9 @@ const pageWithoutParentButWithfeatureMedia:Page = {
 }
 
 const pageWithParentAndFeatureMedia:Page = {
-    title:'有圖有母頁文章',
+    type:TypeOfContent.Page,
     id:0,
+    title:'有圖有母頁文章',
     date:fakeDate,
     slug:'parentPageAndThumbnailIncludedPage',
     modified:fakeDate,
@@ -159,8 +162,9 @@ const pageWithParentAndFeatureMedia:Page = {
 }
 
 const pageWithParentButWithoutFeatureMedia:Page = {
-    title:'無圖有母頁文章',
+    type:TypeOfContent.Page,
     id:1,
+    title:'無圖有母頁文章',
     date:fakeDate,
     modified:fakeDate,
     slug:'parentIncludedPage',
@@ -200,8 +204,9 @@ const pageWithParentButWithoutFeatureMedia:Page = {
 }
 
 const pageWithoutParentAndFeatureMedia:Page = {
-    title:'無圖無母頁文章',
+    type:TypeOfContent.Page,
     id:1,
+    title:'無圖無母頁文章',
     date:fakeDate,
     modified:fakeDate,
     url:'https://www.google.com.tw',

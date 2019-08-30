@@ -4,8 +4,6 @@ import * as termsOfPost from '../home/recentPosts/terms';
 import * as  terms from '../search-result/terms';
 import {formatMonthOrDayTo2Digits} from '../../service/formatters';
 import { CategoryIcon, TagIcon } from './icons';
-import { TypesOfContent } from '../../model/types-of-content';
-import {addRegistryOfPostOrPage} from '../post-page-routeWrapper';
 
 interface PropsOfTemplateFoundPost {
     post:MetaDataOfPost;
@@ -28,10 +26,6 @@ interface PropsOfTemplateFoundPost {
 }
 
 export class TemplateOfFoundPost extends React.Component<PropsOfTemplateFoundPost> {
-    constructor(props) {
-        super(props);
-        addRegistryOfPostOrPage(this.props.post.slug, TypesOfContent.Post);
-    }
     render() {
         let styleOfPost = {};
         if (this.props.width) {

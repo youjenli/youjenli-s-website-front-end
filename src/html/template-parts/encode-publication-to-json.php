@@ -1,3 +1,4 @@
+type:<?php echo json_encode(get_post_type()); ?>,
 id:<?php echo json_encode(get_the_ID()); ?>,
 title:<?php echo json_encode(get_the_title()); ?>,
 slug:<?php echo json_encode(get_post_field('post_name', get_post())) ?>,

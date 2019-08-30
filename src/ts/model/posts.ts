@@ -1,6 +1,8 @@
 import { Category, Tag } from './terms';
+import { TypeOfContent } from './general-types';
 
 export interface Publication {
+    type:TypeOfContent;
     id:number;
     title:string;
     slug:string;

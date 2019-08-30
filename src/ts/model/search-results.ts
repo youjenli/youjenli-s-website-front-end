@@ -1,6 +1,6 @@
 import {Category, Tag} from './terms';
 import {Pagination} from './pagination';
-import {TypesOfContent} from './types-of-content';
+import {TypeOfContent} from './general-types';
 import {Post, Page} from './posts';
 
 export type FoundPublication = FoundPost | FoundPage;
@@ -63,9 +63,9 @@ export interface CacheRecordOfResultOfSearch {
 }
 
 export interface FoundPost extends Post {
-    type:TypesOfContent.Post
+    type:TypeOfContent.Post
 }
 
 export interface FoundPage extends Page {
-    type:TypesOfContent.Page
+    type:TypeOfContent.Page
 }

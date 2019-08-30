@@ -11,10 +11,12 @@ import * as ReactDOM from 'react-dom';
 import GenericPost from './generic';
 import { convertGMTDateToLocalDate } from '../../service/formatters';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
+import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 
 let postShouldBeRender:Post = null;
 
 export function renderPost() {
+    addRegistryOfPostOrPage(postShouldBeRender.slug, postShouldBeRender.type);
     if (postShouldBeRender != null) {
         ReactDOM.render(
             <GenericPost post={postShouldBeRender} />,

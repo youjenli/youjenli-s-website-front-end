@@ -2,8 +2,6 @@ import * as React from 'react';
 import DefaultRecentPostWithoutImg from '../recentPosts/default-without-img';
 import ExternalScreenRecentPostWithImg from '../recentPosts/external-screen-with-img';
 import {MetaDataOfPost} from '../../../model/posts';
-import { addRegistryOfPostOrPage } from '../../post-page-routeWrapper';
-import { TypesOfContent } from '../../../model/types-of-content';
 
 interface PropsOfListOfRecentPostsOnLargeExternalScreen {
     estimatedWidthOfContainer:number;
@@ -19,9 +17,6 @@ export default class ListOfRecentPostsOnLargeExternalScreen extends React.Compon
         const fontSizeOfDateAndTitle = 22;
         const minMarginLeftRightOfPost = fontSizeOfDateAndTitle * 0.5;
         let reactElementsOfPosts = this.props.posts.map((post) => {
-
-            //要記得在 index.tsx 的紀錄中註冊此發文頁，這樣它才有辦法在接到請求的時候委派合適的模組取得並呈現對應內容
-            addRegistryOfPostOrPage(post.slug, TypesOfContent.Post);
 
             if (post.thumbnail != null) {
                 const fontSizeOfPostProps = 16;

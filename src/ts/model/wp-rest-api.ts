@@ -1,4 +1,5 @@
-import Axios, { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios';
+import { TypeOfContent } from './general-types'
 
 interface CommonPropertiesOfPostTypes {
     id:number;
@@ -11,7 +12,7 @@ interface CommonPropertiesOfPostTypes {
     modified_gmt:string;
     slug:string;
     status:'publish' | 'future' | 'draft' | 'pending' | 'private';
-    type:string;
+    type:TypeOfContent;
     link:string;
     title:{
         rendered:string;
@@ -166,7 +167,7 @@ export interface MediaEntityInEmbedContext {
     id: string;
     date: string;
     slug: string;
-    type: string; //Type of Post for the object. 例：attachment"
+    type: TypeOfContent; //Type of Post for the object. 例：attachment"
     link: string; //以網頁展示此 media 的 permalink
     title: {
         rendered: string;//The title for the object. 不含附檔名
@@ -242,8 +243,7 @@ export interface PublicationEntityInViewContext {
     id: number;
     title:string;
     url: string;
-    type: 'post';
-    subtype: 'post' | 'page';
+    type: TypeOfContent;
     _links:{
         self:{
             embeddable:boolean;

@@ -1,7 +1,7 @@
 import { renderPost, routeEventHandlers as routeEventHandlersOfPost } from './post/routeHandler';
 import { renderPage, routeEventHandlers as routeEventHandlersOfPage } from './page/routeHandler';
 import { isNotBlank } from '../service/validator';
-import { TypesOfContent } from '../model/types-of-content';
+import { TypeOfContent } from '../model/general-types';
 
 /*
     這個套件的功能是用來幫 route 辨識文章和專頁的 slug。
@@ -15,7 +15,7 @@ import { TypesOfContent } from '../model/types-of-content';
 
 const registryOfPostAndPage = [];
 
-export function addRegistryOfPostOrPage(slug:string, type:TypesOfContent):void {
+export function addRegistryOfPostOrPage(slug:string, type:TypeOfContent):void {
     if (isNotBlank(slug) && type) {
         registryOfPostAndPage[slug] = type;
     }
@@ -27,16 +27,16 @@ export const generalHooksForPostAndPage = {
     before:(done, params) => {
         //先判斷究竟是哪一種資源
         if (Array.isArray(window.wp.completePosts)) {
-            currentStateOfRootSlug = TypesOfContent.Post;
+            currentStateOfRootSlug = TypeOfContent.Post;
         } else if (Array.isArray(window.wp.completePages)) {
-            currentStateOfRootSlug = TypesOfContent.Page;
+            currentStateOfRootSlug = TypeOfContent.Page;
         } else if (registryOfPostAndPage[params.slug]) {
             switch (registryOfPostAndPage[params.slug]) {
-                case TypesOfContent.Post:
-                    currentStateOfRootSlug = TypesOfContent.Post;
+                case TypeOfContent.Post:
+                    currentStateOfRootSlug = TypeOfContent.Post;
                     break;
-                case TypesOfContent.Page:
-                    currentStateOfRootSlug = TypesOfContent.Page;
+                case TypeOfContent.Page:
+                    currentStateOfRootSlug = TypeOfContent.Page;
                     break;
                 default:
                     //todo 無法判斷資源類型，因此要導回首頁 
@@ -46,21 +46,21 @@ export const generalHooksForPostAndPage = {
         
         //接著根據前一步推斷的結果委派對應模組的 hook 來處理
         switch(currentStateOfRootSlug) {
-            case TypesOfContent.Post:
+            case TypeOfContent.Post:
                 routeEventHandlersOfPost.before(done, params);
                 break;
-            case TypesOfContent.Page:
+            case TypeOfContent.Page:
                 routeEventHandlersOfPage.before(done, params);
                 break;
         }
     },
     leave:() => {
         switch(currentStateOfRootSlug) {
-            case TypesOfContent.Post:
+            case TypeOfContent.Post:
                 routeEventHandlersOfPost.leave();
                 //要記得取消這邊登記的換頁狀態，否則未來判斷分頁可能會錯誤
                 break;
-            case TypesOfContent.Page:
+            case TypeOfContent.Page:
                 routeEventHandlersOfPage.leave();
                 break;
         }
@@ -70,10 +70,10 @@ export const generalHooksForPostAndPage = {
 
 export const generalHandlerForPostAndPage = () => {
     switch(currentStateOfRootSlug) {
-        case TypesOfContent.Post:
+        case TypeOfContent.Post:
             renderPost();
             break;
-        case TypesOfContent.Page:
+        case TypeOfContent.Page:
             renderPage();
             break;
     }

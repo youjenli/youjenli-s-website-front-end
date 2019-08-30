@@ -12,6 +12,7 @@ import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-
 import { ConfigurationOfPublicationFetching } from '../../service/search';
 import { ConfigurationOfFetching as ConfigurationOfCategoryFetching } from '../../service/category-fetcher';
 import { ConfigurationOfFetching as ConfigurationOfTagFetching } from '../../service/tag-fetcher';
+import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 
 let DEFAULT_PUBLICATIONS_PER_PAGE = 10;
 let DEFAULT_TAXONOMIES_PER_PAGE = 14;
@@ -167,6 +168,9 @@ const onPageOfFoundTagsChanged:PageClickedHandler = (page:number):void => {
 }
 
 export const renderResultOfSearch = () => {
+    resultOfSearch.publications.pageContent.forEach(pub => {
+        addRegistryOfPostOrPage(pub.slug, pub.type);
+    });
     ReactDOM.render(
         <GenericSearchResults result={resultOfSearch}
             onPageOfFoundCategoriesChanged={onPageOfFoundCategoriesChanged} 

@@ -46,6 +46,7 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                         if (responseOfQueryOfPage.data.length > 0) {
                             let rawDataOfPage = responseOfQueryOfPage.data[0];
                             let model:Page = {
+                                type:rawDataOfPage.type,
                                 id:rawDataOfPage.id,
                                 title:rawDataOfPage.title.rendered,
                                 slug:rawDataOfPage.slug,

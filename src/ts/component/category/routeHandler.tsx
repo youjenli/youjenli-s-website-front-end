@@ -14,6 +14,7 @@ import { fetchPosts } from '../../service/post-fetcher';
 import * as terms from './terms';
 import { queryParametersOfHome } from '../home/routeHandler';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
+import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 
 const DEFAULT_POSTS_PER_PAGE = 10;
 let postsPerPage = 10;
@@ -23,6 +24,9 @@ let foundPosts = 0;
 let pagination:pg.Pagination = null;
 
 const renderThePageOfCategory = () => {
+    postsShouldBeRendered.forEach(post => {
+        addRegistryOfPostOrPage(post.slug, post.type);
+    });
     ReactDOM.render(
         <GenericCategory category={taxonomy} numberOfResults={foundPosts}
             pageContent={postsShouldBeRendered} pagination={pagination} />,

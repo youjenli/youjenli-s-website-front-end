@@ -5,7 +5,7 @@ import {ResultOfSearch, ResultOfQuery, FoundPublication} from '../model/search-r
 import { Category, Tag } from '../model/terms';
 import { getBaseUrl, defaultEndSize, defaultMidSize } from '../model/pagination';
 import {PublicationEntityInViewContext} from '../model/wp-rest-api';
-import { TypesOfContent } from '../model/types-of-content';
+import { TypeOfContent } from '../model/general-types';
 import { fetchPosts } from './post-fetcher';
 import { fetchPages } from './page-fetcher';
 import {mergeObject} from '../service/formatters';
@@ -53,18 +53,18 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                     const postsWaitingToFetch = {};
                                     const pagesWaitingToFetch = {};
                                     const foundPublications = resultOfSearch.data.map(pub => {
-                                        if (pub.subtype == 'post') {
+                                        if (pub.type == TypeOfContent.Post) {
                                             const post = {
-                                                type:TypesOfContent.Post,
+                                                type:TypeOfContent.Post,
                                                 id:pub.id,
                                                 url:pub.url,
                                                 title:pub.title
                                             };
                                             postsWaitingToFetch[pub.id] = post;
                                             return post;
-                                        } else if (pub.subtype == 'page') {
+                                        } else if (pub.type == TypeOfContent.Page) {
                                             const page = {
-                                                type:TypesOfContent.Page,
+                                                type:TypeOfContent.Page,
                                                 id:pub.id,
                                                 url:pub.url,
                                                 title:pub.title

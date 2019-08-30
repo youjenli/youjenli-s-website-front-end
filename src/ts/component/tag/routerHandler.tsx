@@ -12,6 +12,7 @@ import GenericTag from './generic';
 import { queryParametersOfHome } from '../home/routeHandler';
 import * as terms from './terms';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
+import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 
 const DEFAULT_POSTS_PER_PAGE = 10;
 let postsPerPage = 0;
@@ -29,6 +30,9 @@ const resetStateOfHandler = () => {
 }
 
 export function renderArchiveOfTag() {
+    postsShouldBeRendered.forEach(post => {
+        addRegistryOfPostOrPage(post.slug, post.type);
+    });
     if (tagShouldBeDisplayed != null) {
         ReactDOM.render(
             <GenericTag tag={tagShouldBeDisplayed} numberOfResults={foundPosts}

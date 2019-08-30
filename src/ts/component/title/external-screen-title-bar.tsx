@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { isString } from '../../service/validator';
-import { MenuItem } from '../../model/menu';
+import { MenuItem } from '../../model/global-vars';
 import SiteName from './site-name';
 import {loadMenuItems} from './menu-items-loader';
 import ExternalScreenSearchBar from './external-screen-search-bar';

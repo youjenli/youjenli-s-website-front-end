@@ -10,6 +10,7 @@ import * as terms from '../terms';
 import debounce from '../../service/debounce';
 import {interpretQueryString} from '../../service/interpreter';
 import {convertGMTDateToLocalDate} from '../../service/formatters';
+import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 
 let postsShouldBeRender:MetaDataOfPost[] = null;
 let currentPage:number = 0;
@@ -24,6 +25,13 @@ export const queryParametersOfHome = {
 
 export function renderHomePage(params?:any, query?:string) {
     if (postsShouldBeRender != null) {
+        
+        /* 把前面 before hook 收集到的文章加入專頁和文章的註冊紀錄 */
+        postsShouldBeRender.forEach(post => {
+            addRegistryOfPostOrPage(post.slug, post.type);
+        });
+
+        //整理錯誤訊息紀錄
         const queryParams = interpretQueryString(query);
         if (queryParams && queryParams[queryParametersOfHome.ERROR_MSG] != null) {
             const msgList = queryParams[queryParametersOfHome.ERROR_MSG].split(',')

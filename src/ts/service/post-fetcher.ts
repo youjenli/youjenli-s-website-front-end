@@ -67,6 +67,7 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                             for (let k = 0 ; k < result.length ; k ++) {
                                 const post = result[k];
                                 const metaDataOfPost = {
+                                    type:post.type,
                                     id:post.id,
                                     url:post.link,
                                     date:convertGMTDateToLocalDate(new Date(post.date_gmt)),
