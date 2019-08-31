@@ -64,7 +64,9 @@ export default class ExternalScreenPageOfSearchResults extends React.Component<P
         const fontSizeOfPageIndexes = (-1 * vw + 13568) / 448;
 
         let posts = null, navbarOfPosts = null;
-        if (this.props.results.publications.pagination.totalPages > 0) {
+        if (this.props.results.publications.pageContent === null) {
+            posts = <div className="noData">{terms.didnotSuccessfullyObtainThisPartOfResult}</div>;
+        } else if (this.props.results.publications.pageContent.length > 0) {
             const widthOfPost = (maxWidthOfTitle - 2* this.props.remFontSize) / 2;
             const settingsOfPost = {
                 fontSizeOfDate:(vw + 7936) / 448,
@@ -90,7 +92,9 @@ export default class ExternalScreenPageOfSearchResults extends React.Component<P
         const fontSizeOfDesc = widthOfCategoryAndTag / 9;
 
         let categories = null, navbarOfCategories = null;
-        if (this.props.results.categories.pageContent.length > 0) {
+        if (this.props.results.categories.pageContent === null) {
+            categories = <div className="noData">{terms.didnotSuccessfullyObtainThisPartOfResult}</div>;
+        } else if (this.props.results.categories.pageContent.length > 0) {
             categories = <SearchResultsOfCategory results={this.props.results.categories} width={widthOfCategoryAndTag}
                             numberOfCategoriesInARow={categoryAndTagPerRow} fontSizeOfCategoryName={fontSizeOfName}
                             fontSizeOfDesc={fontSizeOfDesc} />
@@ -109,7 +113,9 @@ export default class ExternalScreenPageOfSearchResults extends React.Component<P
         }
         
         let tags = null, navbarOfTags = null;
-        if(this.props.results.tags.pageContent.length > 0) {
+        if (this.props.results.tags.pageContent === null) {
+            tags = <div className="noData">{terms.didnotSuccessfullyObtainThisPartOfResult}</div>;
+        } else if(this.props.results.tags.pageContent.length > 0) {
             tags = <SearchResultsOfTag results={this.props.results.tags} width={widthOfCategoryAndTag}
                     numberOfTagsInARow={categoryAndTagPerRow} fontSizeOfTagName={fontSizeOfName}
                     fontSizeOfDesc={fontSizeOfDesc} />

@@ -239,11 +239,12 @@ export interface MediaEntityInViewContext extends MediaEntityInEmbedContext {
     post: number;//發表物的 id
 }
 
-export interface PublicationEntityInViewContext {
+export interface FoundEntityInBothViewAndEmbedContext {
     id: number;
     title:string;
     url: string;
-    type: TypeOfContent;
+    type: 'post';
+    subtype: TypeOfContent;
     _links:{
         self:{
             embeddable:boolean;

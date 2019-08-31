@@ -79,3 +79,11 @@ router
     */
     .on(`${paginationPath}`, renderHomePage, routeEventHandlersOfHome)
     .resolve();
+
+export function performSearch(keyword:string, page:number) {
+    let route = `search/${keyword}/`;
+    if (page) {
+        route += paginationPath.replace(placeHolderForPage, page.toString());
+    }
+    router.navigate(encodeURI(route));
+}

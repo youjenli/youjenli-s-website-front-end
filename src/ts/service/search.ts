@@ -4,11 +4,10 @@ import { fetchTags, ConfigurationOfFetching as ConfigurationOfTagFetching } from
 import {ResultOfSearch, ResultOfQuery, FoundPublication} from '../model/search-results';
 import { Category, Tag } from '../model/terms';
 import { getBaseUrl, defaultEndSize, defaultMidSize } from '../model/pagination';
-import {PublicationEntityInViewContext} from '../model/wp-rest-api';
+import {FoundEntityInBothViewAndEmbedContext} from '../model/wp-rest-api';
 import { TypeOfContent } from '../model/general-types';
 import { fetchPosts } from './post-fetcher';
 import { fetchPages } from './page-fetcher';
-import {mergeObject} from '../service/formatters';
 import {theResponseStatusCodeOfSearchIsNot200} from './terms';
 import {isString, isNotBlank} from '../service/validator';
 import {ResultOfFetching} from '../model/wp-rest-api';
@@ -49,13 +48,18 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
         }
         
         return new Promise<ResultOfQuery<FoundPublication>>((resolve, reject) => {
-                       Axios.get<PublicationEntityInViewContext[]>('/wp-json/wp/v2/search', reqConfigOfPosts)
+                       Axios.get<FoundEntityInBothViewAndEmbedContext[]>('/wp-json/wp/v2/search', reqConfigOfPosts)
                             .then(resultOfSearch => {
                                 if (resultOfSearch.status == 200) {
                                     const postsWaitingToFetch = {};
                                     const pagesWaitingToFetch = {};
                                     const foundPublications = resultOfSearch.data.map(pub => {
-                                        if (pub.type == TypeOfContent.Post) {
+                                        /*
+                                            注意，在 rest 服務回傳的 json 物件裡，用來指出物件類型的屬性是 subtype 而不是 type，
+                                            實作時不要搞混以免前端因為找不到部分頁面而無法正常呈現內容。詳見：
+                                            https://developer.wordpress.org/rest-api/reference/search-results/
+                                        */
+                                        if (pub.subtype == TypeOfContent.Post) {
                                             const post = {
                                                 type:TypeOfContent.Post,
                                                 id:pub.id,
@@ -64,7 +68,7 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                             };
                                             postsWaitingToFetch[pub.id] = post;
                                             return post;
-                                        } else if (pub.type == TypeOfContent.Page) {
+                                        } else if (pub.subtype == TypeOfContent.Page) {
                                             const page = {
                                                 type:TypeOfContent.Page,
                                                 id:pub.id,
@@ -86,7 +90,7 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                                      for (let post of posts) {
                                                          const pendingPost = postsWaitingToFetch[post.id];
                                                          if (pendingPost) {
-                                                             mergeObject(pendingPost, post);
+                                                             Object.assign(pendingPost, post);
                                                          }
                                                      }
                                                  }
@@ -94,6 +98,7 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                              .catch(error => {
                                                  /*
                                                      若查詢文章的請求失敗，則填充目前已經查到的搜尋結果，提供不完整的資料給使用者。
+                                                     todo 作法待評估，給這麼殘的資料是否有意義？
                                                  */
                                                  for (let key in keysOfPostsWaitingToFetch) {
                                                      const post = postsWaitingToFetch[key];
@@ -121,7 +126,7 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                                      for (let page of pages) {
                                                          const pendingPage = pagesWaitingToFetch[page.id];
                                                          if (pendingPage) {
-                                                             mergeObject(pendingPage, page);
+                                                             Object.assign(pendingPage, page);
                                                          }
                                                      }
                                                  }
@@ -129,6 +134,7 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                              .catch(error => {
                                                  /*
                                                      若查詢專頁的請求失敗，則填充目前已經查到的搜尋結果，提供不完整的資料給使用者。
+                                                     todo 作法待評估，給這麼殘的資料是否有意義？
                                                  */
                                                  for (let key in keysOfPagesWaitingToFetch) {
                                                      const page = pagesWaitingToFetch[key];
@@ -275,13 +281,19 @@ export function search(config:ConfigurationOfSearch):Promise<ResultOfSearch> {
 
     return Promise.all([
                         searchPublications(reqConfigOfPosts, baseUrl)
-                            .then(result => resultOfSearch.publications = result)
+                            .then(result => {
+                                resultOfSearch['publications'] = result;
+                            })
                             .catch(error => {return error;}),
                         searchCategory(reqConfigOfTaxonomy, baseUrl)
-                            .then(result => resultOfSearch.categories = result)
+                            .then(result => {
+                                resultOfSearch['categories'] = result;
+                            })
                             .catch(error => {return error;}),
                         searchTag(reqConfigOfTaxonomy, baseUrl)
-                            .catch(result => resultOfSearch.tags = result)
+                            .then(result => {
+                                resultOfSearch['tags'] = result;
+                            })
                             .catch(error => {return error;}),
                     ])
                     .then(() => {

@@ -40,6 +40,11 @@ export function learnMoreAboutThisTaxonomy(taxo:Taxonomy, name:string):string {
 export let previousPage = '前一頁';
 export let nextPage = '下一頁';
 
+export let pleaseTryAgainLaterByRefreshingThisPage = '請稍後再重新載入此頁看看。'
+
 export function paginationOfTaxonomiesAreMalfunctioning(taxonomy:Taxonomy) {
-    return `呈現${taxonomy}查詢結果的分頁功能故障，因此畫面跳至首頁。請稍後再嘗試。`;
+    return `呈現${taxonomy}查詢結果的分頁功能故障，因此畫面跳至首頁。${pleaseTryAgainLaterByRefreshingThisPage}`;
 }
+
+export let didnotSuccessfullyObtainThisPartOfResult = `未順利取得這部分查詢結果，${pleaseTryAgainLaterByRefreshingThisPage}`;
+

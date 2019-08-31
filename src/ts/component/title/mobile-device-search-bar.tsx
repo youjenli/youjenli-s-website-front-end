@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
 import * as terms from './terms';
+import { performSearch } from '../../index';
 
 interface MobileDeviceSearchBarProps {
     width:number;
@@ -24,6 +25,7 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
         this.state = {
             placeHolderOfSearchField:'搜尋文章、分類、標籤...'
         }
+        this.onSearchButtonClicked = this.onSearchButtonClicked.bind(this);
     }
     searchField:HTMLInputElement
     removePlaceHolder() {
@@ -50,6 +52,9 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
             this.searchField.style.color = '#BFBFBF';
         }
     }
+    onSearchButtonClicked() {
+        performSearch(this.searchField.value, null);
+    }
     render() {
         const heightOfSearchField = this.props.height;
         const styleOfSearchBar = {
@@ -74,8 +79,8 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
         return ( 
             <div className="search-bar" style={styleOfSearchBar} >
                 { isPlaceHolderOfInputSupported ? 
-                  <input type="text" style={styleOfSearchField}
-                     placeholder={terms.searchFieldPlaceHolder} /> :  
+                  <input type="text" style={styleOfSearchField} placeholder={terms.searchFieldPlaceHolder} 
+                      ref={ ref => this.searchField = ref } /> : 
                   <input type="text" style={styleOfSearchField}
                       placeholder={terms.searchFieldPlaceHolder} 
                       onFocus={() => {
@@ -84,7 +89,7 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
                       onBlur={() => {
                           this.resetPlaceHolder();
                       }}
-                      defaultValue={terms.searchFieldPlaceHolder} ref={ (ref) => {this.searchField = ref} }/>
+                      defaultValue={terms.searchFieldPlaceHolder} ref={ ref => this.searchField = ref }/>
                 }
                 <div className="search-btn" title={terms.titleOfSearchBtn} style={styleOfSearchBtn}>
                     <img  src="img/search-btn-mobile.svg"

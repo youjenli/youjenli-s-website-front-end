@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
 import * as terms from './terms';
+import { performSearch } from '../../index';
 
 interface ExternalScreenSearchBarProps {
     width:number;
@@ -26,7 +27,8 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
         }
         this.state = {
             placeHolderOfSearchField:'搜尋文章、分類、標籤...'
-        }  
+        }
+        this.onSearchButtonClicked = this.onSearchButtonClicked.bind(this);
     }
     searchField:HTMLInputElement
     removePlaceHolder() {
@@ -53,6 +55,9 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
             this.searchField.style.color = '#9C9C9C';
         }
     }
+    onSearchButtonClicked() {
+        performSearch(this.searchField.value, null);
+    }
     render() {
         const searchBarStyle = {
             top:this.props.top + "px",
@@ -77,9 +82,8 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
                 {this.props.children}
                 { isPlaceHolderOfInputSupported() ? 
                     <input style={searchFieldStyle}  type="text" 
-                            onFocus={this.props.toggleSearchBarState}
-                            onBlur={this.props.toggleSearchBarState} 
-                            placeholder={terms.searchFieldPlaceHolder} /> :
+                            onFocus={this.props.toggleSearchBarState} onBlur={this.props.toggleSearchBarState} 
+                            placeholder={terms.searchFieldPlaceHolder} ref={ ref => this.searchField = ref }/> :
                     <input style={searchFieldStyle}  type="text" 
                         onFocus={() => {
                             this.props.toggleSearchBarState();
@@ -89,10 +93,10 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
                             this.props.toggleSearchBarState();
                             this.resetPlaceHolder();
                         }}
-                        defaultValue={terms.searchFieldPlaceHolder} ref={ (ref) => {this.searchField = ref} } />
+                        defaultValue={terms.searchFieldPlaceHolder} ref={ ref => this.searchField = ref } />
                 }                
                 <img className="search-btn" src="img/search-btn.svg" style={searchBtnStyle} title={terms.titleOfSearchBtn} 
-                    alt={terms.altOfSearchIcon}/>
+                    alt={terms.altOfSearchIcon} onClick={this.onSearchButtonClicked}/>
             </div>
         );//註:不能為了刪減網頁大小而刪除 search-btn svg 圖示的 width, height 和 viewBox ，否則它可能會不受外框的拘束而卡掉更多的空間。
     }    

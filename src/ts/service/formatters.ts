@@ -48,15 +48,3 @@ export function trailingSlashIt(str:string):string {
     }
     return str;
 }
-
-export function mergeObject(target:Object, source:Object):Object {
-    if (target) {
-        for (let key in source) {
-            if (source.hasOwnProperty(key)) {
-                target[key] = source[key];
-            }
-        }
-    } else {
-        return target;
-    }
-}
