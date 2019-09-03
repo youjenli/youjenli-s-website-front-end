@@ -31,7 +31,7 @@
     $add_args_of_pages = $pagination['add_args'];
     $baseUrl = $pagination['base'];
     $pagination_format = $pagination['format'];
-    $items_per_page = get_option('posts_per_page');
+    $items_per_page = $wp_query->post_count;
 
     $paginationConfig = array(
         'placeHolderForPageIndicator' => '%_%', //指示分頁欄位的符號。這是從 general-template.php 的 paginate_links 函式抄出來的。

@@ -1,7 +1,7 @@
 /// <reference path="../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { fetchPosts } from '../../service/post-fetcher';
+import { fetchPosts, ConfigurationOfFetching } from '../../service/post-fetcher';
 import {MetaDataOfPost} from '../../model/posts';
 import { reactRoot } from '../../index';
 import GenericHomePage from './generic';
@@ -13,6 +13,7 @@ import {convertGMTDateToLocalDate} from '../../service/formatters';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
 
+let DEFAULT_POSTS_PER_PAGE = 12;
 let postsShouldBeRender:MetaDataOfPost[] = null;
 let currentPage:number = 0;
 let totalPages:number = 0;
@@ -112,9 +113,12 @@ export const routeEventHandlers = {
             postsShouldBeRender = meaningfulPosts;
             currentPage = window.wp.pagination.currentPage;
             totalPages = window.wp.pagination.totalPages;
+            DEFAULT_POSTS_PER_PAGE = window.wp.pagination.itemsPerPage || DEFAULT_POSTS_PER_PAGE;
+
             if (currentPage == totalPages) {
                 shouldRegisterScrollListener = false;
             }
+
             delete window.wp.recentPosts;
             delete window.wp.pagination;
             done();
@@ -124,8 +128,9 @@ export const routeEventHandlers = {
             if (params && isNum(params.page)) {
                 targetPage = parseInt(params.page);
             }
-            const config = {
-                page:targetPage
+            const config:ConfigurationOfFetching = {
+                page:targetPage,
+                per_page:DEFAULT_POSTS_PER_PAGE
             }
             isFetching = true;
             fetchPosts(config)

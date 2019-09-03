@@ -1,5 +1,20 @@
 <?php 
 	/*
+		以下函式是用來設定重要頁面的文章數。
+		基本上除了像首頁這樣要追求形式對齊之美的頁面以外，其他頁面的文章數我傾向從 wordpress 後台去調，
+		不要在此用程式碼寫死。
+
+		參考資料：以下是這種做法的教學。
+		https://binaryfork.com/wordpress/coding/items-per-page-wordpress-archives-658/
+	*/
+	function youjenli_alter_items_per_page_of_home() {
+		if ( is_home() || is_front_page() ) {
+			set_query_var('posts_per_page', 12);
+		}
+	};
+	add_filter('pre_get_posts', 'youjenli_alter_items_per_page_of_home');
+	
+	/*
 		Wordpress 的專頁預設沒有摘要功能，要執行以下指令才能啟用該功能。
 		欲了解詳情可參閱以下說明：
 		https://www.wpentire.com/excerpt-field-in-wordpress-post-page/
