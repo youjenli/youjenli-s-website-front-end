@@ -13,7 +13,7 @@ import { fetchCategories, fetchNodesInCategoryTree } from '../../service/categor
 import { fetchPosts } from '../../service/post-fetcher';
 import * as terms from './terms';
 import { queryParametersOfHome } from '../home/routeHandler';
-import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
+import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 
 const DEFAULT_POSTS_PER_PAGE = 10;
@@ -178,7 +178,11 @@ export function renderArchiveOfCategory(params) {
                      }
                      postsShouldBeRendered = resultOfQueryOfPosts.modelObjs;
                      foundPosts = latestFoundPosts;
-                     record.pages[page] = resultOfQueryOfPosts.modelObjs;
+
+                     if (resultOfQueryOfPosts.isComplete) {
+                        //若此分頁內容有完整才把它加入快取，反之則不加入。
+                        record.pages[page] = resultOfQueryOfPosts.modelObjs;
+                     }
                   } else {
                       /*
                         若總文章數不同，那表示分頁狀態有變，這樣要先刪除舊的快取並以剛抓到的替代。
@@ -200,10 +204,18 @@ export function renderArchiveOfCategory(params) {
                       foundPosts = latestFoundPosts;
 
                       //然後更新快取紀錄
-                      record.pagination['totalPages'] = latestTotalPages;
-                      record.pagination['foundPosts'] = latestFoundPosts;
-                      record.pages = {};
-                      record.pages[page] = resultOfQueryOfPosts.modelObjs;
+                      if (resultOfQueryOfPosts.isComplete) {
+                        record.pagination['totalPages'] = latestTotalPages;
+                        record.pagination['foundPosts'] = latestFoundPosts;
+                        record.pages = {};
+                        record.pages[page] = resultOfQueryOfPosts.modelObjs;
+                      } else {
+                        /*
+                          此分頁的狀態有變，而且剛才拿到的資料也不完整，
+                          這樣不但不更新快取，還要刪除暨有的快取紀錄。
+                        */
+                        deleteRecord(TypesOfCachedItem.Category, slug);
+                      }
                   }
               }).catch(() => {
                   /*請求失敗，淨空要呈現的分頁文章並更新分頁至新的狀態，
@@ -213,7 +225,7 @@ export function renderArchiveOfCategory(params) {
                   pagination['currentPage'] = page;
               }).finally(renderThePageOfCategory);
           } else {
-             //有分頁，直接載入分頁內容
+             //快取中有此分頁，直接載入分頁內容
              pagination = {
                 endSize:record.pagination.endSize,
                 midSize:record.pagination.midSize,
@@ -272,21 +284,22 @@ export function renderArchiveOfCategory(params) {
                                   }
                                   
                                   //最後是應用程式的快取紀錄
-                                  const contentOfRecord = {
-                                      pagination:{
-                                          endSize:pg.defaultEndSize,
-                                          midSize:pg.defaultMidSize,
-                                          totalPages:latestTotalPages,
-                                          baseUrl:baseUrl,
-                                          foundPosts:latestFoundPosts,
-                                          postsPerPage:postsPerPage
-                                      },
-                                      category:taxonomy,
-                                      pages:{}
+                                  if (resultOfQueryOfPosts.isComplete) {
+                                    const contentOfRecord = {
+                                        pagination:{
+                                            endSize:pg.defaultEndSize,
+                                            midSize:pg.defaultMidSize,
+                                            totalPages:latestTotalPages,
+                                            baseUrl:baseUrl,
+                                            foundPosts:latestFoundPosts,
+                                            postsPerPage:postsPerPage
+                                        },
+                                        category:taxonomy,
+                                        pages:{}
+                                    }
+                                    contentOfRecord.pages[page] = resultOfQueryOfPosts.modelObjs;
+                                    addRecord(TypesOfCachedItem.Category, slug, contentOfRecord);
                                   }
-                                  contentOfRecord.pages[page] = resultOfQueryOfPosts.modelObjs;
-                                  addRecord(TypesOfCachedItem.Category, slug, contentOfRecord);
-
                                   renderThePageOfCategory();
                               }).catch(() => {
                                   /*雖然有找到所有分類，但是查詢文章失敗，因此淨空要呈現的分頁文章並更新分頁至新的狀態，
