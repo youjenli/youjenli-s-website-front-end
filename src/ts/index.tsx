@@ -56,8 +56,7 @@ const generalHandlerOfCategory = (params) => {
         renderArchiveOfCategory(paramsOfCategory);
     } else {
         /* 若路徑格式不正確，則轉發往首頁 */
-        router.navigate(
-            `home?${queryParametersOfHome.ERROR_MSG}=${termsOfCategory.invalidPathForArchiveOfCategory(router.lastRouteResolved().url)}`);
+        navigateToHomeWithErrorMessage(termsOfCategory.invalidPathForArchiveOfCategory(router.lastRouteResolved().url));
     }
 };
 
@@ -86,4 +85,8 @@ export function performSearch(keyword:string, page:number) {
         route += paginationPath.replace(placeHolderForPage, page.toString());
     }
     router.navigate(encodeURI(route));
+}
+
+export function navigateToHomeWithErrorMessage(msg:string):void {
+    router.navigate(`home?${queryParametersOfHome.ERROR_MSG}=${msg}`);
 }

@@ -1,5 +1,5 @@
 import { router } from '../../service/router';
-import { queryParametersOfHome } from '../home/routeHandler';
+import { navigateToHomeWithErrorMessage } from '../../index';
 import { getPagination, getBaseUrl, defaultEndSize, defaultMidSize } from '../../model/pagination';
 import { reactRoot } from '../../index';
 import * as React from 'react';
@@ -126,8 +126,7 @@ const onPageOfFoundCategoriesChanged:PageClickedHandler = (page:number):void => 
         /*
           狀態異常，導向首頁並說明狀況
         */
-        const route = encodeURI(`home?${queryParametersOfHome.ERROR_MSG}=${terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.category)}`);
-        router.navigate(route);
+        navigateToHomeWithErrorMessage(terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.category));
     }
 }
 
@@ -229,9 +228,7 @@ const onPageOfFoundTagsChanged:PageClickedHandler = (page:number):void => {
         /*
           狀態異常，導向首頁並說明狀況
         */
-        const route = 
-              encodeURI(`home?${queryParametersOfHome.ERROR_MSG}=${terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.tag)}`);
-        router.navigate(route);
+        navigateToHomeWithErrorMessage(terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.tag));
     }
 }
 

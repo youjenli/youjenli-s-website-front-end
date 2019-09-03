@@ -9,7 +9,7 @@ import { convertGMTDateToLocalDate } from '../../service/formatters';
 import { MetaDataOfPost } from '../../model/posts';
 import {Tag} from '../../model/terms';
 import GenericTag from './generic';
-import { queryParametersOfHome } from '../home/routeHandler';
+import { navigateToHomeWithErrorMessage } from '../../index';
 import * as terms from './terms';
 import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
@@ -44,8 +44,7 @@ export function renderArchiveOfTag() {
         )
     } else {
         //未查到標籤名稱，重新導向至首頁。
-        router.navigate(
-            `home?${queryParametersOfHome.ERROR_MSG}=${terms.cannotFindATagCorrespondingRelatedToGivenPath(router.lastRouteResolved().url)}`);
+        navigateToHomeWithErrorMessage(terms.cannotFindATagCorrespondingRelatedToGivenPath(router.lastRouteResolved().url));
     }
 }
 
@@ -258,14 +257,12 @@ export const routeEventHandlersOfTag = {
                                     .finally(() => done() );
                         } else {
                             //查無此標籤，導向到其他頁。
-                            router.navigate(
-                                `home?${queryParametersOfHome.ERROR_MSG}=${terms.cannotFindATagCorrespondingRelatedToGivenPath(router.lastRouteResolved().url)}`);
+                            navigateToHomeWithErrorMessage(terms.cannotFindATagCorrespondingRelatedToGivenPath(router.lastRouteResolved().url));
                         }
                     })
                     .catch(() => {
                         //查詢標籤作業失敗，導向其他頁
-                        router.navigate(
-                            `home?${queryParametersOfHome.ERROR_MSG}=${terms.didNotSuccessfullyGetTheTagCorrespondingToGivenPath(router.lastRouteResolved().url)}`);
+                        navigateToHomeWithErrorMessage(terms.didNotSuccessfullyGetTheTagCorrespondingToGivenPath(router.lastRouteResolved().url));
                     });
             }
         }

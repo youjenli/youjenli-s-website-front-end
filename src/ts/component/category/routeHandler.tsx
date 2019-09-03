@@ -12,9 +12,10 @@ import {isNotBlank} from '../../service/validator';
 import { fetchCategories, fetchNodesInCategoryTree } from '../../service/category-fetcher';
 import { fetchPosts } from '../../service/post-fetcher';
 import * as terms from './terms';
-import { queryParametersOfHome } from '../home/routeHandler';
+import { navigateToHomeWithErrorMessage } from '../../index';
 import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+
 
 const DEFAULT_POSTS_PER_PAGE = 10;
 let postsPerPage = 10;
@@ -320,22 +321,19 @@ export function renderArchiveOfCategory(params) {
                                  所以考量之後還是決定果斷導引到其他頁面上而不提供殘缺的查詢結果。
                                */
                               taxonomy = null;
-                              router.navigate(
-                                  `home?${queryParametersOfHome.ERROR_MSG}=${terms.didNotSuccessfullyGetTheCategoryCorrespondingToGivenPath(router.lastRouteResolved().url)}`);
+                              navigateToHomeWithErrorMessage(terms.didNotSuccessfullyGetTheCategoryCorrespondingToGivenPath(router.lastRouteResolved().url));
                           }
                       });
               } else {
                   //查無此 slug，重新導向至首頁。
-                  router.navigate(
-                      `home?${queryParametersOfHome.ERROR_MSG}=${terms.cannotFindACategoryRelatedToGivenPath(router.lastRouteResolved().url)}`);
+                  navigateToHomeWithErrorMessage(terms.cannotFindACategoryRelatedToGivenPath(router.lastRouteResolved().url));
               }
           })
           .catch(error => {
               //查詢分類失敗，導引至首頁
               console.log('error');
               console.log(error.response);
-              router.navigate(
-                  `home?${queryParametersOfHome.ERROR_MSG}=${terms.didNotSuccessfullyGetTheCategoryCorrespondingToGivenPath(router.lastRouteResolved().url)}`);
+              navigateToHomeWithErrorMessage(terms.didNotSuccessfullyGetTheCategoryCorrespondingToGivenPath(router.lastRouteResolved().url));
           });
        }
     }

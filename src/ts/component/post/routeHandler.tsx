@@ -1,7 +1,7 @@
 /// <reference path="../../model/global-vars.d.ts"/>
 import {reactRoot} from '../../index';
 import {router} from '../../service/router';
-import { queryParametersOfHome } from '../home/routeHandler';
+import { navigateToHomeWithErrorMessage } from '../../index';
 import {Post} from '../../model/posts';
 import { fetchPosts, ConfigurationOfFetching } from '../../service/post-fetcher';
 import {isString} from '../../service/validator';
@@ -83,23 +83,18 @@ export const routeEventHandlers = {
                         } else {
                             /* 查無文章時，導向首頁並通報異常。 */
                             //不要監聽 scroll 事件，以免發生異常。
-                            const route = 
-                                `home?${queryParametersOfHome.ERROR_MSG}=${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
-                            router.navigate(route);
+                            navigateToHomeWithErrorMessage(`${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
                         }
                         done();
                     })
                     .catch(() => {
-                        const route = 
-                            `home?${queryParametersOfHome.ERROR_MSG}=${terms.failedToLoadThePage(router.lastRouteResolved().url)}`;
-                        router.navigate(route);
+                        navigateToHomeWithErrorMessage(terms.failedToLoadThePage(router.lastRouteResolved().url));
                     });
             }
         } else {
             /* 既沒有從伺服器來的文章，又沒有客戶端要請求的文章匿稱時，導向首頁並通報異常。
             */
-            const route = `home?${queryParametersOfHome.ERROR_MSG}=${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
-            router.navigate(route);
+            navigateToHomeWithErrorMessage(`${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
         }
     },
     leave: function() {

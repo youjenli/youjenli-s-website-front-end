@@ -6,7 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import GenericPage from './generic';
 import { fetchPages, ConfigurationOfFetching } from '../../service/page-fetcher';
-import { queryParametersOfHome } from '../home/routeHandler';
+import { navigateToHomeWithErrorMessage } from '../../index';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import * as terms from '../template/terms';
@@ -74,22 +74,17 @@ export const routeEventHandlers = {
                             done();
                         } else {
                             /* 查無文章時，導向首頁並通報異常。 */
-                            const route = 
-                                `home?${queryParametersOfHome.ERROR_MSG}=${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
-                            router.navigate(route);
+                            navigateToHomeWithErrorMessage(`${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
                         }
                     })
                     .catch(() => {
-                        const route = 
-                            `home?${queryParametersOfHome.ERROR_MSG}=${terms.failedToLoadThePage(router.lastRouteResolved().url)}`;
-                        router.navigate(route);
+                        navigateToHomeWithErrorMessage(terms.failedToLoadThePage(router.lastRouteResolved().url));
                     })
             }
         } else {
             /* 既沒有從伺服器來的文章，又沒有客戶端要請求的文章匿稱時，導向首頁並通報異常。
             */
-            const route = `home?${queryParametersOfHome.ERROR_MSG}=${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
-            router.navigate(route);
+            navigateToHomeWithErrorMessage(`${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
         }
     },
     leave: function() {
