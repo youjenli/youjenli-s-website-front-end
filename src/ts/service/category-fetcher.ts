@@ -83,7 +83,8 @@ export function fetchCategories(params:ConfigurationOfFetching):Promise<ResultOf
                                     const idOfParentsWaitingToBeFetch = Object.keys(postsWaitingForParent).map(key => parseInt(key));
                                     if (idOfParentsWaitingToBeFetch.length > 0) {//應該去拿一些母分頁回來
                                         fetchCategories({
-                                            include:idOfParentsWaitingToBeFetch
+                                            include:idOfParentsWaitingToBeFetch,
+                                            per_page:idOfParentsWaitingToBeFetch.length
                                         })
                                         .then((response) => {
                                             if (response.modelObjs.length > 0) {

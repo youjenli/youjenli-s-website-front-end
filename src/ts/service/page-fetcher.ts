@@ -95,8 +95,13 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                 );
                             }
                             if (rawDataOfPage.parent && rawDataOfPage.parent > 0) {
+                                const reqConfigForParentPage = {
+                                    params:{
+                                        include:[rawDataOfPage.parent].toString()
+                                    }
+                                }
                                 additionalPromises.push(
-                                    Axios.get<PageEntity[]>('/wp-json/wp/v2/pages', reqConfig)
+                                    Axios.get<PageEntity[]>('/wp-json/wp/v2/pages', reqConfigForParentPage)
                                         .then(result => {
                                             if (result.status == 200) {
                                                 if (result.data && result.data.length > 0) {

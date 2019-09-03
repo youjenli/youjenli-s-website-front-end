@@ -139,7 +139,8 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                     const config ={ 
                                         params:{
                                             context:'embed',
-                                            include:categoriesAppearedInFrontPage.toString()
+                                            include:categoriesAppearedInFrontPage.toString(),
+                                            per_page:categoriesAppearedInFrontPage.length
                                         }
                                     }
                                     const promiseOfCategoryReq = 
@@ -153,7 +154,7 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                                         }
                                                         for ( let j = 0 ; j < postsWaitingForDataOfCategories.length ; j ++) {
                                                             const post = postsWaitingForDataOfCategories[j];
-                                                            post.categories = post.categories.map((catId) => {
+                                                            post.categories = post.categories.map((catId) => {//todo 半殘
                                                                 const category = mappingsOfCatIdAndCat[catId];
                                                                 return {
                                                                     id:category.id,
@@ -196,7 +197,8 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                     const config ={ 
                                         params:{
                                             context:'embed',
-                                            include:tagsAppearedInFrontPage.toString()
+                                            include:tagsAppearedInFrontPage.toString(),
+                                            per_page:tagsAppearedInFrontPage.length
                                         }
                                     }
                                     const promiseOfTagReq = 
@@ -251,7 +253,10 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                             
                                 if (featuredMediaAppearedInFrontPage.length > 0) {
                                     const promiseOfFeaturedMediaReq = 
-                                            fetchMedia({include:featuredMediaAppearedInFrontPage})
+                                            fetchMedia({
+                                                    include:featuredMediaAppearedInFrontPage,
+                                                    per_page:featuredMediaAppearedInFrontPage.length
+                                                })
                                                 .then((response) => {
                                                     if (response && response.status == 200) {
                                                         if (response.data.length > 0 ) {
