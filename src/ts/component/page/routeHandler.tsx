@@ -1,7 +1,6 @@
 import {reactRoot} from '../../index';
 import {router} from '../../service/router';
 import {isString} from '../../service/validator';
-import * as terms from './terms';
 import { Page } from '../../model/posts';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -10,6 +9,7 @@ import { fetchPages, ConfigurationOfFetching } from '../../service/page-fetcher'
 import { queryParametersOfHome } from '../home/routeHandler';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import * as terms from '../template/terms';
 
 let pageShouldBeRendered:Page = null;
 
@@ -75,7 +75,7 @@ export const routeEventHandlers = {
                         } else {
                             /* 查無文章時，導向首頁並通報異常。 */
                             const route = 
-                                `home?${queryParametersOfHome.ERROR_MSG}=${terms.thePageYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
+                                `home?${queryParametersOfHome.ERROR_MSG}=${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
                             router.navigate(route);
                         }
                     })
@@ -88,7 +88,7 @@ export const routeEventHandlers = {
         } else {
             /* 既沒有從伺服器來的文章，又沒有客戶端要請求的文章匿稱時，導向首頁並通報異常。
             */
-            const route = `home?${queryParametersOfHome.ERROR_MSG}=${terms.neitherPageDataNorSlugOfPageIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
+            const route = `home?${queryParametersOfHome.ERROR_MSG}=${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
             router.navigate(route);
         }
     },

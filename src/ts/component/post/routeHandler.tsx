@@ -5,13 +5,13 @@ import { queryParametersOfHome } from '../home/routeHandler';
 import {Post} from '../../model/posts';
 import { fetchPosts, ConfigurationOfFetching } from '../../service/post-fetcher';
 import {isString} from '../../service/validator';
-import * as terms from './terms';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import GenericPost from './generic';
 import { convertGMTDateToLocalDate } from '../../service/formatters';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import * as terms from '../template/terms';
 
 let postShouldBeRender:Post = null;
 
@@ -75,21 +75,30 @@ export const routeEventHandlers = {
                     .then((result) => {
                         if (result.modelObjs.length > 0) {
                             postShouldBeRender = result.modelObjs[0];
-                            addRecord(TypesOfCachedItem.Post, params.slug, result.modelObjs[0]);
+
+                            //接下來處理快取問題。
+                            if (result.isComplete) {
+                                addRecord(TypesOfCachedItem.Post, params.slug, result.modelObjs[0]);
+                            }
                         } else {
                             /* 查無文章時，導向首頁並通報異常。 */
                             //不要監聽 scroll 事件，以免發生異常。
                             const route = 
-                                `home?${queryParametersOfHome.ERROR_MSG}=${terms.thePostYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
+                                `home?${queryParametersOfHome.ERROR_MSG}=${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
                             router.navigate(route);
                         }
                         done();
+                    })
+                    .catch(() => {
+                        const route = 
+                            `home?${queryParametersOfHome.ERROR_MSG}=${terms.failedToLoadThePage(router.lastRouteResolved().url)}`;
+                        router.navigate(route);
                     });
             }
         } else {
             /* 既沒有從伺服器來的文章，又沒有客戶端要請求的文章匿稱時，導向首頁並通報異常。
             */
-            const route = `home?${queryParametersOfHome.ERROR_MSG}=${terms.neitherPostDataNorSlugOfPostIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
+            const route = `home?${queryParametersOfHome.ERROR_MSG}=${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`;
             router.navigate(route);
         }
     },
