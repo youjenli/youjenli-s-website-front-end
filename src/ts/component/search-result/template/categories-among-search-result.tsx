@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {ResultOfQuery} from '../../../model/search-results';
 import {Category} from '../../../model/terms';
 import * as terms from '../terms';
 import {KhakiDecorationOfCategory, GreenDecorationOfCategory} from './decorations';
@@ -49,24 +48,24 @@ export class CategoryOnPageOfSearchResults extends React.Component<PropsOfCatego
     }
 }
 
-interface PropsOfSearchResultsOfCategory {
-    results:ResultOfQuery<Category>;
+interface PropsOfTheCategoriesAmongSearchResult {
+    result:Category[];
     width:number;
-    numberOfCategoriesInARow:number;
+    numberOfCategoriesPerRow:number;
     fontSizeOfCategoryName?:number;
     fontSizeOfDesc?:number;
 }
 
-export class SearchResultsOfCategory extends React.Component<PropsOfSearchResultsOfCategory> {
+export class TheCategoriesAmongSearchResult extends React.Component<PropsOfTheCategoriesAmongSearchResult> {
     render() {
         const categories = [];
         const styleOfDecoration = {
             width:`${this.props.width + 2}px`
             /* 寬度要加上 2px 的原因是這樣才能跟文字區域吻合在一起。 */
         }
-        const pageContent = this.props.results.pageContent;
+        const pageContent = this.props.result;
         for (let i = 0 ; i < pageContent.length ; i ++) {
-            if (i % this.props.numberOfCategoriesInARow % 2 == 0) {
+            if (i % this.props.numberOfCategoriesPerRow % 2 == 0) {
                 categories[i] = 
                     <CategoryOnPageOfSearchResults bgColor={'#FEECB8'} width={this.props.width} category={pageContent[i]} key={i}
                         fontSizeOfName={this.props.fontSizeOfCategoryName} fontSizeOfDesc={this.props.fontSizeOfDesc}>
@@ -80,10 +79,10 @@ export class SearchResultsOfCategory extends React.Component<PropsOfSearchResult
                     </CategoryOnPageOfSearchResults>;
             }
         }
-        const leftOverItemsAtTheLastRow = pageContent.length % this.props.numberOfCategoriesInARow;
+        const leftOverItemsAtTheLastRow = pageContent.length % this.props.numberOfCategoriesPerRow;
         if (leftOverItemsAtTheLastRow > 0) {
             const numberOfItemsInBlockOfResults = pageContent.length 
-                + this.props.numberOfCategoriesInARow - leftOverItemsAtTheLastRow;
+                + this.props.numberOfCategoriesPerRow - leftOverItemsAtTheLastRow;
             const styleOfPlaceHoldingItem = {
                 width:`${this.props.width}px`
             }

@@ -8,6 +8,10 @@ export function theResponseStatusCodeIsNot200(postType:string):string {
     return `查詢${postType}的作業狀態碼不是 200。`;
 }
 
+export function didNotFoundTheDataWhichWasSupposedToAttachedInResponse(postType:string):string {
+    return `沒有在查詢${postType}的請求回應裡找到查詢結果。`;
+}
+
 export function theResponseStatusCodeOfSearchIsNot200():string {
     return `查詢網站內容的作業狀態碼不是 200。`;
 }

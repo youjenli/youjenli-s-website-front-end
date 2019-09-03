@@ -1,8 +1,5 @@
 {
     <?php get_template_part('template-parts/encode-publication-to-json') ?>
-    <?php if ( is_search() ) : ?>
-    type:'Post',
-    <?php endif ?>
     <?php $categories = get_the_category();
     if ($categories): 
         $listOfCategories = array();

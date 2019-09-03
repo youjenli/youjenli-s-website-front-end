@@ -3,8 +3,8 @@ import MobilePostHeader from '../template/mobile-header-of-article';
 import * as terms from './terms';
 import { ResultOfSearch } from '../../model/search-results';
 import {PublicationsAmongSearchResult} from  './template/publications-among-search-result';
-import {SearchResultsOfCategory} from './template/categories-among-search-result';
-import {SearchResultsOfTag} from './template/tags-among-search-result';
+import {TheCategoriesAmongSearchResult} from './template/categories-among-search-result';
+import {TheTagsAmongSearchResult} from './template/tags-among-search-result';
 import * as icons from '../template/icons';
 import {RouteBasedNavbarForNarrowDevices} from './template/route-based-nav-bar';
 import {LinksOfPagination} from './template/route-based-pagination';
@@ -107,8 +107,8 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
         if (this.props.results.categories.pageContent === null) {
             categories = <div className="noData">{terms.didnotSuccessfullyObtainThisPartOfResult}</div>;
         } if (this.props.results.categories.pageContent.length > 0) {
-            categories = <SearchResultsOfCategory results={this.props.results.categories} width={widthOfCategoryAndTag}
-                            numberOfCategoriesInARow={categoryAndTagPerRow} fontSizeOfCategoryName={fontSizeOfName}
+            categories = <TheCategoriesAmongSearchResult result={this.props.results.categories.pageContent} width={widthOfCategoryAndTag}
+                            numberOfCategoriesPerRow={categoryAndTagPerRow} fontSizeOfCategoryName={fontSizeOfName}
                             fontSizeOfDesc={fontSizeOfDesc} />
             navbarOfCategories = 
                 <HandlerBasedNavbarForNarrowDevices currentPage={this.props.results.categories.pagination.currentPage} 
@@ -127,8 +127,8 @@ export default class SmartPhonePageOfSearchResults extends React.Component<Props
         if (this.props.results.tags.pageContent === null) {
             tags = <div className="noData">{terms.didnotSuccessfullyObtainThisPartOfResult}</div>;
         } else if(this.props.results.tags.pageContent.length > 0) {
-            tags = <SearchResultsOfTag results={this.props.results.tags} width={widthOfCategoryAndTag}
-                    numberOfTagsInARow={categoryAndTagPerRow} fontSizeOfTagName={fontSizeOfName}
+            tags = <TheTagsAmongSearchResult result={this.props.results.tags.pageContent} width={widthOfCategoryAndTag}
+                    numberOfTagsPerRow={categoryAndTagPerRow} fontSizeOfTagName={fontSizeOfName}
                     fontSizeOfDesc={fontSizeOfDesc} />
             navbarOfTags =
                 <HandlerBasedNavbarForNarrowDevices currentPage={this.props.results.tags.pagination.currentPage} 

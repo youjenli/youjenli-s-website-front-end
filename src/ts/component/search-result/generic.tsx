@@ -65,7 +65,7 @@ export default class GenericSearchResults extends React.Component<PropsOfGeneric
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
                     <ExternalScreenPageOfSearchResults viewportWidth={this.state.viewportWidth}
-                        baseZIndex={baseZIndex} remFontSize={18} results={this.props.result} 
+                        baseZIndex={baseZIndex} remFontSize={18} result={this.props.result} 
                         onPageOfFoundCategoriesChanged={this.props.onPageOfFoundCategoriesChanged}
                         onPageOfFoundTagsChanged={this.props.onPageOfFoundTagsChanged} />
                 </React.Fragment>

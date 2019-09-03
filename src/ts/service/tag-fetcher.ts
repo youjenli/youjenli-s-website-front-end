@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { Tag } from '../model/terms';
-import { TagEntityInViewContext,ResultOfFetching } from '../model/wp-rest-api';
+import { TagEntityInViewContext } from '../model/wp-rest-api';
+import { ResultOfFetching } from '../model/general-types';
 import {isNotBlank} from './validator';
 import * as terms from './terms';
 
@@ -34,19 +35,30 @@ export function fetchTags(params:ConfigurationOfFetching):Promise<ResultOfFetchi
     return new Promise<ResultOfFetching<Tag>>((resolve, reject) => {
                 Axios.get<TagEntityInViewContext[]>('/wp-json/wp/v2/tags', reqConfig)
                      .then(response => {
-                         if (response.status == 200) {
-                             resolve({
-                                 response:response,
-                                 modelObjs:response.data.map<Tag>((item) => {
-                                     return {
-                                         id:item.id,
-                                         name:item.name,
-                                         slug:item.slug,
-                                         url:item.link,
-                                         description:item.description,
-                                     };
-                                 })
-                             });
+                         if (response && response.status == 200) {
+                             if (Array.isArray(response.data)) {
+                                resolve({
+                                    modelObjs:response.data.map<Tag>((item) => {
+                                        return {
+                                            id:item.id,
+                                            name:item.name,
+                                            slug:item.slug,
+                                            url:item.link,
+                                            description:item.description,
+                                        };
+                                    }),
+                                    response:response,
+                                    isComplete:true
+                                });
+                             } else {
+                                 // axios 沒有提供資料，回報異常。
+                                reject({
+                                    request:response.request,
+                                    response:response,
+                                    message:terms.didNotFoundTheDataWhichWasSupposedToAttachedInResponse(terms.tagOfTaxonomy),
+                                    config:response.config
+                                });
+                             }
                          } else {
                              /* 因為在開發時無法判斷到底是什麼原因導致請求會成功，但結果卻不是 200，
                                 所以暫時先按照 Axios Promise Catch 的回傳格式送請求資訊給此函式的使用者

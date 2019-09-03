@@ -1,21 +1,35 @@
 import {Category, Tag} from './terms';
-import {Pagination} from './pagination';
 import {TypeOfContent} from './general-types';
 import {Post, Page} from './posts';
+import { Pagination } from '../model/pagination';
+
+export interface FoundPost extends Post {
+    type:TypeOfContent.Post
+}
+
+export interface FoundPage extends Page {
+    type:TypeOfContent.Page
+}
 
 export type FoundPublication = FoundPost | FoundPage;
 
-export interface ResultOfQuery<T extends FoundPost | FoundPage | Category | Tag | FoundPublication> {
-    numberOfResults:number;
-    pageContent:T[];
-    pagination:Pagination;
-}
-
 export interface ResultOfSearch {
     query:string;
-    publications:ResultOfQuery<FoundPublication>;
-    categories:ResultOfQuery<Category>;
-    tags:ResultOfQuery<Tag>;
+    publications:{
+        numberOfResults:number;
+        pageContent:FoundPublication[];
+        pagination:Pagination;
+    }
+    tags:{
+        numberOfResults:number;
+        pageContent:Tag[];
+        pagination:Pagination;
+    },
+    categories:{
+        numberOfResults:number;
+        pageContent:Category[];
+        pagination:Pagination;
+    }
 }
 
 export interface CacheRecordOfResultOfSearch {
@@ -60,12 +74,4 @@ export interface CacheRecordOfResultOfSearch {
             lastVisitedPage:number;
         }
     }
-}
-
-export interface FoundPost extends Post {
-    type:TypeOfContent.Post
-}
-
-export interface FoundPage extends Page {
-    type:TypeOfContent.Page
 }

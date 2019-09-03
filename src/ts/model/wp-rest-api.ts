@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import { TypeOfContent } from './general-types'
 
 interface CommonPropertiesOfPostTypes {
@@ -257,10 +256,4 @@ export interface FoundEntityInBothViewAndEmbedContext {
             href:string;//提供此類物件資訊的 rest api 接口，例：http://127.0.0.1/wp-json/wp/v2/search
         }[];
     };
-}
-
-//這是各項負責抓取資料的 ajax 程式回傳給業務程式的預設資料格式
-export interface ResultOfFetching<T> {
-    modelObjs:T[];
-    response:AxiosResponse;
 }

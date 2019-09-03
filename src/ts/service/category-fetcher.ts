@@ -1,5 +1,6 @@
 import Axios from 'axios';
-import { CategoryEntityInViewContext, ResultOfFetching } from '../model/wp-rest-api';
+import { CategoryEntityInViewContext } from '../model/wp-rest-api';
+import { ResultOfFetching } from '../model/general-types';
 import { Category } from '../model/terms';
 import {isNotBlank} from './validator';
 import * as terms from './terms';
@@ -49,85 +50,100 @@ export function fetchCategories(params:ConfigurationOfFetching):Promise<ResultOf
     return new Promise<ResultOfFetching<Category>>((resolve, reject) => {
                 Axios.get<CategoryEntityInViewContext[]>('/wp-json/wp/v2/categories', reqConfig)
                      .then((responseOfQueryOfTaxonomies) => {
-                         if (responseOfQueryOfTaxonomies.status == 200) {
-                            const result = responseOfQueryOfTaxonomies.data;
-                                    
-                            let postsWaitingForParent:{
-                                [id:number]:Category[]
-                            } = [];
+                         if (responseOfQueryOfTaxonomies && responseOfQueryOfTaxonomies.status == 200) {
+                            let isComplete = true;
+                            if (Array.isArray(responseOfQueryOfTaxonomies.data)) {
+                                const result = responseOfQueryOfTaxonomies.data;
+                                let postsWaitingForParent:{
+                                    [id:number]:Category[]
+                                } = [];
 
-                            let dataHandler = () => {
-                                return result.map<Category>((item) => {
-                                            const taxonomy = {
-                                                id:parseInt(item.id),
-                                                name:item.name,
-                                                slug:item.slug,
-                                                url:item.link,
-                                                description:item.description
-                                            };
-                                            if (item.parent != 0) {//若是 0 就代表無父母分類
-                                                if (Array.isArray(postsWaitingForParent[item.parent])) {
-                                                    postsWaitingForParent[item.parent].push(taxonomy);
-                                                } else {
-                                                    postsWaitingForParent[item.parent] = [taxonomy];
+                                let dataHandler = () => {
+                                    return result.map<Category>((item) => {
+                                                const taxonomy = {
+                                                    id:parseInt(item.id),
+                                                    name:item.name,
+                                                    slug:item.slug,
+                                                    url:item.link,
+                                                    description:item.description
+                                                };
+                                                if (item.parent != 0) {//若是 0 就代表無父母分類
+                                                    if (Array.isArray(postsWaitingForParent[item.parent])) {
+                                                        postsWaitingForParent[item.parent].push(taxonomy);
+                                                    } else {
+                                                        postsWaitingForParent[item.parent] = [taxonomy];
+                                                    }
                                                 }
-                                            }
-                                            return taxonomy;
-                                });
-                            };
-                        
-                            const categories:Category[] = dataHandler();
-                            if (includeParent) {
-                                const idOfParentsWaitingToBeFetch = Object.keys(postsWaitingForParent).map(key => parseInt(key));
-                                if (idOfParentsWaitingToBeFetch.length > 0) {//應該去拿一些母分頁回來
-                                    fetchCategories({
-                                        include:idOfParentsWaitingToBeFetch
-                                    })
-                                    .then((result) => {
-                                        if (result.modelObjs.length > 0) {
-                                            result.modelObjs.forEach((taxonomy) => {
-                                                postsWaitingForParent[taxonomy.id].forEach((category) => {
-                                                    category.parent = {
-                                                        id:taxonomy.id,
-                                                        name:taxonomy.name,
-                                                        slug:taxonomy.slug,
-                                                        url:taxonomy.url,
-                                                        description:taxonomy.description
-                                                    };
-                                                });
-                                            });
-                                        } else {
-                                            //意外的查不到資料，塞入填充物
-                                            Object.keys(postsWaitingForParent).forEach((key) => {
-                                                const index = parseInt(key);//轉型態，這樣 ts 才能辨識內容
-                                                postsWaitingForParent[index].forEach((category) => {
-                                                    category.parent = null;
-                                                });
-                                            });
-                                        }
-                                        resolve({
-                                            modelObjs:categories,
-                                            response:responseOfQueryOfTaxonomies
-                                        });
-                                    })
-                                    .catch(() => {
-                                        //無法順利查詢父母分類時，把等待中專頁拿出來填充父母專頁的欄位
-                                        Object.values(postsWaitingForParent).forEach(posts => {
-                                            posts.forEach(post => {
-                                                post.parent = null;
-                                            });
-                                        });
-                                        resolve({
-                                            modelObjs:categories,
-                                            response:responseOfQueryOfTaxonomies
-                                        });
+                                                return taxonomy;
                                     });
+                                };
+                            
+                                const categories:Category[] = dataHandler();
+                                if (includeParent) {
+                                    const idOfParentsWaitingToBeFetch = Object.keys(postsWaitingForParent).map(key => parseInt(key));
+                                    if (idOfParentsWaitingToBeFetch.length > 0) {//應該去拿一些母分頁回來
+                                        fetchCategories({
+                                            include:idOfParentsWaitingToBeFetch
+                                        })
+                                        .then((response) => {
+                                            if (response.modelObjs.length > 0) {
+                                                response.modelObjs.forEach((taxonomy) => {
+                                                    postsWaitingForParent[taxonomy.id].forEach((category) => {
+                                                        category.parent = {
+                                                            id:taxonomy.id,
+                                                            name:taxonomy.name,
+                                                            slug:taxonomy.slug,
+                                                            url:taxonomy.url,
+                                                            description:taxonomy.description
+                                                        };
+                                                    });
+                                                });
+                                            } else {
+                                                //意外的查不到資料，塞入填充物
+                                                Object.keys(postsWaitingForParent).forEach((key) => {
+                                                    const index = parseInt(key);//轉型態，這樣 ts 才能辨識內容
+                                                    postsWaitingForParent[index].forEach((category) => {
+                                                        category.parent = null;
+                                                    });
+                                                });
+                                                isComplete = false;
+                                            }
+                                            resolve({
+                                                modelObjs:categories,
+                                                response:responseOfQueryOfTaxonomies,
+                                                isComplete:isComplete
+                                            });
+                                        })
+                                        .catch(() => {
+                                            //無法順利查詢父母分類時，把等待中專頁拿出來填充父母專頁的欄位
+                                            Object.values(postsWaitingForParent).forEach(posts => {
+                                                posts.forEach(post => {
+                                                    post.parent = null;
+                                                });
+                                            });
+                                            isComplete = false;
+                                            resolve({
+                                                modelObjs:categories,
+                                                response:responseOfQueryOfTaxonomies,
+                                                isComplete:isComplete
+                                            });
+                                        });
+                                    }
                                 }
+                                resolve({
+                                    modelObjs:categories,
+                                    response:responseOfQueryOfTaxonomies,
+                                    isComplete:isComplete
+                                });
+                            } else {
+                                // axios 沒有提供資料，回報異常。
+                                reject({
+                                    request:responseOfQueryOfTaxonomies.request,
+                                    response:responseOfQueryOfTaxonomies,
+                                    message:terms.didNotFoundTheDataWhichWasSupposedToAttachedInResponse(terms.categoryOfTaxonomy),
+                                    config:responseOfQueryOfTaxonomies.config
+                                });
                             }
-                            resolve({
-                                modelObjs:categories,
-                                response:responseOfQueryOfTaxonomies
-                            });
                          } else {
                              /* 因為在開發時無法判斷到底是什麼原因導致請求會成功，但結果卻不是 200，
                                 所以暫時先按照 Axios Promise Catch 的回傳格式送請求資訊給此函式的使用者

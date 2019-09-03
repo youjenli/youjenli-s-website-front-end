@@ -1,24 +1,14 @@
 import Axios from 'axios';
-import { fetchCategories, ConfigurationOfFetching as ConfigurationOfCategoryFetching } from './category-fetcher';
-import { fetchTags, ConfigurationOfFetching as ConfigurationOfTagFetching } from './tag-fetcher';
-import {ResultOfSearch, ResultOfQuery, FoundPublication} from '../model/search-results';
-import { Category, Tag } from '../model/terms';
-import { getBaseUrl, defaultEndSize, defaultMidSize } from '../model/pagination';
-import {FoundEntityInBothViewAndEmbedContext} from '../model/wp-rest-api';
-import { TypeOfContent } from '../model/general-types';
+import { fetchCategories } from './category-fetcher';
+import { fetchTags } from './tag-fetcher';
+import { FoundPublication} from '../model/search-results';
+import { Tag, Category } from '../model/terms';
+import { FoundEntityInBothViewAndEmbedContext } from '../model/wp-rest-api';
+import { TypeOfContent, ResultOfFetching } from '../model/general-types';
 import { fetchPosts } from './post-fetcher';
 import { fetchPages } from './page-fetcher';
-import {theResponseStatusCodeOfSearchIsNot200} from './terms';
-import {isString, isNotBlank} from '../service/validator';
-import {ResultOfFetching} from '../model/wp-rest-api';
-import {Term} from '../model/terms';
-
-interface ConfigurationOfSearch {
-    keyword:string;
-    page?:number;
-    publicationsPerPage?:number;
-    taxonomiesPerPage?:number;
-}
+import { theResponseStatusCodeOfSearchIsNot200 } from './terms';
+import { isNotBlank } from '../service/validator';
 
 export interface ConfigurationOfPublicationFetching {
     search:string,
@@ -26,8 +16,8 @@ export interface ConfigurationOfPublicationFetching {
     page?:number
 }
 
-export function searchPublications(config:ConfigurationOfPublicationFetching, baseUrl:string):
-    Promise<ResultOfQuery<FoundPublication>> {
+export function searchPublications(config:ConfigurationOfPublicationFetching):
+        Promise<ResultOfFetching<FoundPublication>> {
         const page = config.page || 1;
 
         const reqConfigOfPosts = {
@@ -47,13 +37,14 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
             }
         }
         
-        return new Promise<ResultOfQuery<FoundPublication>>((resolve, reject) => {
+        return new Promise<ResultOfFetching<FoundPublication>>((resolve, reject) => {
                        Axios.get<FoundEntityInBothViewAndEmbedContext[]>('/wp-json/wp/v2/search', reqConfigOfPosts)
-                            .then(resultOfSearch => {
-                                if (resultOfSearch.status == 200) {
+                            .then(responseOfSearch => {
+                                if (responseOfSearch.status == 200) {
+                                    let isComplete = true;
                                     const postsWaitingToFetch = {};
                                     const pagesWaitingToFetch = {};
-                                    const foundPublications = resultOfSearch.data.map(pub => {
+                                    const foundPublications = responseOfSearch.data.map(pub => {
                                         /*
                                             注意，在 rest 服務回傳的 json 物件裡，用來指出物件類型的屬性是 subtype 而不是 type，
                                             實作時不要搞混以免前端因為找不到部分頁面而無法正常呈現內容。詳見：
@@ -84,9 +75,9 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                     if (keysOfPostsWaitingToFetch.length > 0) {
                                        promises.push(
                                          fetchPosts({ include:keysOfPostsWaitingToFetch.map(id => parseInt(id))})
-                                             .then(resultOfFetching => {
-                                                 if (resultOfFetching.modelObjs.length > 0) {
-                                                     const posts = resultOfFetching.modelObjs;
+                                             .then(responseOfFetching => {
+                                                 if (responseOfFetching.modelObjs.length > 0) {
+                                                     const posts = responseOfFetching.modelObjs;
                                                      for (let post of posts) {
                                                          const pendingPost = postsWaitingToFetch[post.id];
                                                          if (pendingPost) {
@@ -98,9 +89,9 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                              .catch(error => {
                                                  /*
                                                      若查詢文章的請求失敗，則填充目前已經查到的搜尋結果，提供不完整的資料給使用者。
-                                                     todo 作法待評估，給這麼殘的資料是否有意義？
                                                  */
-                                                 for (let key in keysOfPostsWaitingToFetch) {
+                                                 isComplete = false;
+                                                 for (let key in keysOfPostsWaitingToFetch) {//todo 作法待評估，給這麼殘的資料是否有意義？
                                                      const post = postsWaitingToFetch[key];
                                                      post.date = null;
                                                      post.modified = null;
@@ -120,9 +111,9 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                     if (keysOfPagesWaitingToFetch.length > 0) {
                                        promises.push(
                                          fetchPages({ include:keysOfPagesWaitingToFetch.map(id => parseInt(id)) })
-                                             .then(resultOfFetching => {
-                                                 if (resultOfFetching.modelObjs.length > 0) {
-                                                     const pages = resultOfFetching.modelObjs;
+                                             .then(responseOfFetching => {
+                                                 if (responseOfFetching.modelObjs.length > 0) {
+                                                     const pages = responseOfFetching.modelObjs;
                                                      for (let page of pages) {
                                                          const pendingPage = pagesWaitingToFetch[page.id];
                                                          if (pendingPage) {
@@ -134,9 +125,9 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                              .catch(error => {
                                                  /*
                                                      若查詢專頁的請求失敗，則填充目前已經查到的搜尋結果，提供不完整的資料給使用者。
-                                                     todo 作法待評估，給這麼殘的資料是否有意義？
                                                  */
-                                                 for (let key in keysOfPagesWaitingToFetch) {
+                                                 isComplete = false;
+                                                 for (let key in keysOfPagesWaitingToFetch) {//todo 作法待評估，給這麼殘的資料是否有意義？
                                                      const page = pagesWaitingToFetch[key];
                                                      page.date = null;
                                                      page.modified = null;
@@ -150,27 +141,20 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                                              })
                                        );
                                     }
-                                    Promise.all<ResultOfQuery<FoundPublication>>(promises)
-                                      .then(() => {
-                                          resolve({
-                                              numberOfResults:resultOfSearch.headers['x-wp-total'],
-                                              pageContent:foundPublications as FoundPublication[],
-                                              pagination:{
-                                                  baseUrl:baseUrl,
-                                                  endSize:defaultEndSize,
-                                                  midSize:defaultMidSize,
-                                                  totalPages:resultOfSearch.headers['x-wp-totalpages'],
-                                                  currentPage:page,
-                                                  itemsPerPage:foundPublications.length
-                                              }
-                                          });
-                                      });
+                                    Promise.all<ResultOfFetching<FoundPublication>>(promises)
+                                           .then(() => {
+                                               resolve({
+                                                   modelObjs:foundPublications as FoundPublication[],
+                                                   response:responseOfSearch,
+                                                   isComplete:isComplete
+                                               });
+                                           });
                                 } else {
-                                   reject({
-                                     request:resultOfSearch.request,
-                                     response:resultOfSearch,
-                                     message:theResponseStatusCodeOfSearchIsNot200(),
-                                     config:resultOfSearch.config
+                                    reject({
+                                       request:responseOfSearch.request,
+                                       response:responseOfSearch,
+                                       message:theResponseStatusCodeOfSearchIsNot200(),
+                                       config:responseOfSearch.config
                                    });
                                 }
                             })
@@ -178,41 +162,22 @@ export function searchPublications(config:ConfigurationOfPublicationFetching, ba
                    });
 }
 
-/* 這個函式的用途是轉化分類和標籤的資料格式，使他們成為前端功能可接受的物件。
- */
-function createResultHandlerForTaxonomy<T extends Term>(baseUrl:string, currentPage:number):
-    (result:ResultOfFetching<T>) => ResultOfQuery<T> {
-        return (result:ResultOfFetching<T>) => {
-            const resultOfQuery:ResultOfQuery<T> = {
-                numberOfResults:result.response.headers['x-wp-total'],
-                pageContent:result.modelObjs,
-                pagination:{
-                    endSize:defaultEndSize,
-                    midSize:defaultMidSize,
-                    totalPages:result.response.headers['x-wp-totalpages'],
-                    currentPage:currentPage
-                }
-            }
-            if (isString(baseUrl)) {
-                resultOfQuery.pagination['baseUrl'] = baseUrl;
-            }
-
-            return resultOfQuery;
-        }
+interface ConfigurationOfSearch {
+    keyword:string;
+    pageOfPublications?:number;
+    pageOfTaxonomies?:number;
+    publicationsPerPage?:number;
+    taxonomiesPerPage?:number;
 }
 
-export function searchCategory(config:ConfigurationOfCategoryFetching, baseUrl:string):Promise<ResultOfQuery<Category>> {
-    return fetchCategories(config)
-                .then(createResultHandlerForTaxonomy(baseUrl, config.page));
-}
-
-export function searchTag(config:ConfigurationOfTagFetching, baseUrl:string):Promise<ResultOfQuery<Tag>> {
-    return fetchTags(config)
-                .then(createResultHandlerForTaxonomy(baseUrl, config.page));
+type ResultOfSearch = {
+    query:string;
+    publications:ResultOfFetching<FoundPublication>;
+    categories:ResultOfFetching<Category>;
+    tags:ResultOfFetching<Tag>;
 }
 
 export function search(config:ConfigurationOfSearch):Promise<ResultOfSearch> {
-
     let reqConfigOfPosts = null;
     let reqConfigOfTaxonomy = null;
     if (config) {
@@ -221,12 +186,12 @@ export function search(config:ConfigurationOfSearch):Promise<ResultOfSearch> {
         */
         reqConfigOfPosts = {
             search:config.keyword,
-            page:config.page,
+            page:config.pageOfPublications,
             per_page:config.publicationsPerPage
         }
         reqConfigOfTaxonomy = {
             search:config.keyword,
-            page:1,
+            page:config.pageOfTaxonomies,
             per_page:config.taxonomiesPerPage
         }
     } else {
@@ -234,67 +199,59 @@ export function search(config:ConfigurationOfSearch):Promise<ResultOfSearch> {
     }
 
     /*
-      先準備後序查詢要用的資訊以及資料的結構。
-    */
-    const baseUrl = getBaseUrl();
-    /*
       以下是所有資料的預設值。
       為了在部分請求失敗的情況下仍可提供一部分資訊給使用者，因此這裡的欄位才會都有預設值。
     */
     const resultOfSearch:ResultOfSearch = {
         query:config.keyword,
         publications:{
-            numberOfResults:0,
-            pageContent:null,
-            pagination:{
-                baseUrl:baseUrl,
-                endSize:defaultEndSize,
-                midSize:defaultMidSize,
-                totalPages:0,
-                currentPage:0,
-                itemsPerPage:0
-            }
+            modelObjs:null,
+            response:null,
+            isComplete:false
         },
         categories:{
-            numberOfResults:0,
-            pageContent:null,
-            pagination:{
-                endSize:defaultEndSize,
-                midSize:defaultMidSize,
-                totalPages:0,
-                currentPage:0,
-                itemsPerPage:0
-            }
+            modelObjs:null,
+            response:null,
+            isComplete:false
         },
         tags:{
-            numberOfResults:0,
-            pageContent:null,
-            pagination:{
-                endSize:defaultEndSize,
-                midSize:defaultMidSize,
-                totalPages:0,
-                currentPage:0,
-                itemsPerPage:0
-            }
+            modelObjs:null,
+            response:null,
+            isComplete:false
         }
     };
 
     return Promise.all([
-                        searchPublications(reqConfigOfPosts, baseUrl)
+                        searchPublications(reqConfigOfPosts)
                             .then(result => {
                                 resultOfSearch['publications'] = result;
                             })
-                            .catch(error => {return error;}),
-                        searchCategory(reqConfigOfTaxonomy, baseUrl)
+                            .catch(error => {
+                                if (error && error.response) {
+                                    resultOfSearch.publications.response = error.response;
+                                }
+                                return error;
+                            }),
+                        fetchCategories(reqConfigOfTaxonomy)
                             .then(result => {
                                 resultOfSearch['categories'] = result;
                             })
-                            .catch(error => {return error;}),
-                        searchTag(reqConfigOfTaxonomy, baseUrl)
+                            .catch(error => {
+                                if (error && error.response) {
+                                    resultOfSearch.categories.response = error.response;
+                                }
+                                return error;
+                            }),
+                        fetchTags(reqConfigOfTaxonomy)
                             .then(result => {
                                 resultOfSearch['tags'] = result;
                             })
-                            .catch(error => {return error;}),
+                            .catch(error => {
+                                if (error && error.response) {
+                                    resultOfSearch.tags.response = error.response;
+                                }
+                                return error;
+                            }),
                     ])
                     .then(() => {
                         return resultOfSearch;

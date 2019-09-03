@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {ResultOfQuery} from '../../../model/search-results';
 import {Tag} from '../../../model/terms';
 import * as terms from '../terms';
 import {BlueDecorationOfTag, RedDecorationOfTag} from './decorations';
@@ -56,15 +55,15 @@ export class TagOnPageOfSearchResults extends React.Component<PropsOfTagOnPageOf
     }
 }
 
-interface PropsOfSearchResultsOfTag {
-    results:ResultOfQuery<Tag>;
+interface PropsOfTheTagsAmongSearchResult {
+    result:Tag[];
     width:number;
-    numberOfTagsInARow:number;
+    numberOfTagsPerRow:number;
     fontSizeOfTagName?:number;
     fontSizeOfDesc?:number;
 }
 
-export class SearchResultsOfTag extends React.Component<PropsOfSearchResultsOfTag> {
+export class TheTagsAmongSearchResult extends React.Component<PropsOfTheTagsAmongSearchResult> {
     render() {
 
         const blurOfShadow = 1.8;
@@ -79,9 +78,9 @@ export class SearchResultsOfTag extends React.Component<PropsOfSearchResultsOfTa
                     Math.round 裡面 x 10，外面 / 10 的原因是希望計算要精準到小數第一位。
                 */
         const tags = [];
-        const pageContent = this.props.results.pageContent;
+        const pageContent = this.props.result;
         for (let i = 0 ; i < pageContent.length ; i ++) {
-            if (i % this.props.numberOfTagsInARow % 2 == 0) { 
+            if (i % this.props.numberOfTagsPerRow % 2 == 0) { 
                 tags[i] = 
                     <TagOnPageOfSearchResults additionalClassesOnContent="blue" width={this.props.width} 
                        topShiftOfContent={topShiftOfContent} tag={pageContent[i]} key={i}
@@ -97,10 +96,10 @@ export class SearchResultsOfTag extends React.Component<PropsOfSearchResultsOfTa
                     </TagOnPageOfSearchResults>;
             }
         }
-        const leftOverItemsAtTheLastRow = pageContent.length % this.props.numberOfTagsInARow;
+        const leftOverItemsAtTheLastRow = pageContent.length % this.props.numberOfTagsPerRow;
         if (leftOverItemsAtTheLastRow > 0) {
             const numberOfItemsInBlockOfResults = pageContent.length 
-                + this.props.numberOfTagsInARow - leftOverItemsAtTheLastRow;
+                + this.props.numberOfTagsPerRow - leftOverItemsAtTheLastRow;
             const styleOfPlaceHoldingItem = {
                 width:`${this.props.width}px`
             }

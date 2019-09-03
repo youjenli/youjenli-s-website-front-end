@@ -3,8 +3,8 @@ import { ResultOfSearch } from '../../model/search-results';
 import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import * as terms from './terms';
 import {PublicationsAmongSearchResult} from  './template/publications-among-search-result';
-import {SearchResultsOfCategory} from './template/categories-among-search-result';
-import {SearchResultsOfTag} from './template/tags-among-search-result'
+import {TheCategoriesAmongSearchResult} from './template/categories-among-search-result';
+import {TheTagsAmongSearchResult} from './template/tags-among-search-result'
 import * as icons from '../template/icons';
 import {DefaultRouteBasedNavbar } from './template/route-based-nav-bar';
 import {LinksOfPagination} from './template/route-based-pagination';
@@ -16,7 +16,7 @@ interface PropsOfExternalScreenPageOfSearchResults {
     viewportWidth:number;
     baseZIndex:number;
     remFontSize:number;
-    results:ResultOfSearch;
+    result:ResultOfSearch;
     onPageOfFoundCategoriesChanged:PageClickedHandler;
     onPageOfFoundTagsChanged:PageClickedHandler;
 }
@@ -24,10 +24,9 @@ interface PropsOfExternalScreenPageOfSearchResults {
 export default class ExternalScreenPageOfSearchResults extends React.Component<PropsOfExternalScreenPageOfSearchResults> {
     render() {
         const vw = this.props.viewportWidth;
-        const results = this.props.results;
         let maxWidthOfTitle = 1024;
         const title = {
-            name:terms.createTitleOfPageOfSearchResults(results.query),
+            name:terms.createTitleOfPageOfSearchResults(this.props.result.query),
             maxWidth:maxWidthOfTitle,
         };
 
@@ -64,26 +63,26 @@ export default class ExternalScreenPageOfSearchResults extends React.Component<P
         const fontSizeOfPageIndexes = (-1 * vw + 13568) / 448;
 
         let posts = null, navbarOfPosts = null;
-        if (this.props.results.publications.pageContent === null) {
+        if (this.props.result.publications.pageContent === null) {
             posts = <div className="noData">{terms.didnotSuccessfullyObtainThisPartOfResult}</div>;
-        } else if (this.props.results.publications.pageContent.length > 0) {
+        } else if (this.props.result.publications.pageContent.length > 0) {
             const widthOfPost = (maxWidthOfTitle - 2* this.props.remFontSize) / 2;
             const settingsOfPost = {
                 fontSizeOfDate:(vw + 7936) / 448,
                 fontSizeOfTitle:(vw + 8832) / 448
             }
-            posts = <PublicationsAmongSearchResult pageContent={this.props.results.publications.pageContent} width={widthOfPost} 
+            posts = <PublicationsAmongSearchResult pageContent={this.props.result.publications.pageContent} width={widthOfPost} 
                         numberOfPostInARow={2} post={settingsOfPost} />
             navbarOfPosts = 
-                <DefaultRouteBasedNavbar currentPage={this.props.results.publications.pagination.currentPage} 
-                    totalPages={this.props.results.publications.pagination.totalPages} baseUrl={this.props.results.publications.pagination.baseUrl}
+                <DefaultRouteBasedNavbar currentPage={this.props.result.publications.pagination.currentPage} 
+                    totalPages={this.props.result.publications.pagination.totalPages} baseUrl={this.props.result.publications.pagination.baseUrl}
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} >
-                        <LinksOfPagination pagination={this.props.results.publications.pagination} />
+                        <LinksOfPagination pagination={this.props.result.publications.pagination} />
                 </DefaultRouteBasedNavbar>
         } else {
             posts = 
                 <div className="noData" style={styleOfNothingFoundInQuery}>
-                    {terms.generatePostsNotFoundNotificationMsg(this.props.results.query)}</div>;
+                    {terms.generatePostsNotFoundNotificationMsg(this.props.result.query)}</div>;
         }
 
         const categoryAndTagPerRow = Math.floor((maxWidthOfTitle - 18/*分類名稱左右間隔 1rem */) / 154 /* 分類名稱最小寬度 + 1rem */);      
@@ -92,52 +91,52 @@ export default class ExternalScreenPageOfSearchResults extends React.Component<P
         const fontSizeOfDesc = widthOfCategoryAndTag / 9;
 
         let categories = null, navbarOfCategories = null;
-        if (this.props.results.categories.pageContent === null) {
+        if (this.props.result.categories.pageContent === null) {
             categories = <div className="noData">{terms.didnotSuccessfullyObtainThisPartOfResult}</div>;
-        } else if (this.props.results.categories.pageContent.length > 0) {
-            categories = <SearchResultsOfCategory results={this.props.results.categories} width={widthOfCategoryAndTag}
-                            numberOfCategoriesInARow={categoryAndTagPerRow} fontSizeOfCategoryName={fontSizeOfName}
+        } else if (this.props.result.categories.pageContent.length > 0) {
+            categories = <TheCategoriesAmongSearchResult result={this.props.result.categories.pageContent} width={widthOfCategoryAndTag}
+                            numberOfCategoriesPerRow={categoryAndTagPerRow} fontSizeOfCategoryName={fontSizeOfName}
                             fontSizeOfDesc={fontSizeOfDesc} />
             navbarOfCategories = 
-                <DefaultHandlerBasedNavbar currentPage={this.props.results.categories.pagination.currentPage} 
-                    totalPages={this.props.results.categories.pagination.totalPages}
+                <DefaultHandlerBasedNavbar currentPage={this.props.result.categories.pagination.currentPage} 
+                    totalPages={this.props.result.categories.pagination.totalPages}
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes}
                     onPageClicked={this.props.onPageOfFoundCategoriesChanged} >
-                        <HandlersOfPagination pagination={this.props.results.categories.pagination} 
+                        <HandlersOfPagination pagination={this.props.result.categories.pagination} 
                             onPageClicked={this.props.onPageOfFoundCategoriesChanged} />
                 </DefaultHandlerBasedNavbar>
         } else {
             categories = 
                 <div className="noData" style={styleOfNothingFoundInQuery}>
-                    {terms.generateCategoriesNotFoundNotificationMsg(this.props.results.query)}</div>;
+                    {terms.generateCategoriesNotFoundNotificationMsg(this.props.result.query)}</div>;
         }
         
         let tags = null, navbarOfTags = null;
-        if (this.props.results.tags.pageContent === null) {
+        if (this.props.result.tags.pageContent === null) {
             tags = <div className="noData">{terms.didnotSuccessfullyObtainThisPartOfResult}</div>;
-        } else if(this.props.results.tags.pageContent.length > 0) {
-            tags = <SearchResultsOfTag results={this.props.results.tags} width={widthOfCategoryAndTag}
-                    numberOfTagsInARow={categoryAndTagPerRow} fontSizeOfTagName={fontSizeOfName}
+        } else if(this.props.result.tags.pageContent.length > 0) {
+            tags = <TheTagsAmongSearchResult result={this.props.result.tags.pageContent} width={widthOfCategoryAndTag}
+                    numberOfTagsPerRow={categoryAndTagPerRow} fontSizeOfTagName={fontSizeOfName}
                     fontSizeOfDesc={fontSizeOfDesc} />
             navbarOfTags =
-                <DefaultHandlerBasedNavbar currentPage={this.props.results.tags.pagination.currentPage} 
-                    totalPages={this.props.results.tags.pagination.totalPages}
+                <DefaultHandlerBasedNavbar currentPage={this.props.result.tags.pagination.currentPage} 
+                    totalPages={this.props.result.tags.pagination.totalPages}
                     heightOfDirectionIcon={heightOfDirectionIcon} fontSizeOfPageIndexes={fontSizeOfPageIndexes} 
                     onPageClicked={this.props.onPageOfFoundTagsChanged} >
-                        <HandlersOfPagination pagination={this.props.results.tags.pagination} 
+                        <HandlersOfPagination pagination={this.props.result.tags.pagination} 
                             onPageClicked={this.props.onPageOfFoundTagsChanged} />
                 </DefaultHandlerBasedNavbar>
         } else {
             tags = <div className="noData" style={styleOfNothingFoundInQuery}>
-                        {terms.generateTagsNotFoundNotificationMsg(this.props.results.query)}</div>
+                        {terms.generateTagsNotFoundNotificationMsg(this.props.result.query)}</div>
         }
 
         return (
             <React.Fragment>
                 <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
                     titleBg={titleBg} title={title} appendDecorationLine={true}>
-                    <div className="summary">{terms.createSummaryOfSearchResults(results.publications.numberOfResults,
-                            results.categories.numberOfResults, results.tags.numberOfResults)}</div>
+                    <div className="summary">{terms.createSummaryOfSearchResults(this.props.result.publications.numberOfResults,
+                            this.props.result.categories.numberOfResults, this.props.result.tags.numberOfResults)}</div>
                 </DefaultHeaderOfArticle>
                 <div id="postBg" className="es search" style={styleOfPostBg}>
                     <div className="content" style={styleOfPostContent}>

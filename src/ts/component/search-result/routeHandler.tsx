@@ -1,12 +1,16 @@
 import { router } from '../../service/router';
 import { queryParametersOfHome } from '../home/routeHandler';
-import { getPagination } from '../../model/pagination';
+import { getPagination, getBaseUrl, defaultEndSize, defaultMidSize } from '../../model/pagination';
 import { reactRoot } from '../../index';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import GenericSearchResults from './generic';
-import { search, searchCategory, searchTag, searchPublications } from '../../service/search';
-import { ResultOfSearch, CacheRecordOfResultOfSearch } from '../../model/search-results';
+import { search, searchPublications } from '../../service/search';
+import { fetchCategories, ConfigurationOfFetching as ConfigurationOfCategoriesFetching } from '../../service/category-fetcher';
+import { fetchTags } from '../../service/tag-fetcher';
+import { ResultOfFetching } from '../../model/general-types';
+import { Category, Tag } from '../../model/terms';
+import { CacheRecordOfResultOfSearch } from '../../model/search-results';
 import * as terms from './terms';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
 import { ConfigurationOfPublicationFetching } from '../../service/search';
@@ -14,6 +18,7 @@ import { ConfigurationOfFetching as ConfigurationOfCategoryFetching } from '../.
 import { ConfigurationOfFetching as ConfigurationOfTagFetching } from '../../service/tag-fetcher';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
+import { ResultOfSearch } from '../../model/search-results';
 
 let DEFAULT_PUBLICATIONS_PER_PAGE = 10;
 let DEFAULT_TAXONOMIES_PER_PAGE = 14;
@@ -21,70 +26,102 @@ let resultOfSearch:ResultOfSearch = null;
 
 export type PageClickedHandler = (page:number) => void;
 
+function loadFoundCategoriesFromCache(record:CacheRecordOfResultOfSearch, page:number):void {
+    //快取中有紀錄，從裡面拿資料
+    resultOfSearch.categories = {
+        numberOfResults:record.categories.foundCategories,
+        pageContent:record.categories.pageContent[page],
+        pagination:{
+            endSize:record.categories.pagination.endSize,
+            midSize:record.categories.pagination.midSize,
+            totalPages:record.categories.pagination.totalPages,
+            currentPage:page,
+            itemsPerPage:record.categories.pagination.itemsPerPage
+        }
+    }
+    record.categories.pagination.lastVisitedPage = page;
+}
+
+function fetchCategoriesAndHandleResult(config:ConfigurationOfCategoriesFetching):Promise<ResultOfFetching<Category>> {
+    if (!isNum(config.page)) {
+        config.page = 1;
+    }
+    if (!isNum(config.per_page)) {
+        config.per_page = DEFAULT_TAXONOMIES_PER_PAGE;
+    }
+    return fetchCategories(config)
+                .then(result => {
+                    const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
+
+                    const numberOfCategoriesFound = result.response.headers['x-wp-total'];
+                    const totalPages = result.response.headers['x-wp-totalpages'];
+                    resultOfSearch.categories = {
+                        numberOfResults:numberOfCategoriesFound,
+                        pageContent:result.modelObjs,
+                        pagination:{
+                            endSize:record.categories.pagination.endSize,
+                            midSize:record.categories.pagination.midSize,
+                            totalPages:totalPages,
+                            currentPage:config.page,
+                            itemsPerPage:config.per_page
+                        }
+                    }
+                
+                    /*
+                        接下來要根據查詢到的結果總數判斷快取是否過期並執行對應的管理作業。
+                    */
+                    if (numberOfCategoriesFound === record.categories.foundCategories) {
+                        //伺服器上的記錄狀態沒變，斷定快取沒過期
+                        if (result.isComplete) {
+                            record.categories.pageContent[config.page] = result.modelObjs;
+                            record.categories.pagination.lastVisitedPage = config.page;
+                        }
+                        /*
+                          註：若此處發現資料不完整的話，那就不加入本地快取，等下次請求時再拿拿看了。
+                        */
+                    } else {
+                        //伺服器上的記錄狀態有變，斷定快取過期，這表示要更新本地快取紀錄
+                        record.categories.foundCategories = numberOfCategoriesFound;
+                        record.categories.pageContent = {}
+                        //根據分頁是否完整，決定要不要加入快取。
+                        if (result.isComplete) {
+                            record.categories.pageContent[config.page] = result.modelObjs;
+                        }
+                        record.categories.pagination = {
+                            endSize:record.categories.pagination.endSize,
+                            midSize:record.categories.pagination.midSize,
+                            totalPages:totalPages,
+                            itemsPerPage:config.per_page,
+                            lastVisitedPage:config.page
+                        }
+                    }
+                    return result;
+                });
+}
+
 const onPageOfFoundCategoriesChanged:PageClickedHandler = (page:number):void => {
     if (resultOfSearch && resultOfSearch.categories.pagination) {
         const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
         if (record.categories.pageContent[page]) {
             //快取中有紀錄，從裡面拿資料
-            resultOfSearch.categories = {
-                numberOfResults:record.categories.foundCategories,
-                pageContent:record.categories.pageContent[page],
-                pagination:{
-                    endSize:record.categories.pagination.endSize,
-                    midSize:record.categories.pagination.midSize,
-                    totalPages:record.categories.pagination.totalPages,
-                    currentPage:page,
-                    itemsPerPage:record.categories.pagination.itemsPerPage
-                }
-            }
+            loadFoundCategoriesFromCache(record, page);
+            renderResultOfSearch();
         } else {
-            const perPage = resultOfSearch.categories.pagination.itemsPerPage ? 
-                resultOfSearch.categories.pagination.itemsPerPage : DEFAULT_TAXONOMIES_PER_PAGE;
-            searchCategory({
+            fetchCategoriesAndHandleResult({
                 page:page,
                 includeParent:false,
-                per_page:perPage,
+                per_page:resultOfSearch.categories.pagination.itemsPerPage,
                 search:resultOfSearch.query
-            }, null)
-            .then(result => {
-                const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
-
-                resultOfSearch.categories = result;
-                //拿快取中可重複利用的資訊填充給接下來要塗層的頁面使用
-                resultOfSearch.categories.pagination.endSize = record.publications.pagination.endSize;
-                resultOfSearch.categories.pagination.midSize = record.publications.pagination.midSize;
-                resultOfSearch.categories.pagination.itemsPerPage = perPage;
-                /*
-                    接下來要根據查詢到的結果總數判斷快取是否過期並執行對應的管理作業。
-                */
-                if (result.numberOfResults === record.categories.foundCategories) {
-                    //快取沒過期
-                    record.categories.pageContent[page] = result.pageContent;
-                    record.categories.pagination.lastVisitedPage = result.pagination.currentPage;
-                } else {
-                    //快取過期
-                    record.publications = {
-                        foundPublications:result.numberOfResults,
-                        pageContent:{
-                            [page]:result.pageContent
-                        },
-                        pagination:{
-                            endSize:record.categories.pagination.endSize,
-                            midSize:record.categories.pagination.midSize,
-                            totalPages:result.pagination.totalPages,
-                            itemsPerPage:perPage,
-                            lastVisitedPage:result.pagination.currentPage
-                        }
-                    };
-                }
             })
             .catch(() => {
                 /* 將此頁內容標記為有缺漏，讓畫面元件呈現合適的內容給使用者
                  */
                 resultOfSearch.categories.pageContent = null;
+            })
+            .finally(() => {
+                renderResultOfSearch();
             });
         }
-        renderResultOfSearch();
     } else {
         /*
           狀態異常，導向首頁並說明狀況
@@ -95,69 +132,100 @@ const onPageOfFoundCategoriesChanged:PageClickedHandler = (page:number):void => 
     }
 }
 
+function loadFoundTagsFromCache(record:CacheRecordOfResultOfSearch, page:number):void {
+    resultOfSearch.tags = {
+        numberOfResults:record.tags.foundTags,
+        pageContent:record.tags.pageContent[page],
+        pagination:{
+            endSize:record.tags.pagination.endSize,
+            midSize:record.tags.pagination.midSize,
+            totalPages:record.tags.pagination.totalPages,
+            currentPage:page,
+            itemsPerPage:record.tags.pagination.itemsPerPage,
+        }
+    }
+
+    record.tags.pagination.lastVisitedPage = page;
+}
+
+function fetchTagsAndHandleResult(config:ConfigurationOfTagFetching):Promise<ResultOfFetching<Tag>> {
+    if (!isNum(config.page)) {
+        config.page = 1;
+    }
+    if (!isNum(config.per_page)) {
+        config.per_page = DEFAULT_TAXONOMIES_PER_PAGE;
+    }
+    return fetchTags(config)
+            .then(result => {
+                const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
+            
+                const numberOfTagsFound = result.response.headers['x-wp-total'];
+                const totalPages = result.response.headers['x-wp-totalpages'];
+                resultOfSearch.tags = {
+                    numberOfResults:numberOfTagsFound,
+                    pageContent:result.modelObjs,
+                    pagination:{
+                        endSize:record.tags.pagination.endSize,
+                        midSize:record.tags.pagination.midSize,
+                        totalPages:totalPages,
+                        currentPage:config.page,
+                        itemsPerPage:config.per_page
+                    }
+                }
+            
+                /*
+                    接下來要根據查詢到的結果總數判斷快取是否過期並執行對應的管理作業。
+                */
+                if (numberOfTagsFound === record.tags.foundTags) {
+                    //伺服器上的記錄狀態沒變，斷定快取沒過期
+                    if (result.isComplete) {
+                        record.tags.pageContent[config.page] = result.modelObjs;
+                        record.tags.pagination.lastVisitedPage = config.page;
+                    }
+                    /*
+                      註：若此處發現資料不完整的話，那就不加入本地快取，等下次請求時再拿拿看了。
+                    */
+                } else {
+                    //伺服器上的記錄狀態有變，斷定快取過期，這表示要更新本地快取紀錄
+                    record.tags.foundTags = numberOfTagsFound;
+                    record.tags.pageContent = {}
+                    //根據分頁是否完整，決定要不要加入快取。
+                    if (result.isComplete) {
+                        record.tags.pageContent[config.page] = result.modelObjs;
+                    }
+                    record.tags.pagination = {
+                        endSize:record.tags.pagination.endSize,
+                        midSize:record.tags.pagination.midSize,
+                        totalPages:totalPages,
+                        itemsPerPage:config.per_page,
+                        lastVisitedPage:config.page
+                    }
+                }
+                return result;
+            });
+}
+
 const onPageOfFoundTagsChanged:PageClickedHandler = (page:number):void => {
     if (resultOfSearch && resultOfSearch.tags.pagination) {
         const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
         if (record.tags.pageContent[page]) {
             //快取中有紀錄，從裡面拿資料
-            resultOfSearch.tags = {
-                numberOfResults:record.tags.foundCategories,
-                pageContent:record.tags.pageContent[page],
-                pagination:{
-                    endSize:record.tags.pagination.endSize,
-                    midSize:record.tags.pagination.midSize,
-                    totalPages:record.tags.pagination.totalPages,
-                    currentPage:page,
-                    itemsPerPage:record.tags.pagination.itemsPerPage
-                }
-            }
+            loadFoundTagsFromCache(record, page);
         } else {
-            const perPage = resultOfSearch.tags.pagination.itemsPerPage ? 
-                resultOfSearch.tags.pagination.itemsPerPage : DEFAULT_TAXONOMIES_PER_PAGE;
-            searchTag({
+            fetchTagsAndHandleResult({
                 page:page,
-                per_page:perPage,
+                per_page:resultOfSearch.tags.pagination.itemsPerPage,
                 search:resultOfSearch.query
-            }, null)
-            .then(result => {
-                const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
-
-                resultOfSearch.tags = result;
-                //拿快取中的資訊填充給接下來要塗層的頁面使用
-                resultOfSearch.tags.pagination.endSize = record.tags.pagination.endSize;
-                resultOfSearch.tags.pagination.midSize = record.tags.pagination.midSize;
-                resultOfSearch.tags.pagination.itemsPerPage = perPage;
-                /*
-                    接下來要根據查詢到的結果總數判斷快取是否過期並執行對應的管理作業。
-                */
-                if (result.numberOfResults === record.publications.foundPublications) {
-                    //快取沒過期
-                    record.publications.pageContent[page] = result.pageContent;
-                    record.publications.lastVisitedPage = resultOfSearch.tags.pagination.currentPage;
-                } else {
-                    //快取過期
-                    record.publications = {
-                        foundTags:result.numberOfResults,
-                        pageContent:{
-                            [page]:result.pageContent
-                        },
-                        pagination:{
-                            endSize:record.tags.pagination.endSize,
-                            midSize:record.tags.pagination.midSize,
-                            totalPages:result.pagination.totalPages,
-                            itemsPerPage:perPage,
-                            lastVisitedPage:resultOfSearch.tags.pagination.currentPage
-                        }
-                    };
-                }
             })
             .catch(() => {
                 /* 將此頁內容標記為有缺漏，讓畫面元件呈現合適的內容給使用者
                  */
                 resultOfSearch.tags.pageContent = null;
+            })
+            .finally(() => {
+                renderResultOfSearch();
             });
         }
-        renderResultOfSearch();
     } else {
         /*
           狀態異常，導向首頁並說明狀況
@@ -318,37 +386,49 @@ export const routeEventHandlers = {
                         page:pageOfFoundPublicationsToAccess
                     }
                     tasksAwaitedToBeExecute.push(
-                        searchPublications(config, baseUrl)
+                        searchPublications(config)
                             .then(result => {
-                                resultOfSearch.publications = result;
-                                //拿快取中可重複利用的資訊填充給接下來要塗層的頁面使用
-                                resultOfSearch.publications.pagination.endSize = record.publications.pagination.endSize;
-                                resultOfSearch.publications.pagination.midSize = record.publications.pagination.midSize;
-                                resultOfSearch.publications.pagination.itemsPerPage = publicationsPerPage;
+                                
+                                const numberOfPublicationsFound = result.response.headers['x-wp-total'];
+                                const totalPages = result.response.headers['x-wp-totalpages'];
+                                resultOfSearch.publications = {
+                                    numberOfResults:numberOfPublicationsFound,
+                                    pageContent:result.modelObjs,
+                                    pagination:{
+                                        baseUrl:record.publications.pagination.baseUrl,
+                                        endSize:record.publications.pagination.endSize,
+                                        midSize:record.publications.pagination.midSize,
+                                        totalPages:totalPages,
+                                        currentPage:pageOfFoundPublicationsToAccess,
+                                        itemsPerPage:publicationsPerPage
+                                    }
+                                }
 
                                 /*
                                     接下來要根據查詢到的結果總數判斷快取是否過期並執行對應的管理作業。
                                 */
-                                if (result.numberOfResults === record.publications.foundPublications) {
+                                if (numberOfPublicationsFound == record.publications.foundPublications) {
                                     //快取沒過期
-                                    record.publications.pageContent[page] = result.pageContent;
-                                    record.publications.pagination.lastVisitedPage = pageOfFoundPublicationsToAccess;
+                                    if (result.isComplete) {
+                                        record.publications.pageContent[pageOfFoundPublicationsToAccess] = result.modelObjs;
+                                        record.publications.pagination.lastVisitedPage = pageOfFoundPublicationsToAccess;
+                                    }
                                 } else {
                                     //快取過期
-                                    record.publications = {
-                                        foundPublications:result.numberOfResults,
-                                        pageContent:{
-                                            [page]:result.pageContent
-                                        },
-                                        pagination:{
-                                            baseUrl:baseUrl,
-                                            endSize:record.publications.pagination.endSize,
-                                            midSize:record.publications.pagination.midSize,
-                                            totalPages:result.pagination.totalPages,
-                                            itemsPerPage:publicationsPerPage,
-                                            lastVisitedPage:pageOfFoundPublicationsToAccess
-                                        }
-                                    };
+                                    //伺服器上的記錄狀態有變，這表示要更新本地快取紀錄
+                                    record.publications.foundPublications = numberOfPublicationsFound;
+                                    record.publications.pageContent = {};
+                                    if (result.isComplete) {
+                                        record.publications.pageContent[pageOfFoundPublicationsToAccess] = result.modelObjs;
+                                    }
+                                    record.publications.pagination = {
+                                        baseUrl:baseUrl,
+                                        endSize:record.publications.pagination.endSize,
+                                        midSize:record.publications.pagination.midSize,
+                                        totalPages:totalPages,
+                                        itemsPerPage:publicationsPerPage,
+                                        lastVisitedPage:pageOfFoundPublicationsToAccess
+                                    }
                                 }
                             })
                     );
@@ -359,60 +439,23 @@ export const routeEventHandlers = {
                     pageOfFoundCategoriesToAccess = 1;
                 }
                 if (record.categories.pageContent[pageOfFoundCategoriesToAccess]) {
-                    resultOfSearch['categories'] = {
-                        numberOfResults:record.categories.foundCategories,
-                        pageContent:record.categories.pageContent[pageOfFoundCategoriesToAccess],
-                        pagination:{
-                            endSize:record.categories.pagination.endSize,
-                            midSize:record.categories.pagination.midSize,
-                            totalPages:record.categories.pagination.totalPages,
-                            currentPage:pageOfFoundCategoriesToAccess,
-                            itemsPerPage:record.categories.pagination.itemsPerPage
-                        }
-                    }
-
-                    record.categories.pagination.lastVisitedPage = pageOfFoundCategoriesToAccess;
+                    loadFoundCategoriesFromCache(record, pageOfFoundCategoriesToAccess);
                 } else {
                     //沒有找到欲檢視頁面的暫存紀錄，因此要向伺服器拿
-                    const categoriesPerPage = record.publications.pagination.itemsPerPage || DEFAULT_TAXONOMIES_PER_PAGE;
                     const config:ConfigurationOfCategoryFetching = {
                         search:keyword,
-                        per_page:categoriesPerPage,
-                        page:pageOfFoundCategoriesToAccess
+                        per_page:record.categories.pagination.itemsPerPage,
+                        page:pageOfFoundCategoriesToAccess,
+                        includeParent:false
                     }
 
                     tasksAwaitedToBeExecute.push(
-                        searchCategory(config, null)
-                            .then(result => {
-                                resultOfSearch.categories = result;
-                                //拿快取中可重複利用的資訊填充給接下來要塗層的頁面使用
-                                resultOfSearch.categories.pagination.endSize = record.publications.pagination.endSize;
-                                resultOfSearch.categories.pagination.midSize = record.publications.pagination.midSize;
-                                resultOfSearch.categories.pagination.itemsPerPage = categoriesPerPage;
-
-                                /*
-                                    接下來要根據查詢到的結果總數判斷快取是否過期並執行對應的管理作業。
-                                */
-                                if (result.numberOfResults === record.categories.foundCategories) {
-                                    //快取沒過期
-                                    record.categories.pageContent[page] = result.pageContent;
-                                    record.categories.pagination.lastVisitedPage = resultOfSearch.categories.pagination.currentPage;
-                                } else {
-                                    //快取過期
-                                    record.publications = {
-                                        foundPublications:result.numberOfResults,
-                                        pageContent:{
-                                            [page]:result.pageContent
-                                        },
-                                        pagination:{
-                                            endSize:record.categories.pagination.endSize,
-                                            midSize:record.categories.pagination.midSize,
-                                            totalPages:result.pagination.totalPages,
-                                            itemsPerPage:categoriesPerPage,
-                                            lastVisitedPage:resultOfSearch.categories.pagination.currentPage
-                                        }
-                                    };
-                                }
+                        fetchCategoriesAndHandleResult(config)
+                            .catch(() => {
+                                /* 將此頁內容標記為有缺漏，讓畫面元件呈現合適的內容給使用者
+                                 */
+                                resultOfSearch.categories.pageContent = null;
+                                return;
                             })
                     );
                 }
@@ -422,61 +465,21 @@ export const routeEventHandlers = {
                     pageOfFoundTagsToAccess = 1;
                 }
                 if (record.tags.pageContent[pageOfFoundTagsToAccess]) {
-                    resultOfSearch['tags'] = {
-                        numberOfResults:record.tags.foundTags,
-                        pageContent:record.tags.pageContent[pageOfFoundTagsToAccess],
-                        pagination:{
-                            endSize:record.tags.pagination.endSize,
-                            midSize:record.tags.pagination.midSize,
-                            totalPages:record.tags.pagination.totalPages,
-                            currentPage:pageOfFoundTagsToAccess,
-                            itemsPerPage:record.tags.pagination.itemsPerPage,
-                        }
-                    }
-
-                    record.tags.pagination.lastVisitedPage = pageOfFoundTagsToAccess;
+                    loadFoundTagsFromCache(record, pageOfFoundTagsToAccess);
                 } else {
                     //沒有找到欲檢視頁面的暫存紀錄，因此要向伺服器拿
-                    const tagsPerPage = record.tags.pagination.itemsPerPage || DEFAULT_TAXONOMIES_PER_PAGE;
                     const config:ConfigurationOfTagFetching = {
                         search:keyword,
-                        per_page:tagsPerPage,
+                        per_page:record.tags.pagination.itemsPerPage,
                         page:pageOfFoundTagsToAccess
                     }
 
                     tasksAwaitedToBeExecute.push(
-                        searchTag(config, null)
-                            .then(result => {
-                                resultOfSearch.tags = result;
-
-                                //拿快取中可重複利用的資訊填充給接下來要塗層的頁面使用
-                                resultOfSearch.tags.pagination.endSize = record.tags.pagination.endSize;
-                                resultOfSearch.tags.pagination.midSize = record.tags.pagination.midSize;
-                                resultOfSearch.tags.pagination.itemsPerPage = tagsPerPage;
-
-                                /*
-                                    接下來要根據查詢到的結果總數判斷快取是否過期並執行對應的管理作業。
-                                */
-                                if (result.numberOfResults === record.publications.foundPublications) {
-                                    //快取沒過期
-                                    record.publications.pageContent[page] = result.pageContent;
-                                    record.publications.lastVisitedPage = resultOfSearch.tags.pagination.currentPage;
-                                } else {
-                                    //快取過期
-                                    record.publications = {
-                                        foundTags:result.numberOfResults,
-                                        pageContent:{
-                                            [page]:result.pageContent
-                                        },
-                                        pagination:{
-                                            endSize:record.tags.pagination.endSize,
-                                            midSize:record.tags.pagination.midSize,
-                                            totalPages:result.pagination.totalPages,
-                                            itemsPerPage:tagsPerPage,
-                                            lastVisitedPage:resultOfSearch.tags.pagination.currentPage
-                                        }
-                                    };
-                                }
+                        fetchTagsAndHandleResult(config)
+                            .catch(() => {
+                                /* 將此頁內容標記為有缺漏，讓畫面元件呈現合適的內容給使用者
+                                 */
+                                resultOfSearch.tags.pageContent = null;
                             })
                     );
                 }
@@ -494,53 +497,91 @@ export const routeEventHandlers = {
             
                search({ 
                    keyword:keyword,
-                   page:page,
+                   pageOfPublications:page,
+                   pageOfTaxonomies:1,
                    publicationsPerPage:publicationsPerPage,
                    taxonomiesPerPage:taxonomiesPerPage
                  })
                  .then(data => {
-                     resultOfSearch = data;
+                     const baseUrl = getBaseUrl();
+                     resultOfSearch = {
+                        query:keyword,
+                        publications:{
+                            numberOfResults:data.publications.response.headers['x-wp-total'],
+                            pageContent:data.publications.modelObjs,
+                            pagination:{
+                                baseUrl:baseUrl,
+                                endSize:defaultEndSize,
+                                midSize:defaultMidSize,
+                                totalPages:data.publications.response.headers['x-wp-totalpages'],
+                                currentPage:page,
+                                itemsPerPage:publicationsPerPage
+                            }
+                        },
+                        categories:{
+                            numberOfResults:data.categories.response.headers['x-wp-total'],
+                            pageContent:data.categories.modelObjs,
+                            pagination:{
+                                endSize:defaultEndSize,
+                                midSize:defaultMidSize,
+                                totalPages:data.categories.response.headers['x-wp-totalpages'],
+                                currentPage:1,
+                                itemsPerPage:taxonomiesPerPage
+                            }
+                        },
+                        tags:{
+                            numberOfResults:data.tags.response.headers['x-wp-total'],
+                            pageContent:data.tags.modelObjs,
+                            pagination:{
+                                endSize:defaultEndSize,
+                                midSize:defaultMidSize,
+                                totalPages:data.tags.response.headers['x-wp-totalpages'],
+                                currentPage:1,
+                                itemsPerPage:taxonomiesPerPage
+                            }
+                        }
+                    };
 
                      const record:CacheRecordOfResultOfSearch = {
                          query:keyword,
                          publications:{
-                             foundPublications:data.publications.numberOfResults,
+                             foundPublications:data.publications.response.headers['x-wp-total'],
                              pageContent:{
-                                 [page]:data.publications.pageContent
+                                 [page]:data.publications.modelObjs,
                              },
                              pagination:{
-                                 baseUrl:data.publications.pagination.baseUrl,
-                                 endSize:data.publications.pagination.endSize,
-                                 midSize:data.publications.pagination.midSize,
-                                 totalPages:data.publications.pagination.totalPages,
-                                 itemsPerPage:data.publications.pagination.itemsPerPage,
+                                 baseUrl:baseUrl,
+                                 endSize:defaultEndSize,
+                                 midSize:defaultMidSize,
+                                 totalPages:data.publications.response.headers['x-wp-totalpages'],
+                                 itemsPerPage:publicationsPerPage,
                                  lastVisitedPage:page
                              }
                          },
                          categories:{
-                             foundCategories:data.categories.numberOfResults,
+                             foundCategories:data.categories.response.headers['x-wp-total'],
                              pageContent:{
-                                 [data.categories.pagination.currentPage]:data.categories.pageContent
+                                 [1]:data.categories.modelObjs
                              },
                              pagination:{
-                                 endSize:data.categories.pagination.endSize,
-                                 midSize:data.categories.pagination.midSize,
-                                 totalPages:data.categories.pagination.totalPages,
-                                 itemsPerPage:data.categories.pagination.itemsPerPage,
-                                 lastVisitedPage:data.categories.pagination.currentPage
+                                 endSize:defaultEndSize,
+                                 midSize:defaultMidSize,
+                                 totalPages:data.categories.response.headers['x-wp-totalpages'],
+                                 itemsPerPage:taxonomiesPerPage,
+                                 lastVisitedPage:1
                              }
                          },
                          tags:{
-                             foundTags:data.tags.numberOfResults,
+                             foundTags:data.tags.response.headers['x-wp-total'],
                              pageContent:{
-                                 [data.tags.pagination.currentPage]:data.tags.pageContent
+                                 [1]:data.tags.modelObjs
                              },
                              pagination:{
-                                 endSize:data.tags.pagination.endSize,
-                                 midSize:data.tags.pagination.midSize,
-                                 totalPages:data.tags.pagination.totalPages,
-                                 itemsPerPage:data.tags.pagination.itemsPerPage,
-                                 lastVisitedPage:data.tags.pagination.currentPage
+                                 endSize:defaultEndSize,
+                                 midSize:defaultMidSize,
+                                 totalPages:data.tags.response.headers['x-wp-totalpages'],
+                                 itemsPerPage:taxonomiesPerPage,
+                                 lastVisitedPage:1
                              }
                          }
                      }

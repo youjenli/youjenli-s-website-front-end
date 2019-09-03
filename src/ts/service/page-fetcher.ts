@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { convertGMTDateToLocalDate } from './formatters';
-import { PageEntity , ResultOfFetching } from '../model/wp-rest-api';
+import { PageEntity } from '../model/wp-rest-api';
+import { ResultOfFetching } from '../model/general-types';
 import { Page } from '../model/posts';
 import { isNotBlank } from './validator';
 import * as terms from './terms';
@@ -41,8 +42,9 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
     return  new Promise((resolve, reject) => {
         Axios.get<PageEntity[]>('/wp-json/wp/v2/pages', reqConfig)
                 .then((responseOfQueryOfPage) => {
-                    if (responseOfQueryOfPage.status == 200) {
-                        if (responseOfQueryOfPage.data.length > 0) {
+                    if (responseOfQueryOfPage && responseOfQueryOfPage.status == 200) {
+                        let isComplete = true;
+                        if (Array.isArray(responseOfQueryOfPage.data) && responseOfQueryOfPage.data.length > 0) {
                             let rawDataOfPage = responseOfQueryOfPage.data[0];
                             let model:Page = {
                                 type:rawDataOfPage.type,
@@ -60,19 +62,35 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                 additionalPromises.push(
                                     fetchMedia({include:[rawDataOfPage.featured_media]})
                                         .then(result => {
-                                            if (result.data && result.data.length > 0) {
-                                                const rawDataOfImage = result.data[0];
-                                                model['thumbnail'] = {
-                                                    url:rawDataOfImage.link,
-                                                    caption:rawDataOfImage.caption.rendered
+                                            if (result) {
+                                                if (result.status == 200) {
+                                                    if (result.data && result.data.length > 0) {
+                                                        const rawDataOfImage = result.data[0];
+                                                        model['thumbnail'] = {
+                                                            url:rawDataOfImage.link,
+                                                            caption:rawDataOfImage.caption.rendered
+                                                        }
+                                                    } else {
+                                                        /* 查不到資料、回傳資料毀損 => 藉由 null 指示資料有缺漏。 */
+                                                        model['thumbnail'] = null;
+                                                        isComplete = false;
+                                                    }
+                                                } else {
+                                                    /* 請求不順利 => 藉由 null 指示資料有缺漏。 */
+                                                    model['thumbnail'] = null;
+                                                    isComplete = false;
                                                 }
                                             } else {
-                                                /* 查不到資料、回傳資料毀損 => 藉由 null 指示資料有缺漏。 */
-                                                model['thumbnail'] = null;
+                                                //todo
                                             }
                                         })
-                                        .catch(() => {
+                                        .catch(error => {
+                                            /*
+                                              請求過程發生問題。這種情況下不打算做什麼，只藉由 null 註明該欄位資料有缺失
+                                            */
                                             model['thumbnail'] = null;
+                                            isComplete = false;
+                                            return error;
                                         })
                                 );
                             }
@@ -80,24 +98,35 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                 additionalPromises.push(
                                     Axios.get<PageEntity[]>('/wp-json/wp/v2/pages', reqConfig)
                                         .then(result => {
-                                            if (result.data && result.data.length > 0) {
-                                                //如果有查到父頁面，則為 model 補充父頁面的資訊。
-                                                const rawDataOfParentPage = result.data[0];
-                                                model['parent'] = {
-                                                    title:rawDataOfParentPage.title.rendered,
-                                                    url:rawDataOfParentPage.link,
-                                                    slug:rawDataOfParentPage.slug
+                                            if (result.status == 200) {
+                                                if (result.data && result.data.length > 0) {
+                                                    //如果有查到父頁面，則為 model 補充父頁面的資訊。
+                                                    const rawDataOfParentPage = result.data[0];
+                                                    model['parent'] = {
+                                                        title:rawDataOfParentPage.title.rendered,
+                                                        url:rawDataOfParentPage.link,
+                                                        slug:rawDataOfParentPage.slug
+                                                    }
+                                                } else {
+                                                    //資料毀損或找不到父頁面，則把父頁面標記為 null
+                                                    model['parent'] = null;
+                                                    isComplete = false;
                                                 }
                                             } else {
-                                                //如果沒有查到父頁面，則在
+                                                /*
+                                                  請求不順利 => 藉由 null 指示資料有缺漏。
+                                                */
                                                 model['parent'] = null;
+                                                isComplete = false;
                                             }
                                         })
-                                        .catch(() => {
+                                        .catch(error => {
                                             /*
-                                              這種情況下不打算做什麼，因此只藉由 null 註明該欄位資料有缺失
+                                              請求過程發生問題。這種情況下不打算做什麼，只藉由 null 註明該欄位資料有缺失
                                             */
                                             model['parent'] = null;
+                                            isComplete = false;
+                                            return error;
                                         })
                                 );
                             }
@@ -105,18 +134,20 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                      .then(() => {
                                          resolve({
                                              modelObjs:[model],
-                                             response:responseOfQueryOfPage
+                                             response:responseOfQueryOfPage,
+                                             isComplete:isComplete
                                          });
                                      });
                         } else {
                             //查無此專頁，回報空資料集
                             resolve({
                                 modelObjs:[],
-                                response:responseOfQueryOfPage
+                                response:responseOfQueryOfPage,
+                                isComplete:isComplete
                             });
                         }
                     } else {
-                        /* 因為在開發時無法判斷到底是什麼原因導致請求會成功，但結果卻不是 200，
+                        /* 因為在開發時無法判斷什麼情況導致 axios 不送回任何物件，或著請求成功，但結果卻不是 200，
                            所以暫時先按照 Axios Promise Catch 的回傳格式送請求資訊給此函式的使用者
                          */
                         reject({

@@ -1,8 +1,5 @@
 {
     <?php get_template_part('template-parts/encode-publication-to-json') ?>
-    <?php if ( is_search() ) : ?>
-    type:'Page',
-    <?php endif ?>
     <?php if ($post->post_parent) : 
         $parent = get_post($post->post_parent); 
         $parentObj = array(
