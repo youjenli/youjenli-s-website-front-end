@@ -57,6 +57,7 @@ export const routeEventHandlers = {
                 pageShouldBeRendered = record;
                 done();
             } else {
+                //查無此頁的快取紀錄
                 const config:ConfigurationOfFetching = {
                     slug:params.slug
                 }
@@ -64,6 +65,12 @@ export const routeEventHandlers = {
                     .then(result => {
                         if (result.modelObjs.length > 0) {
                             pageShouldBeRendered = result.modelObjs[0];
+
+                            //再來處理快取問題。
+                            if (result.isComplete) {
+                                addRecord(TypesOfCachedItem.Page, params.slug, pageShouldBeRendered);
+                            }
+
                             done();
                         } else {
                             /* 查無文章時，導向首頁並通報異常。 */
