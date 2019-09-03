@@ -11,7 +11,7 @@ import {Tag} from '../../model/terms';
 import GenericTag from './generic';
 import { queryParametersOfHome } from '../home/routeHandler';
 import * as terms from './terms';
-import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
+import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
 
@@ -144,7 +144,10 @@ export const routeEventHandlersOfTag = {
                                     baseUrl:record.pagination.baseUrl
                                 }
 
-                                record.pages[page] = result.modelObjs;
+                                if (result.isComplete) {
+                                    //若此分頁內容有完整才把它加入快取，反之則不加入。
+                                    record.pages[page] = result.modelObjs;
+                                }
                             } else {
                                 /*
                                   依據文章總數推估標籤底下的文章有變，因此要重建此標籤頁的快取紀錄
@@ -158,10 +161,14 @@ export const routeEventHandlersOfTag = {
                                }
                             
                                //接著更新快取紀錄
-                               record.pagination['totalPages'] = latestTotalPages;
-                               record.pagination['foundPosts'] = latestFoundPosts;
-                               record.pages = {};
-                               record.pages[page] = result.modelObjs;
+                               if (result.isComplete) {
+                                   record.pagination['totalPages'] = latestTotalPages;
+                                   record.pagination['foundPosts'] = latestFoundPosts;
+                                   record.pages = {};
+                                   record.pages[page] = result.modelObjs;
+                               } else {
+                                   deleteRecord(TypesOfCachedItem.Tag, slug);
+                               }
                             }
                         })
                         .catch(() => {
@@ -219,20 +226,22 @@ export const routeEventHandlersOfTag = {
                                         //註：這裡不用設定 postsPerPage，因為已經在最上面重設了。
                                         
                                         //接下來產生快取紀錄
-                                        const contentOfRecord = {
-                                            pagination:{
-                                                endSize:pg.defaultEndSize,
-                                                midSize:pg.defaultMidSize,
-                                                totalPages:totalPages,
-                                                baseUrl:baseUrl,
-                                                foundPosts:foundPosts,
-                                                postsPerPage:postsPerPage
-                                            },
-                                            tag:tagShouldBeDisplayed,
-                                            pages:{}
+                                        if (result.isComplete) {
+                                            const contentOfRecord = {
+                                                pagination:{
+                                                    endSize:pg.defaultEndSize,
+                                                    midSize:pg.defaultMidSize,
+                                                    totalPages:totalPages,
+                                                    baseUrl:baseUrl,
+                                                    foundPosts:foundPosts,
+                                                    postsPerPage:postsPerPage
+                                                },
+                                                tag:tagShouldBeDisplayed,
+                                                pages:{}
+                                            }
+                                            contentOfRecord.pages[page] = postsShouldBeRendered;
+                                            addRecord(TypesOfCachedItem.Tag, slug, contentOfRecord);
                                         }
-                                        contentOfRecord.pages[page] = postsShouldBeRendered;
-                                        addRecord(TypesOfCachedItem.Tag, slug, contentOfRecord);
                                     })
                                     .catch(() => {
                                         //雖然有查到標籤，但查詢文章卻失敗
