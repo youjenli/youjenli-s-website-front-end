@@ -126,8 +126,7 @@ const onPageOfFoundCategoriesChanged:PageClickedHandler = (page:number):void => 
         /*
           狀態異常，導向首頁並說明狀況
         */
-        const route = 
-            `home?${queryParametersOfHome.ERROR_MSG}=${terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.category)}`;
+        const route = encodeURI(`home?${queryParametersOfHome.ERROR_MSG}=${terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.category)}`);
         router.navigate(route);
     }
 }
@@ -231,7 +230,7 @@ const onPageOfFoundTagsChanged:PageClickedHandler = (page:number):void => {
           狀態異常，導向首頁並說明狀況
         */
         const route = 
-              `home?${queryParametersOfHome.ERROR_MSG}=${terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.tag)}`;
+              encodeURI(`home?${queryParametersOfHome.ERROR_MSG}=${terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.tag)}`);
         router.navigate(route);
     }
 }
