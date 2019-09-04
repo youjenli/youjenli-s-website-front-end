@@ -24,9 +24,6 @@
 <script>
     window.wp = {
         siteUrl:<?php echo json_encode(untrailingslashit($url)); ?>
-        <?php if ( isset($errorMsg) ) : ?>,
-        errorMsg:<?php echo json_encode($errorMsg); ?>
-        <?php endif; ?>
     }
 </script>
 <?php 

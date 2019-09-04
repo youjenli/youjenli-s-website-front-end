@@ -21,20 +21,6 @@ export const reactRoot = document.getElementById('react-root');
 */
 const paginationPath = pageIndicator.replace(placeHolderForPage, ':page');
 
-/*
-  實驗發現如果想要指定根路徑的 route，那就要透過「/」來表達，而不能只填寫 ''，否則會變成萬用 route 的設定。
-  另外，因為 navigo 會在根路徑以外的路徑前面加上「/」，所以表達根路徑以外的路徑時，開頭不用加上「/」，
-  也不需要在產生 navigo 實例的時候在 root (host name) 後面加上「/」，否則 navigo 會重覆為路徑加上斜線，導致問題。
-*/
-router.on(renderHomePage, routeEventHandlersOfHome);
-/*
-  之所以加入 home 這個 route 的原因是 navigo 的 navigate 函式不能傳參數，
-  而我又試不出方法讓它導向至根目錄並傳遞錯誤訊息參數。
-  試來試去只有當路徑不是根路徑的情況下才能順利傳遞參數，
-  因此才另外定義這個 route。
-*/
-router.on('home', renderHomePage, routeEventHandlersOfHome);
-
 const generalHandlerOfCategory = (params) => {
     let paramsOfCategory = {};
     let route = router.lastRouteResolved().url;
@@ -77,10 +63,17 @@ router
        然後請求參數只包括 page:2，而沒有 keyword。
     */
     .on(`${paginationPath}`, renderHomePage, routeEventHandlersOfHome)
+    /*
+      實驗發現如果想要指定根路徑的 route，那就要透過「/」來表達，而不能只填寫 ''，否則會變成萬用 route 的設定。
+      另外，因為 navigo 會在根路徑以外的路徑前面加上「/」，所以表達根路徑以外的路徑時，開頭不用加上「/」，
+      也不需要在產生 navigo 實例的時候在 root (host name) 後面加上「/」，否則 navigo 會重覆為路徑加上斜線，導致問題。
+    */
+    .on('/', renderHomePage, routeEventHandlersOfHome)
+    .on(renderHomePage, routeEventHandlersOfHome)
     .resolve();
 
 export function performSearch(keyword:string, page:number) {
-    let route = `search/${keyword}/`;
+    let route = `search/${encodeURI(keyword)}/`;
     if (page) {
         route += paginationPath.replace(placeHolderForPage, page.toString());
     }
@@ -88,5 +81,5 @@ export function performSearch(keyword:string, page:number) {
 }
 
 export function navigateToHomeWithErrorMessage(msg:string):void {
-    router.navigate(`home?${queryParametersOfHome.ERROR_MSG}=${msg}`);
+    router.navigate(`/?${queryParametersOfHome.ERROR_MSG}=${encodeURI(msg)}`);
 }

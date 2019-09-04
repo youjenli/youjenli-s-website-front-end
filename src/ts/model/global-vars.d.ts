@@ -28,7 +28,6 @@ declare global {
     interface Window { 
         wp:{
             siteUrl:string;
-            errorMsg?:string;
             titleBar:{
                 menuItems:MenuItem[];
             };

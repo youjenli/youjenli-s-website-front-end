@@ -25,15 +25,17 @@ export const queryParametersOfHome = {
     ERROR_MSG:'errorMsg'
 }
 
-export function renderHomePage(params?:any, query?:string) {
+export function renderHomePage(query?:any) 
+        /* 這裡 query 的型態不能訂為 string，否則 tsc 會斷定它在 router 註冊的程式碼有型態問題 */ {
     if (postsShouldBeRender != null) {
         
-        /* 把前面 before hook 收集到的文章加入專頁和文章的註冊紀錄 */
-        postsShouldBeRender.forEach(post => {
-            addRegistryOfPostOrPage(post.slug, post.type);
-        });
-
         //整理錯誤訊息紀錄
+        /*
+            注意，這裡直接從此函式的第一個參數取得請求參數，原因與 navigo 的設計有關。
+            當路由是 ""、"/" 或 "#" 這些根路徑時，第一個路徑參數會變得無意義，
+            這種情況下 navigo 不會提供 null、undefined 等值作為此函式的第一個參數，
+            而是直接以第二個參數──也就是請求字串取代第一個參數，因此這裡才要解析第一個參數。
+        */
         const queryParams = interpretQueryString(query);
         if (queryParams && queryParams[queryParametersOfHome.ERROR_MSG] != null) {
             const msgList = queryParams[queryParametersOfHome.ERROR_MSG].split(',')
@@ -41,6 +43,12 @@ export function renderHomePage(params?:any, query?:string) {
                                 //註：實驗發現 navigo 會自動為 route 編碼而沒有設定可以改成手動，因此這邊要先解碼才能拿來使用。
             errorMsgShouldBeRender.push(...msgList);
         }
+
+        /* 把前面 before hook 收集到的文章加入專頁和文章的註冊紀錄 */
+        postsShouldBeRender.forEach(post => {
+            addRegistryOfPostOrPage(post.slug, post.type);
+        });
+
         ReactDOM.render(
             <GenericHomePage posts={postsShouldBeRender} errorMsg={errorMsgShouldBeRender} 
                 onWidgetOfErrorMsgDismissed={() => { errorMsgShouldBeRender = [] /* 重置錯誤訊息的狀態 */}} />,
@@ -92,12 +100,8 @@ function setupStateOfHomePage() {
 export const routeEventHandlers = {
     before: function (done, params) {
         setupStateOfHomePage();
+
         if (window.wp.recentPosts) {
-            if (window.wp.errorMsg) {
-                errorMsgShouldBeRender.push(window.wp.errorMsg);
-                delete window.wp.errorMsg;
-            }
-            
             //執行一些在客戶端發佈資料的前置作業
             const meaningfulPosts = window.wp.recentPosts.map((post) => {
                 //轉換時間格式
