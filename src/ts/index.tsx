@@ -81,5 +81,12 @@ export function performSearch(keyword:string, page:number) {
 }
 
 export function navigateToHomeWithErrorMessage(msg:string):void {
-    router.navigate(`/?${queryParametersOfHome.ERROR_MSG}=${encodeURI(msg)}`);
+    const queryStr = `${queryParametersOfHome.ERROR_MSG}=${encodeURI(msg)}`;
+    if (queryStr.length >= 2048) {
+        /*
+            如果錯誤訊息太長，則保留適當的長度並去掉多餘訊息。
+        */
+        queryStr.substring(0, 2048);
+    }
+    router.navigate(`/?${queryStr}`);
 }
