@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as directions from './direction';
 import {PageClickedHandler} from '../routeHandler';
+import * as terms from '../terms';
 
 interface PropsOfHandlerBasedNavbar {
     currentPage:number;
@@ -95,6 +96,8 @@ export class DefaultHandlerBasedNavbar extends React.Component<PropsOfHandlerBas
         let additionalClassNameOfPrevNav = '', additionalClassNameOfNextNav = '';
         if (this.props.currentPage == 1) {
             additionalClassNameOfPrevNav = ' hidden';
+            linkToPreviousPage = 
+                <a ><directions.LeftDirection style={styleOfDirection}/>{terms.previousPage}</a>
         } else {
             const pageClickedHandler = (evt: React.SyntheticEvent) => {
                 evt.preventDefault();
@@ -102,11 +105,14 @@ export class DefaultHandlerBasedNavbar extends React.Component<PropsOfHandlerBas
             }
 
             linkToPreviousPage = 
-                <a onClick={pageClickedHandler} ><directions.LeftDirection style={styleOfDirection}/></a>;
+                <a onClick={pageClickedHandler} ><directions.LeftDirection style={styleOfDirection}/>
+                    {terms.previousPage}</a>;
         }
 
         if (this.props.currentPage == this.props.totalPages) {
             additionalClassNameOfNextNav = ' hidden';
+            linkToNextPage = 
+                <a>{terms.nextPage}<directions.RightDirection style={styleOfDirection}/></a>;
         } else {
             const pageClickedHandler = (evt: React.SyntheticEvent) => {
                 evt.preventDefault();
@@ -114,7 +120,8 @@ export class DefaultHandlerBasedNavbar extends React.Component<PropsOfHandlerBas
             }
 
             linkToNextPage =
-                <a onClick={pageClickedHandler} ><directions.RightDirection style={styleOfDirection}/></a>;
+                <a onClick={pageClickedHandler} >{terms.nextPage}
+                    <directions.RightDirection style={styleOfDirection}/></a>;
         }
 
         return ( 

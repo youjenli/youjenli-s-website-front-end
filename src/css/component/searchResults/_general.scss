@@ -84,7 +84,9 @@
         @import './post/general.scss';
 
         .navbar {
-            color:#4A4A4A;
+            a {
+                color:#4A4A4A;
+            }
             svg g {
                 fill:#4A4A4A;
             }
@@ -102,7 +104,9 @@
             }
         }
         .navbar {
-            color:#4C7027;
+            a {
+                color:#4C7027;
+            }
             svg g {
                 fill:#4C7027;
             }
@@ -132,7 +136,9 @@
             }
         }
         .navbar {
-            color:#6F8099;
+            a {
+                color:#6F8099;
+            }
             svg g {
                 fill:#6F8099;
             }

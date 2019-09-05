@@ -85,7 +85,6 @@ export class DefaultRouteBasedNavbar extends React.Component<PropsOfRouteBasedNa
         let additionalClassNameOfPrevNav = '', additionalClassNameOfNextNav = '';
         if (this.props.currentPage == 1) {
             additionalClassNameOfPrevNav = ' hidden';
-            
         } else {
             hrefOfLeftDirection = createUrlForPage(this.props.baseUrl, this.props.currentPage - 1);
         }
