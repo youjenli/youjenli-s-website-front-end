@@ -69,21 +69,29 @@ const debouncedScrollEventHandler = debounce(() => {
             isFetching = true;
             fetchPosts({page:nextPage})
                 .then((result) => {
-                    if (result) {
-                        if (result.modelObjs.length > 0) {
-                            postsShouldBeRender = postsShouldBeRender.concat(result.modelObjs);
-                            currentPage = nextPage;
-                            totalPages = result.response.headers['x-wp-totalpages'];
-                            renderHomePage();
-                            if (currentPage == totalPages) {
-                                //既然資料已全數載入，那就不用再監聽捲動事件，因此可以取消註冊捲動事件監聽器
-                                window.removeEventListener('scroll', debouncedScrollEventHandler);
-                                //既然資料已全數載入，那就不用再註冊捲動事件監聽器
-                                shouldRegisterScrollListener = false;
+                    /*
+                        注意，因為使用者可能在觸發此頁面非同步取得最新文章的功能後立刻切換到新分頁，
+                        這會導致這個函式後序程式碼的步驟拋出找不到 postsShouldBeRender 參考的錯誤。
+                        解決此問題的辦法是再次檢查負責記錄 isFetching 有沒有因為 leave hook 而被設定成 false，
+                        若已變成 false 就跳過後序步驟。
+                    */
+                    if (isFetching) {
+                        if (result) {
+                            if (result.modelObjs.length > 0) {
+                                postsShouldBeRender = postsShouldBeRender.concat(result.modelObjs);
+                                currentPage = nextPage;
+                                totalPages = result.response.headers['x-wp-totalpages'];
+                                renderHomePage();
+                                if (currentPage == totalPages) {
+                                    //既然資料已全數載入，那就不用再監聽捲動事件，因此可以取消註冊捲動事件監聽器
+                                    window.removeEventListener('scroll', debouncedScrollEventHandler);
+                                    //既然資料已全數載入，那就不用再註冊捲動事件監聽器
+                                    shouldRegisterScrollListener = false;
+                                }
                             }
                         }
+                        isFetching = false;
                     }
-                    isFetching = false;
                 });
          }
     }
@@ -166,7 +174,7 @@ export const routeEventHandlers = {
     after: function() {
         if (shouldRegisterScrollListener) {
             window.addEventListener('scroll', debouncedScrollEventHandler);
-         }
+        }
     },
     leave: function() {
         //移除此頁面的狀態
