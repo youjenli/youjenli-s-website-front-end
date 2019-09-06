@@ -7,7 +7,7 @@ interface PropsOfDecorations {
 export class KhakiDecorationOfCategory extends React.Component<PropsOfDecorations > {
     render() {
         return (
-            <svg style={this.props.style} viewBox="0 0 154 44" version="1.1">
+            <svg className="decoration" style={this.props.style} viewBox="0 0 154 44" version="1.1">
                 <defs>
                     <path d="M8,0 L146,0 C150.418278,-8.11624501e-16 154,3.581722 154,8 L154,124.399858 C154,127.762298 151.897443,130.765875 148.738076,131.916702 L117.692363,143.225374 C117.581678,143.265692 117.470117,143.30356 117.357759,143.338951 L79.6494318,155.216529 C78.0328804,155.725719 76.2963826,155.70835 74.6903398,155.166927 C57.4044397,149.339563 45.7462563,145.379207 39.7157895,143.285858 C33.9937808,141.299584 22.5836774,137.475879 5.48547923,131.814746 L5.48547944,131.814745 C2.21091945,130.730554 4.22427077e-16,127.669575 0,124.220196 L0,8 C-5.41083001e-16,3.581722 3.581722,8.11624501e-16 8,0 Z" id="path-1"></path>
                     <filter x="-3.2%" y="-2.6%" width="106.5%" height="106.1%" filterUnits="objectBoundingBox" id="filter-2">
@@ -33,7 +33,7 @@ export class KhakiDecorationOfCategory extends React.Component<PropsOfDecoration
 export class GreenDecorationOfCategory extends React.Component<PropsOfDecorations> {
     render() {
         return (
-            <svg style={this.props.style} viewBox="0 0 154 44" version="1.1">
+            <svg className="decoration" style={this.props.style} viewBox="0 0 154 44" version="1.1">
                 <defs>
                     <path d="M8,0 L146,-7.10542736e-15 C150.418278,-7.91705186e-15 154,3.581722 154,8 L154,124.378175 C154,127.740771 151.897252,130.744451 148.737679,131.895164 L117.692345,143.201839 C117.581672,143.242146 117.470123,143.280004 117.357779,143.315385 L79.6490627,155.191134 C78.0327396,155.700169 76.2965256,155.682805 74.6907065,155.141546 C57.4046046,149.315073 45.746299,145.355327 39.7157895,143.262307 C33.993823,141.276373 22.5838455,137.453339 5.48585706,131.793205 L5.48585551,131.79321 C2.21110303,130.709132 4.22445053e-16,127.648057 0,124.198532 L0,8 C-5.41083001e-16,3.581722 3.581722,8.11624501e-16 8,0 Z" id="path-1"></path>
                     <filter x="-3.2%" y="-2.6%" width="106.5%" height="106.1%" filterUnits="objectBoundingBox" id="filter-2">

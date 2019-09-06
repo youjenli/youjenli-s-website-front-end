@@ -153,6 +153,7 @@
         border-radius:8px;
 
         .content {
+            flex-grow:1;
             padding:1px 0.5em;
             .name {
                 color:#4A4A4A;
@@ -169,6 +170,9 @@
             }
         }
         
+        .decoration {
+            flex-grow:0;
+        }
     }
 
     & > .noData {
