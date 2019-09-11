@@ -16,12 +16,14 @@ const flatten = require('gulp-flatten');
   但我還是選用它，原因是 gulp-template 的說明簡單易懂，而且剛好可以簡單的解決我的問題。
 */
 const template = require('gulp-template');
-const print = require('gulp-print').default;
-//註: gulp-webserver 已經四年沒有更新了，現在 jetbrains 好像接手開發這專案並改名為 gulp-connect，最後更新時間是四個月前。
-const connect = require('gulp-connect');
 const dateFormat = require('dateformat');
-const zip = require('gulp-zip');
-const decompress = require('gulp-decompress');
+/*
+  因為 Linux 上面要安裝其他套件才能解壓縮 zip 檔，所以後來改用 tar 和 gz 來封裝場景。
+*/
+const tar = require('gulp-tar');
+const untar = require('gulp-untar');
+const gzip = require('gulp-gzip');
+const gunzip = require('gulp-gunzip');
 const GulpSSH = require('gulp-ssh');
 const path = require('path');
 
@@ -236,18 +238,27 @@ const itemsToArchive = ['**/*.php'].concat(cssArtifacts).concat(jsArtifacts).con
 
 function packArtifactTask() {
     const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
-    nameOfArchive = `${prefixOfArchive}-${createDate}.zip`;
+    nameOfArchive = `${prefixOfArchive}-${createDate}.tar.gz`;
+
     return gulp.src(itemsToArchive, {base:distRoot})
-            .pipe(zip(nameOfArchive))
-            .pipe(print(filePath => `File ${filePath} has been pack to wordpress theme.`))
+            .pipe(tar(nameOfArchive))
+            .pipe(gzip({
+                append:false
+                /*  
+                    gulp-gzip 套件預設會在檔案名稱後面加上 .gz，因此這裡要以 append 參數指定不增加副檔名，
+                    這樣才能確保 nameOfArchive 變數有完整的套件檔名給後面函式採用。
+                    https://www.npmjs.com/package/gulp-gzip
+                */
+            }))
             .pipe(gulp.dest(distRoot));
 }
 
 const archiveTask = gulp.series(defaultTask, packArtifactTask);
 gulp.task('archive', archiveTask);
 
-const deployTask = gulp.series(function copyArchive() {
-        
+function generateDeployTask()  {
+    let pathToArchive = null;
+    function validateDeploymentConfigTask(done) {
         if (!deploymentConfig) {
             throw new Error('Configuration of deployment does not exists!');
         }
@@ -260,47 +271,76 @@ const deployTask = gulp.series(function copyArchive() {
         if (!deploymentConfig.dest) {
             throw new Error('Destination path of archive is a mandatory setting for deployment task.');
         }
-        const destPath = path.join(deploymentConfig.dest, deploymentConfig.nameOfTheme);
         if (!deploymentConfig.nameOfTheme) {
             throw new Error('The name of theme is a mandatory setting for deployment task.');
         }
         
-        let pathToArchive = null;
+        if (deploymentConfig.archive) {
+            pathToArchive = deploymentConfig.archive;
+        }
+        /*
+            如果檢查發現這次建置作業的 nameOfArchive 變數有內容，這表示這次建置作業有打包套件，
+            因此就部署這個套件，不套用設定檔指定的套件。
+        */
         if (nameOfArchive) {
             pathToArchive = path.join(distRoot, nameOfArchive);
-        } else if (deploymentConfig.archive) {
-            pathToArchive = deploymentConfig.archive;
-        } else {
+        }
+        
+        if (!nameOfArchive) {
             throw new Error('Did not found any archive that is ready for deploy.');
         }
+        done();
+    }
 
-        const targetName = deploymentConfig.target.host;
-        if (targetName == 'local') {
-            /* 若部署目標是本地端的目錄，那直接解壓縮場景檔到目的地即可。
-            */
-           return del(destPath, {force:true})
+    let copyArchive = null, extractArchiveAndDeployToServer = null;
+    const targetName = deploymentConfig.target.host;
+    if (targetName == 'local') {
+        /* 若部署目標是本地端的目錄，那直接解壓縮場景檔到目的地即可。 */
+        copyArchive = () => {
+            return del(destPath, {force:true})
                     .then(() => {
                         gulp.src(pathToArchive)
-                            .pipe(decompress())
+                            .pipe(gunzip())
+                            .pipe(untar())
                             .pipe(gulp.dest(destPath));
                     });
             /*註：
                 gulp 允許作業回傳 promise 通知它作業結束，不一定要呼叫它會提供的 done callback
                 https://gulpjs.com/docs/en/getting-started/async-completion
             */
-        } else {
-            /* 若部署目標不在本地，那就建立 SSH 連線。
-             */
-            const gulpSSH = new GulpSSH({
-                ignoreErrors:false,
-                sshConfig:deploymentConfig.target
-            });
-            return gulp.src(pathToArchive)
-                        .pipe(decompress())
-                        .pipe(gulpSSH.dest(destPath));
         }
-    });
+ 
+        extractArchiveAndDeployToServer  = function doNothing(done) {
+            done();
+        };
+    } else {
+        /* 若部署目標不在本地，那就建立 SSH 連線。
+         */
+        const gulpSSH = new GulpSSH({
+            ignoreErrors:false,
+            sshConfig:deploymentConfig.target
+        });
+        copyArchive = () => {
+            return gulp.src(pathToArchive)
+                        .pipe(gulpSSH.dest('/tmp'));
+        }
+        
+        extractArchiveAndDeployToServer = function extractAndMoveTheWebsite() {
+            let pathOfTheme = `/tmp/${deploymentConfig.nameOfTheme}`;
+            return gulpSSH.exec([
+                `rm -rf ${pathOfTheme}`,
+                `mkdir ${pathOfTheme}`,
+                `tar -zxf /tmp/${path.basename(pathToArchive)} -C ${pathOfTheme}`,
+                `sudo rm -rf ${deploymentConfig.dest}/${deploymentConfig.nameOfTheme}`,
+                `sudo cp -r ${pathOfTheme} ${deploymentConfig.dest}`
+            ]);
+        };
+    }
 
+    return gulp.series(validateDeploymentConfigTask, copyArchive, extractArchiveAndDeployToServer);
+}
+
+const deployTask = generateDeployTask();
 gulp.task('deploy', deployTask);
 
 const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
@@ -310,11 +350,11 @@ const cssSrcFiles = ['src/css/**/*.css', 'src/css/**/*.scss'];
   但是因為這邊 gulp watch 只接受 unix-like 系統格式的路徑，所以這邊不需要透過 path 重新產生路徑。
   */
 
-const monitorSrcAndRebuildTask = function rebuild() {
-            gulp.watch(pathOfHtmlSrcFiles, prepareHtmlTask),
-            gulp.watch(cssSrcFiles, prepareCSSTask),
-            gulp.watch(tsSrcFiles, prepareJSTask),
-            gulp.watch(imgSrcFiles, prepareImgTask)
+function monitorSrcAndRebuildTask() {
+        gulp.watch(pathOfHtmlSrcFiles, prepareHtmlTask),
+        gulp.watch(cssSrcFiles, prepareCSSTask),
+        gulp.watch(tsSrcFiles, prepareJSTask),
+        gulp.watch(imgSrcFiles, prepareImgTask)
 };
 /*
     註: 以上寫法是參考自下面網址中的範例

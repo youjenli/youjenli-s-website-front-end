@@ -30,15 +30,17 @@ module.exports = {
             另外，windows 上面載入 privateKey 時，可以直接用斜線表達目錄階層，不需要再透過 path 解析。
             例：fs.readFileSync('C:/Users/user/.ssh/my-key-file'),
         */
-        privateKey:fs.readFileSync(`/Users/${os.userInfo().username}/.ssh/id_rsa`),
+        privateKey:fs.readFileSync(`C:/Users/${os.userInfo().username}/.ssh/id_rsa`),
         passphrase:'passphrase'
     },
     /*要部署的壓縮檔相對於建置指令稿的路徑與名稱。
       建置指令稿只有在無法從前面其他作業得到壓縮檔的名稱時，才會使用這裡的設定。
       這項設定的用途是給開發者可以在不另外打包的情況下能夠藉由這項參數指示建置指令稿部署 wordpress 場景。 */
     archive:'./dist/wp-youjenli-website.zip',
-    //要部署場景的路徑。若只是透過檔案系統部署到本地，那這裡可以填寫相對或絕對路徑。
-    dest:'/var/www/html',
+    /*要部署場景的路徑，尾端不用加斜線。
+      若只是透過檔案系統部署到本地，那這裡就可以自由填寫相對或絕對路徑。
+    */
+    dest:'/var/www/html/projectName/wp-content/themes',
     //場景的名稱，必填
     nameOfTheme:'helloworld'
 };
