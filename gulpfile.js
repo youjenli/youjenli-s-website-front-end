@@ -233,12 +233,13 @@ const defaultTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask,
 gulp.task('default', defaultTask);
 
 let nameOfArchive = null;
-const itemsToArchive = ['**/*.php'].concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
-                        .map(filePattern => path.join(distRoot, filePattern));
 
 function packArtifactTask() {
     const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
     nameOfArchive = `${prefixOfArchive}-${createDate}.tar.gz`;
+
+    const itemsToArchive = ['**/*.php'].concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
+                        .map(filePattern => path.join(distRoot, filePattern));
 
     return gulp.src(itemsToArchive, {base:distRoot})
             .pipe(tar(nameOfArchive))
@@ -296,6 +297,7 @@ function generateDeployTask()  {
     const targetName = deploymentConfig.target.host;
     if (targetName == 'local') {
         /* 若部署目標是本地端的目錄，那直接解壓縮場景檔到目的地即可。 */
+        const destPath = path.join(deploymentConfig.dest, deploymentConfig.nameOfTheme);
         copyArchive = () => {
             return del(destPath, {force:true})
                     .then(() => {
