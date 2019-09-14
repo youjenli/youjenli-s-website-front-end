@@ -11,13 +11,16 @@
         border-radius: 8px;
         box-sizing: border-box;
         box-shadow:0 1px 3px 0 rgba(0,0,0,50);
-        font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+
         .categories, .tags {
             .noData {
                 color:#888844;
             }
         }
         .category, .tag, .read {
+            font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, 
+                         Helvetica-Light, "Georgia", "Trebuchet MS", "Franklin Gothic Book", "sans-serif", 
+                         "Gill Sans MT","Segoe UI", "Calibri",  "Calisto MT", "Times New Roman", system-ui;
             text-decoration:none;
             &:hover {
                 text-decoration: underline;
@@ -28,7 +31,9 @@
             color:inherit;
         }
         .title {
-            font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, Helvetica-Light, system-ui;
+            font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, 
+                         Helvetica-Light, "Book Antiqua", "Lucida Bright", "Segoe UI", "Calisto MT", Verdana, "Calibri", 
+                         "Arial Rounded MT", "Microsoft Sans Serif", "Times New Roman","Tahoma", "Arial", system-ui;
             a {
                 cursor:pointer;
                 text-decoration:none;
@@ -60,7 +65,7 @@
                 color:#223552;
             }
             .title {
-                color:#655E55;                
+                color:#655E55;
             }
         }
         &.plain {
@@ -79,7 +84,7 @@
                 text-align:center;
             }
             .title {
-                color:#383838;                
+                color:#383838;
             }
             .categories {
                 color:#667E4D;
@@ -105,6 +110,11 @@
             }
             .noExcerpt {
                 color:#717558;
+            }
+            .excerpt, .noExcerpt {
+                font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, 
+                             Helvetica-Light, "MS Sans Serif", Calibri, Segoe UI, Arial, Lucida Bright, Calisto MT, 
+                             "Times New Roman", system-ui;
             }
             .read {
                 color:#8EBB5E;

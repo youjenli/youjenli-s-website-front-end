@@ -1,15 +1,15 @@
-$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體";
-$backupFonts:'PingFangTC-Regular', 'Microsoft JhengHei', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
 #post-header {
     width:100%;
     /*react 元件裡會設定 #post-header 的寬度，然後下面再用 em 來求相對尺寸*/
     position:relative;
     box-sizing:border-box;
-    font-family:$prioritizedFonts, $backupFonts;
 
     .title {
         color:#B0CA98;
-        font-family: $prioritizedFonts,'HannotateTC-W5',$backupFonts;
+        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體",'HannotateTC-W5', 'PingFangTC-Regular', 
+                     'Microsoft JhengHei', 'STHeitiTC-Light', "Book Antiqua", "Lucida Bright", "Segoe UI", 
+                     "Calisto MT", Verdana, "Calibri", "Arial Rounded MT", "Microsoft Sans Serif", "Times New Roman",
+                     "Tahoma", "Arial", system-ui;
     }
 
     .categories, .tags, .publishInfo {
@@ -21,7 +21,9 @@ $backupFonts:'PingFangTC-Regular', 'Microsoft JhengHei', 'STHeitiTC-Light', 'Gil
                 fill:#B2B2B2;
             }
         }
-        font-family: $prioritizedFonts, $backupFonts;
+        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體",'HannotateTC-W5', 'PingFangTC-Regular', 
+                     'Microsoft JhengHei', 'STHeitiTC-Light', "Georgia", "Trebuchet MS", "Franklin Gothic Book", 
+                     "sans-serif",  "Gill Sans MT","Segoe UI", "Calibri",  "Calisto MT", "Times New Roman", system-ui;
         .tag, .category {
             color:inherit;
             text-decoration:none;

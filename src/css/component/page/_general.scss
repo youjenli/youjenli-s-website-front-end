@@ -1,14 +1,14 @@
 /* 
     page 借用了 post 的元件，因此大部份元件的樣式已經定義在 post 的樣式表中，這裡只定義 page 額外增加的樣式。
 */
-$prioritizedFonts:'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體";
-$backupFonts:'PingFangTC-Regular', 'Microsoft JhengHei', 'STHeitiTC-Light', 'GillSans-Light', 'ArialMT', system-ui;
 #post-header {
     .parentPage {
         color:#B0CA98;
         display:flex;
         align-items: center;
-        font-family: $prioritizedFonts, $backupFonts;
+        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體",'HannotateTC-W5', 'PingFangTC-Regular', 
+                     'Microsoft JhengHei', 'STHeitiTC-Light', "Georgia", "Trebuchet MS", "Franklin Gothic Book", 
+                     "sans-serif",  "Gill Sans MT","Segoe UI", "Calibri",  "Calisto MT", "Times New Roman", system-ui;
         margin-bottom:0.75em;
         
         svg {
