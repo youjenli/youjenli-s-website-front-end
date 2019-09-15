@@ -1,4 +1,47 @@
 <?php 
+	
+	function youjenli_create_meta_boxes( $meta_boxes ) {
+		$prefix = 'custom-field-';
+	
+		$meta_boxes[] = array(
+			/*
+				參閱以下連結了解 meta box 設定的用途：
+				https://docs.metabox.io/creating-meta-boxes/
+			*/
+			/* 呈現在文章編輯頁面之 meta box 提供的輸入欄位上面之標題文字
+			*/
+			'title' => '自訂欄位',
+			// 指出以下自訂欄位適用的內容類型。
+			'post_types' => array('post', 'page' ),
+			// 設定自訂欄位要顯示的位置。side 表示在側邊與文章其他設定並列顯示在選單中。
+			'context' => 'side',
+			// 是否自動儲存自訂欄位的內容？
+			'autosave' => 'false',
+			// 要自訂哪些欄位？
+			'fields' => [
+				/*
+					可參閱以下連結了解欄位各項設定的用途：
+					https://docs.metabox.io/field-settings/
+				*/
+				[
+					//在後台發文頁面提供的欄位類型
+					'type' => 'textarea',
+					//儲存至 wp_postmeta 的 meta key 名稱
+					'id' => $prefix . 'subject',
+					//在後台發文頁面顯示的欄位名稱
+					'name' => '本文主旨',
+					//顯示在上面一項欄位名稱下面的欄位說明。
+					'label_description' => '這篇文章想傳達的思想或情感。',
+					//在輸入欄位下方，用來引導使用者的內容。
+					'desc' => '若在此欄位填寫主旨給系統，則系統會在發表內容的上面呈現文章主旨，使讀者更容易瞭解文章內容。'
+				]
+			]
+		);
+	
+		return $meta_boxes;
+	}
+	add_filter( 'rwmb_meta_boxes', 'youjenli_create_meta_boxes' );
+
 	/*
 		以下函式是用來設定重要頁面的文章數。
 		基本上除了像首頁這樣要追求形式對齊之美的頁面以外，其他頁面的文章數我傾向從 wordpress 後台去調，
