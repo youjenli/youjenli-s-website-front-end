@@ -29,7 +29,9 @@ interface CommonPropertiesOfPostTypes {
     comment_status:'open' | 'closed';
     ping_status:'open' | 'closed';
     template:string;
-    meta:[];
+    meta: {
+        "custom-field-gist":string;
+    };
     _links:{
         self: {//存取此文章的 rest api 路徑
             href:string;

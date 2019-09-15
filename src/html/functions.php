@@ -1,7 +1,16 @@
 <?php 
+	/*
+		metabox 是一個能夠在後台的文章編輯頁提供欄位讓作者可以輸入文章附加內容的擴充套件。
+		為提供更好用的功能，我要運用此套件在文章編輯頁產生文章主旨的輸入欄位，因此要藉由以下函式設定 meta box。
+		
+	*/
+	//為自訂的主旨欄位加上前綴詞以免與其他套件的參數衝突
+	$prefix_of_custom_field = 'custom-field-';
+	//自訂主旨欄位在資料庫保存的名稱
+	$name_of_custom_field_gist = $prefix_of_custom_field . 'gist';
 	
 	function youjenli_create_meta_boxes( $meta_boxes ) {
-		$prefix = 'custom-field-';
+		global $name_of_custom_field_gist;
 	
 		$meta_boxes[] = array(
 			/*
@@ -27,7 +36,7 @@
 					//在後台發文頁面提供的欄位類型
 					'type' => 'textarea',
 					//儲存至 wp_postmeta 的 meta key 名稱
-					'id' => $prefix . 'subject',
+					'id' => $name_of_custom_field_gist,
 					//在後台發文頁面顯示的欄位名稱
 					'name' => '本文主旨',
 					//顯示在上面一項欄位名稱下面的欄位說明。
@@ -41,6 +50,23 @@
 		return $meta_boxes;
 	}
 	add_filter( 'rwmb_meta_boxes', 'youjenli_create_meta_boxes' );
+
+	/*
+		在上面為文章主旨建立自訂欄位之後，接下來為了讓 rest api 的發文查詢功能可以輸出此自訂欄位，
+		我要藉由以下函式讓 wordpress 系統知道我有自訂欄位，而且需要在 rest api 輸出這些自訂欄位。
+	*/
+	function register_posts_meta_field() {
+		global $name_of_custom_field_gist;
+		register_meta('post', $name_of_custom_field_gist,
+				  [
+					  'type' => 'string',
+					  'description' => 'The gist of current post/page.',
+					  'show_in_rest' => true,
+					  'single' => true
+				  ]
+			  );
+	}
+	add_action( 'rest_api_init', 'register_posts_meta_field' );
 
 	/*
 		以下函式是用來設定重要頁面的文章數。
