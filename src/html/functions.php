@@ -4,14 +4,12 @@
 		為提供更好用的功能，我要運用此套件在文章編輯頁產生文章主旨的輸入欄位，因此要藉由以下函式設定 meta box。
 		
 	*/
-	//為自訂的主旨欄位加上前綴詞以免與其他套件的參數衝突
-	$prefix_of_custom_field = 'custom-field-';
-	//自訂主旨欄位在資料庫保存的名稱
-	$name_of_custom_field_gist = $prefix_of_custom_field . 'gist';
+	require_once( 'constants.php' );
 	
 	function youjenli_create_meta_boxes( $meta_boxes ) {
-		global $name_of_custom_field_gist;
-	
+		global $name_of_custom_field_gist, $name_of_custom_field_pathOfIcon, 
+			   $name_of_custom_field_nameOfLink, $name_of_custom_field_hintOfLink;
+
 		$meta_boxes[] = array(
 			/*
 				參閱以下連結了解 meta box 設定的用途：
@@ -19,13 +17,17 @@
 			*/
 			/* 呈現在文章編輯頁面之 meta box 提供的輸入欄位上面之標題文字
 			*/
-			'title' => '自訂欄位',
+			'title' => '發文自訂欄位',
 			// 指出以下自訂欄位適用的內容類型。
 			'post_types' => array('post'),
 			// 設定自訂欄位要顯示的位置。side 表示在側邊與文章其他設定並列顯示在選單中。
 			'context' => 'side',
 			// 是否自動儲存自訂欄位的內容？
 			'autosave' => 'false',
+			/* 此欄位在選單上相對於其他自訂欄位的順位，可填 high, low, default。
+			   若未特別調整，則自訂欄位都會被排在系統內建欄位的後面。
+			*/
+			'priority' => 'high',
 			// 要自訂哪些欄位？
 			'fields' => [
 				/*
@@ -42,11 +44,39 @@
 					//顯示在上面一項欄位名稱下面的欄位說明。
 					'label_description' => '這篇文章想傳達的思想或情感。',
 					//在輸入欄位下方，用來引導使用者的內容。
-					'desc' => '若在此欄位填寫主旨給系統，則系統會在發表內容的上面呈現文章主旨，使讀者更容易瞭解文章內容。'
+					'desc' => '此欄位填寫的主旨會出現在發表內容的上面，使讀者更容易瞭解文章內容。'
 				]
 			]
 		);
-	
+
+		$meta_boxes[] = array(
+			'title' => '發表物自訂欄位',
+			'post_types' => array('post', 'page'),
+			'context' => 'side',
+			'autosave' => false,
+			'priority' => 'low',
+			'fields' => [
+				[
+					'type' => 'text',
+					'id' => $name_of_custom_field_nameOfLink,
+					'name' => '釘選在標題列或選單的顯示名稱',
+					'label_description' => '此發表物的連結在標題列或連結選單上面的顯示名稱'
+				],
+				[
+					'type' => 'textarea',
+					'id' => $name_of_custom_field_hintOfLink,
+					'name' => '發表物內容的提示訊息',
+					'label_description' => '當滑鼠游標移到選單上此文章的連結時，畫面上會浮現的內容概要'
+				]
+				,[
+					'type' => 'file_input',
+					'id' => $name_of_custom_field_pathOfIcon,
+					'name' => '發表物連結的示意圖',
+					'label_description' => '伴隨此文章的連結一起呈現的示意圖'
+				]
+			]
+		);
+
 		return $meta_boxes;
 	}
 	add_filter( 'rwmb_meta_boxes', 'youjenli_create_meta_boxes' );

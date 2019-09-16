@@ -11,8 +11,31 @@
 ?>
 <script type="text/javascript">
     <?php 
+        require_once( dirname( __FILE__ ) . '/../constants.php');
+
         $menuItems = array();
 
+        function retrieveMenuItem( $post ) {
+            global $name_of_custom_field_nameOfLink, $name_of_custom_field_hintOfLink, 
+                   $name_of_custom_field_pathOfIcon;
+            
+            $name_of_link = get_post_meta($post->ID, $name_of_custom_field_nameOfLink, true);
+            if (!$name_of_link) {
+                $name_of_link = get_the_title($post);
+            }
+            $hint_of_link = get_post_meta($post->ID, $name_of_custom_field_hintOfLink, true);
+            if (!$hint_of_link) {
+                $hint_of_link = get_the_excerpt($post);
+            }
+            return array(
+                'type' => get_post_type($post),
+                'name' => $name_of_link,
+                'url' => get_permalink($post),
+                'hint' => $hint_of_link,
+                'slug' => get_post_field('post_name', $post),
+                'pathOfIcon' => get_post_meta($post->ID, $name_of_custom_field_pathOfIcon, true)
+            );
+        };
         /*
             注意事項：
             1. 存取專頁的參數來自 class-wp-query.php 之 parse_query 的參數。
@@ -26,14 +49,7 @@
         
         if ( count($me) > 0 ) {
             $me = $me[0];
-            $menuItems[] = array(
-                'type' => get_post_type($me),
-                'name' => get_the_title($me),
-                'url' => get_permalink($me),
-                'hint' => get_the_excerpt($me),
-                'slug' => get_post_field('post_name', $me),
-                'pathOfIcon' => get_post_meta($me->ID, 'pathOfIcon', true) //對應自訂欄位 pageOfIcon
-            );
+            $menuItems[] = retrieveMenuItem($me);
         }
         
         $mySite = get_posts( array(
@@ -43,14 +59,7 @@
 
         if ( count($mySite) > 0 ) {
             $mySite = $mySite[0];
-            $menuItems[] = array(
-                'type' => get_post_type($mySite),
-                'name' => get_the_title($mySite),
-                'url' => get_permalink($mySite),
-                'hint' => get_the_excerpt($mySite),
-                'slug' => get_post_field('post_name', $mySite),
-                'pathOfIcon' => get_post_meta($mySite->ID, 'pathOfIcon', true) //對應自訂欄位 pageOfIcon
-            );
+            $menuItems[] = retrieveMenuItem($mySite);
         }
     ?>
     window.wp.titleBar = {

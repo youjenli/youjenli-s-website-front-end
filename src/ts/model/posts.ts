@@ -1,12 +1,15 @@
 import { Category, Tag } from './terms';
 import { TypeOfContent } from './general-types';
 
-export interface Publication {
+export interface CoreAttributesOfPublication {
     type:TypeOfContent;
     id:number;
     title:string;
     slug:string;
     url:string;
+}
+
+export interface Publication extends CoreAttributesOfPublication { 
     date:Date;
     modified?:Date;
     excerpt?:string;

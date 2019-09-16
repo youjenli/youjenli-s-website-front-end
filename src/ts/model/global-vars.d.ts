@@ -4,13 +4,11 @@ import { Page } from './posts';
 import { FoundPublication } from './search-results';
 import { SettingsOfPagination, Pagination} from './pagination';
 import { TypeOfContent } from './general-types';
+import { CoreAttributesOfPublication } from './posts';
 
-export interface MenuItem {
-    type:TypeOfContent;
+export interface MenuItem extends CoreAttributesOfPublication {
     name:string;
-    url:string;
     hint:string;
-    slug?:string;
     pathOfIcon?:string;
 }
 
