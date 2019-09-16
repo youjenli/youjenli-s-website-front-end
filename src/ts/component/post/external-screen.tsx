@@ -3,7 +3,7 @@ import { Post } from '../../model/posts';
 import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import PostInfo from '../template/post-info';
 import PostBackgroundOnExternalScreen from '../template/es-postBg';
-import Subject from './subject';
+import Gist from './gist';
 import * as Countable from 'countable';
 
 interface PropsOfExternalScreenPostPage {
@@ -21,7 +21,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
         let marginBottomOfPostContent = this.props.remFontSize * 1.5;
         let marginBottomOfPostBg = this.props.remFontSize * 2;/*數值缺規格，待確認 */
         let widthOfPostBg = this.props.viewportWidth * 0.382 + 632.832;
-        let paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;        
+        let paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;
         const title = {
             name:post.title,
             maxWidth:maxWidthOfTitle
@@ -30,7 +30,13 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
         const heightOfImg = maxWidthOfTitle * 0.6;
         const parser = new DOMParser();
         const doc = parser.parseFromString(this.props.post.content, 'text/html');
-        let subjectElement = doc.getElementsByClassName('subject')[0];
+        const contentOfPost = {
+            margin:{
+                top:marginTopOfPostContent,
+                bottom:marginBottomOfPostContent
+            },
+            post:doc.body.innerHTML
+        }
         const tocElement = doc.getElementById('toc');
         let toc = null;
         if (tocElement) {
@@ -61,20 +67,12 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                 leftRight:paddingLeftRightOfPosgBg
             }
 
-            const contentOfPost = {
-                margin:{
-                    top:marginBottomOfPostContent,
-                    bottom:marginBottomOfPostContent
-                },
-                post:null//先不擺內容，等接下來可能要移除 subject 的作業結束後再回頭設定此屬性。
-            }
-            if (subjectElement) {
-                subjectElement.parentElement.removeChild(subjectElement);
+            if (this.props.post.gist) {
                 postBg = (
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
                         toc={toc} content={contentOfPost}>
-                        <Subject content={subjectElement.innerHTML}/>
+                        <Gist content={this.props.post.gist}/>
                     </PostBackgroundOnExternalScreen>
                 );
             } else {
@@ -119,8 +117,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                 leftRight:paddingLeftRightOfPosgBg
             };
             let postHeader = null
-            if (subjectElement) {
-                subjectElement.parentElement.removeChild(subjectElement);
+            if (this.props.post.gist) {
 
                 let countingResult:Countable.CountingResult;
                 Countable.count(doc.body.innerHTML, counter => {
@@ -133,7 +130,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
                             date={this.props.post.date} modified={this.props.post.modified}
                             wordCount={countingResult.characters} marginBottomOfLastItem='0px'/>
-                        <Subject content={subjectElement.innerHTML} />
+                        <Gist content={this.props.post.gist} />
                     </DefaultHeaderOfArticle>
                 ); 
             } else {
@@ -150,15 +147,6 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                             wordCount={countingResult.characters} marginBottomOfLastItem='1.5em' />
                     </DefaultHeaderOfArticle>
                 );
-            }
-
-            //要在 subject 元素從節點樹上移除之後才可以設定發文內容的樣式，否則內容會出錯。
-            const contentOfPost = {
-                margin:{
-                    top:marginTopOfPostContent,
-                    bottom:marginBottomOfPostContent
-                },
-                post:doc.body.innerHTML
             }
 
             return (

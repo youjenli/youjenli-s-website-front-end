@@ -3,7 +3,7 @@ import { calculateViewPortWidth, calculateViewPortHeight } from '../../service/d
 import ExternalScreenTitleBar from '../title/external-screen-title-bar';
 import MobileDeviceTitleBar from '../title/mobile-device-title-bar';
 import LargeExternalScreenPostPage from './large-external-screen';
-import ExternaScreenPostPage from './external-screen';
+import ExternalScreenPostPage from './external-screen';
 import TabletPostPage from './tablet';
 import SmartPhonePostPage from './smart-phone';
 import {Post, ParsedPost} from '../../model/posts';
@@ -60,7 +60,7 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
-                    <ExternaScreenPostPage viewportWidth={this.state.viewportWidth}
+                    <ExternalScreenPostPage viewportWidth={this.state.viewportWidth}
                         baseZIndex={baseZIndex} remFontSize={18} post={this.props.post}/>
                 </React.Fragment>
             );
@@ -69,23 +69,11 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                 註: 必須把行動裝置的目錄提早至這個階段解析，否則一旦餵給主要內容的塗層元件後，將不便產生目錄結構給標題列
              */
             const parser = new DOMParser();
-            const doc:Document = parser.parseFromString(this.props.post.content, 'text/html');
+            const post = this.props.post;
+            const doc:Document = parser.parseFromString(post.content, 'text/html');
             if (doc) {
-                const post = this.props.post;
-                const parsedPost:ParsedPost = {
-                    type:post.type,
-                    id:post.id,
-                    title:post.title,
-                    slug:post.slug,
-                    url:post.url,
-                    date:post.date,
-                    modified:post.modified,
-                    categories:post.categories,
-                    tags:post.tags,
-                    thumbnail:post.thumbnail,
-                    excerpt:post.excerpt,
-                    dom:doc
-                };
+                const parsedPost:ParsedPost = Object.assign({ dom:doc }, post);
+
                 /*
                   註: 還是不明白為什麼想在 this.props.post 上面附加屬性，
                   或是用 object.create 搬移屬性到另一個物件再加入新屬性的方法無法通過 tsc 對 parsedPost 型態的檢查。
@@ -145,7 +133,7 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                 }
             } else {//todo 處理解析失敗的狀況。
 
-            }            
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ParsedPost } from '../../model/posts';
 import MobileHeaderOfArticle from '../template/mobile-header-of-article';
 import PostInfo from '../template/post-info';
-import Subject from './subject';
+import Gist from './gist';
 import * as Countable from 'countable';
 
 interface PropsOfSmartPhonePostPage {
@@ -27,12 +27,10 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             fontSize:`${fontSizeOfPostInfo}px`
         }
         
-        let subjectElement = this.props.post.dom.getElementsByClassName('subject')[0];
-        let fontSizeOfSubjectHint = null, fontSizeOfSubjectContent = null;
-        if (subjectElement) {
-            subjectElement.parentElement.removeChild(subjectElement);
-            fontSizeOfSubjectHint = 16;
-            fontSizeOfSubjectContent = 14;
+        let fontSizeOfGistIndicator = null, fontSizeOfGist = null;
+        if (this.props.post.gist) {
+            fontSizeOfGistIndicator = 16;
+            fontSizeOfGist = 14;
         }
                 
         let countingResult:Countable.CountingResult = null;
@@ -47,20 +45,20 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             }
 
             let postCtnrElement = null;
-            if (subjectElement) {
-                const marginTopBottomOfSubject = fontSizeOfSubjectHint * 1.5;
+            if (this.props.post.gist) {
+                const marginTopBottomOfGist = fontSizeOfGistIndicator * 1.5;
                 
-                const styleOfSubjectContent = {
-                    fontSize:`${fontSizeOfSubjectContent}px`,
-                    margin:`${marginTopBottomOfSubject}px 0`
+                const styleOfGist = {
+                    fontSize:`${fontSizeOfGist}px`,
+                    margin:`${marginTopBottomOfGist}px 0`
                 }
-                const styleOfSubjectHint = {
-                    fontSize:`${fontSizeOfSubjectHint}px`
+                const styleOfGistIndicator = {
+                    fontSize:`${fontSizeOfGistIndicator}px`
                 }
 
                 postCtnrElement = 
                     <div id="postBg" className="sp post">
-                        <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} content={subjectElement.innerHTML}/>
+                        <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} content={this.props.post.gist}/>
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                     </div>;
             } else {
@@ -91,21 +89,21 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             }
             
             let postHeaderElement = null;
-            if (subjectElement) {
-                const styleOfSubjectContent = {
-                    fontSize:`${fontSizeOfSubjectContent}px`,
-                    margin:`${fontSizeOfSubjectHint * 1.5}px 0`
+            if (this.props.post.gist) {
+                const styleOfGist = {
+                    fontSize:`${fontSizeOfGist}px`,
+                    margin:`${fontSizeOfGistIndicator * 1.5}px 0`
                 }
-                const styleOfSubjectHint = {
-                    fontSize:`${fontSizeOfSubjectHint}px`
+                const styleOfGistIndicator = {
+                    fontSize:`${fontSizeOfGistIndicator}px`
                 }
                 postHeaderElement = 
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
                         title={title} decorationLine={decoration}>
                             <PostInfo categories={post.categories} tags={post.tags} styleOfPostInfo={styleOfPostInfo}
                                 date={post.date} modified={post.modified} wordCount={countingResult.characters} >
-                                <Subject styleOfContent={styleOfSubjectContent} styleOfHint={styleOfSubjectHint} 
-                                        content={subjectElement.innerHTML}/>
+                                <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} 
+                                        content={this.props.post.gist}/>
                             </PostInfo>
                     </MobileHeaderOfArticle>;
             } else {

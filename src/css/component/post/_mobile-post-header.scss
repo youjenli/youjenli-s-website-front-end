@@ -42,11 +42,13 @@
         position:relative;
     }
 }
-.tb .subject, .sp .subject {
-    border-width:3px;
-    padding:0.33em 1em 1em 1em;
-    legend {
-        padding:0 0.5em;
+.tb, .sp {
+    .gist {
+        border-width:3px;
+        padding:0.33em 1em 1em 1em;
+        legend {
+            padding:0 0.5em;
+        }
     }
 }
 

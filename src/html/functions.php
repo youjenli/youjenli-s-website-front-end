@@ -21,7 +21,7 @@
 			*/
 			'title' => '自訂欄位',
 			// 指出以下自訂欄位適用的內容類型。
-			'post_types' => array('post', 'page' ),
+			'post_types' => array('post'),
 			// 設定自訂欄位要顯示的位置。side 表示在側邊與文章其他設定並列顯示在選單中。
 			'context' => 'side',
 			// 是否自動儲存自訂欄位的內容？

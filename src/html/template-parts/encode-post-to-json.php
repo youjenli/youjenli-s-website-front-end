@@ -1,5 +1,6 @@
 {
     <?php get_template_part('template-parts/encode-publication-to-json') ?>
+    gist:<?php echo json_encode(get_post_meta($post->ID, 'custom-field-gist', true)) ?>,
     <?php $categories = get_the_category();
     if ($categories): 
         $listOfCategories = array();

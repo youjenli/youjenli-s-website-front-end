@@ -88,6 +88,13 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                     if (post.modified) {
                                         metaDataOfPost['modified'] = convertGMTDateToLocalDate(new Date(post.modified_gmt));
                                     }
+                                    /*
+                                     * 如果此發文的記錄中沒有主旨，則 custom-field-gist 欄位會是空字串。
+                                       為避免這種情況造成後續步驟的問題，這邊要依據此欄位是否為空來建立對應的內容。
+                                     */
+                                    if (isNotBlank(post.meta["custom-field-gist"])) {
+                                        metaDataOfPost['gist'] = post.meta["custom-field-gist"];
+                                    }
                                     //準備分類資料
                                     if (post.categories.length > 0) {
                                         /*因為暫時沒空完全搞懂 wordpress rest api 的實作方式以便加入分類名稱的資訊到上面去

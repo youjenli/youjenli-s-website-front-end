@@ -17,6 +17,7 @@ export interface Publication {
 }
 
 export interface MetaDataOfPost extends Publication {
+    gist?:string;
     categories?:Category[];
     tags?:Tag[];
 }

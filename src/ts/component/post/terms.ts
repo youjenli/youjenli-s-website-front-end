@@ -1,5 +1,5 @@
 export let titleOfToc = '章節目錄';
-export let titleOfSubject = '本文主旨';
+export let indicatorOfGist = '本文主旨';
 export let theFormatOfSlugOfPostIsInvalid = '文章的網址暱稱格式錯誤，請提供正確的暱稱。';
 
 export let unableToLoadSubsequentContent = 

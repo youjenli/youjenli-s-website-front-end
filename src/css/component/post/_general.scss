@@ -49,7 +49,7 @@ $backupFonts:'PingFangTC-Regular', 'Microsoft JhengHei', 'STHeitiTC-Light', 'Gil
             color:#AEAEAE;
         }
     }
-    .subject {
+    .gist {
         border-style:solid;
         border-color:#648942;
         color:#F5F9F1;
@@ -63,10 +63,12 @@ $backupFonts:'PingFangTC-Regular', 'Microsoft JhengHei', 'STHeitiTC-Light', 'Gil
     opacity:0.9;
     box-shadow:0 2px 4px 0 rgb(111,156, 65);
 }
-$fontFamilyOfTextInArticle:PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
-.les .subject, .es .subject, .tb .subject {
-    box-sizing:border-box;
-    font-family: $fontFamilyOfTextInArticle;
+
+.les, .es, .tb {
+    .gist {
+        box-sizing:border-box;
+        font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+    }
 }
 
 @import './les-es-post-header.scss';

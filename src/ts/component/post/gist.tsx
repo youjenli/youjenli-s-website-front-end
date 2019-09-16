@@ -1,17 +1,17 @@
 import * as React from 'react';
 import * as termsOfArticle from './terms';
 
-interface PropsOfSubject {
+interface PropsOfGist {
     content:string
     styleOfContent?:React.CSSProperties;
     styleOfHint?:React.CSSProperties;
 }
 
-export default class Subject extends React.Component<PropsOfSubject> {
+export default class Gist extends React.Component<PropsOfGist> {
     render() {
         return(
-            <fieldset className="subject" style={this.props.styleOfContent}>
-                <legend style={this.props.styleOfHint}>{termsOfArticle.titleOfSubject}</legend>
+            <fieldset className="gist" style={this.props.styleOfContent}>
+                <legend style={this.props.styleOfHint}>{termsOfArticle.indicatorOfGist}</legend>
                 {this.props.content}
             </fieldset>
         );
