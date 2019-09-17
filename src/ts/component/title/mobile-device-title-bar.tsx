@@ -67,7 +67,7 @@ export default class MobileDeviceTitleBar extends
         let searchBarWidth, searchBarHeight, fontSizeOfSearchHint, searchIconWidth, searchIconHeight;
         let paddingOfMenuItems;
         const borderWidthOfLink = 1;
-        let featureLinkIconWidth, spaceBetweenIconAndLink, fontSizeOfFeatureLink;
+        let iconWidthOfFeaturedLink, spaceBetweenIconAndLink, fontSizeOfFeaturedLink;
         let commonStyleOfLinkOnMenu = null, menuItemsPerRow = 2, shouldSocialMediaGrpSpanTheWholeRow = false;
         let styleOfSocialMediaGrp = null;
         let styleOfLinkIcon, styleOfSocialMediaBtn;
@@ -86,12 +86,12 @@ export default class MobileDeviceTitleBar extends
             paddingOfMenuItems = remFontSize * 0.75;
             searchIconWidth = (this.props.viewportWidth + 3008) / 96;
             searchIconHeight = searchIconWidth;
-            featureLinkIconWidth = (this.props.viewportWidth + 1376) / 48;
-            fontSizeOfFeatureLink = (this.props.viewportWidth + 896) / 64;
-            spaceBetweenIconAndLink = (this.props.viewportWidth + 128) / 768 * fontSizeOfFeatureLink;
+            iconWidthOfFeaturedLink = (this.props.viewportWidth + 1376) / 48;
+            fontSizeOfFeaturedLink = (this.props.viewportWidth + 896) / 64;
+            spaceBetweenIconAndLink = (this.props.viewportWidth + 128) / 768 * fontSizeOfFeaturedLink;
             commonStyleOfLinkOnMenu = {
                 flexBasis:'50%',
-                fontSize:`${fontSizeOfFeatureLink}px`,
+                fontSize:`${fontSizeOfFeaturedLink}px`,
             }
             styleOfSocialMediaGrp = {
                 flexBasis:'50%',
@@ -100,15 +100,15 @@ export default class MobileDeviceTitleBar extends
             menuItemsPerRow = 2;
         } else {//套用手機的佈局規則
             paddingOfMenuItems = remFontSize * 0.5;
-            fontSizeOfFeatureLink = 24;
+            fontSizeOfFeaturedLink = 24;
             commonStyleOfLinkOnMenu = {
-                fontSize:`${fontSizeOfFeatureLink}px`
+                fontSize:`${fontSizeOfFeaturedLink}px`
             }
             styleOfSocialMediaGrp = {
                 paddingTop:`${paddingOfMenuItems}px`
             }
             //圖示寬度要移到這邊，這樣手機版的邏輯區域才可以判斷是否要把 social media grp 展到第三層。
-            featureLinkIconWidth = 42;
+            iconWidthOfFeaturedLink = 42;
             if (this.props.viewportWidth > 432) { //顯示寬度超過 432 即視為手機水平模式
                 fontSizeOfSiteName = 28;
                 this.headerHeight = fontSizeOfSiteName * 1.933;
@@ -120,7 +120,7 @@ export default class MobileDeviceTitleBar extends
                 fontSizeOfSearchHint = 24;
                 commonStyleOfLinkOnMenu['flexBasis'] = '50%';
                 menuItemsPerRow = 2;
-                if ((searchBarWidth / 2 - 4 * featureLinkIconWidth) / 3 < featureLinkIconWidth * 0.5) {//社群網站連結區域比較窄
+                if ((searchBarWidth / 2 - 4 * iconWidthOfFeaturedLink) / 3 < iconWidthOfFeaturedLink * 0.5) {//社群網站連結區域比較窄
                     styleOfSocialMediaGrp['flexBasis'] = '100%';
                     shouldSocialMediaGrpSpanTheWholeRow = true;
                 } else {//社群網站連結不會太窄
@@ -144,7 +144,7 @@ export default class MobileDeviceTitleBar extends
             searchBarHeight = 53;
             searchIconWidth = 42;
             searchIconHeight = 38;
-            spaceBetweenIconAndLink = fontSizeOfFeatureLink * 1.5;
+            spaceBetweenIconAndLink = fontSizeOfFeaturedLink * 1.5;
         }
         topShiftOfMenu = this.headerHeight;
         maxHeightOfMenu = calculateViewPortHeight() - this.headerHeight;
@@ -222,17 +222,17 @@ export default class MobileDeviceTitleBar extends
         
         styleOfLinkIcon = {
             marginRight:`${spaceBetweenIconAndLink}px`,
-            width:`${featureLinkIconWidth}px`
+            width:`${iconWidthOfFeaturedLink}px`
         };
       
         styleOfSocialMediaBtn = {
-            width:`${featureLinkIconWidth}px`
+            width:`${iconWidthOfFeaturedLink}px`
         }
 
-        let featureLinks = null;
+        let featuredLinks = null;
         if (this.state.isMenuOpened && this.menuItems.length > 0) {
             const arrowShape = this.props.viewportWidth <= 432 ? <ArrowShape /> : null;
-            featureLinks = [];
+            featuredLinks = [];
 
             const createMenuItemElement = function(dataOfItem, keyOfItem:number, styleOfItem:React.CSSProperties) {
                 let id = null, additionalClass = '';
@@ -273,11 +273,11 @@ export default class MobileDeviceTitleBar extends
             for (let k = 0 ; k < normalItems.length ; k ++) {
                  const item = this.menuItems[k];
                  if (k % menuItemsPerRow == 0) {
-                     featureLinks.push(
+                     featuredLinks.push(
                          createMenuItemElement(item, k, styleOfFirstChild)
                      );
                  } else {
-                     featureLinks.push(
+                     featuredLinks.push(
                          createMenuItemElement(item, k, styleOfChildrenWhichIsNotFirstChild)
                      );
                  }
@@ -307,15 +307,15 @@ export default class MobileDeviceTitleBar extends
                           const item = this.menuItems[i];
                           const remainder = i % menuItemsPerRow;
                           if (remainder >= demarcation) {
-                            featureLinks.push(
+                            featuredLinks.push(
                                 createMenuItemElement(item, i, styleOfChildrenWhichDoesNotHaveSiblingsBelow)
                             );
                           } else if (remainder == 0) {
-                            featureLinks.push(
+                            featuredLinks.push(
                                 createMenuItemElement(item, i, styleOfFirstChild)
                             );
                           } else {
-                            featureLinks.push(
+                            featuredLinks.push(
                                 createMenuItemElement(item, i, styleOfChildrenWhichIsNotFirstChild)
                             );
                           }
@@ -326,11 +326,11 @@ export default class MobileDeviceTitleBar extends
                         for (let j = 0 ; j < this.menuItems.length ; j ++) {
                             const item = this.menuItems[j];
                             if (j % menuItemsPerRow == 0) {
-                                featureLinks.push(
+                                featuredLinks.push(
                                     createMenuItemElement(item, j , styleOfFirstChild)
                                 );
                             } else {
-                                featureLinks.push(
+                                featuredLinks.push(
                                     createMenuItemElement(item, j, styleOfChildrenWhichIsNotFirstChild)
                                 )
                             }
@@ -358,15 +358,15 @@ export default class MobileDeviceTitleBar extends
                             const item = this.menuItems[i];
                             const remainder = i % menuItemsPerRow;
                             if (remainder >= demarcation) {
-                              featureLinks.push(
+                              featuredLinks.push(
                                   createMenuItemElement(item, i, styleOfChildrenWhichIsNotFirstChildInSecondLastRow)
                               );
                             } else if (remainder == 0) {
-                              featureLinks.push(
+                              featuredLinks.push(
                                   createMenuItemElement(item, i, styleOfFirstChild)
                               );
                             } else {
-                              featureLinks.push(
+                              featuredLinks.push(
                                   createMenuItemElement(item, i, styleOfChildrenWhichIsNotFirstChildInTheLastRow)
                               );
                             }
@@ -382,7 +382,7 @@ export default class MobileDeviceTitleBar extends
                                 `${borderWidthOfLink}px solid #979797`;
                         for (let j = startIndex ; j < this.menuItems.length ; j ++ ) {
                             const item = this.menuItems[j];
-                            featureLinks.push(
+                            featuredLinks.push(
                                 createMenuItemElement(item, j, styleOfChildrenWhichIsNotFirstChildInTheLastRow)
                             )
                         }
@@ -401,11 +401,11 @@ export default class MobileDeviceTitleBar extends
                             const item = this.menuItems[k];
                             const remainder = k % menuItemsPerRow;
                             if (remainder == 0) {
-                                featureLinks.push(
+                                featuredLinks.push(
                                     createMenuItemElement(item, k, styleOfFirstChildInTheLastRow)
                                 )
                             } else {
-                                featureLinks.push(
+                                featuredLinks.push(
                                     createMenuItemElement(item, k, styleOfChildrenWhichIsNotFirstChildInTheLastRow)
                                 )
                             }
@@ -438,7 +438,7 @@ export default class MobileDeviceTitleBar extends
                                 <MobileDeviceSearchBar height={searchBarHeight} width={searchBarWidth}
                                      fontSizeOfSearchHint={fontSizeOfSearchHint}
                                      searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
-                                {featureLinks}
+                                {featuredLinks}
                                 <div id="socialMediaGrp" className="link"  style={styleOfSocialMediaGrp}>
                                     <a href={socialMediaTerms.facebookPersonalPage} target="_blank" title={socialMediaTerms.facebookIconTitle}>
                                         <icons.FaceBookIcon style={styleOfSocialMediaBtn} /></a>

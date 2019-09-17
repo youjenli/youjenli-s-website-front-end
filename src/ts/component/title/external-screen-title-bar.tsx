@@ -4,7 +4,7 @@ import { MenuItem } from '../../model/global-vars';
 import SiteName from './site-name';
 import {loadMenuItems} from './menu-items-loader';
 import ExternalScreenSearchBar from './external-screen-search-bar';
-import HintOfFeatureLink from './hint-of-feature-link';
+import HintOfFeaturedLink from './hint-of-featured-link';
 import base64EncodedTitle from './site-name-2_5x_base64';
 import * as terms from './terms';
 
@@ -50,15 +50,15 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
         */
        let headerHeight:number;
        let siteNameFontSize:number, siteNameTopPosition:number, siteNameLeftPosition:number;
-       let featureLinkFontSize:number, featureHintFontSize:number, featureLinkMarginRight:number;
-       let groupOfFeatureLinkTop:number;
+       let featuredLinkFontSize:number, featureHintFontSize:number, marginRightOfFeaturedLink:number;
+       let topOfgroupOfFeaturedLink:number;
        let searchHintFontSize:number, searchBarWidth:number, searchBarHeight:number, searchBarTop:number,
             searchFieldBorderRadius:number;
 
        if (this.props.viewportWidth >= 1440) {//最大螢幕
             siteNameFontSize = this.props.viewportWidth / 62;
             headerHeight = 2.1 * siteNameFontSize;
-            featureLinkFontSize = this.props.viewportWidth / 67;
+            featuredLinkFontSize = this.props.viewportWidth / 67;
             featureHintFontSize = (this.props.viewportWidth + 1920)/240;
             searchHintFontSize = this.props.viewportWidth / 90;
             searchFieldBorderRadius = 10;
@@ -68,7 +68,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
             if (this.props.aspectRatio > 0.7) { //4:3 螢幕
                 siteNameFontSize = this.props.viewportWidth / 50;
                 headerHeight = 2.045 * siteNameFontSize;
-                featureLinkFontSize = this.props.viewportWidth / 57.6;
+                featuredLinkFontSize = this.props.viewportWidth / 57.6;
                 featureHintFontSize = (this.props.viewportWidth + 1472)/208;
                 searchHintFontSize = (this.props.viewportWidth + 432) / 104;                
                 searchBarHeight = (3 * this.props.viewportWidth + 2336)/208;
@@ -76,7 +76,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
             } else if (this.props.aspectRatio > 0.6) {//16:10 螢幕
                 siteNameFontSize = this.props.viewportWidth / 53.3;
                 headerHeight = 2.075 * siteNameFontSize;
-                featureLinkFontSize = this.props.viewportWidth / 60;
+                featuredLinkFontSize = this.props.viewportWidth / 60;
                 featureHintFontSize = (this.props.viewportWidth + 1680) / 208;
                 searchHintFontSize = (this.props.viewportWidth + 1888) / 208;                
                 searchBarHeight = (3 * this.props.viewportWidth + 2336)/208;
@@ -84,7 +84,7 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
             } else {//16:9 螢幕
                 siteNameFontSize = this.props.viewportWidth / 57.6;
                 headerHeight = 2.02 * siteNameFontSize;
-                featureLinkFontSize = this.props.viewportWidth / 62.6;
+                featuredLinkFontSize = this.props.viewportWidth / 62.6;
                 featureHintFontSize = (this.props.viewportWidth + 1472) / 208;
                 searchHintFontSize = 14;
                 searchBarHeight = (2.6 * this.props.viewportWidth + 7737.6) / 416;
@@ -95,8 +95,8 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
         siteNameLeftPosition = siteNameFontSize;
         siteNameTopPosition = (headerHeight - siteNameFontSize)/2
         searchBarTop = (headerHeight - searchBarHeight) / 2;
-        featureLinkMarginRight = featureLinkFontSize * 2;
-        groupOfFeatureLinkTop = (searchBarHeight - featureLinkFontSize) / 2;
+        marginRightOfFeaturedLink = featuredLinkFontSize * 2;
+        topOfgroupOfFeaturedLink = (searchBarHeight - featuredLinkFontSize) / 2;
 
         const headerCtxStyle = {
             zIndex:this.props.baseZIndex + 1
@@ -104,23 +104,29 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
         const headerBarStyle = {
             height:headerHeight + "px"
         };
-        const styleOfFeatureLink = {
-            marginRight:featureLinkMarginRight + "px",
-            fontSize:featureLinkFontSize + "px"
+        const styleOfFeaturedLink = {
+            marginRight:marginRightOfFeaturedLink + "px",
+            fontSize:featuredLinkFontSize + "px"
         }
-        const groupOfFeatureLinkStyle = {
-            top:groupOfFeatureLinkTop + "px"
+        const styleOfgroupOfFeaturedLink = {
+            top:topOfgroupOfFeaturedLink + "px"
         }
 
         let navMenuItems = this.menuItems.map((item, idx) => {
+            let charactersOfMenuItem = 0;
+            /* 在想到更好的方法處理提示訊息的對齊問題之前，
+               暫時先用這種相對不嚴謹的規則實現重要連結的中文字、英文字元數之計算作業 */
+            for (let i = 0 ; i < item.name.length ; i ++) {
+                charactersOfMenuItem += item.name.charCodeAt(i) < 256 ? 1 : 2;
+            }
             return (
-                <a className="featureLink" key={idx} style={styleOfFeatureLink} data-navigo
+                <a className="featuredLink" key={idx} style={styleOfFeaturedLink} data-navigo
                     onMouseEnter={() => this.toggleStateOfHint(idx)}
                     onMouseLeave={() => this.toggleStateOfHint(idx)}
                     href={item.url} >{item.name}
                     { this.state.statusOfHints[idx] && isNotBlank(item.hint) ?
-                        <HintOfFeatureLink  fontSizeOfFeatureLink={featureLinkFontSize} 
-                            charactersOfFeatureLink={item.name.length} 
+                        <HintOfFeaturedLink  fontSizeOfFeaturedLink={featuredLinkFontSize} 
+                            charactersInFeaturedLink={charactersOfMenuItem} 
                             hint={item.hint} fontSizeOfHint={featureHintFontSize} />
                     : null }
                 </a>
@@ -134,9 +140,9 @@ export default class ExternalScreenTitleBar extends React.Component<ExternalScre
                         fontSize={siteNameFontSize} top={siteNameTopPosition} left={siteNameLeftPosition} />
                     <ExternalScreenSearchBar width={searchBarWidth} height={searchBarHeight} 
                         top={searchBarTop} right={siteNameFontSize} borderRadius={searchFieldBorderRadius}
-                        fontSizeOfFeatureLink={featureLinkFontSize} fontSizeOfSearchHint={searchHintFontSize}
+                        fontSizeOfFeaturedLink={featuredLinkFontSize} fontSizeOfSearchHint={searchHintFontSize}
                         toggleSearchBarState={this.toggleSearchBarState}>
-                       <nav id="groupOfFeatureLinks" style={groupOfFeatureLinkStyle}>
+                       <nav id="groupOfFeaturedLinks" style={styleOfgroupOfFeaturedLink}>
                             {navMenuItems}
                         </nav> 
                     </ExternalScreenSearchBar>

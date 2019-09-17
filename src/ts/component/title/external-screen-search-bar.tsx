@@ -8,7 +8,7 @@ interface ExternalScreenSearchBarProps {
     height:number;
     top:number;
     right:number;
-    fontSizeOfFeatureLink:number;
+    fontSizeOfFeaturedLink:number;
     fontSizeOfSearchHint:number;
     borderRadius:number;
     toggleSearchBarState:() => void;
@@ -69,7 +69,7 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
             height:this.props.height + "px",
             borderRadius:`${borderRadius}px`,
             paddingLeft:`${borderRadius}px`,
-            marginRight:`${this.props.fontSizeOfFeatureLink * 0.5}px`,
+            marginRight:`${this.props.fontSizeOfFeaturedLink * 0.5}px`,
             fontSize:`${this.props.fontSizeOfSearchHint}px`
         }
         

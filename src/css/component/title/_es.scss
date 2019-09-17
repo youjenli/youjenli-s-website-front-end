@@ -1,50 +1,61 @@
-#header-ctx #groupOfFeatureLinks {
+#header-ctx #groupOfFeaturedLinks {
     position: absolute;
     right:100%;
     /*一定要加上 white-space 設定，否則元素之間的斷行記號會導致連結變成直的*/
     white-space: nowrap;
-}
+    display:flex;
+    justify-content: flex-start;
 
-#header-ctx .featureLink {
-    position:relative;
-    text-decoration:none;
-    color:white;
-    font-family: "PingFangTC-Regular", "STHeitiTC-Light", "Microsoft JhengHei", Arial, Helvetica, sans-serif;
-}
+    .featuredLink {
+        position:relative;
+        text-decoration:none;
+        color:white;
+        font-family: "PingFangTC-Regular", "STHeitiTC-Light", "Microsoft JhengHei", Arial, Helvetica, sans-serif;
 
-#header-ctx .featureLink:hover {
-    cursor: pointer;
-}
+        &:hover {
+            cursor: pointer;
+        }
 
-#header-ctx .featureHint {
-    position:absolute;
-    color:black;
-    background-color:#FFFFFF;
-    border-style:solid;
-    border-color:#979797;
-    box-sizing: border-box;
-    box-shadow:0 2px 3px 0 #979797;
-    border-radius:8px;
-    /* 
-        雖然 MDN 說 white-space 的 normal 是預設值，可是實際測試發現若在 chrome 73 上面不設定 normal，那文字不會自動包起來，原因不明。
-        https://developer.mozilla.org/en-US/docs/Web/CSS/white-space
-        因此這裡一定要加上 normal 才能下常排版。
-    */
-    white-space: normal;
-}
-#header-ctx .featureHint #point {
-    stroke:#979797;
-}
+        /*
+          positioningBox 的用途是把整個提示訊息框搬到重要連結的下面，並提供裡面元素的定位基準點。
+        */
+        .positioningBox {
+            position:absolute;
+            top:100%;
+            display:flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
 
-#header-ctx .featureHint #point,
-#header-ctx .featureHint .arrow {
-    position:absolute;
-    fill:#FFFFFF;
-    fill-rule:evenodd;
-}
+            .arrow {
+                fill:#FFFFFF;
+                fill-rule:evenodd;
+            }
+            .point {
+                stroke:#979797;
+            }
+            .shading {
+                position:absolute;
+            }
 
-#header-ctx .featureHint .hint {
-    line-height:1;
+            .featureHint {
+                line-height:1;
+                color:black;
+                background-color:#FFFFFF;
+                border-style:solid;
+                border-color:#979797;
+                box-sizing: border-box;
+                box-shadow:0 2px 3px 0 #979797;
+                border-radius:8px;
+                /* 
+                    雖然 MDN 說 white-space 的 normal 是預設值，可是實際測試發現若在 chrome 73 上面不設定 normal，那文字不會自動包起來，原因不明。
+                    https://developer.mozilla.org/en-US/docs/Web/CSS/white-space
+                    因此這裡一定要加上 normal 才能下常排版。
+                */
+                white-space: normal;
+            }
+        }
+    }
 }
 
 #header-ctx #header-bar .search-bar {
