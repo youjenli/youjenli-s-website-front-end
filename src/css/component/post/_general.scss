@@ -6,10 +6,10 @@
 
     .title {
         color:#B0CA98;
-        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體",'HannotateTC-W5', 'PingFangTC-Regular', 
-                     'Microsoft JhengHei', 'STHeitiTC-Light', "Book Antiqua", "Lucida Bright", "Segoe UI", 
-                     "Calisto MT", Verdana, "Calibri", "Arial Rounded MT", "Microsoft Sans Serif", "Times New Roman",
-                     "Tahoma", "Arial", system-ui;
+        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', 'HannotateTC-W5', 'PingFangTC-Regular', 'STHeitiTC-Light',
+                     "Book Antiqua", "Lucida Bright", "Segoe UI", "Calisto MT", Verdana, "Calibri", "Arial Rounded MT", 
+                     "Microsoft Sans Serif", "Times New Roman", "Tahoma", "Arial", 'Microsoft YaHei', 'Microsoft JhengHei', 
+                     "華康細圓體", '新細明體', system-ui;
     }
 
     .categories, .tags, .publishInfo {
@@ -21,9 +21,10 @@
                 fill:#B2B2B2;
             }
         }
-        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', "華康細圓體",'HannotateTC-W5', 'PingFangTC-Regular', 
-                     'Microsoft JhengHei', 'STHeitiTC-Light', "Georgia", "Trebuchet MS", "Franklin Gothic Book", 
-                     "sans-serif",  "Gill Sans MT","Segoe UI", "Calibri",  "Calisto MT", "Times New Roman", system-ui;
+        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', 'HannotateTC-W5', 'PingFangTC-Regular', 
+                     'STHeitiTC-Light', "Georgia", "Trebuchet MS", "Franklin Gothic Book", "sans-serif", 
+                     "Gill Sans MT","Segoe UI", "Calibri", "Calisto MT", "Times New Roman", 'Microsoft YaHei', 
+                     'Microsoft JhengHei', "華康細圓體", '新細明體', system-ui;
         .tag, .category {
             color:inherit;
             text-decoration:none;
@@ -69,7 +70,9 @@
 .les, .es, .tb {
     .gist {
         box-sizing:border-box;
-        font-family: PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, system-ui;
+        font-family: 'Rockwell', 'Constantia', 'Times New Roman', 'Segoe UI', 'Trebuchet MS', 'Calibri', 'Arial',
+                     'PingFangTC-Light', 'STHeitiTC-Light', 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, 'Helvetica-Light',
+                     '標楷體', '微軟正黑體', '新細明體', 'system-ui';
     }
 }
 
