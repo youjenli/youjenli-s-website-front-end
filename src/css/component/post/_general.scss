@@ -70,9 +70,15 @@
 .les, .es, .tb {
     .gist {
         box-sizing:border-box;
-        font-family: 'Rockwell', 'Constantia', 'Times New Roman', 'Segoe UI', 'Trebuchet MS', 'Calibri', 'Arial',
-                     'PingFangTC-Light', 'STHeitiTC-Light', 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, 'Helvetica-Light',
-                     '標楷體', '微軟正黑體', '新細明體', 'system-ui';
+
+        $chineseFonts:'PingFangTC-Light', 'STHeitiTC-Light', 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, 'Helvetica-Light', 
+                      '標楷體', '微軟正黑體', '新細明體', 'system-ui';
+        font-family: 'Rockwell', 'Constantia', 'Times New Roman', 'Segoe UI', 'Trebuchet MS', 'Calibri', 'Arial', $chineseFonts;
+        
+        legend {
+            font-family: "Copperplate Gothic Light", "Lucida Sans Unicode", "Lucida Console", "Trebuchet MS", "Segoe UI", 
+                         "Consolas, Calibri", $chineseFonts;
+        }
     }
 }
 
