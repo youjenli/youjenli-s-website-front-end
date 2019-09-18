@@ -10,8 +10,8 @@
         position:relative;
         text-decoration:none;
         color:white;
-        font-family: "PingFangTC-Regular", "STHeitiTC-Light", 'FangSong', "微軟正黑體", "SimSun", '細明體',
-                     "Calibri", "Trebuchet MS", "Segoe UI", "Arial", "Helvetica";
+        font-family: "PingFangTC-Regular", "STHeitiTC-Light", "Helvetica", "Calibri", "Trebuchet MS", "Segoe UI", 
+                     "Arial", 'FangSong', "微軟正黑體", "SimSun", '細明體';
 
         &:hover {
             cursor: pointer;
@@ -40,8 +40,8 @@
             }
 
             .featureHint {
-                font-family: 'Georgia', 'Calisto MT', 'Microsoft YaHei', '微軟正黑體', '細明體', 
-                             'Rockwell', 'Calisto MT', 'Tahoma', 'Trebuchet MS', 'Microsoft Sans Serif';
+                font-family: 'Rockwell', 'Calisto MT', 'Tahoma', 'Trebuchet MS', 'Microsoft Sans Serif',
+                             'Microsoft YaHei', '微軟正黑體', '細明體';
                 line-height:1;
                 color:black;
                 background-color:#FFFFFF;
