@@ -35,6 +35,7 @@ if (process.env.prod && process.env.prod == 'true') {
 const srcRoot = path.join(__dirname, 'src');
 const distRoot = path.join(__dirname, 'dist'); //輸出建置成品的路徑
 const jsBundleName = 'index';
+const patternOfRewriteSettings = ['**/.htaccess'];
 const jsArtifacts = [`**/${jsBundleName}.js`, `**/${jsBundleName}.js.map`];
 const nameOfhtmlSrcFile = ['**/*.php', '**/*.html'];
 const cssArtifacts = ['**/*.css', '**/*.css.map'];
@@ -202,12 +203,11 @@ gulp.task('prepareImg', prepareImgTask);
 
 const htmlSrcRoot = path.join(srcRoot, 'html');
 const pathOfHtmlSrcFiles = nameOfhtmlSrcFile.map(filePattern => path.join(htmlSrcRoot, filePattern));
-const pathOfHeaderTemplate = `${htmlSrcRoot}/template-parts/general-header.php`;
 function copyHtmlFilesTask(){
     /*
       這邊之所以要排除 general-header.php 的原因是我們稍後要根據建置模式產生對應的樣板內容
     */
-    return gulp.src([...pathOfHtmlSrcFiles, `!${pathOfHeaderTemplate}`], { base: htmlSrcRoot})
+    return gulp.src(pathOfHtmlSrcFiles, { base: htmlSrcRoot })
                .pipe(gulp.dest(distRoot));
 }
 
@@ -220,16 +220,25 @@ let replacement = {
     protocol:isProductionBuild? 'https' : 'http'
 }
 function generateTemplateTask() {
-    return gulp.src(pathOfHeaderTemplate, {base:htmlSrcRoot})
+    return gulp.src(path.join(distRoot, 'template-parts/general-header.php'), {base:distRoot})
                .pipe(template(replacement))
                .pipe(gulp.dest(distRoot))
 }
 
-const prepareHtmlTask = gulp.series(removeHtmlArtifact, gulp.parallel(copyHtmlFilesTask, generateTemplateTask));
+const prepareHtmlTask = gulp.series(removeHtmlArtifact, gulp.series(copyHtmlFilesTask, generateTemplateTask));
 
 gulp.task('prepareHtml', prepareHtmlTask);
 
-const defaultTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask);
+function copyRewriteSettingFiles() {
+    return gulp.src(patternOfRewriteSettings.map(pattern => path.join(srcRoot, pattern)) , { base:srcRoot })
+               .pipe(gulp.dest(distRoot));
+}
+
+const prepareSettingFilesTask = gulp.series(copyRewriteSettingFiles);
+gulp.task('prepareSettingFiles', prepareSettingFilesTask);
+
+const defaultTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask, 
+                                    prepareSettingFilesTask);
 gulp.task('default', defaultTask);
 
 let nameOfArchive = null;
@@ -239,7 +248,7 @@ function packArtifactTask() {
     nameOfArchive = `${prefixOfArchive}-${createDate}.tar.gz`;
 
     const itemsToArchive = ['**/*.php'].concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
-                        .map(filePattern => path.join(distRoot, filePattern));
+                            .concat(patternOfRewriteSettings).map(filePattern => path.join(distRoot, filePattern));
 
     return gulp.src(itemsToArchive, {base:distRoot})
             .pipe(tar(nameOfArchive))

@@ -1,0 +1,12 @@
+# 註：本來是打算在 httpd 的 virtualhost 設定中安排請求重新導向，
+# 可是後來發現網路上提供的設定範例之情境都是不包含 https 設定，而且在 .htaccess 裡面設定，
+# 因此最後乾脆改以這種形式設定請求重新導向。
+
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+# L 標記的意思是重導規則僅執行到此處而不繼續下去。
+# 注意 %{REQUEST_FILENAME} 和 %{REQUEST_URI} 內容不同，不可混用。
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
