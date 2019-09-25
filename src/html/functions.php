@@ -85,7 +85,7 @@
 		在上面為文章主旨建立自訂欄位之後，接下來為了讓 rest api 的發文查詢功能可以輸出此自訂欄位，
 		我要藉由以下函式讓 wordpress 系統知道我有自訂欄位，而且需要在 rest api 輸出這些自訂欄位。
 	*/
-	function register_posts_meta_field() {
+	function youjenli_register_posts_meta_field() {
 		global $name_of_custom_field_gist;
 		register_meta('post', $name_of_custom_field_gist,
 				  [
@@ -96,7 +96,7 @@
 				  ]
 			  );
 	}
-	add_action( 'rest_api_init', 'register_posts_meta_field' );
+	add_action( 'rest_api_init', 'youjenli_register_posts_meta_field' );
 
 	/*
 		以下函式是用來設定重要頁面的文章數。
@@ -133,7 +133,7 @@
 	remove_filter( 'the_excerpt', 'wpautop' );
 
     function youjenli_setup() {
-        add_theme_support('post-thumbnails');
+		add_theme_support('post-thumbnails');
     }
     add_action('after_setup_theme', 'youjenli_setup');
 	
