@@ -7,7 +7,7 @@
         4. 文章分頁設定
     */
 ?>
-<title>祐任的個人網站</title>
+<title><?php echo get_bloginfo('name', 'raw'); ?></title>
 <link rel="stylesheet" type="text/css" href="<?php echo get_theme_file_uri('style.css') ?>">
 <base href="<?php echo trailingslashit(get_template_directory_uri()) ?>" />
 <?php 
