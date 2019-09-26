@@ -20,15 +20,26 @@ module.exports = {
         //若要部署到遠端伺服器才要填寫接下來四項參數
         port:22,
         username:'account',
-        /* 注意，
-            似乎是因為 nodejs ssh2 套件只能讀取以 pem 格式儲存的私鑰，然而 mac mojave 上面新版 OpenSSH 的 ssh-keygen 預設用來儲存金鑰的格式不是 pem 格式，
-            所以這裡提供給 gulp-ssh 的金鑰必須以 PEM 格式保存，否則會導致它呼叫 ssh2 時拋出 
-            Error: Cannot parse privateKey: Unsupported key format 的錯誤訊息。 
-            欲了解狀況可參閱以下文件:
-            https://serverfault.com/questions/939909/ssh-keygen-does-not-create-rsa-private-key/941893#941893?newreg=141e245aa38c4458a5551228ae101e66
+        /* 關於 privateKey 參數的注意事項:
+           1. 似乎是因為 nodejs ssh2 套件只能讀取以 pem 格式儲存的私鑰，不支援 openssh 的格式，
+              然而 mac mojave 上面新版 OpenSSH 的 ssh-keygen 預設用來儲存金鑰的格式不是 pem 格式，
+              因此這裡要提供給 gulp-ssh 的金鑰必須改以 PEM 格式保存，否則會導致它呼叫 ssh2 時拋出以下錯誤訊息: 
+              
+              Error: Cannot parse privateKey: Unsupported key format
+              
+              欲了解狀況可參閱以下文件:
+              https://serverfault.com/questions/939909/ssh-keygen-does-not-create-rsa-private-key/941893#941893?newreg=141e245aa38c4458a5551228ae101e66
+           
+           2. 若要產生 gulp-ssh 可用的金鑰，可以到以下連結下載並安裝 Mac OSX 版的 puttygen。
+              https://www.puttygen.com/
+              接著只要用以下語法就可以在產生 pem 格式的金鑰: 
 
-            另外，windows 上面載入 privateKey 時，可以直接用斜線表達目錄階層，不需要再透過 path 解析。
-            例：fs.readFileSync('C:/Users/user/.ssh/my-key-file'),
+              puttygen -t rsa -b 4096 -C "註解，若在 GCP 就是登入帳號名稱" -m PEM
+           
+           3. 連線用的金鑰在 Mac OS 的存取權限必須為設定 600，否則系統會拒絕存取。
+
+           4. 在 windows 上面載入 privateKey 時，可以直接用斜線表達目錄階層，不需要再透過 path 解析。
+              例：fs.readFileSync('C:/Users/user/.ssh/my-key-file'),
         */
         privateKey:fs.readFileSync(`C:/Users/${os.userInfo().username}/.ssh/id_rsa`),
         passphrase:'passphrase'
