@@ -65,18 +65,26 @@
 /* 橫跨所有螢幕的樣式設定 */
 #postBg {
     box-sizing:border-box;
-    font-family: "MS Sans Serif", Calibri, 'Segoe UI', Arial, 'Lucida Bright', 'Calisto MT', "Times New Roman",
-                 PingFangTC-Light, STHeitiTC-Light, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, Helvetica-Light, 
-                 "Microsoft JhengHei", '新細明體', system-ui;
+    font-family: "AvenirNext-Medium", "Microsoft Sans Serif", "Calibri", "Segoe UI", "Arial", "Lucida Bright", "Calisto MT", 
+                 "Verdana", "Tahoma", "Arial", "Times New Roman", "PingFangTC-Light", "STHeitiTC-Light", "FZLTXHB--B51-0"/* 蘭亭黑-繁 纖黑 */, 
+                 "Helvetica-Light", "Microsoft JhengHei", "新細明體", system-ui;
 
     .gist {
         border-style:solid;
         border-color:#F4BA66;
         color:#000000;
     }
+
+    /*
+        註: 驗證發現中文字型 ArialUnicodeMS 前面，否則 Mac OS 的瀏覽器會先套用 ArialUnicodeMS 自帶的中文字。
+    */
+    code {
+        font-family: "AvenirNext-Medium", "Sathu", "Geneva", "STHeiti", "PingFangTC-Light", "LiSongPro", "Trebuchet MS",
+                     "Microsoft Sans Serif", "Segoe UI", "Calibri", "Franklin Gothic", "ArialUnicodeMS";
+    }
 }
 
-#postBg.les, #postBg.es {    
+#postBg.les, #postBg.es {
     font-size:18px;
     margin:0 auto;
     background:rgb(255,253,249);

@@ -215,8 +215,18 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome to post written in English at youjenli.ddns.net",
+            "name": "Chrome youjenli.ddns.net 英文文章",
             "url": "https://youjenli.ddns.net/the-great-gatsby/",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome youjenli.ddns.net 中文文章",
+            "url": "http://youjenli.ddns.net/%e5%b8%ab%e8%aa%aa/",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"

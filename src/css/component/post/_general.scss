@@ -6,10 +6,10 @@
 
     .title {
         color:#B0CA98;
-        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', 'HannotateTC-W5', 'PingFangTC-Regular', 'STHeitiTC-Light',
-                     "Book Antiqua", "Lucida Bright", "Segoe UI", "Calisto MT", Verdana, "Calibri", "Arial Rounded MT", 
-                     "Microsoft Sans Serif", "Times New Roman", "Tahoma", "Arial", 'Microsoft YaHei', 'Microsoft JhengHei', 
-                     "華康細圓體", '新細明體', system-ui;
+        font-family: "AvenirNext-Medium", "Book Antiqua", "Lucida Bright", "Segoe UI", "Calisto MT", "Verdana",
+                     "Calibri",  "ArialRoundedMTBold", "Arial Rounded MT", "Microsoft Sans Serif", "Times New Roman",
+                     "Tahoma", "Arial", "PingFangTC-Regular", "STHeitiTC-Light", "Helvetica-Light", "STYuanti-TC-Regular",
+                     "STYuanti-TC-Light", "Microsoft YaHei", "Microsoft JhengHei", "華康細圓體", "新細明體", system-ui;
     }
 
     .categories, .tags, .publishInfo {
@@ -21,10 +21,10 @@
                 fill:#B2B2B2;
             }
         }
-        font-family: 'STYuanti-TC-Regular', 'STYuanti-TC-Light', 'HannotateTC-W5', 'PingFangTC-Regular', 
-                     'STHeitiTC-Light', "Georgia", "Trebuchet MS", "Franklin Gothic Book", "sans-serif", 
-                     "Gill Sans MT","Segoe UI", "Calibri", "Calisto MT", "Times New Roman", 'Microsoft YaHei', 
-                     'Microsoft JhengHei', "華康細圓體", '新細明體', system-ui;
+        font-family: "Georgia", "Palatino-Roman", "Charter-Roman", "Trebuchet MS", "Franklin Gothic Book", "sans-serif",
+                     "Gill Sans MT","Segoe UI", "Calibri", "Calisto MT", "Times New Roman", "STYuanti-TC-Regular",
+                     "STYuanti-TC-Light", "HannotateTC-W5", "PingFangTC-Regular", "STHeitiTC-Light", "Microsoft YaHei",
+                     "Microsoft JhengHei", "華康細圓體", "新細明體", system-ui;
         .tag, .category {
             color:inherit;
             text-decoration:none;
@@ -71,13 +71,19 @@
     .gist {
         box-sizing:border-box;
 
-        $chineseFonts:'PingFangTC-Light', 'STHeitiTC-Light', 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, 'Helvetica-Light', 
-                      '標楷體', '微軟正黑體', '新細明體', 'system-ui';
-        font-family: 'Rockwell', 'Constantia', 'Times New Roman', 'Segoe UI', 'Trebuchet MS', 'Calibri', 'Arial', $chineseFonts;
+        $chineseFonts:"PingFangTC-Light", "STHeitiTC-Light", "FZLTXHB--B51-0"/* 蘭亭黑-繁 纖黑 */, "Helvetica-Light",
+                      "標楷體", "微軟正黑體", "新細明體", "system-ui";
+        /*
+            註: 以下兩種字型設定的中文部分--也就是 $chineseFonts 要擺在 ArialUnicodeMS 前面，
+            否則 Mac OS 的瀏覽器會先套用 ArialUnicodeMS 自帶的中文字。
+        */
+        font-family: "Rockwell", "Georgia", "Constantia", "Times New Roman", "Segoe UI", "Trebuchet MS", "Calibri", "Sathu",
+                     "Verdana", $chineseFonts, "ArialUnicodeMS", "Arial";
         
         legend {
-            font-family: "Copperplate Gothic Light", "Lucida Sans Unicode", "Lucida Console", "Trebuchet MS", "Segoe UI", 
-                         "Consolas, Calibri", $chineseFonts;
+            font-family: "Copperplate", "Copperplate Gothic Light", "Geneva", "LucidaGrande", "Sathu", "Lucida Sans Unicode", 
+                         "Lucida Console", "Trebuchet MS", "Avenir-Medium", "Segoe UI", "Consolas", "Calibri", "Verdana",
+                         $chineseFonts, "ArialUnicodeMS";
         }
     }
 }
