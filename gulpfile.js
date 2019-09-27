@@ -27,9 +27,11 @@ const gunzip = require('gulp-gunzip');
 const GulpSSH = require('gulp-ssh');
 const path = require('path');
 
-let isProductionBuild = false;
-if (process.env.prod && process.env.prod == 'true') {
-    isProductionBuild = true;
+function isObject(unknown) {
+    if (typeof unknown === 'object' && unknown !== null) {
+        return true;
+    } 
+    return false;
 }
 
 const srcRoot = path.join(__dirname, 'src');
@@ -39,7 +41,9 @@ const jsArtifacts = [`**/${jsBundleName}.js`, `**/${jsBundleName}.js.map`];
 const nameOfhtmlSrcFile = ['**/*.php', '**/*.html'];
 const cssArtifacts = ['**/*.css', '**/*.css.map'];
 const nameOfImgAssets = ['*.png', '*.svg', '*.jpeg'].map(filePattern => path.join('img', filePattern));
-const deploymentConfig = require('./settings-of-deployment');
+
+const buildSettings = require('./build-settings');
+const deploymentConfig = isObject(buildSettings.deploy) ? buildSettings.deploy : {} ;
 const prefixOfArchive = `wp-${deploymentConfig.nameOfTheme ? deploymentConfig.nameOfTheme : 'youjenli' }-theme`;
 
 function removeHtmlArtifact() {
@@ -77,7 +81,19 @@ gulp.task('cleanArchives', gulp.series(function cleanArchivesTask(){
 }));
 
 const tsEntryFiles = ['src/ts/index.tsx'];
-const tsConfig = require('./tsconfig.json');
+let tsConfig = null;
+if (isObject(buildSettings.js) && isObject(buildSettings.js.tsConfig)) {
+    tsConfig = buildSettings.js.tsConfig;
+} else {
+    tsConfig = {
+        "compilerOptions": {
+            "lib":["dom", "es6"],
+            "target":"es5",
+            "jsx":"react"
+        }
+    };
+}
+
 /*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
     所以下面要把 tsconfig 的 compilerOptions 往外提出來
 */
@@ -106,7 +122,7 @@ function transpileTS() {
                   entries: tsEntryFiles,
                   cache:{},
                   packageCache:{},
-                  debug: !isProductionBuild //是否包含 sourcemap
+                  debug: isObject(buildSettings.js) && buildSettings.js.sourceMap //是否包含 sourcemap
               })
               .plugin(tsify, transpileConfig)
               .bundle()
@@ -117,7 +133,7 @@ function transpileTS() {
               //欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
               .pipe(buffer());
 
-    if (isProductionBuild) {
+    if (isObject(buildSettings.js) && buildSettings.js.minify == true) {
         //如果要建置生產環境的場景，那就壓縮 js 檔
         transpile = 
             transpile.pipe(minify({
@@ -128,7 +144,11 @@ function transpileTS() {
                      }))
                      .pipe(gulp.dest(distRoot)); 
     } else {
-        //如果要建置開發環境的場景，那就輸出 sourcemap
+        /* 
+          如果要建置開發環境的場景，那就輸出 sourcemap。
+          這裡使用 gulp sourcemap 套件的方法很不循常，但這是我摸索出的有效方法。
+          這足以整合 gulp、browserify 和 gulp-sourcemap。
+        */
         transpile =
             transpile.pipe(sourcemaps.init({loadMaps: true}))
                      .pipe(sourcemaps.write('./'));
@@ -141,13 +161,22 @@ gulp.task('prepareJS', prepareJSTask);
 
 const cssSrcRoot = path.join(srcRoot, 'css');
 let cleanCSSConfig = null;
-if (isProductionBuild) {
-    cleanCSSConfig = require('./clean-css-config');
+if (isObject(buildSettings.css)) {
+    const retrievedValue = buildSettings.css.cleanCSSConfig;
+    if (isObject(retrievedValue)) {
+        cleanCSSConfig = retrievedValue;
+    }
 } else {
-    cleanCSSConfig = require('./clean-css-config-debug');
+    cleanCSSConfig = {
+        "format":"beautify",
+        "inline":["local"],
+        "level":1,
+        "sourceMap":true
+    };
 }
+
 function transpileSCSS() {
-    if (isProductionBuild) {
+    if (isObject(buildSettings.css) && buildSettings.css.sourceMap == true) {
         return gulp.src([path.join(cssSrcRoot, 'style.scss')], {base:cssSrcRoot})
                     /*
                     sass() 這部分除了包含轉譯 scss，它還會利用 scss 自訂的 css import 語法機制將其他 css 檔案
@@ -163,15 +192,8 @@ function transpileSCSS() {
     } else {
         return gulp.src([path.join(cssSrcRoot, 'style.scss')], {base:'.'})
                    .pipe(sourcemaps.init())
-                   /*
-                    sass() 這部分除了包含轉譯 scss，它還會利用 scss 自訂的 css import 語法機制將其他 css 檔案
-                    合併到主要的 css 檔案裡，但是不包含把 css 檔案串連起來。
-                    */
                    .pipe(sass())
                    .pipe(buffer())
-                   /*
-                     cleanCSS() 包含合併 css 檔案、簡化或壓縮 css 語法，例如使用功能相同但是更簡短的語法替代原本的 css 語法。
-                   */
                    .pipe(cleanCSS(cleanCSSConfig))
                    .pipe(sourcemaps.write('./'))
                    /*
@@ -202,35 +224,38 @@ gulp.task('prepareImg', prepareImgTask);
 
 const htmlSrcRoot = path.join(srcRoot, 'html');
 const pathOfHtmlSrcFiles = nameOfhtmlSrcFile.map(filePattern => path.join(htmlSrcRoot, filePattern));
-const pathOfHeaderTemplate = `${htmlSrcRoot}/template-parts/general-header.php`;
 function copyHtmlFilesTask(){
     /*
       這邊之所以要排除 general-header.php 的原因是我們稍後要根據建置模式產生對應的樣板內容
     */
-    return gulp.src([...pathOfHtmlSrcFiles, `!${pathOfHeaderTemplate}`], { base: htmlSrcRoot})
+    return gulp.src(pathOfHtmlSrcFiles, { base: htmlSrcRoot})
                .pipe(gulp.dest(distRoot));
 }
 
-/*
-  客戶端的 navigo router 必須擁有包含通訊協定的完整 host name，因此我得透過 wordpress 的 api 輸出此資訊到客戶端
-  然而我必須在呼叫 wordpress 的 api 時，指定網站的通訊協定；在此同時，開發模式和生產模式的通訊協定又不同，
-  因此要透過以下作業替換呼叫 wordpress api 提供網站名稱的函式之參數。
-*/
-let replacement = {
-    protocol:isProductionBuild? 'https' : 'http'
-}
-function generateTemplateTask() {
-    return gulp.src(pathOfHeaderTemplate, {base:htmlSrcRoot})
-               .pipe(template(replacement))
-               .pipe(gulp.dest(distRoot))
+let variableSubstitutionTask = null;
+if (isObject(buildSettings.html) && isObject(buildSettings.html.variableSubstitution)) {
+    const parallelTasks = Object.keys(buildSettings.html.variableSubstitution).map(function(key) {
+        if (isObject(buildSettings.html.variableSubstitution[key])) {
+            return () => {
+                return gulp.src(path.join(distRoot, key), {base:distRoot})
+                           .pipe(template(buildSettings.html.variableSubstitution[key]))
+                           .pipe(gulp.dest(distRoot));
+            }
+        } else {
+            return (done) => { done() };
+        }
+    });
+    variableSubstitutionTask = gulp.parallel(...parallelTasks);
+} else {
+    variableSubstitutionTask = (done) => { done() };
 }
 
-const prepareHtmlTask = gulp.series(removeHtmlArtifact, gulp.parallel(copyHtmlFilesTask, generateTemplateTask));
+const prepareHtmlTask = gulp.series(removeHtmlArtifact, gulp.series(copyHtmlFilesTask, variableSubstitutionTask));
 
 gulp.task('prepareHtml', prepareHtmlTask);
 
-const defaultTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask);
-gulp.task('default', defaultTask);
+const buildTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask);
+gulp.task('build', buildTask);
 
 let nameOfArchive = null;
 
@@ -254,10 +279,11 @@ function packArtifactTask() {
             .pipe(gulp.dest(distRoot));
 }
 
-const archiveTask = gulp.series(defaultTask, packArtifactTask);
+const archiveTask = gulp.series(buildTask, packArtifactTask);
 gulp.task('archive', archiveTask);
+gulp.task('default', archiveTask);
 
-function generateDeployTask()  {
+function generateDeployTask() {
     let pathToArchive = null;
     function validateDeploymentConfigTask(done) {
         if (!deploymentConfig) {
@@ -346,7 +372,7 @@ function generateDeployTask()  {
 }
 
 const deployTask = generateDeployTask();
-gulp.task('deploy', deployTask);
+gulp.task('deploy', gulp.series(archiveTask, deployTask));
 
 const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
 const cssSrcFiles = ['src/css/**/*.css', 'src/css/**/*.scss'];
@@ -368,4 +394,4 @@ function monitorSrcAndRebuildTask() {
     檔案變動後不會觸發重新編譯，因此最後決定不再用。
     試來試去，最後發現 gulp 3 之前的做法才能滿足目前的需求。
 */
-gulp.task('watch', gulp.series(monitorSrcAndRebuildTask, packArtifactTask, deployTask));
+gulp.task('watch', gulp.series(monitorSrcAndRebuildTask, deployTask));

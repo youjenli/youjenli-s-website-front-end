@@ -201,6 +201,16 @@
                 "url":"http://127.0.0.1/wp-content/themes/youjenli/",
                 "path": "${workspaceFolder}"
             }]
-        }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome to home of youjenli.ddns.net",
+            "url": "http://youjenli.ddns.net/",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
     ]
 }

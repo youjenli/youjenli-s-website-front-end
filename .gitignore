@@ -7,8 +7,8 @@ node_modules
 /temp
 
 #部署應用程式的資訊
-/settings-of-deployment*.js
-!/settings-of-deployment-template.js
+/build-settings*.js
+!/build-settings-template.js
 
 # OS generated files #
 ######################

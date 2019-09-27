@@ -1,1 +1,0 @@
-gulp archive deploy --series

@@ -1,2 +1,0 @@
-set prod=true
-gulp %*
