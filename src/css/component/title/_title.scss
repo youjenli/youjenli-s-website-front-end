@@ -12,6 +12,7 @@
 }
 
 #header-bar .backToHome {
+    color:white;
     text-decoration: none;
     font-size:inherit;
     font-family: inherit;
@@ -19,7 +20,6 @@
 
 #header-bar #site-name {
     position: absolute;
-    color:white;
     & > img {
         position:relative;
     }

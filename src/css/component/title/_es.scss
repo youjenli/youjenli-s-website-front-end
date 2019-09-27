@@ -10,8 +10,12 @@
         position:relative;
         text-decoration:none;
         color:white;
-        font-family: "PingFangTC-Regular", "STHeitiTC-Light", "Helvetica", "Calibri", "Trebuchet MS", "Segoe UI", 
-                     "Arial", 'FangSong', "微軟正黑體", "SimSun", '細明體';
+        /*
+            註: 中文字體要擺在英文的後面，這樣若有英文字才不會吃到這些常見中文字體附帶的樣式，例如 PingFangTC。
+        */
+        font-family:  "Helvetica", "Calibri", "Trebuchet MS", "Segoe UI", "Arial", "STFangsong" /* Mac OS 仿宋體*/, 
+                      "FangSong"/* Windows 的仿宋體*/, "PingFangTC-Regular", "STHeitiTC-Light", "微軟正黑體", "SimSun",
+                      "細明體";
 
         &:hover {
             cursor: pointer;
