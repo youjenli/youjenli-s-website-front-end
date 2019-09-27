@@ -18,10 +18,9 @@
             }
         }
         .category, .tag, .read {
-            font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, 
-                         Helvetica-Light, "Georgia", "Trebuchet MS", "Franklin Gothic Book", "sans-serif", 
-                         "Gill Sans MT","Segoe UI", "Calibri",  "Calisto MT", "Times New Roman", 'Microsoft JhengHei', 
-                         '新細明體', system-ui;
+            font-family: "PingFangTC-Light", "STHeitiTC-Light", "Microsoft JhengHei", "新細明體", "Helvetica-Light", 
+                         "Georgia", "Charter-Roman", "Trebuchet MS", "Franklin Gothic Book", "sans-serif", 
+                         "Gill Sans MT", "Segoe UI", "Calibri",  "Calisto MT", "Times New Roman", system-ui;
             text-decoration:none;
             &:hover {
                 text-decoration: underline;
@@ -32,10 +31,11 @@
             color:inherit;
         }
         .title {
-            font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, 
-                         Helvetica-Light, "Book Antiqua", "Lucida Bright", "Segoe UI", "Calisto MT", Verdana, "Calibri", 
-                         "Arial Rounded MT", "Microsoft Sans Serif", "Times New Roman","Tahoma", "Arial", 
-                         'Microsoft YaHei', 'Microsoft JhengHei', '新細明體', system-ui;
+            font-family: "AvenirNext-Medium", "Sathu", "Book Antiqua", "Lucida Bright", "Segoe UI", "Calisto MT",
+                         "Verdana", "Calibri", "Arial Rounded MT", "Microsoft Sans Serif", "Calibri", "Arial Rounded MT",
+                         "Geneva", "Times New Roman", "Tahoma", "Arial", "STYuanti-TC-Regular", "FZLTXHB--B51-0"/* 蘭亭黑-繁 纖黑 */,
+                         "PingFangTC-Light", "STHeitiTC-Light", "Microsoft YaHei", "Microsoft JhengHei",
+                         "新細明體", system-ui;
             a {
                 cursor:pointer;
                 text-decoration:none;
@@ -114,9 +114,9 @@
                 color:#717558;
             }
             .excerpt, .noExcerpt {
-                font-family: STYuanti-TC-Regular, 'FZLTXHB--B51-0'/* 蘭亭黑-繁 纖黑 */, PingFangTC-Light, STHeitiTC-Light, 
-                             Helvetica-Light, "MS Sans Serif", Calibri, Segoe UI, Arial, Lucida Bright, Calisto MT, 
-                             "Times New Roman", 'Microsoft JhengHei', '新細明體', system-ui;
+                font-family: "GillSans", "Avenir-Medium", "Microsoft Sans Serif", "Calibri", "Segoe UI", "Arial",
+                             "Lucida Bright", "Calisto MT", "Times New Roman","Helvetica-Light", "FZLTXHB--B51-0"/* 蘭亭黑-繁 纖黑 */,
+                             "PingFangTC-Light", "STHeitiTC-Light", "Microsoft JhengHei", "新細明體", system-ui;
             }
             .read {
                 color:#8EBB5E;
