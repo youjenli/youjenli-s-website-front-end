@@ -212,5 +212,15 @@
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
             }
         },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome to post written in English at youjenli.ddns.net",
+            "url": "https://youjenli.ddns.net/the-great-gatsby/",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
     ]
 }

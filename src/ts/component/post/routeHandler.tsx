@@ -53,7 +53,7 @@ export const routeEventHandlers = {
               Wordpress 把未分類的文章歸納到「未分類」這個類型，然而我不打算讓使用者在系統界面上以此分類名稱索引文章，
               因此在了解如何在 wordpress 上面過濾未分類之前，先在這裡過濾伺服器送來的資料。
             */
-            firstPost.categories = firstPost.categories.filter((category) => { category.name != 'Uncategorized' });
+            firstPost.categories = firstPost.categories.filter( category => category.name !== 'Uncategorized' );
             
             postShouldBeRender = firstPost;
             addRecord(TypesOfCachedItem.Post, firstPost.slug, firstPost);
