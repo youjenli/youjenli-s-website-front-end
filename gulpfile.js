@@ -329,12 +329,15 @@ function generateDeployTask()  {
         
         extractArchiveAndDeployToServer = function extractAndMoveTheWebsite() {
             let pathOfTheme = `/tmp/${deploymentConfig.nameOfTheme}`;
+            let pathOfArchiveOnRemoteHost = `/tmp/${path.basename(pathToArchive)}`;
             return gulpSSH.exec([
                 `rm -rf ${pathOfTheme}`,
                 `mkdir ${pathOfTheme}`,
-                `tar -zxf /tmp/${path.basename(pathToArchive)} -C ${pathOfTheme}`,
+                `tar -zxf ${pathOfArchiveOnRemoteHost} -C ${pathOfTheme}`,
                 `sudo rm -rf ${deploymentConfig.dest}/${deploymentConfig.nameOfTheme}`,
-                `sudo cp -r ${pathOfTheme} ${deploymentConfig.dest}`
+                `sudo cp -r ${pathOfTheme} ${deploymentConfig.dest}`,
+                `rm -rf ${pathOfTheme}`,
+                `rm ${pathOfArchiveOnRemoteHost}`
             ]);
         };
     }
