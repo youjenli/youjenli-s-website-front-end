@@ -73,11 +73,16 @@ router
     .resolve();
 
 export function performSearch(keyword:string, page:number) {
-    let route = `search/${encodeURI(keyword)}/`;
+    /*
+       註: 據了解，雖然 Navigo 的 navigate 函式在拿 route 去更新瀏覽器的歷史狀態之前不會特別編碼連結，
+       但是似乎因為瀏覽器的歷史紀錄 API 接到路徑之後會自動編碼的關係，所以實際運作發現這邊不用手動編碼路徑，
+       否則當路徑有部分中文字時，反而會導致瀏覽器自動編碼後的連結與原本的目標連結不同。
+    */
+    let route = `search/${keyword}/`;
     if (page) {
         route += paginationPath.replace(placeHolderForPage, page.toString());
     }
-    router.navigate(encodeURI(route));
+    router.navigate(route);
 }
 
 export function navigateToHomeWithErrorMessage(msg:string):void {
