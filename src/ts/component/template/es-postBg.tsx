@@ -83,7 +83,7 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
         }
 
         return (
-            <div id="postBg" className={this.props.className} style={styleOfPostBG}>               
+            <div id="postBg" className={this.props.className} style={styleOfPostBG}>
                 {this.props.children}
                 <div className="content post" style={styleOfPostContent}>
                     {tocElement}

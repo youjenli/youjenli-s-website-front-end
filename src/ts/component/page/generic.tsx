@@ -46,23 +46,23 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
         const vw = this.state.viewportWidth
         if (vw > 1440) {
             return (
-                <React.Fragment>
+                <div id="page" className="bg">
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
                     <LargeExternalScreenPage viewportWidth={this.state.viewportWidth}
                         baseZIndex={baseZIndex} remFontSize={18} page={this.props.page} />
-                </React.Fragment>
+                </div>
             );
         } else if (vw > 1060) {
             return (
-                <React.Fragment>
+                <div id="page" className="bg">
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
                     <ExternalScreenPage viewportWidth={this.state.viewportWidth} 
                         baseZIndex={baseZIndex} remFontSize={18} page={this.props.page} />
-                </React.Fragment>
+                </div>
             );
         } else {//套用行動裝置的佈局規則
 
@@ -130,23 +130,23 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
 
                 if (vw > 432) {
                     return (
-                        <React.Fragment>
+                        <div id="page" className="bg mbl">
                             <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} >
                                 {tocElement}
                             </MobileDeviceTitleBar>
                             <TabletPage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={18}
                                 page={parsedPage} />
-                        </React.Fragment>
+                        </div>
                     );
                 } else {
                     return (
-                        <React.Fragment>
+                        <div id="page" className="bg mbl">
                             <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} >
                                 {tocElement}
                             </MobileDeviceTitleBar>
                             <SmartPhonePage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={16} 
                                 page={parsedPage} />
-                        </React.Fragment>
+                        </div>
                     );
                 }
             }// end if(doc)    

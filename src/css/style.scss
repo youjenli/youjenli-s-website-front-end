@@ -5,10 +5,36 @@ body {
     min-width:320px;
 }
 
-#react-root {
+.bg {
+    padding-bottom:1px;
+}
+
+#home, #post, #page, #category, #tag, #search {
     /*使 react 元件區塊以 relative 定位以便裡面的元件可以使用其他定位方式。*/
     position:relative;
     min-height:100vh;
+}
+
+#home {
+    background-color: #FBFBFB;
+    &.mbl {
+        background-color:rgba(255,242,223,52);
+        /* 這是用來在行動版網頁展開選單時，負責確保後面內容不產生捲軸的類別 */
+        &.trim {
+            overflow:hidden;
+            max-height:100vh;
+            max-width:100vw;
+        }
+    }
+}
+#post, #page {
+    background-color:rgba(255,242,223,52);
+    &.mbl {
+        background-color:rgba(255,242,223,32);
+    }
+}
+#category, #tag, #search {
+    background-color:rgba(255,242,223,52);
 }
 
 @import './component/title/title.scss';

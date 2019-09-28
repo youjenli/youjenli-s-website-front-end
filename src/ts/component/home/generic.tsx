@@ -62,60 +62,60 @@ export default class GenericHomePage extends React.Component<PropsOfHome, StateO
         if (this.state.viewportWidth > 1440) {//使用大外接螢幕的佈局
             if (aspectRatio > 0.6) {//適用 16:10 的螢幕
                 return (
-                    <React.Fragment>
+                    <div id="home" className="bg">
                         <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                             aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                             baseZIndex={headerBaseZIndex} />
                         <HomeOf16To10LargeExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
                             posts={this.props.posts} errorMsg={this.props.errorMsg} 
                             onWidgetOfErrorMsgDismissed={this.props.onWidgetOfErrorMsgDismissed} />
-                    </React.Fragment>
+                    </div>
                 );
             } else {
                 return (
-                    <React.Fragment>
+                    <div id="home" className="bg">
                         <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                             aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                             baseZIndex={headerBaseZIndex} />
                         <HomeOf16To9LargeExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
                             posts={this.props.posts} errorMsg={this.props.errorMsg} 
                             onWidgetOfErrorMsgDismissed={this.props.onWidgetOfErrorMsgDismissed} />
-                    </React.Fragment>
+                    </div>
                 );
             }
         } else if (this.state.viewportWidth > 1024) {//使用外接螢幕的佈局
             if (aspectRatio > 0.7) {//套用 4:3 外接螢幕的佈局規則
                 return (
-                    <React.Fragment>
+                    <div id="home" className="bg">
                         <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                             aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                             baseZIndex={headerBaseZIndex} />
                         <HomeOf4To3ExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
                             posts={this.props.posts} errorMsg={this.props.errorMsg} 
                             onWidgetOfErrorMsgDismissed={this.props.onWidgetOfErrorMsgDismissed} />
-                    </React.Fragment>
+                    </div>
                 );
             } else if (aspectRatio > 0.6) {//套用 16:10 外接螢幕的佈局規則
                 return (
-                    <React.Fragment>
+                    <div id="home" className="bg">
                         <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                             aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                             baseZIndex={headerBaseZIndex} />
                         <HomeOf16To10ExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
                             posts={this.props.posts} errorMsg={this.props.errorMsg} 
                             onWidgetOfErrorMsgDismissed={this.props.onWidgetOfErrorMsgDismissed} />
-                    </React.Fragment>
+                    </div>
                 );
             } else {//套用 16:9 外接螢幕的佈局規則
                 return (
-                    <React.Fragment>
+                    <div id="home" className="bg">
                         <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                             aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                             baseZIndex={headerBaseZIndex} />
                         <HomeOf16To9ExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20}
                             posts={this.props.posts} errorMsg={this.props.errorMsg} 
                             onWidgetOfErrorMsgDismissed={this.props.onWidgetOfErrorMsgDismissed} />
-                    </React.Fragment>
+                    </div>
                 );
             }
         } else if (this.state.viewportWidth > 640) {//使用平板的佈局
@@ -131,13 +131,13 @@ export default class GenericHomePage extends React.Component<PropsOfHome, StateO
             }
             
             return (
-                <React.Fragment>
+                <div id="home" className="bg mbl">
                     <MobileDeviceTitleBar className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                     {disposableWidget}
                     <SloganOnTablet viewportWidth={this.state.viewportWidth} />
                     <ListOfRecentPostsOnTablet viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
                         remFontSize={18} posts={this.props.posts}/>
-                </React.Fragment>
+                </div>
             );
         } else {//使用手機版面的佈局
             if (this.state.viewportWidth > 432) {
@@ -153,13 +153,13 @@ export default class GenericHomePage extends React.Component<PropsOfHome, StateO
                             onDismissed={this.props.onWidgetOfErrorMsgDismissed}/>;
                 }
                 return (
-                    <React.Fragment>
+                    <div id="home" className="bg mbl">
                         <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                         <HomeOf16To9SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
                         <ListOfRecentPostsOn16To9SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
                             remFontSize={18} posts={this.props.posts}/>
                         {disposableWidget}
-                    </React.Fragment>
+                    </div>
                 );
             } else {
                 let disposableWidget = null;
@@ -174,13 +174,13 @@ export default class GenericHomePage extends React.Component<PropsOfHome, StateO
                             onDismissed={this.props.onWidgetOfErrorMsgDismissed} />;
                 }
                 return (
-                    <React.Fragment>
+                    <div id="home" className="bg mbl">
                         <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex}/>
                         <HomeOf9To16SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 10}/>
                         <ListOfRecentPostsOn9To16SmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={headerBaseZIndex - 20} 
                             remFontSize={16} posts={this.props.posts}/>
                         {disposableWidget}
-                    </React.Fragment>
+                    </div>
                 );
             }
         }

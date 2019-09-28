@@ -7,8 +7,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> 404 not found",
-            "url": "http://127.0.0.1/category/3345678",
+            "name": "Chrome youjenli.ddns.net 查無此資源",
+            "url": "http://youjenli.ddns.net/category/3345678",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
@@ -17,8 +17,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> home",
-            "url": "http://127.0.0.1",
+            "name": "Chrome youjenli.ddns.net 首頁",
+            "url": "http://youjenli.ddns.net/",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
@@ -27,7 +27,7 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> home with error msg",
+            "name": "Chrome youjenli.ddns.net 首頁帶錯誤訊息",
             "url": "http://127.0.0.1/?errorMsg=helloworld",
             "pathMapping": {
                 "/": "${workspaceFolder}",
@@ -37,8 +37,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> post",
-            "url": "http://127.0.0.1/twelfth-post",
+            "name": "Chrome youjenli.ddns.net 英文文章",
+            "url": "https://youjenli.ddns.net/the-great-gatsby/",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
@@ -47,8 +47,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> page",
-            "url": "http://127.0.0.1/resume",
+            "name": "Chrome youjenli.ddns.net 中文文章",
+            "url": "http://youjenli.ddns.net/%e5%b8%ab%e8%aa%aa/",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
@@ -57,8 +57,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> archive of category",
-            "url": "http://127.0.0.1/category/it-tech/it-tech-note/",
+            "name": "Chrome youjenli.ddns.net 專頁",
+            "url": "http://youjenli.ddns.net/me",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
@@ -67,8 +67,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> archive of parent category",
-            "url": "http://127.0.0.1/category/it-tech/",
+            "name": "Chrome youjenli.ddns.net 中文分類頁",
+            "url": "http://youjenli.ddns.net/category/%e4%b8%ad%e5%9c%8b%e5%8f%a4%e6%96%87/",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
@@ -77,8 +77,8 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> archive of tag",
-            "url": "http://127.0.0.1/tag/first/",
+            "name": "Chrome youjenli.ddns.net 中文母分類頁",
+            "url": "http://youjenli.ddns.net/category/a-new-category/",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
@@ -87,8 +87,18 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Chrome -> search",
-            "url": "http://127.0.0.1/search/second",
+            "name": "Chrome youjenli.ddns.net 英文標籤頁",
+            "url": "http://youjenli.ddns.net/tag/mock-data/",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            }
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome youjenli.ddns.net 搜尋中文文章",
+            "url": "https://youjenli.ddns.net/search/師說/",
             "pathMapping": {
                 "/": "${workspaceFolder}",
                 "/wp-content/themes/youjenli/": "${workspaceFolder}"
@@ -201,36 +211,6 @@
                 "url":"http://127.0.0.1/wp-content/themes/youjenli/",
                 "path": "${workspaceFolder}"
             }]
-        },
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Chrome to home of youjenli.ddns.net",
-            "url": "http://youjenli.ddns.net/",
-            "pathMapping": {
-                "/": "${workspaceFolder}",
-                "/wp-content/themes/youjenli/": "${workspaceFolder}"
-            }
-        },
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Chrome youjenli.ddns.net 英文文章",
-            "url": "https://youjenli.ddns.net/the-great-gatsby/",
-            "pathMapping": {
-                "/": "${workspaceFolder}",
-                "/wp-content/themes/youjenli/": "${workspaceFolder}"
-            }
-        },
-        {
-            "type": "chrome",
-            "request": "launch",
-            "name": "Chrome youjenli.ddns.net 中文文章",
-            "url": "http://youjenli.ddns.net/%e5%b8%ab%e8%aa%aa/",
-            "pathMapping": {
-                "/": "${workspaceFolder}",
-                "/wp-content/themes/youjenli/": "${workspaceFolder}"
-            }
-        },
+        }
     ]
 }

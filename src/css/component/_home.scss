@@ -1,21 +1,3 @@
-/*
-  寬度 > 1024px 的螢幕採用外接螢幕的佈局方式
-*/
-@media (min-width:1025px){
-    body {
-        background-color: #FBFBFB;
-    }
-}
-
-/*
-    寬度 < 1024px 採用平板或手機的佈局方式
-*/
-@media (max-width:1024px){
-    body {
-        background-color: rgb(255,248,238);
-    }
-}
-
 #http-error {
     transition:opacity 200ms ease-out;
     box-sizing:border-box;
@@ -91,13 +73,6 @@
 
 @media (max-width:432px) {
     @include styleOfHttpErrorMsgOnSmartPhone(0.5em);
-}
-
-/* 這是用來在行動版網頁展開選單時，負責確保後面內容不產生捲軸的類別 */
-#react-root.trim {
-    overflow:hidden;
-    max-height:100vh;
-    max-width:100vw;
 }
 
 @import './slogan/general.scss';

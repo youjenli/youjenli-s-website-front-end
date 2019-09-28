@@ -11,6 +11,7 @@ import debounce from '../../service/debounce';
 import * as terms from './terms';
 import * as socialMediaTerms from '../home/slogan/socialMedia/terms';
 import * as icons from '../home/slogan/socialMedia/icons';
+import { reactRoot } from '../../index';
 
 interface MobileDeviceTitleBarProps {
     className:string;
@@ -39,7 +40,6 @@ export default class MobileDeviceTitleBar extends
     onWindowScroll
     toggleMenuState() {
         this.setState({isMenuOpened:!this.state.isMenuOpened});
-        const reactRoot:HTMLElement = document.querySelector('#react-root');
         reactRoot.classList.toggle('trim');
     }
     componentDidMount() {
@@ -56,7 +56,6 @@ export default class MobileDeviceTitleBar extends
         if (!isStickyPositionSupported()) {
             window.removeEventListener('scroll', this.onWindowScroll);
         }        
-        const reactRoot:HTMLElement = document.querySelector('#react-root');
         reactRoot.classList.remove('trim');
     }
     render(){

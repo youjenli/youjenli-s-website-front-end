@@ -46,23 +46,23 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
         const vw = this.state.viewportWidth
         if (vw > 1440) {
             return (
-                <React.Fragment>
+                <div id="post" className="bg">
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
                     <LargeExternalScreenPostPage viewportWidth={this.state.viewportWidth}
                         baseZIndex={baseZIndex} remFontSize={18} post={this.props.post}/>
-                </React.Fragment>
+                </div>
             );
         } else if (vw > 1060) {
             return (
-                <React.Fragment>
+                <div id="post" className="bg">
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
                     <ExternalScreenPostPage viewportWidth={this.state.viewportWidth}
                         baseZIndex={baseZIndex} remFontSize={18} post={this.props.post}/>
-                </React.Fragment>
+                </div>
             );
         } else {
             /*
@@ -112,23 +112,23 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                 
                 if (vw > 432) {
                     return (
-                        <React.Fragment>
+                        <div id="post" className="bg mbl">
                             <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20}>
                                 {tocElement}
                             </MobileDeviceTitleBar>
                             <TabletPostPage viewportWidth={this.state.viewportWidth}
                                 baseZIndex={baseZIndex} remFontSize={18} post={parsedPost}/>
-                        </React.Fragment>
+                        </div>
                     );
                 } else {
                     return (
-                        <React.Fragment>
+                        <div id="post" className="bg mbl">
                             <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20}>
                                 {tocElement}
                             </MobileDeviceTitleBar>
                             <SmartPhonePostPage viewportWidth={this.state.viewportWidth}
                                     baseZIndex={baseZIndex} remFontSize={16} post={parsedPost}/>
-                        </React.Fragment>
+                        </div>
                     );
                 }
             } else {//todo 處理解析失敗的狀況。

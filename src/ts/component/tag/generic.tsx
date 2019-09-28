@@ -50,7 +50,7 @@ export default class GenericTag extends React.Component<PropsOfGenericTag, State
         const vw = this.state.viewportWidth
         if (vw > 1440) { //採用大外接螢幕佈局模式
             return (
-                <React.Fragment>
+                <div id="tag" className="bg">
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
@@ -58,45 +58,45 @@ export default class GenericTag extends React.Component<PropsOfGenericTag, State
                         baseZIndex={baseZIndex} remFontSize={18} tag={this.props.tag} 
                         numberOfResults={this.props.numberOfResults} pageContent={this.props.pageContent} 
                         pagination={this.props.pagination} />
-                </React.Fragment>
+                </div>
             );
         } else if (vw > 1060) { //採用外接螢幕佈局模式
             return (
-                <React.Fragment>
+                <div id="tag" className="bg">
                     <ExternalScreenTitleBar viewportWidth={this.state.viewportWidth}
                         aspectRatio={this.state.viewportHeight / this.state.viewportWidth} 
                         baseZIndex={baseZIndex + 20} />
                     <PageOfTagOnExternalScreen viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} 
                         remFontSize={18} tag={this.props.tag} numberOfResults={this.props.numberOfResults}
                         pageContent={this.props.pageContent} pagination={this.props.pagination} />
-                </React.Fragment>
+                </div>
             );
         } else if (vw > 630) { //採用平板佈局模式
             return (
-                <React.Fragment>
+                <div id="tag" className="bg">
                     <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
                     <PageOfTagOnTabletScreen viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} 
                         remFontSize={18} tag={this.props.tag} numberOfResults={this.props.numberOfResults}
                         pageContent={this.props.pageContent} pagination={this.props.pagination} />
-                </React.Fragment>
+                </div>
             );
         } else if (vw > 432) {//採用手機水平佈局模式
             return (
-                <React.Fragment>
+                <div id="tag" className="bg">
                     <MobileDeviceTitleBar  className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
                     <PageOfTagOnSmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} 
                         remFontSize={18} tag={this.props.tag} numberOfResults={this.props.numberOfResults}
                         pageContent={this.props.pageContent} pagination={this.props.pagination} />
-                </React.Fragment>
+                </div>
             );
         } else {//採用手機垂直佈局模式
             return (
-                <React.Fragment>
+                <div id="tag" className="bg">
                     <MobileDeviceTitleBar  className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} />
                     <PageOfTagOnSmartPhone viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} 
                         remFontSize={16} tag={this.props.tag} numberOfResults={this.props.numberOfResults}
                         pageContent={this.props.pageContent} pagination={this.props.pagination} />
-                </React.Fragment>
+                </div>
             );
         }
     }
