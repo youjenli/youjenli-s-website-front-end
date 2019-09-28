@@ -74,7 +74,7 @@ router
 
 export function performSearch(keyword:string, page:number) {
     /*
-       註: 據了解，雖然 Navigo 的 navigate 函式在拿 route 去更新瀏覽器的歷史狀態之前不會特別編碼連結，
+       註: 在我讀 Navigo 的原始碼之後發現雖然 Navigo 的 navigate 函式在拿 route 去更新瀏覽器的歷史狀態之前不會特別編碼連結，
        但是似乎因為瀏覽器的歷史紀錄 API 接到路徑之後會自動編碼的關係，所以實際運作發現這邊不用手動編碼路徑，
        否則當路徑有部分中文字時，反而會導致瀏覽器自動編碼後的連結與原本的目標連結不同。
     */
@@ -86,7 +86,13 @@ export function performSearch(keyword:string, page:number) {
 }
 
 export function navigateToHomeWithErrorMessage(msg:string):void {
-    const queryStr = `${queryParametersOfHome.ERROR_MSG}=${encodeURI(msg)}`;
+    /*
+       註: 這裡呼叫 navigate 的狀況與 performSearch 相同。
+       雖然 Navigo 的 navigate 函式在拿 route 去更新瀏覽器的歷史狀態之前不會特別編碼連結，
+       但是似乎因為瀏覽器的歷史紀錄 API 接到路徑之後會自動編碼的關係，所以實際運作發現這邊不用手動編碼路徑，
+       否則當路徑有部分中文字時，反而會導致瀏覽器自動編碼後的連結與原本的目標連結不同。
+    */
+    const queryStr = `${queryParametersOfHome.ERROR_MSG}=${msg}`;
     if (queryStr.length >= 2048) {
         /*
             如果錯誤訊息太長，則保留適當的長度並去掉多餘訊息。

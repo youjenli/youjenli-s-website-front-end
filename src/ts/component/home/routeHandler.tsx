@@ -40,7 +40,11 @@ export function renderHomePage(query?:any)
         if (queryParams && queryParams[queryParametersOfHome.ERROR_MSG] != null) {
             const msgList = queryParams[queryParametersOfHome.ERROR_MSG].split(',')
                                 .map(param => decodeURI(param));
-                                //註：實驗發現 navigo 會自動為 route 編碼而沒有設定可以改成手動，因此這邊要先解碼才能拿來使用。
+                            /*
+                              註：在讀 Navigo 程式碼之後發現它不會自動為 route 編碼，
+                              但是當它透過瀏覽器的歷史紀錄 API 更新目前網頁所在的路徑時，
+                              瀏覽器的 API 會自動替網址編碼，而這邊會拿到編碼後的路徑，因此要先解碼才能拿來解讀。
+                            */
             errorMsgShouldBeRender.push(...msgList);
         }
 
