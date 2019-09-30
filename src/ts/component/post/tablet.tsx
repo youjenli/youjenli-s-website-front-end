@@ -3,7 +3,6 @@ import { ParsedPost } from '../../model/posts';
 import MobilePostHeader from '../template/mobile-header-of-article';
 import PostInfo from '../template/post-info';
 import Gist from './gist';
-import * as Countable from 'countable';
 
 interface PropsOfTabletPostPage {
     viewportWidth:number;
@@ -32,11 +31,6 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
             fontSizeOfGistIndicator = (vw + 1936)/148;
             fontSizeOfGist = (vw + 1640)/148;
         }
-
-        let countingResult:Countable.CountingResult = null;
-        Countable.count(this.props.post.dom.body.innerHTML, counter => {
-            countingResult = counter;
-        });
 
         if (this.props.post.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
@@ -79,7 +73,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 <React.Fragment>
                     <MobilePostHeader baseZIndex={this.props.baseZIndex} className="tb" title={title} paddingBottom={paddingBottomOfTitleBg} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified}
-                            styleOfPostInfo={styleOfPostInfo} wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} >
+                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} >
                             <img src={post.thumbnail.url} style={styleOfImg} />
                         </PostInfo>                        
                     </MobilePostHeader>                    
@@ -108,7 +102,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                         title={title} decorationLine={decorationLine} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                            styleOfPostInfo={styleOfPostInfo} wordCount={countingResult.characters} marginBottomOfLastItem={'0px'} />
+                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={'0px'} />
                         <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} 
                                     content={this.props.post.gist}/>
                     </MobilePostHeader>
@@ -117,7 +111,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                         title={title} decorationLine={decorationLine} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                            styleOfPostInfo={styleOfPostInfo} wordCount={countingResult.characters} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} />
+                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} />
                     </MobilePostHeader>;
             }
 

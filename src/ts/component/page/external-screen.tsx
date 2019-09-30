@@ -5,7 +5,6 @@ import PostBackgroundOnExternalScreen from '../template/es-postBg';
 import { PublishInfo } from '../template/post-info'
 import {CategoryIcon} from '../template/icons';
 import {LinkOfParent} from '../template/terms';
-import * as Countable from 'countable';
 
 interface PropsOfExternalScreenPage {
     viewportWidth:number;
@@ -84,10 +83,6 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
             }
 
             //接下來要開始準備 post-header 的內容
-            let countingResult:Countable.CountingResult;
-            Countable.count(doc.body.innerHTML, counter => {
-                countingResult = counter;
-            });
             const titleBg = {
                 paddingBottom:heightOfImg * 0.618/* 注意，不用加上發佈資訊的下沿，那部分由 postInfo 的樣式來設定 */
             };
@@ -101,8 +96,7 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         {parentInfoElement}
-                        <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters}
-                            style={styleOfPublishInfo} />
+                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo} />
                         <img src={page.thumbnail.url} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
@@ -122,12 +116,7 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                 top:0,
                 leftRight:paddingLeftRightOfPosgBg
             };
-            
-            let countingResult:Countable.CountingResult;
-                Countable.count(doc.body.innerHTML, counter => {
-                    countingResult = counter;
-                });
-            
+
             //要在 subject 元素從節點樹上移除之後才可以設定發文內容的樣式，否則內容會出錯。
             const contentOfPost = {
                 margin:{
@@ -142,8 +131,7 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         {parentInfoElement}
-                        <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters}
-                            style={styleOfPublishInfo} />
+                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 

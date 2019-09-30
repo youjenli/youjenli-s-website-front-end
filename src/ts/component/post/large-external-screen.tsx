@@ -4,7 +4,6 @@ import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import PostInfo from '../template/post-info';
 import Gist from './gist';
 import PostBackgroundOnExternalScreen from '../template/es-postBg';
-import * as Countable from 'countable';
 
 interface PropsOfLargeExternalScreenPostPage {
     viewportWidth:number;
@@ -85,10 +84,6 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
             contentOfPost['post'] = doc.body.innerHTML;
 
             /* 接下來要準備 post-header 的內容 */
-            let countingResult:Countable.CountingResult;
-            Countable.count(doc.body.innerHTML, counter => {
-                countingResult = counter;
-            });
             const titleBg = {
                 paddingBottom:heightOfImg * 0.618/* 注意，不用加上發佈資訊的下沿，那部分由 postInfo 的樣式來設定 */
             };
@@ -102,8 +97,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
-                            date={this.props.post.date} modified={this.props.post.modified}
-                            wordCount={countingResult.characters} marginBottomOfLastItem='2em' />                      
+                            date={this.props.post.date} modified={this.props.post.modified} marginBottomOfLastItem='2em' />
                         <img src={post.thumbnail.url} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     {postBgElement}
@@ -119,33 +113,20 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
             };
             let postHeader = null
             if (this.props.post.gist) {
-
-                let countingResult:Countable.CountingResult;
-                Countable.count(doc.body.innerHTML, counter => {
-                    countingResult = counter;
-                });
-                
                 postHeader = (
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
-                            date={this.props.post.date} modified={this.props.post.modified}
-                            wordCount={countingResult.characters}/>
+                            date={this.props.post.date} modified={this.props.post.modified} />
                         <Gist content={this.props.post.gist}/>
                     </DefaultHeaderOfArticle>
                 ); 
             } else {
-                let countingResult:Countable.CountingResult;
-                Countable.count(doc.body.innerHTML, counter => {
-                    countingResult = counter;
-                });
-
                 postHeader = (
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
-                            date={this.props.post.date} modified={this.props.post.modified}
-                            wordCount={countingResult.characters} marginBottomOfLastItem='2em' />
+                            date={this.props.post.date} modified={this.props.post.modified} marginBottomOfLastItem='2em' />
                     </DefaultHeaderOfArticle>
                 );
             }

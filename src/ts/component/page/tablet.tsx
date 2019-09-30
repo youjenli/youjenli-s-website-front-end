@@ -4,7 +4,6 @@ import { ParsedPage } from '../../model/posts';
 import {LinkOfParent} from '../template/terms';
 import {PublishInfo} from '../template/post-info';
 import {CategoryIcon} from '../template/icons';
-import * as Countable from 'countable';
 
 interface PropsOfTabletPage {
     viewportWidth:number;
@@ -27,11 +26,6 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
         const styleOfPageInfo = {
             fontSize:`${fontSizeOfPageInfo}px`
         }
-               
-        let countingResult:Countable.CountingResult = null;
-        Countable.count(this.props.page.dom.body.innerHTML, counter => {
-            countingResult = counter;
-        });
 
         let parentElement = null;
         if (page.parent) {
@@ -42,7 +36,7 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
                 </div>;
         }
         
-        const publishInfo = <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters} />
+        const publishInfo = <PublishInfo date={page.date} modified={page.modified} />
 
         if (this.props.page.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;

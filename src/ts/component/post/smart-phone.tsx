@@ -3,7 +3,6 @@ import { ParsedPost } from '../../model/posts';
 import MobileHeaderOfArticle from '../template/mobile-header-of-article';
 import PostInfo from '../template/post-info';
 import Gist from './gist';
-import * as Countable from 'countable';
 
 interface PropsOfSmartPhonePostPage {
     viewportWidth:number;
@@ -32,11 +31,6 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             fontSizeOfGistIndicator = 16;
             fontSizeOfGist = 14;
         }
-                
-        let countingResult:Countable.CountingResult = null;
-        Countable.count(this.props.post.dom.body.innerHTML, counter => {
-            countingResult = counter;
-        });
 
         if (this.props.post.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
@@ -75,7 +69,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} title={title} className="sp">
                         <img src={post.thumbnail.url} style={styleOfImg}/>
                         <PostInfo categories={post.categories} tags={post.tags} styleOfPostInfo={styleOfPostInfo}
-                            date={post.date} modified={post.modified} wordCount={countingResult.characters} />
+                            date={post.date} modified={post.modified} />
                         </MobileHeaderOfArticle>
                     {postCtnrElement}                        
                 </React.Fragment>
@@ -101,7 +95,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
                         title={title} decorationLine={decoration}>
                             <PostInfo categories={post.categories} tags={post.tags} styleOfPostInfo={styleOfPostInfo}
-                                date={post.date} modified={post.modified} wordCount={countingResult.characters} >
+                                date={post.date} modified={post.modified} >
                                 <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} 
                                         content={this.props.post.gist}/>
                             </PostInfo>
@@ -111,8 +105,8 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                 postHeaderElement = 
                 <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
                     title={title} decorationLine={decoration}>
-                        <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                            wordCount={countingResult.characters}  styleOfPostInfo={styleOfPostInfo} 
+                        <PostInfo categories={post.categories} tags={post.tags} date={post.date}
+                            modified={post.modified} styleOfPostInfo={styleOfPostInfo} 
                             marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`}/>
                 </MobileHeaderOfArticle>;
             }

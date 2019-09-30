@@ -4,7 +4,6 @@ import MobileHeaderOfArticle from '../template/mobile-header-of-article';
 import {LinkOfParent} from '../template/terms';
 import {PublishInfo} from '../template/post-info';
 import {CategoryIcon} from '../template/icons';
-import * as Countable from 'countable';
 
 interface PropsOfSmartPhonePage {
     viewportWidth:number;
@@ -37,13 +36,8 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
             </div>;            
         }
 
-        let countingResult:Countable.CountingResult = null;
-        Countable.count(this.props.page.dom.body.innerHTML, counter => {
-            countingResult = counter;
-        });
-
         const publishInfo = 
-                <PublishInfo date={page.date} modified={page.modified} wordCount={countingResult.characters} />;
+                <PublishInfo date={page.date} modified={page.modified} />;
 
         const styleOfPostBg = {
             paddingTop:this.props.remFontSize * 1.5
