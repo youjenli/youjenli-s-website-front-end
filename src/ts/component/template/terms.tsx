@@ -24,3 +24,5 @@ export function thePublicationYouArelookingForDoesNotExist(path:string):string {
 export let neitherTheDataNorTheSlugOfPublicationIsAvailable = '未按正確格式提供資訊給系統載入文章。';
 
 export let thereforeYouWillBeRedirectToTheHomePage = '故導向至本站首頁';
+
+export let noTitle = '（無標題）';

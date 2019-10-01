@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { isNotBlank } from '../../service/validator';
+import * as terms from './terms';
 
 interface PropsOfDefaultHeaderOfArticle {
     baseZIndex:number;
@@ -19,12 +21,21 @@ export default class DefaultHeaderOfArticle extends React.Component<PropsOfDefau
         const styleOfPostHeader = {
             zIndex:this.props.baseZIndex + 1
         }
+
         if(this.props.title.fontSize) {
             styleOfPostHeader['fontSize'] = `${this.props.title.fontSize}px`;
         }
         const styleOfTitleBg = {
             paddingBottom:`${this.props.titleBg.paddingBottom}px`,
             zIndex:this.props.baseZIndex + 3
+        }
+
+        let classesOfTitle = "title", titleText = null;
+        if (isNotBlank(this.props.title.name)) {
+            titleText = this.props.title.name;
+        } else {
+            titleText = terms.noTitle;
+            classesOfTitle += ' noTitle';
         }
 
         const styleOfPostInfo = {
@@ -44,12 +55,12 @@ export default class DefaultHeaderOfArticle extends React.Component<PropsOfDefau
             <div id="post-header" className={this.props.className} style={styleOfPostHeader}>
                 <div id="titleBg" style={styleOfTitleBg}>
                     <div className="postInfo" style={styleOfPostInfo}>
-                        <div className="title">{this.props.title.name}</div>
+                        <div className={classesOfTitle}>{titleText}</div>
                         {this.props.children}
-                    </div>                    
+                    </div>
                 </div>
                 {decoration}
-            </div>             
+            </div>
         );
     }    
 }

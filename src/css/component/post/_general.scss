@@ -10,6 +10,9 @@
                      "Calibri",  "ArialRoundedMTBold", "Arial Rounded MT", "Microsoft Sans Serif", "Times New Roman",
                      "Tahoma", "Arial", "PingFangTC-Regular", "STHeitiTC-Light", "Helvetica-Light", "STYuanti-TC-Regular",
                      "STYuanti-TC-Light", "Microsoft YaHei", "Microsoft JhengHei", "華康細圓體", "新細明體", system-ui;
+        &.noTitle {
+            color:#878667;
+        }
     }
 
     .categories, .tags, .publishInfo {
