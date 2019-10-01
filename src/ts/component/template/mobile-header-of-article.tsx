@@ -22,8 +22,8 @@ export default class MobileHeaderOfArticle extends React.Component<PropsOfMobile
         if (isNotBlank(this.props.title.name)) {
             titleText = this.props.title.name;
         } else {
-            titleText = terms.noTitle;
-            classesOfTitle += ' noTitle';
+            titleText = terms.titleIsBlank;
+            classesOfTitle += ' blank';
         }
         
         /* title bg 的用途是讓 img 可以輕鬆的定位在整欄資訊的最下面，在此同時又有一部分曝露在標頭的外面 */

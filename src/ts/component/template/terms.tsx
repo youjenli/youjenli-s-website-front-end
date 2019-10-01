@@ -25,4 +25,4 @@ export let neitherTheDataNorTheSlugOfPublicationIsAvailable = '未按正確格�
 
 export let thereforeYouWillBeRedirectToTheHomePage = '故導向至本站首頁';
 
-export let noTitle = '（無標題）';
+export let titleIsBlank = '（無標題）';

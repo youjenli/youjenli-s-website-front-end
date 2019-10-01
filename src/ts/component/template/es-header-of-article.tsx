@@ -34,8 +34,8 @@ export default class DefaultHeaderOfArticle extends React.Component<PropsOfDefau
         if (isNotBlank(this.props.title.name)) {
             titleText = this.props.title.name;
         } else {
-            titleText = terms.noTitle;
-            classesOfTitle += ' noTitle';
+            titleText = terms.titleIsBlank;
+            classesOfTitle += ' blank';
         }
 
         const styleOfPostInfo = {
