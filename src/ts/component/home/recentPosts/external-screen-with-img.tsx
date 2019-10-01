@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as terms from './terms';
 import {Category} from '../../../model/terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/formatters';
+import {isNotBlank} from '../../../service/validator';
 
 interface ExternalScreenRecentPostWithImgProps {
     width:number;
@@ -34,6 +35,14 @@ interface ExternalScreenRecentPostWithImgProps {
 
 export default class ExternalScreenRecentPostWithImg extends React.Component<ExternalScreenRecentPostWithImgProps> {
     render() {
+        let titleText = null, classesOfTitle = 'title';
+        if (isNotBlank(this.props.title.name)) {
+            titleText = this.props.title.name;
+        } else {
+            titleText = terms.titleFieldIsBlank;
+            classesOfTitle += ' blank';
+        }
+        
         const month = formatMonthOrDayTo2Digits(this.props.date.getMonth());
         const day = formatMonthOrDayTo2Digits(this.props.date.getDate());
 
@@ -73,7 +82,7 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
             marginTop:`${this.props.title.margin.top}px`,
             marginBottom:`${this.props.title.margin.bottom}px`,
             fontSize:`${this.props.title.fontSize}px`,
-            flexGrow:1            
+            flexGrow:1
         }
         return (
             <article className="rPost img" style={styleOfPost} title={this.props.title.name}>
@@ -82,8 +91,7 @@ export default class ExternalScreenRecentPostWithImg extends React.Component<Ext
                     <span className="date">{this.props.date.getFullYear()}/{month}/{day}．</span>
                     <span className="categories">{categories}</span>
                 </div>
-                <div style={styleOfTitle} className="title">
-                    <a href={this.props.urlOfPost} data-navigo>{this.props.title.name}</a></div>
+                <a href={this.props.urlOfPost} style={styleOfTitle} className={classesOfTitle} data-navigo>{titleText}</a>
             </article>
         );
     }

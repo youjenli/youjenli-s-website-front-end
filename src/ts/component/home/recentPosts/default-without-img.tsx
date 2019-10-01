@@ -3,6 +3,7 @@ import {Category, Tag} from '../../../model/terms';
 import {CategoryIcon, TagIcon} from '../../template/icons';
 import * as terms from './terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/formatters';
+import {isNotBlank} from '../../../service/validator';
 
 interface DefaultRecentPostWithoutImgProps {
     width:number;
@@ -68,6 +69,15 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
         const styleOfDate = {
             marginRight:`${this.props.postInfoBar.titleBar.marginRightOfDate}px`
         }
+
+        let titleText = null, classesOfTitle = "title";
+        if (isNotBlank(this.props.postInfoBar.titleBar.titleName)) {
+            titleText = this.props.postInfoBar.titleBar.titleName;
+        } else {
+            titleText = terms.titleFieldIsBlank;
+            classesOfTitle += ' blank';
+        }
+
         const styleOfTitleBar = {
             fontSize:`${this.props.postInfoBar.titleBar.fontSizeOfDateAndTitle}px`,
             marginBottom:`${this.props.postInfoBar.titleBar.marginBottom}px`
@@ -146,8 +156,7 @@ export default class DefaultRecentPostWithoutImg extends React.Component<Default
                     <div className="titleBar" style={styleOfTitleBar}>
                         <span className="date" style={styleOfDate}>
                             {this.props.postInfoBar.titleBar.date.getFullYear()}<br />{month}.{day}</span>
-                        <span className="title">
-                            <a href={this.props.excerpt.urlOfPost} data-navigo>{this.props.postInfoBar.titleBar.titleName}</a></span>
+                        <a href={this.props.excerpt.urlOfPost} className={classesOfTitle} data-navigo>{titleText}</a>
                     </div>
                     <div style={styleOfCategories} className="categories">
                         <CategoryIcon style={styleOfIcon}/>

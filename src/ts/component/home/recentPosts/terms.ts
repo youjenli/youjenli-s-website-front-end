@@ -1,5 +1,6 @@
 import { isNum } from "../../../service/validator";
 
+export let titleFieldIsBlank = '（無標題）';
 export let postWasNotCategorized = '未分類';
 export let postWasNotTagged = '未標記';
 export let cannotFoundTaxonomies = '因故暫時查不到這部分資訊，請稍後再試或聯絡系統管理員。';

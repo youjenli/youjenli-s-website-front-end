@@ -3,6 +3,7 @@ import {Category, Tag} from '../../../model/terms';
 import {CategoryIcon, TagIcon, PublishIcon} from '../../template/icons';
 import * as terms from './terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/formatters';
+import {isNotBlank} from '../../../service/validator';
 
 interface MobileHorizontalRecentPostWithoutImgProps {
     width:number;
@@ -66,8 +67,20 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
         }
         const styleOfTitle = {
             fontSize:`${this.props.postInfoBar.title.fontSizeOfDateAndTitle}px`,
-            marginBottom:`${this.props.postInfoBar.title.marginBottom}px`
+            marginBottom:`${this.props.postInfoBar.title.marginBottom}px`,
+            display:'block' 
+            /*因為桌面版無圖片近期文章的標題不需要以 block 方式呈現，
+              所以這邊才為有此需求的行動版無圖片近期文章標題另外加上樣式*/
         }
+
+        let titleText = null, classesOfTitle = 'title';
+        if (isNotBlank(this.props.postInfoBar.title.titleName)) {
+            titleText = this.props.postInfoBar.title.titleName;
+        } else {
+            titleText = terms.titleFieldIsBlank;
+            classesOfTitle += ' blank';
+        }
+
         const widthOfIcon = `${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`;
         const heightOfIcon = `${this.props.postInfoBar.fontSizeOfCategoriesTagsAndDate}px`;
         const styleOfIcon = {
@@ -128,15 +141,15 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
             const modifiedMonth = formatMonthOrDayTo2Digits(this.props.postInfoBar.modified.getMonth());
             const modifiedDay = formatMonthOrDayTo2Digits(this.props.postInfoBar.modified.getDate());
             lastUpdate = `${terms.infoSeparater}${terms.lastModified} ${this.props.postInfoBar.modified.getFullYear()}/${modifiedMonth}/${modifiedDay}`;
-        }       
+        }
 
         const publishInfoElement = (
             <div style={styleOfTagsAndPublishDate} className="publishInfo">
                 <PublishIcon style={styleOfIcon}/><span>
                     {terms.published}&nbsp;{this.props.postInfoBar.date.getFullYear()}/{publishMonth}/{publishDay}
-                    {lastUpdate}                    
+                    {lastUpdate}
                 </span>
-            </div>);      
+            </div>);
 
         const em = this.props.excerpt.margin;
         const styleOfExcerpt = {
@@ -155,11 +168,11 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
         return (
             <article className="rPost plain" style={styleOfPost}>
                 <div className="postInfoBg" style={styleOfPostInfoBg}>
-                    <div className="title" style={styleOfTitle}>
-                        <a href={this.props.excerpt.urlOfPost} data-navigo>{this.props.postInfoBar.title.titleName}</a></div>
+                    <a href={this.props.excerpt.urlOfPost} className={classesOfTitle} style={styleOfTitle} data-navigo>
+                        {titleText}</a>
                     <div style={styleOfCategories} className="categories">
                         <CategoryIcon style={styleOfIcon}/>
-                        <span>{categories}</span>                        
+                        <span>{categories}</span>
                     </div>
                     <div style={styleOfTagsAndPublishDate} className="tags">
                         <TagIcon style={styleOfIcon}/>

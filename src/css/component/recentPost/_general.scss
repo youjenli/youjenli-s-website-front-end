@@ -36,13 +36,10 @@
                          "Geneva", "Times New Roman", "Tahoma", "Arial", "STYuanti-TC-Regular", "華康細圓體",
                          "FZLTXHB--B51-0"/* 蘭亭黑-繁 纖黑 */, "PingFangTC-Light", "STHeitiTC-Light", "Microsoft YaHei", 
                          "Microsoft JhengHei", "新細明體", system-ui;
-            a {
-                cursor:pointer;
-                text-decoration:none;
-                color:inherit;
-                &:hover {
-                    text-decoration: underline;
-                }
+            cursor:pointer;
+            text-decoration:none;
+            &:hover {
+                text-decoration: underline;
             }
         }
         &.img {
@@ -68,6 +65,10 @@
             }
             .title {
                 color:#655E55;
+                display:block;
+                &.blank {
+                    color:#8F8482;
+                }
             }
         }
         &.plain {
@@ -87,6 +88,9 @@
             }
             .title {
                 color:#383838;
+                &.blank {
+                    color:#6D6D6D;
+                }
             }
             .categories {
                 color:#667E4D;

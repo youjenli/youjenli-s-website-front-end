@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as terms from './terms';
 import {Category} from '../../../model/terms';
 import {formatMonthOrDayTo2Digits} from '../../../service/formatters';
+import {isNotBlank} from '../../../service/validator';
 
 interface PropsOfMobileRecentPostWithImg {
     width:number;
@@ -35,6 +36,14 @@ interface PropsOfMobileRecentPostWithImg {
 
 export default class MobileRecentPostWithImg extends React.Component<PropsOfMobileRecentPostWithImg> {
     render() {
+        let titleText = null, classesOfTitle = 'title';
+        if (isNotBlank(this.props.title.name)) {
+            titleText = this.props.title.name;
+        } else {
+            titleText = terms.titleFieldIsBlank;
+            classesOfTitle += ' blank';
+        }
+
         const month = formatMonthOrDayTo2Digits(this.props.date.getMonth());
         const day = formatMonthOrDayTo2Digits(this.props.date.getDate());
 
@@ -51,7 +60,7 @@ export default class MobileRecentPostWithImg extends React.Component<PropsOfMobi
             alignItems:'flex-start',
             flexGrow:0.5
         }
-        const styleOfPostProps = {            
+        const styleOfPostProps = {
             fontSize:`${this.props.postProps.fontSize}px`,
             paddingBottom:`${this.props.postProps.marginBottom}px`,
             flexGrow:1
@@ -81,12 +90,11 @@ export default class MobileRecentPostWithImg extends React.Component<PropsOfMobi
 
         return (
             <article className="rPost img" style={styleOfPost} title={this.props.title.name}>
-                <div style={styleOfTitle} className="title">
-                    <a href={this.props.urlOfPost} data-navigo>{this.props.title.name}</a></div>
+                <a href={this.props.urlOfPost} style={styleOfTitle} className={classesOfTitle} data-navigo>{titleText}</a>
                 <div style={styleOfPostProps} className="postProps">
                     <span className="date">{this.props.date.getFullYear()}/{month}/{day}．</span>
                     <span className="categories">{categories}</span>
-                </div>                
+                </div>
                 <a href={this.props.urlOfPost} data-navigo><img style={styleOfImg} src={this.props.imgUrl} /></a>
             </article>
         );
