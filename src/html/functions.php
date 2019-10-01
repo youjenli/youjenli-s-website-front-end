@@ -1,11 +1,12 @@
 <?php 
+	
+	require_once( 'constants.php' );
+
 	/*
 		metabox 是一個能夠在後台的文章編輯頁提供欄位讓作者可以輸入文章附加內容的擴充套件。
 		為提供更好用的功能，我要運用此套件在文章編輯頁產生文章主旨的輸入欄位，因此要藉由以下函式設定 meta box。
 		
 	*/
-	require_once( 'constants.php' );
-	
 	function youjenli_create_meta_boxes( $meta_boxes ) {
 		global $name_of_custom_field_gist, $name_of_custom_field_pathOfIcon, 
 			   $name_of_custom_field_nameOfLink, $name_of_custom_field_hintOfLink;
@@ -97,6 +98,27 @@
 			  );
 	}
 	add_action( 'rest_api_init', 'youjenli_register_posts_meta_field' );
+
+	/*
+		因為 wordpress 5.0 以後加人的 Gutenberg 編輯器會加入我不需要的資訊影響文章篇幅，
+		所以下面兩行要參考網路上的做法來禁用此功能。
+		https://digwp.com/2018/04/how-to-disable-gutenberg/
+	*/	
+	if (version_compare($GLOBALS['wp_version'], '5.0-beta', '>')) {
+		// WP > 5 beta
+		// disable for posts
+		add_filter('use_block_editor_for_post', '__return_false', 10);
+		// disable for post types
+		add_filter('use_block_editor_for_post_type', '__return_false', 10);
+		
+	} else {
+		// WP < 5 beta
+		// disable for posts
+		add_filter('gutenberg_can_edit_post', '__return_false', 10);
+		// disable for post types
+		add_filter('gutenberg_can_edit_post_type', '__return_false', 10);
+	}
+
 
 	/*
 		以下函式是用來設定重要頁面的文章數。
