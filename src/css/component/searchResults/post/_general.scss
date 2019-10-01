@@ -18,6 +18,9 @@
             text-decoration: underline;
         }
         cursor:pointer;
+        &.blank {
+            color:#848484;
+        }
     }
     .categories, .parent {
         color:#667E4D;

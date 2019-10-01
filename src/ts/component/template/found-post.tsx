@@ -1,9 +1,11 @@
 import * as React from 'react';
 import {MetaDataOfPost} from '../../model/posts';
 import * as termsOfPost from '../home/recentPosts/terms';
-import * as  terms from '../search-result/terms';
+import * as termsOfSearchResults from '../search-result/terms';
+import * as terms from './terms';
 import {formatMonthOrDayTo2Digits} from '../../service/formatters';
 import { CategoryIcon, TagIcon } from './icons';
+import {isNotBlank} from '../../service/validator';
 
 interface PropsOfTemplateFoundPost {
     post:MetaDataOfPost;
@@ -47,6 +49,14 @@ export class TemplateOfFoundPost extends React.Component<PropsOfTemplateFoundPos
             styleOfDate['marginRight'] = `${this.props.date.marginRight}px`;
         }
 
+        let titleText = null, classesOfTitle = 'title';
+        if (isNotBlank(this.props.post.title)) {
+            titleText = this.props.post.title;
+        } else {
+            titleText = terms.titleIsBlank;
+            classesOfTitle += ' blank';
+        }
+
         let styleOfTitle = {};
         if (this.props.title && this.props.title.fontSize) {
             styleOfTitle['fontSize'] = `${this.props.title.fontSize}px`;
@@ -77,7 +87,7 @@ export class TemplateOfFoundPost extends React.Component<PropsOfTemplateFoundPos
                     return (
                         <React.Fragment key={idx}>
                             {idx > 0 ? '．' : null}
-                            <a href={item.url} title={terms.learnMoreAboutThisTaxonomy(terms.Taxonomy.category, item.name)} data-navigo>{item.name}</a>
+                            <a href={item.url} title={termsOfSearchResults.learnMoreAboutThisTaxonomy(termsOfSearchResults.Taxonomy.category, item.name)} data-navigo>{item.name}</a>
                         </React.Fragment>
                     );
                 })}</span>
@@ -103,7 +113,7 @@ export class TemplateOfFoundPost extends React.Component<PropsOfTemplateFoundPos
                         return (
                             <React.Fragment key={idx}>
                                 {idx > 0 ? '．' : null}
-                                <a href={item.url} title={terms.learnMoreAboutThisTaxonomy(terms.Taxonomy.tag, item.name)} data-navigo>
+                                <a href={item.url} title={termsOfSearchResults.learnMoreAboutThisTaxonomy(termsOfSearchResults.Taxonomy.tag, item.name)} data-navigo>
                                     {item.name}</a>
                             </React.Fragment>
                         );
@@ -127,8 +137,8 @@ export class TemplateOfFoundPost extends React.Component<PropsOfTemplateFoundPos
                     <div className="date" style={styleOfDate}>
                         {this.props.post.date.getFullYear()}<br />{month}.{day}
                     </div>
-                    <a className="title" style={styleOfTitle} href={this.props.post.url} title={learnMoreAboutThisArticle} data-navigo>
-                        {this.props.post.title}</a>
+                    <a className={classesOfTitle} style={styleOfTitle} href={this.props.post.url} title={learnMoreAboutThisArticle} data-navigo>
+                        {titleText}</a>
                 </div>
                 {categoriesElement}
                 {tagsElement}

@@ -3,7 +3,8 @@ import {MetaDataOfPage} from '../../model/posts';
 import * as termsOfPost from '../home/recentPosts/terms';
 import * as terms from './terms';
 import {formatMonthOrDayTo2Digits} from '../../service/formatters';
-import { CategoryIcon } from './icons';
+import {CategoryIcon} from './icons';
+import {isNotBlank} from '../../service/validator';
 
 interface PropsOfTemplateOfFoundPage {
     page:MetaDataOfPage;
@@ -45,6 +46,14 @@ export class TemplateOfFoundPage extends React.Component<PropsOfTemplateOfFoundP
         }
         if (this.props.date.marginRight) {
             styleOfDate['marginRight'] = `${this.props.date.marginRight}px`;
+        }
+
+        let titleText = null, classesOfTitle = 'title';
+        if (isNotBlank(this.props.page.title)) {
+            titleText = this.props.page.title;
+        } else {
+            titleText = terms.titleIsBlank;
+            classesOfTitle += ' blank';
         }
 
         let styleOfTitle = {};
@@ -93,8 +102,8 @@ export class TemplateOfFoundPage extends React.Component<PropsOfTemplateOfFoundP
                     <div className="date" style={styleOfDate}>
                         {this.props.page.date.getFullYear()}<br />{month}.{day}
                     </div>
-                    <a className="title" style={styleOfTitle} href={this.props.page.url} title={learnMoreAboutThisArticle} data-navigo>
-                        {this.props.page.title}</a>
+                    <a className={classesOfTitle} style={styleOfTitle} href={this.props.page.url} title={learnMoreAboutThisArticle} data-navigo>
+                        {titleText}</a>
                 </div>
                 {parentElement}
                 <div className="excerpt" style={styleOfExcerpt}>
