@@ -9,6 +9,7 @@ interface PropsOfPostInfo {
     tags?:Tag[];
     date:Date;
     modified:Date;
+    estimatedReadingTimes:number;
     styleOfPostInfo?:React.CSSProperties;
     marginBottomOfLastItem?:string;
 }
@@ -47,9 +48,10 @@ export default class PostInfo extends React.Component<PropsOfPostInfo> {
                 <div className="postInfo" style={this.props.styleOfPostInfo}>
                     <div className="categories"><CategoryIcon/>{categories}</div>
                     <div className="tags"><TagIcon />{tags}</div>
-                    <PublishInfo date={this.props.date} modified={this.props.modified} style={styleOfPublishInfo} />
+                    <PublishInfo date={this.props.date} modified={this.props.modified} style={styleOfPublishInfo} 
+                        estimatedReadingTimes={this.props.estimatedReadingTimes} />
                     {this.props.children}
-                </div>                
+                </div>
             </React.Fragment>
         )
     }
@@ -58,11 +60,12 @@ export default class PostInfo extends React.Component<PropsOfPostInfo> {
 interface PropsOfPublishInfo {
     date:Date;
     modified:Date;
+    estimatedReadingTimes:number;
     style?:React.CSSProperties;
 }
 
 export class PublishInfo extends React.Component<PropsOfPublishInfo> {
-    
+
     render() {
         const publishMonth = formatMonthOrDayTo2Digits(this.props.date.getMonth());
         const publishDay = formatMonthOrDayTo2Digits(this.props.date.getDate());
@@ -74,10 +77,15 @@ export class PublishInfo extends React.Component<PropsOfPublishInfo> {
             lastUpdate = `${terms.clauseSeparater}${terms.lastModified} ${this.props.modified.getFullYear()}/${modifiedMonth}/${modifiedDay}`;
         }
 
+        let estimatedReadingTimes = null;
+        if (this.props.estimatedReadingTimes > 0) {
+            estimatedReadingTimes = `${terms.period}${terms.estimatedReadingTimes(this.props.estimatedReadingTimes)}${terms.period}`;
+        }
+
         return (
             <div className="publishInfo" style={this.props.style}>
                 <PublishIcon/><span>
-                    {terms.published}&nbsp;{this.props.date.getFullYear()}/{publishMonth}/{publishDay}{lastUpdate}
+                    {terms.published}&nbsp;{this.props.date.getFullYear()}/{publishMonth}/{publishDay}{lastUpdate}{estimatedReadingTimes}
                 </span>
             </div>
         );

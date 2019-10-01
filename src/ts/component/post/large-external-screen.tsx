@@ -97,7 +97,8 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
-                            date={this.props.post.date} modified={this.props.post.modified} marginBottomOfLastItem='2em' />
+                            date={this.props.post.date} modified={this.props.post.modified} marginBottomOfLastItem='2em'
+                            estimatedReadingTimes={this.props.post.estimatedReadingTimes} />
                         <img src={post.thumbnail.url} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     {postBgElement}
@@ -117,8 +118,8 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
-                            date={this.props.post.date} modified={this.props.post.modified} />
-                        <Gist content={this.props.post.gist}/>
+                            date={this.props.post.date} modified={this.props.post.modified} estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
+                        <Gist content={this.props.post.gist} />
                     </DefaultHeaderOfArticle>
                 ); 
             } else {
@@ -126,7 +127,8 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
-                            date={this.props.post.date} modified={this.props.post.modified} marginBottomOfLastItem='2em' />
+                            date={this.props.post.date} modified={this.props.post.modified} marginBottomOfLastItem='2em'
+                            estimatedReadingTimes={this.props.post.estimatedReadingTimes} />
                     </DefaultHeaderOfArticle>
                 );
             }

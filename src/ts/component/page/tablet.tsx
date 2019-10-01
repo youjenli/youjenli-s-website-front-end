@@ -36,7 +36,7 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
                 </div>;
         }
         
-        const publishInfo = <PublishInfo date={page.date} modified={page.modified} />
+        const publishInfo = <PublishInfo date={page.date} modified={page.modified} estimatedReadingTimes={page.estimatedReadingTimes}/>
 
         if (this.props.page.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;

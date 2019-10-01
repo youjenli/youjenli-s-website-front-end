@@ -11,4 +11,6 @@
     $name_of_custom_field_nameOfLink = $prefix_of_custom_field . 'nameOfLink';
     $name_of_custom_field_hintOfLink = $prefix_of_custom_field . 'hintOfLink';
     $name_of_custom_field_pathOfIcon = $prefix_of_custom_field . 'icon';
+
+    $name_of_custom_field_estimatedReadingTimes = $prefix_of_custom_field . 'estimatedReadingTimes';
 ?>

@@ -7,6 +7,7 @@ export interface CoreAttributesOfPublication {
     title:string;
     slug:string;
     url:string;
+    estimatedReadingTimes:number;
 }
 
 export interface Publication extends CoreAttributesOfPublication { 

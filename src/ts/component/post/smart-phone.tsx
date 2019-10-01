@@ -69,9 +69,9 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} title={title} className="sp">
                         <img src={post.thumbnail.url} style={styleOfImg}/>
                         <PostInfo categories={post.categories} tags={post.tags} styleOfPostInfo={styleOfPostInfo}
-                            date={post.date} modified={post.modified} />
+                            date={post.date} modified={post.modified} estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
                         </MobileHeaderOfArticle>
-                    {postCtnrElement}                        
+                    {postCtnrElement}
                 </React.Fragment>
             );
         } else {
@@ -95,7 +95,7 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     <MobileHeaderOfArticle baseZIndex={this.props.baseZIndex} className="sp"
                         title={title} decorationLine={decoration}>
                             <PostInfo categories={post.categories} tags={post.tags} styleOfPostInfo={styleOfPostInfo}
-                                date={post.date} modified={post.modified} >
+                                date={post.date} modified={post.modified} estimatedReadingTimes={this.props.post.estimatedReadingTimes}>
                                 <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} 
                                         content={this.props.post.gist}/>
                             </PostInfo>
@@ -107,7 +107,8 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     title={title} decorationLine={decoration}>
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date}
                             modified={post.modified} styleOfPostInfo={styleOfPostInfo} 
-                            marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`}/>
+                            marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`}
+                            estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
                 </MobileHeaderOfArticle>;
             }
 

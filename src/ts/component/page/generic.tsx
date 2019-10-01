@@ -103,30 +103,7 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
                 }
                 
                 const page = this.props.page;
-                const parsedPage:ParsedPage = {
-                    type:page.type,
-                    title:page.title,
-                    id:page.id,
-                    slug:page.slug,
-                    date:page.date,
-                    url:page.url,
-                    modified:page.modified,
-                    excerpt:page.excerpt,
-                    dom:doc
-                };
-                if (page.thumbnail) {
-                    parsedPage['thumbnail'] = {
-                        url:page.thumbnail.url,
-                        caption:page.thumbnail.caption
-                    }
-                }
-                if (page.parent) {
-                    parsedPage['parent'] = {
-                        title:page.parent.title,
-                        url:page.parent.url,
-                        slug:page.parent.slug
-                    }
-                }
+                const parsedPage:ParsedPage = Object.assign({ dom:doc }, page);
 
                 if (vw > 432) {
                     return (

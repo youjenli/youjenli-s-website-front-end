@@ -97,7 +97,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
                             date={this.props.post.date} modified={this.props.post.modified}
-                            marginBottomOfLastItem='1.5em' />
+                            marginBottomOfLastItem='1.5em' estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
                         <img src={post.thumbnail.url} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     {postBg}
@@ -118,7 +118,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
                             date={this.props.post.date} modified={this.props.post.modified} 
-                            marginBottomOfLastItem='0px'/>
+                            marginBottomOfLastItem='0px'  estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
                         <Gist content={this.props.post.gist} />
                     </DefaultHeaderOfArticle>
                 ); 
@@ -128,7 +128,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         <PostInfo categories={this.props.post.categories} tags={this.props.post.tags}
                             date={this.props.post.date} modified={this.props.post.modified}
-                            marginBottomOfLastItem='1.5em' />
+                            marginBottomOfLastItem='1.5em' estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
                     </DefaultHeaderOfArticle>
                 );
             }

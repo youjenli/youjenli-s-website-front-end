@@ -1,5 +1,10 @@
 import { TypeOfContent } from './general-types'
 
+export enum CustomFields {
+    Gist = 'custom-field-gist',
+    EstimatedReadingTimes = 'custom-field-estimatedReadingTimes'
+}
+
 interface CommonPropertiesOfPostTypes {
     id:number;
     date:string;
@@ -30,7 +35,8 @@ interface CommonPropertiesOfPostTypes {
     ping_status:'open' | 'closed';
     template:string;
     meta: {
-        "custom-field-gist":string;
+        [CustomFields.Gist]:string;
+        [CustomFields.EstimatedReadingTimes]:number;
     };
     _links:{
         self: {//存取此文章的 rest api 路徑

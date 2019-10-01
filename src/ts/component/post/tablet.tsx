@@ -73,7 +73,8 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 <React.Fragment>
                     <MobilePostHeader baseZIndex={this.props.baseZIndex} className="tb" title={title} paddingBottom={paddingBottomOfTitleBg} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified}
-                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} >
+                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} 
+                            estimatedReadingTimes={this.props.post.estimatedReadingTimes} >
                             <img src={post.thumbnail.url} style={styleOfImg} />
                         </PostInfo>                        
                     </MobilePostHeader>                    
@@ -102,7 +103,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                         title={title} decorationLine={decorationLine} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={'0px'} />
+                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={'0px'} estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
                         <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} 
                                     content={this.props.post.gist}/>
                     </MobilePostHeader>
@@ -111,7 +112,8 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <MobilePostHeader className="tb" baseZIndex={this.props.baseZIndex} 
                         title={title} decorationLine={decorationLine} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
-                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} />
+                            styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`}
+                            estimatedReadingTimes={this.props.post.estimatedReadingTimes} />
                     </MobilePostHeader>;
             }
 

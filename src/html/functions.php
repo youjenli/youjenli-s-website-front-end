@@ -8,8 +8,9 @@
 		
 	*/
 	function youjenli_create_meta_boxes( $meta_boxes ) {
-		global $name_of_custom_field_gist, $name_of_custom_field_pathOfIcon, 
-			   $name_of_custom_field_nameOfLink, $name_of_custom_field_hintOfLink;
+		global  $name_of_custom_field_gist, $name_of_custom_field_pathOfIcon,
+				$name_of_custom_field_nameOfLink, $name_of_custom_field_hintOfLink,
+				$name_of_custom_field_estimatedReadingTimes;
 
 		$meta_boxes[] = array(
 			/*
@@ -18,7 +19,7 @@
 			*/
 			/* 呈現在文章編輯頁面之 meta box 提供的輸入欄位上面之標題文字
 			*/
-			'title' => '發文自訂欄位',
+			'title' => '發文的補充資訊',
 			// 指出以下自訂欄位適用的內容類型。
 			'post_types' => array('post'),
 			// 設定自訂欄位要顯示的位置。side 表示在側邊與文章其他設定並列顯示在選單中。
@@ -35,6 +36,7 @@
 					可參閱以下連結了解欄位各項設定的用途：
 					https://docs.metabox.io/field-settings/
 				*/
+				//本文主旨
 				[
 					//在後台發文頁面提供的欄位類型
 					'type' => 'textarea',
@@ -49,9 +51,33 @@
 				]
 			]
 		);
+		
+		$meta_boxes[] = array(
+			'title' => '發表物的補充資訊',
+			// 指出以下自訂欄位適用的內容類型。
+			'post_types' => array('post', 'page'),
+			// 設定自訂欄位要顯示的位置。side 表示在側邊與文章其他設定並列顯示在選單中。
+			'context' => 'side',
+			// 是否自動儲存自訂欄位的內容？
+			'autosave' => 'false',
+			/* 此欄位在選單上相對於其他自訂欄位的順位，可填 high, low, default。
+			   若未特別調整，則自訂欄位都會被排在系統內建欄位的後面。
+			*/
+			'priority' => 'high',
+			// 要自訂哪些欄位？
+			'fields' => [
+				//預計閱讀時間
+				[
+					'type' => 'number',
+					'id' => $name_of_custom_field_estimatedReadingTimes,
+					'name' => '預計閱讀時間',
+					'label_description' => '估計讀者需要花費幾分鐘來閱讀此文章'
+				]
+			]
+		);
 
 		$meta_boxes[] = array(
-			'title' => '發表物自訂欄位',
+			'title' => '在選單列表呈現發表物的設定',
 			'post_types' => array('post', 'page'),
 			'context' => 'side',
 			'autosave' => false,
@@ -77,7 +103,6 @@
 				]
 			]
 		);
-
 		return $meta_boxes;
 	}
 	add_filter( 'rwmb_meta_boxes', 'youjenli_create_meta_boxes' );
@@ -87,15 +112,31 @@
 		我要藉由以下函式讓 wordpress 系統知道我有自訂欄位，而且需要在 rest api 輸出這些自訂欄位。
 	*/
 	function youjenli_register_posts_meta_field() {
-		global $name_of_custom_field_gist;
+		global $name_of_custom_field_gist, $name_of_custom_field_estimatedReadingTimes;
 		register_meta('post', $name_of_custom_field_gist,
-				  [
-					  'type' => 'string',
-					  'description' => 'The gist of current post/page.',
-					  'show_in_rest' => true,
-					  'single' => true
-				  ]
-			  );
+							[
+								'type' => 'string',
+								'description' => 'The gist of current post/page.',
+								'show_in_rest' => true,
+								'single' => true
+							]
+						);
+		register_meta('post', $name_of_custom_field_estimatedReadingTimes,
+							[
+								'type' => 'number',
+								'description' => 'Estimated reading times of this post.',
+								'show_in_rest' => true,
+								'single' => true
+							]
+						);
+		register_meta('page', $name_of_custom_field_estimatedReadingTimes,
+						[
+							'type' => 'number',
+							'description' => 'Estimated reading times of this page.',
+							'show_in_rest' => true,
+							'single' => true
+						]
+					);
 	}
 	add_action( 'rest_api_init', 'youjenli_register_posts_meta_field' );
 

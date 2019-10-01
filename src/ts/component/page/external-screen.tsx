@@ -96,7 +96,8 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         {parentInfoElement}
-                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo} />
+                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo} 
+                            estimatedReadingTimes={page.estimatedReadingTimes} />
                         <img src={page.thumbnail.url} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
@@ -131,7 +132,8 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         {parentInfoElement}
-                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo} />
+                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo}
+                            estimatedReadingTimes={page.estimatedReadingTimes} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 

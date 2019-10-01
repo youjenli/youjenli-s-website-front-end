@@ -26,3 +26,15 @@ url:<?php echo json_encode(get_permalink($post->ID)); ?>,
     ); ?>
 thumbnail:<?php echo json_encode($thumbnail); ?>,
 <?php endif; ?>
+<?php 
+require( dirname( __FILE__ ) . '/../constants.php');
+/*註：雖然 title-bar.php 應該已經在前面載入過這個變數檔案，
+  但我推測因為 wordpress 採用 function 之類的辦法載入呈現發表物的樣板，
+  所以這裡要用 require 載入變數檔案，否則會讀不到變數
+*/
+$estimatedReadingTimes = get_post_meta($post->ID, $name_of_custom_field_estimatedReadingTimes, true);
+if ( is_numeric( $estimatedReadingTimes ) ) : ?>
+estimatedReadingTimes:<?php echo json_encode( $estimatedReadingTimes ) ?>,
+<?php else: ?>
+estimatedReadingTimes:0,
+<?php endif ?>

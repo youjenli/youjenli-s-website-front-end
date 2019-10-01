@@ -6,6 +6,8 @@ import { ResultOfFetching } from '../model/general-types';
 import { fetchMedia } from '../service/media-fetcher';
 import { Post } from '../model/posts';
 import { isNotBlank } from './validator';
+import { CustomFields } from '../model/wp-rest-api';
+import { isNum } from '../service/validator';
 
 export interface ConfigurationOfFetching {
     page?:number;
@@ -92,9 +94,17 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                      * 如果此發文的記錄中沒有主旨，則 custom-field-gist 欄位會是空字串。
                                        為避免這種情況造成後續步驟的問題，這邊要依據此欄位是否為空來建立對應的內容。
                                      */
-                                    if (isNotBlank(post.meta["custom-field-gist"])) {
-                                        metaDataOfPost['gist'] = post.meta["custom-field-gist"];
+                                    if (isNotBlank(post.meta[CustomFields.Gist])) {
+                                        metaDataOfPost['gist'] = post.meta[CustomFields.Gist];
                                     }
+
+                                    const estimatedReadingTimes = post.meta[CustomFields.EstimatedReadingTimes];
+                                    if (isNum(estimatedReadingTimes) && estimatedReadingTimes > 0 ) {
+                                        metaDataOfPost['estimatedReadingTimes'] = estimatedReadingTimes;
+                                    } else {
+                                        metaDataOfPost['estimatedReadingTimes'] = 0;
+                                    }
+
                                     //準備分類資料
                                     if (post.categories.length > 0) {
                                         /*因為暫時沒空完全搞懂 wordpress rest api 的實作方式以便加入分類名稱的資訊到上面去

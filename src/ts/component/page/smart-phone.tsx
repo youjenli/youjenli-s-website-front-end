@@ -37,7 +37,7 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
         }
 
         const publishInfo = 
-                <PublishInfo date={page.date} modified={page.modified} />;
+                <PublishInfo date={page.date} modified={page.modified} estimatedReadingTimes={page.estimatedReadingTimes} />;
 
         const styleOfPostBg = {
             paddingTop:this.props.remFontSize * 1.5

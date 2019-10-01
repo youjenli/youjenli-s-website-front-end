@@ -6,6 +6,8 @@ import { Page } from '../model/posts';
 import { isNotBlank } from './validator';
 import * as terms from './terms';
 import { fetchMedia } from './media-fetcher';
+import { CustomFields } from '../model/wp-rest-api';
+import { isNum } from '../service/validator';
 
 export interface ConfigurationOfFetching {
     page?:number;
@@ -46,6 +48,7 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                         let isComplete = true;
                         if (Array.isArray(responseOfQueryOfPage.data) && responseOfQueryOfPage.data.length > 0) {
                             let rawDataOfPage = responseOfQueryOfPage.data[0];
+                            const estimatedReadingTimes = rawDataOfPage.meta[CustomFields.EstimatedReadingTimes];
                             let model:Page = {
                                 type:rawDataOfPage.type,
                                 id:rawDataOfPage.id,
@@ -55,8 +58,10 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                 modified:convertGMTDateToLocalDate(new Date(rawDataOfPage.modified_gmt)),
                                 url:rawDataOfPage.link,
                                 excerpt:rawDataOfPage.excerpt.rendered,
-                                content:rawDataOfPage.content.rendered
+                                content:rawDataOfPage.content.rendered,
+                                estimatedReadingTimes:isNum(estimatedReadingTimes) && estimatedReadingTimes > 0 ? estimatedReadingTimes : 0
                             };
+
                             const additionalPromises = [];
                             if (rawDataOfPage.featured_media) {
                                 additionalPromises.push(

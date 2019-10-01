@@ -96,7 +96,8 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} appendDecorationLine={false}>
                         {parentInfoElement}
-                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo} />
+                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo}
+                            estimatedReadingTimes={page.estimatedReadingTimes} />
                         <img src={page.thumbnail.url} style={styleOfImg} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
@@ -128,7 +129,8 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="les"
                         titleBg={titleBg} title={title} appendDecorationLine={true}>
                         {parentInfoElement}
-                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo} />
+                        <PublishInfo date={page.date} modified={page.modified} style={styleOfPublishInfo}
+                            estimatedReadingTimes={page.estimatedReadingTimes} />
                     </DefaultHeaderOfArticle>
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}  className="les" 
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
