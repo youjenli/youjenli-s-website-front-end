@@ -53,7 +53,7 @@ export class TemplateOfFoundPost extends React.Component<PropsOfTemplateFoundPos
         if (isNotBlank(this.props.post.title)) {
             titleText = this.props.post.title;
         } else {
-            titleText = terms.titleIsBlank;
+            titleText = terms.titleIsUnavailable;
             classesOfTitle += ' blank';
         }
 
@@ -130,6 +130,13 @@ export class TemplateOfFoundPost extends React.Component<PropsOfTemplateFoundPos
             styleOfExcerpt['fontSize'] = `${this.props.excerpt.fontSize}px`
         }
 
+        let excerpt = null;
+        if (isNotBlank(this.props.post.excerpt)) {
+            excerpt = this.props.post.excerpt;
+        } else {
+            excerpt = terms.excerptIsUnavailable;
+        }
+
         const learnMoreAboutThisArticle = termsOfPost.learnMoreAboutThisArticle(this.props.post.title);
         return (
             <article className="post" style={styleOfPost}>
@@ -143,8 +150,7 @@ export class TemplateOfFoundPost extends React.Component<PropsOfTemplateFoundPos
                 {categoriesElement}
                 {tagsElement}
                 <div className="excerpt" style={styleOfExcerpt}>
-                    <a href={this.props.post.url} title={learnMoreAboutThisArticle} data-navigo>
-                        {this.props.post.excerpt || ''}</a></div>
+                    <a href={this.props.post.url} title={learnMoreAboutThisArticle} data-navigo>{excerpt}</a></div>
             </article>
         );
     }

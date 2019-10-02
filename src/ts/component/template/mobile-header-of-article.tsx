@@ -22,7 +22,7 @@ export default class MobileHeaderOfArticle extends React.Component<PropsOfMobile
         if (isNotBlank(this.props.title.name)) {
             titleText = this.props.title.name;
         } else {
-            titleText = terms.titleIsBlank;
+            titleText = terms.titleIsUnavailable;
             classesOfTitle += ' blank';
         }
         
