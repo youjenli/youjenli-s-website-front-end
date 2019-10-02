@@ -12,23 +12,26 @@
         box-sizing: border-box;
         box-shadow:0 1px 3px 0 rgba(0,0,0,50);
 
+        .categories, .tags, .read {
+            font-family: "PingFangTC-Light", "STHeitiTC-Light", "Microsoft JhengHei", "新細明體", "Helvetica-Light", 
+                         "Georgia", "Charter-Roman", "Trebuchet MS", "Franklin Gothic Book", "sans-serif", 
+                         "Gill Sans MT", "Segoe UI", "Calibri",  "Calisto MT", "Times New Roman", system-ui;
+        }
         .categories, .tags {
+            .category, .tag {
+                color:inherit;
+                font-family: inherit;
+            }
             .noData {
                 color:#888844;
             }
         }
         .category, .tag, .read {
-            font-family: "PingFangTC-Light", "STHeitiTC-Light", "Microsoft JhengHei", "新細明體", "Helvetica-Light", 
-                         "Georgia", "Charter-Roman", "Trebuchet MS", "Franklin Gothic Book", "sans-serif", 
-                         "Gill Sans MT", "Segoe UI", "Calibri",  "Calisto MT", "Times New Roman", system-ui;
             text-decoration:none;
             &:hover {
                 text-decoration: underline;
                 cursor:pointer;
             }
-        }
-        .category, .tag {
-            color:inherit;
         }
         .title {
             font-family: "AvenirNext-Medium", "Sathu", "Book Antiqua", "Lucida Bright", "Segoe UI", "Calisto MT",
@@ -113,14 +116,12 @@
             .excerpt {
                 color:#2F411C;
                 overflow-y:hidden;
-            }
-            .noExcerpt {
-                color:#717558;
-            }
-            .excerpt, .noExcerpt {
                 font-family: "GillSans", "Avenir-Medium", "Microsoft Sans Serif", "Calibri", "Segoe UI", "Arial",
                              "Lucida Bright", "Calisto MT", "Times New Roman","Helvetica-Light", "FZLTXHB--B51-0"/* 蘭亭黑-繁 纖黑 */,
                              "PingFangTC-Light", "STHeitiTC-Light", "Microsoft JhengHei", "新細明體", system-ui;
+                &.blank {
+                    color:#717558;
+                }
             }
             .read {
                 color:#8EBB5E;

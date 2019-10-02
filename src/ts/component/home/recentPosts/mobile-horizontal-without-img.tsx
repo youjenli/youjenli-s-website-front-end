@@ -183,7 +183,7 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
                 {
                     this.props.excerpt.content ?
                     <p className="excerpt" style={styleOfExcerpt}>{this.props.excerpt.content}</p> :
-                    <p className="noExcerpt" style={styleOfExcerpt}>{terms.postDoesNotHaveExcerpt}</p>
+                    <p className="excerpt blank" style={styleOfExcerpt}>{terms.postDoesNotHaveExcerpt}</p>
                     /* 當畫面上沒有摘抄時，要顯示替代內容，否則會把繼續閱讀的連結擠上去 */
                 }
                 <a className="read" href={this.props.excerpt.urlOfPost} data-navigo
