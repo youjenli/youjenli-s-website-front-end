@@ -197,6 +197,18 @@
 
     function youjenli_setup() {
 		add_theme_support('post-thumbnails');
+		/*
+			wordpress 的 default_filters.php 會為讀取摘抄內容的 get_the_excerpt 函式加入 wp_trim_excerpt filter。
+			這個過濾器的用途是在任何元件透過 get_the_excerpt 函式讀取摘抄時，若過濾器發現此文章無摘抄，
+			則會依據網站的語言設定擷取一定長度的文章內容來作為摘抄。
+			若系統採用英文語系，那 wp_trim_excerpt 函式擷取文章長度的演算法可能無法妥當辨識單字，道致摘抄的長度跟文章一樣長。
+
+			因為中文可以在較小的空間內呈現較多內容，所以這邊要把摘抄設定從原本的 55 個字（word）放寬到 140 個字，
+			這樣以後就可以在前端呈現更長的摘抄內容。
+		*/
+		add_filter( 'excerpt_length', function() {
+			return 140;
+		}, 999 );
     }
     add_action('after_setup_theme', 'youjenli_setup');
 	
