@@ -19,6 +19,8 @@ import { ConfigurationOfFetching as ConfigurationOfTagFetching } from '../../ser
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
 import { ResultOfSearch } from '../../model/search-results';
+import { TypeOfContent } from '../../model/general-types';
+import { FoundPublication } from '../../model/search-results';
 
 let DEFAULT_PUBLICATIONS_PER_PAGE = 10;
 let DEFAULT_TAXONOMIES_PER_PAGE = 14;
@@ -245,6 +247,19 @@ export const renderResultOfSearch = () => {
     );
 }
 
+function filterOutTheUncategorizedCategory(publications:FoundPublication[]) {
+    if (Array.isArray(publications)) {
+        publications.forEach(publication => {
+            if (publication.type == TypeOfContent.Post && Array.isArray(publication.categories)) {
+                publication.categories = publication.categories.filter( category => category.name !== 'Uncategorized' );
+            } else {
+                return publication;
+            }
+        });
+    }
+    return publications
+}
+
 export const routeEventHandlers = {
     before:(done, params) => {
 
@@ -255,12 +270,12 @@ export const routeEventHandlers = {
         if (window.wp.search) {
             const search = window.wp.search;
             const pg = getPagination();
-            
+
             resultOfSearch = {
                 query:search.query,
                 publications:{
                     numberOfResults:search.publications.totalItems,
-                    pageContent:search.publications.itemsInCurrentPage,
+                    pageContent:filterOutTheUncategorizedCategory(search.publications.itemsInCurrentPage),
                     pagination:pg
                 },
                 categories:{
@@ -389,7 +404,7 @@ export const routeEventHandlers = {
                                 const totalPages = result.response.headers['x-wp-totalpages'];
                                 resultOfSearch.publications = {
                                     numberOfResults:numberOfPublicationsFound,
-                                    pageContent:result.modelObjs,
+                                    pageContent:filterOutTheUncategorizedCategory(result.modelObjs),
                                     pagination:{
                                         baseUrl:record.publications.pagination.baseUrl,
                                         endSize:record.publications.pagination.endSize,
