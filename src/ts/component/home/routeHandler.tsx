@@ -13,7 +13,7 @@ import {convertGMTDateToLocalDate} from '../../service/formatters';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
 
-let DEFAULT_POSTS_PER_PAGE = 12;
+let postsPerPage = 12;
 let postsShouldBeRender:MetaDataOfPost[] = null;
 let currentPage:number = 0;
 let totalPages:number = 0;
@@ -71,7 +71,10 @@ const debouncedScrollEventHandler = debounce(() => {
          let nextPage = currentPage + 1;
          if (totalPages <= 0 /* 意味目前沒有紀錄 */ || nextPage <= totalPages  /* 要存取的頁面沒超界 */) {
             isFetching = true;
-            fetchPosts({page:nextPage})
+            fetchPosts({
+                    page:nextPage,
+                    per_page:postsPerPage
+                })
                 .then((result) => {
                     /*
                         注意，因為使用者可能在觸發此頁面非同步取得最新文章的功能後立刻切換到新分頁，
@@ -129,7 +132,7 @@ export const routeEventHandlers = {
             postsShouldBeRender = meaningfulPosts;
             currentPage = window.wp.pagination.currentPage;
             totalPages = window.wp.pagination.totalPages;
-            DEFAULT_POSTS_PER_PAGE = window.wp.pagination.itemsPerPage || DEFAULT_POSTS_PER_PAGE;
+            postsPerPage = window.wp.pagination.itemsPerPage || postsPerPage;
 
             if (currentPage == totalPages) {
                 shouldRegisterScrollListener = false;
@@ -146,7 +149,7 @@ export const routeEventHandlers = {
             }
             const config:ConfigurationOfFetching = {
                 page:targetPage,
-                per_page:DEFAULT_POSTS_PER_PAGE
+                per_page:postsPerPage
             }
             isFetching = true;
             fetchPosts(config)
