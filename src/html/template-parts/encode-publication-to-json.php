@@ -1,3 +1,11 @@
+<?php 
+require( dirname( __FILE__ ) . '/../constants.php'); 
+/*
+  註：雖然 title-bar.php 應該已經在前面載入過以上變數檔案，
+  但我推測因為 wordpress 採用 function 之類的辦法載入呈現發表物的樣板，
+  所以這裡要用 require 載入變數檔案，否則會讀不到變數
+*/
+?>
 type:<?php echo json_encode(get_post_type()); ?>,
 id:<?php echo json_encode(get_the_ID()); ?>,
 title:<?php echo json_encode(get_the_title()); ?>,
@@ -10,18 +18,21 @@ excerpt:<?php echo json_encode(get_the_excerpt());
 ?>,
 url:<?php echo json_encode(get_permalink($post->ID)); ?>,
 <?php if ( has_post_thumbnail() ) :
-    $thumbnail = array(
-        'url' => get_the_post_thumbnail_url(),
-        'caption' => get_the_post_thumbnail_caption()
-    ); ?>
+if ( is_home() || is_front_page() ) {
+  $thumbnail = array(
+    'url' => get_the_post_thumbnail_url(),//也就是 400 x 240 的照片
+    'caption' => get_the_post_thumbnail_caption()
+  );
+} else {
+  //is_single() || is_page() 及其他情況
+  $thumbnail = array(
+      'url' => get_the_post_thumbnail_url( $post, $name_of_the_size_of_custom_post_thumbnails_in_single_or_page ), //也就是 1024 x 614 的照片
+      'caption' => get_the_post_thumbnail_caption()
+  );
+}?>
 thumbnail:<?php echo json_encode($thumbnail); ?>,
 <?php endif; ?>
 <?php 
-require( dirname( __FILE__ ) . '/../constants.php');
-/*註：雖然 title-bar.php 應該已經在前面載入過這個變數檔案，
-  但我推測因為 wordpress 採用 function 之類的辦法載入呈現發表物的樣板，
-  所以這裡要用 require 載入變數檔案，否則會讀不到變數
-*/
 $estimatedReadingTimes = get_post_meta($post->ID, $name_of_custom_field_estimatedReadingTimes, true);
 if ( is_numeric( $estimatedReadingTimes ) ) : ?>
 estimatedReadingTimes:<?php echo json_encode( $estimatedReadingTimes ) ?>,

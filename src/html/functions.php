@@ -1,6 +1,6 @@
 <?php 
 	
-	require_once( 'constants.php' );
+	require( 'constants.php' );
 
 	/*
 		metabox 是一個能夠在後台的文章編輯頁提供欄位讓作者可以輸入文章附加內容的擴充套件。
@@ -196,7 +196,27 @@
 	remove_filter( 'the_excerpt', 'wpautop' );
 
     function youjenli_setup() {
+		// 啟用文章縮略圖功能
+		global $name_of_the_size_of_custom_post_thumbnails_in_single_or_page;
 		add_theme_support('post-thumbnails');
+		/* 
+			設定縮圖的尺吋。因為首頁和文章頁都有縮略圖，所以這邊會有兩個尺吋。縮略圖的預設尺吋是比較小的尺吋。
+			取小尺吋為 600 x 360 的原因是首頁近期文章最大張的縮略圖不會超過這個尺吋。
+			需要這種縮略圖的情況是在最大尺吋 640 x 360、水平模式的手機。
+			取大尺吋為 1024 x 614 的原因是發文頁最大張的縮略圖不會超過這個尺吋。
+			需要這種縮略圖的情況是最大尺吋的外接螢幕。
+		*/
+		set_post_thumbnail_size( 600, 360, false );
+		add_image_size( $name_of_the_size_of_custom_post_thumbnails_in_single_or_page, 1024, 614, false );
+		/* 
+			附註
+			1. 就算有為 wordpress 設定圖片尺吋，那也跟圖片尺吋無關。
+			   wordpress 只負責把圖片切到符合這裡規範的尺吋，並不會壓縮圖片。
+			   如果上傳的照片大，那就算有經 wp 切割，下載時還是會得到檔案很大的圖片。
+			2. set_post_thumbnail_size 和 add_image_size 的第三個參數是要不要剪裁圖片以符合規格。
+			   欲了解詳情請參閱他們在 post-thumbnail-template.php 的說明。
+		*/
+
 		/*
 			wordpress 的 default_filters.php 會為讀取摘抄內容的 get_the_excerpt 函式加入 wp_trim_excerpt filter。
 			這個過濾器的用途是在任何元件透過 get_the_excerpt 函式讀取摘抄時，若過濾器發現此文章無摘抄，
