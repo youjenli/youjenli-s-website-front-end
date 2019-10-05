@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as terms from './terms';
+import Greeting from './greeting';
 
 interface PropsOfSloganOnTable {
     viewportWidth:number;
@@ -41,10 +42,6 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
             height:`${halfOfTheHeightOfPic}px`
         }
 
-        const styleOfGreetings = {
-            fontSize:`${fontSizeOfGreetings}px`
-        }
-
         const shiftOfL1bg = 1.4 * remFontSize;
         const heightOfL1bg = shiftOfL1bg + 0.78 * heightOfPic;
         const widthOfL1bg = shiftOfL1bg + 0.8 * widthOfPic;
@@ -57,8 +54,16 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
 
         const heightOfDescPanel = halfOfTheHeightOfPic + shiftOfL1bg + 1.4 * remFontSize;
         const paddingLeftOfDescPanel = paddingLeftOfL2bg + widthOfPic + marginLeftOfGtPanel;
-        const maxWidthOfWelMsg = this.props.viewportWidth - paddingLeftOfDescPanel - paddingRightOfL2bg;
-        const fontSizeOfWelMsg = maxWidthOfWelMsg / terms.welcomeMsg.length;
+        const maxWidthOfWelMsg = this.props.viewportWidth - paddingLeftOfDescPanel - paddingRightOfL2bg - 25;
+        /*
+            20191005 發現畫面捲軸的寬度會影響這邊的計算結果，導致 maxWidthOfWelMsg 這個值比畫面上可分配的空間還大，
+            最後使得文字被迫斷行，不符設計規格。
+            為解決這個問題，這邊計算可分配空間的公式要再扣掉捲軸寬度。然而，因為我們在這一步驟時，仍無法得知捲軸寬度，
+            所以我先扣掉一個比常見瀏覽器 (Chrome、Firefox) 的捲軸寬度還要更大的值，那就是 25。
+
+            這個方法也許不夠理想，但在想到更好做法之前，暫時先這樣做。
+        */
+        const fontSizeOfWelMsg = Math.floor(maxWidthOfWelMsg / terms.welcomeMsg.length);
         const marginTopBottomOfWelMsg = (0.09 * remFontSize + 195.84) * fontSizeOfWelMsg / 384;
         const styleOfDescPanel ={
             minHeight:`${heightOfDescPanel}px`,
@@ -82,15 +87,14 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
             <div id="slogan" className="tb">
                 <section className="l2bg" style={styleOfL2bg}>
                     <div className="picAndGtCtnr">
-                        <div className="myPic" style={styleOfMyPic}>
+                        <div className="myPic">
                             <div className="l1bg" style={styleOfL1bg}></div>
-                            <img className="portrait" src="img/portrait-5-3rd.png" />
+                            <img className="portrait" src="img/portrait-5-3rd.png" style={styleOfMyPic}/>
                         </div>
                         <div className="gtPanel" style={styleOfGtPanel}>
-                            <h1 className="greetings" style={styleOfGreetings}>
-                                {terms.greetingMsg}<br />{terms.myName}</h1>
+                            <Greeting fontSize={fontSizeOfGreetings} />
                         </div>
-                    </div>                    
+                    </div>
                 </section>
                 <section className="descPanel" style={styleOfDescPanel}>
                     <div className="welcome" style={styleOfWelMsg}>{terms.welcomeMsg}</div>

@@ -3,6 +3,7 @@ import * as terms from './terms';
 import * as socialMediaTerms from './socialMedia/terms';
 import * as icon from './socialMedia/icons';
 import * as logo from './logo';
+import Greeting from './greeting';
 
 export interface PropsOfSloganOnExternalScreen {
     viewportWidth:number;
@@ -93,7 +94,7 @@ export default class SloganOnExternalScreen extends React.Component<PropsOfSloga
             width:`${this.props.l2bg.portrait.width}px`,
             height:`${this.props.l2bg.portrait.height}px`
             /*注意，在 pic and gt ctnr 的左邊有兩倍 l1bg leftshift 的 padding 之後，這裡就不必再有 margin */
-        };        
+        };
         const portraitStyle = {
             width:`${this.props.l2bg.portrait.width}px`,
             height:`${this.props.l2bg.portrait.height}px`,
@@ -110,9 +111,6 @@ export default class SloganOnExternalScreen extends React.Component<PropsOfSloga
             marginTop:`${this.props.l2bg.gtPanel.marginTop}px`,
             marginLeft:`${this.props.l2bg.gtPanel.marginLeft}px`,
             marginRight:`${this.props.l2bg.portrait.l1bg.leftShift}px`
-        }
-        const styleOfGreetings = {
-            fontSize:`${this.props.l2bg.gtPanel.greetings.fontSize}px`
         }
         const styleOfSMIcon = {
             width:`${this.props.l2bg.gtPanel.sm.width}px`,
@@ -169,8 +167,7 @@ export default class SloganOnExternalScreen extends React.Component<PropsOfSloga
                             <img className="portrait" style={portraitStyle} src={this.props.l2bg.portrait.imgUrl} />
                         </div>
                         <div className="gtPanel" style={styleOfGtPanel}>
-                            <h1 className="greetings" style={styleOfGreetings}>
-                                {terms.greetingMsg}<br />{terms.myName}</h1>
+                            <Greeting fontSize={this.props.l2bg.gtPanel.greetings.fontSize} />
                             <div className="socialMediaGrp" style={styleOfSMGrp}>
                                 <a href={socialMediaTerms.facebookPersonalPage} target="_blank" title={socialMediaTerms.facebookIconTitle}>
                                     <icon.FaceBookIcon style={styleOfSMIcon} /></a>
