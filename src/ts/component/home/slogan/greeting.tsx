@@ -42,6 +42,12 @@ export default class GreetingMessage extends React.Component<PropsOfGreetingMess
                 /* 0.15 的來源: 預設有 1.15 倍行高，扣掉 1 倍行高之後剩下 0.15 倍分給上下 padding。 */
                 height:`${this.props.fontSize}px`
             }
+            /*
+                因為瀏覽器會在每一列元素的 base line 上面開始呈現圖片，這導致上下兩行圖片有個多餘的空白。
+                為使畫面符合設計，這邊要把字體大小設定為 0 來解決這問題。
+                詳見: https://developer.mozilla.org/en-US/docs/Archive/Misc_top_level/Images,_Tables,_and_Mysterious_Gaps
+            */
+            style['fontSize'] = 0;
             return (
                 <div className="greetings" style={style}>
                     <img src="img/hello.png" style={styleOfLine} alt="您好~" /><img src="img/i-am-youjenli.png" style={styleOfLine} alt="我是李祐任！" />
