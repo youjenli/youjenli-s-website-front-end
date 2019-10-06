@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as terms from './terms';
 import GreetingMessage from './greeting';
+import WelcomeMessage from './welcome';
 
 interface PropsOfSloganOnTable {
     viewportWidth:number;
@@ -70,11 +71,6 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
             padding:`${marginTopBottomOfWelMsg}px ${paddingRightOfL2bg}px 0 ${paddingLeftOfDescPanel}px`,
         }
 
-        const styleOfWelMsg = {
-            fontSize:`${fontSizeOfWelMsg}px`,
-            marginBottom:`${marginTopBottomOfWelMsg}px`
-        }
-
         let fontSizeOfDesc = maxWidthOfWelMsg / 17;
         if (fontSizeOfDesc < 14) {
             fontSizeOfDesc = 14;
@@ -97,7 +93,7 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
                     </div>
                 </section>
                 <section className="descPanel" style={styleOfDescPanel}>
-                    <div className="welcome" style={styleOfWelMsg}>{terms.welcomeMsg}</div>
+                    <WelcomeMessage fontSize={fontSizeOfWelMsg} marginBottom={marginTopBottomOfWelMsg} />
                     <div className="desc" style={styleOfDesc}>{terms.desc}</div>
                 </section>
             </div>

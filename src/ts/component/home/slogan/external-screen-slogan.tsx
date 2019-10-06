@@ -4,6 +4,7 @@ import * as socialMediaTerms from './socialMedia/terms';
 import * as icon from './socialMedia/icons';
 import * as logo from './logo';
 import GreetingMessage from './greeting';
+import WelcomeMessage from './welcome';
 
 export interface PropsOfSloganOnExternalScreen {
     viewportWidth:number;
@@ -184,7 +185,8 @@ export default class SloganOnExternalScreen extends React.Component<PropsOfSloga
                 <section className="bgOfPosts" style={styleOfPostsOfBg}>
                     <div className="placehlder" style={styleOfPlaceHldrInBgOfPosts}>
                         <div className="descPanel" style={styleOfDescPanel}>
-                            <h2 className="welcome" style={styleOfWelMsg}>{terms.welcomeMsg}</h2>
+                            <WelcomeMessage fontSize={this.props.descPanel.welMsg.fontSize} 
+                                marginBottom={this.props.descPanel.welMsg.marginBottom} />
                             <p className="desc" style={styleOfDesc}>{terms.desc}</p>
                             <div className="logoChain" style={styleOfIconChain}>
                                 <logo.HTMLLogo style={styleOfTallToolIcon} />

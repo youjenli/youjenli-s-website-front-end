@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as terms from './terms';
 import GreetingMessage from './greeting';
+import WelcomeMessage from './welcome';
 
 interface PropsOfSloganOnSmartPhone {
     baseZIndex:number;
@@ -62,10 +63,6 @@ export default class SloganOnSmartPhone extends React.Component<PropsOfSloganOnS
             bottom:`${borderRadiusOfDescPanel}px`,
             zIndex:this.props.baseZIndex + 1
         }
-        const styleOfWelMsg = {
-            fontSize:`${this.props.descPanel.welMsg.fontSize}px`,
-            marginBottom:`${this.props.descPanel.welMsg.marginBottom}px`
-        }
         const styleOfDesc = {
             fontSize:`${this.props.descPanel.desc.fontSize}px`
         }
@@ -78,7 +75,8 @@ export default class SloganOnSmartPhone extends React.Component<PropsOfSloganOnS
                         marginTop={this.props.l1bg.greetings.marginTopBottom} />
                 </div>
                 <div className="descPanel" style={styleOfDescPanel}>
-                    <div className="welcome" style={styleOfWelMsg}>{terms.welcomeMsg}</div>
+                    <WelcomeMessage fontSize={this.props.descPanel.welMsg.fontSize}
+                        marginBottom={this.props.descPanel.welMsg.marginBottom} />
                     <div className="desc" style={styleOfDesc}>{terms.desc}</div>
                 </div>
             </div>

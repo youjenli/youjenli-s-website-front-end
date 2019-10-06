@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as terms from './terms';
 import { isNum } from '../../../service/validator';
+import { isFontSupported } from '../../../service/featureDetection';
 
 interface PropsOfGreetingMessage {
     fontSize:number;
@@ -16,30 +17,7 @@ export default class GreetingMessage extends React.Component<PropsOfGreetingMess
             我要把特定字串安置到螢幕上看不見之處再量測寬度，然後比對寬度是否和事先預設的數值相同。
             若相同則視為存在，否則調整 fontSupported 參數讓後序步驟以 png 圖片替換文字。
         */
-       const str = "註 20190520 發現這套檢驗方法只在 zoom level 是 100% 的情況下有用。";
-       const test = document.createElement('span');
-       test.style.fontFamily = "'Yuppy TC', 'Arial'";
-       test.style.fontSize = '16px';
-       test.style.transform = 'scale(1)';
-       test.innerHTML = str;
-
-       const control = document.createElement('span');
-       control.style.fontFamily = "Arial";
-       control.style.fontSize = '16px';
-       control.style.transform = 'scale(1)';
-       control.innerHTML = str;
-
-       const body = document.getElementsByTagName('body')[0];
-       body.appendChild(test);
-       body.appendChild(control);
-       if (test.offsetWidth != control.offsetWidth) {
-          //支援 MacOS 的 Yuppy 字體
-          this.fontSupported = true;
-       }
-
-       //檢測完成後，移除測試用的元素。
-       test.parentElement.removeChild(test);
-       control.parentElement.removeChild(control);
+       this.fontSupported = isFontSupported('Yuppy TC', 'Arial');
     }
     fontSupported = false;
     render() {
