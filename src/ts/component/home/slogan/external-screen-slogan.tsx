@@ -3,7 +3,7 @@ import * as terms from './terms';
 import * as socialMediaTerms from './socialMedia/terms';
 import * as icon from './socialMedia/icons';
 import * as logo from './logo';
-import Greeting from './greeting';
+import GreetingMessage from './greeting';
 
 export interface PropsOfSloganOnExternalScreen {
     viewportWidth:number;
@@ -167,7 +167,7 @@ export default class SloganOnExternalScreen extends React.Component<PropsOfSloga
                             <img className="portrait" style={portraitStyle} src={this.props.l2bg.portrait.imgUrl} />
                         </div>
                         <div className="gtPanel" style={styleOfGtPanel}>
-                            <Greeting fontSize={this.props.l2bg.gtPanel.greetings.fontSize} />
+                            <GreetingMessage fontSize={this.props.l2bg.gtPanel.greetings.fontSize} />
                             <div className="socialMediaGrp" style={styleOfSMGrp}>
                                 <a href={socialMediaTerms.facebookPersonalPage} target="_blank" title={socialMediaTerms.facebookIconTitle}>
                                     <icon.FaceBookIcon style={styleOfSMIcon} /></a>

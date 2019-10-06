@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as terms from './terms';
-import Greeting from './greeting';
+import GreetingMessage from './greeting';
 
 interface PropsOfSloganOnTable {
     viewportWidth:number;
@@ -92,7 +92,7 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
                             <img className="portrait" src="img/portrait-5-3rd.png" style={styleOfMyPic}/>
                         </div>
                         <div className="gtPanel" style={styleOfGtPanel}>
-                            <Greeting fontSize={fontSizeOfGreetings} />
+                            <GreetingMessage fontSize={fontSizeOfGreetings} />
                         </div>
                     </div>
                 </section>

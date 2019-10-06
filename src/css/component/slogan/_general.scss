@@ -19,7 +19,8 @@
         .welcome {
             color:#354255;
             margin:0;
-            font-family: "Klee-Demibold", "Microsoft JhengHei", "ArialMT", "Arial", system-ui;
+            font-family: "Klee", "Microsoft JhengHei", "ArialMT", "Arial", system-ui;
+            /* 註: Klee 體要寫 Klee，不能寫 Klee-Demibold 否則 Mac OS 的 Firefox 會找不到此字型。*/
         }
         .desc {
             margin:0;
@@ -29,26 +30,39 @@
     }
 
     &.es, &.tb {
-        .picAndGtCtnr {
-            position:relative;
-            display:flex;
-            align-items: flex-start;
-        }
-        .myPic {
-            position:relative;
-            box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
-            flex-grow:0;
-        }
-        .portrait {
-            position:relative;
-            object-fit: contain;
-        }
-        .l1bg{
-            position:absolute;
-            background-color:#7FB14C;
-            opacity:0.9;
-            box-shadow:0 2px 4px 0 #6F9C41;
-            border-radius:5px;
+        .l2bg {
+            .picAndGtCtnr {
+                position:relative;
+                display:flex;
+                align-items: flex-start;
+
+                .myPic {
+                    position:relative;
+                    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.5);
+                    flex-grow:0;
+
+                    .l1bg{
+                        position:absolute;
+                        background-color:#7FB14C;
+                        opacity:0.9;
+                        box-shadow:0 2px 4px 0 #6F9C41;
+                        border-radius:5px;
+                    }
+                    .portrait {
+                        position:relative;
+                        object-fit: contain;
+                    }
+                }
+
+                .greetings {
+                    white-space: pre-line;
+                    /*
+                        這裡調整 white-space 的原因是我想用一套 greeting 樣板給佈局方式不同的外接螢幕、平板和手機使用。
+                        外接螢幕和平板的招呼句需要斷行，而手機不用，這點可以在產生樣板之後透過不同的 white-space 設定來實現。
+                        因此才有這邊的 pre-line 設定。
+                    */
+                }
+            }
         }
     }
 }

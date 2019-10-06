@@ -1,19 +1,20 @@
 import * as React from 'react';
 import * as terms from './terms';
+import { isNum } from '../../../service/validator';
 
-interface PropsOfGreeting {
+interface PropsOfGreetingMessage {
     fontSize:number;
+    marginTop?:number;//為行動裝置增加的設定
 }
 
-export default class Greeting extends React.Component<PropsOfGreeting> {
+export default class GreetingMessage extends React.Component<PropsOfGreetingMessage> {
     constructor(props) {
         super(props);
         
         /*
             為了解瀏覽器是否支援歡迎句要用的字體，
             我要把特定字串安置到螢幕上看不見之處再量測寬度，然後比對寬度是否和事先預設的數值相同。
-            若相同則視為存在，否則調整 fontTypeSupported 參數讓後序步驟以 png 圖片替換文字。
-            詳情可參閱此模組的樣式表以了解測試元素的樣式。
+            若相同則視為存在，否則調整 fontSupported 參數讓後序步驟以 png 圖片替換文字。
         */
        const str = "註 20190520 發現這套檢驗方法只在 zoom level 是 100% 的情況下有用。";
        const test = document.createElement('span');
@@ -27,34 +28,35 @@ export default class Greeting extends React.Component<PropsOfGreeting> {
        control.style.fontSize = '16px';
        control.style.transform = 'scale(1)';
        control.innerHTML = str;
-       /*
-           註 20190520 發現這套檢驗方法只在 zoom level 是 100% 的情況下有用。
-           因此必須在這裡透過 transform scale(1) 規定大小，這樣才不會因為瀏覽器 zoom level 不是 100% 而判斷失準。
-           //todo 結果還是有問題
-       */
-       
+
        const body = document.getElementsByTagName('body')[0];
        body.appendChild(test);
        body.appendChild(control);
        if (test.offsetWidth != control.offsetWidth) {
           //支援 MacOS 的 Yuppy 字體
-          this.fontTypeSupported = true;
+          this.fontSupported = true;
        }
 
        //檢測完成後，移除測試用的元素。
        test.parentElement.removeChild(test);
        control.parentElement.removeChild(control);
     }
-    fontTypeSupported = false;
+    fontSupported = false;
     render() {
-        if (this.fontTypeSupported) {
-            const styleOfGreetings = {
-                fontSize:`${this.props.fontSize}px`,
-                fontWeight:100
-            }
+        const style = {};
+        if (isNum(this.props.marginTop)) {
+            style['marginTop'] = `${this.props.marginTop}px`;
+            /*
+                註: 不知道為什麼，行動版網頁招呼句和上面圖片之間的空格不能透過替圖片加 margin-bottom 產生，這種 margin 會崩塌掉。
+                因此這邊只好藉由此元件提供 margin-top 參數給行動版網頁設定以產生間距。
+            */
+        }
+
+        if (this.fontSupported) {
+            style['fontSize'] = `${this.props.fontSize}px`;
+            style['fontWeight'] = 100;
             return (
-                <h1 className="greetings" style={styleOfGreetings}>
-                    {terms.greetingMsg}<br />{terms.myName}</h1>
+                <h1 className="greetings" style={style}>{terms.greetingMsg}&#13;&#10;{terms.myName}</h1>
             )
         } else {
             const styleOfLine = {
@@ -63,7 +65,7 @@ export default class Greeting extends React.Component<PropsOfGreeting> {
                 height:`${this.props.fontSize}px`
             }
             return (
-                <div className="greetings">
+                <div className="greetings" style={style}>
                     <img src="img/hello.png" style={styleOfLine} alt="您好~" /><img src="img/i-am-youjenli.png" style={styleOfLine} alt="我是李祐任！" />
                 </div>
             )

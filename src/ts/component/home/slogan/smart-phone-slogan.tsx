@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as terms from './terms';
+import GreetingMessage from './greeting';
 
 interface PropsOfSloganOnSmartPhone {
     baseZIndex:number;
@@ -53,10 +54,6 @@ export default class SloganOnSmartPhone extends React.Component<PropsOfSloganOnS
             left:`${this.props.l1bg.portrait.leftShift}px`,
             zIndex:this.props.baseZIndex + 3
         }
-        const styleOfGreetings = {
-            fontSize:`${this.props.l1bg.greetings.fontSize}px`,
-            marginTop:`${this.props.l1bg.greetings.marginTopBottom}px`
-        }
         const borderRadiusOfDescPanel = 5;
         const pdp = this.props.descPanel.padding;
         const styleOfDescPanel = {
@@ -77,7 +74,8 @@ export default class SloganOnSmartPhone extends React.Component<PropsOfSloganOnS
             <div id="slogan" className="sp">
                 <div className="l2bg" style={styleOfL1bg}>
                     <img className="portrait" src={this.props.l1bg.portrait.imgUrl} style={styleOfPortrait}/>
-                    <div className="greetings" style={styleOfGreetings}>{terms.greetingMsg}{terms.myName}</div>
+                    <GreetingMessage fontSize={this.props.l1bg.greetings.fontSize} 
+                        marginTop={this.props.l1bg.greetings.marginTopBottom} />
                 </div>
                 <div className="descPanel" style={styleOfDescPanel}>
                     <div className="welcome" style={styleOfWelMsg}>{terms.welcomeMsg}</div>
