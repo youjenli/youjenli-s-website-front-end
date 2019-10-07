@@ -1,3 +1,4 @@
+export const defaultSiteName = '祐任的個人網站';
 export const postInWP = '文章';
 export const thumbnailOfPost = '文章的意象圖';
 export const tagOfTaxonomy = '標籤';

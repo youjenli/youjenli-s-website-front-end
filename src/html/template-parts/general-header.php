@@ -7,7 +7,7 @@
         4. 文章分頁設定
     */
 ?>
-<title><?php echo get_bloginfo('name', 'raw'); ?></title>
+<title></title>
 <link rel="stylesheet" type="text/css" href="<?php echo get_theme_file_uri('style.css') ?>">
 <base href="<?php echo trailingslashit(get_template_directory_uri()) ?>" />
 <?php 
@@ -23,7 +23,8 @@
 ?>
 <script>
     window.wp = {
-        siteUrl:<?php echo json_encode(untrailingslashit($url)); ?>
+        siteName:<?php echo json_encode( get_bloginfo('name', 'raw') ); ?>,
+        siteUrl:<?php echo json_encode( untrailingslashit($url) ); ?>
     }
 </script>
 <?php 

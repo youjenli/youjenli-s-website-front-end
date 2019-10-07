@@ -12,6 +12,7 @@ import {interpretQueryString} from '../../service/interpreter';
 import {convertGMTDateToLocalDate} from '../../service/formatters';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
+import PageTitle from '../page-title';
 
 let postsPerPage = 12;
 let postsShouldBeRender:MetaDataOfPost[] = null;
@@ -54,9 +55,12 @@ export function renderHomePage(query?:any)
         });
 
         ReactDOM.render(
-            <GenericHomePage posts={postsShouldBeRender} errorMsg={errorMsgShouldBeRender} 
-                onWidgetOfErrorMsgDismissed={() => { errorMsgShouldBeRender = [] /* 重置錯誤訊息的狀態 */}} />,
-            reactRoot
+            <React.Fragment>
+                <PageTitle />
+                <GenericHomePage posts={postsShouldBeRender} errorMsg={errorMsgShouldBeRender} 
+                    onWidgetOfErrorMsgDismissed={() => { errorMsgShouldBeRender = [] /* 重置錯誤訊息的狀態 */}} />
+            </React.Fragment>,
+            reactRoot,
         );
     } else {//處理最嚴重的意外情況
         ReactDOM.render(<SevereErrorPage />,reactRoot);

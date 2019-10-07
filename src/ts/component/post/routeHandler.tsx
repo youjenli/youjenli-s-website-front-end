@@ -12,6 +12,7 @@ import { convertGMTDateToLocalDate } from '../../service/formatters';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import * as terms from '../template/terms';
+import PageTitle from '../page-title';
 
 let postShouldBeRender:Post = null;
 
@@ -19,7 +20,10 @@ export function renderPost() {
     addRegistryOfPostOrPage(postShouldBeRender.slug, postShouldBeRender.type);
     if (postShouldBeRender != null) {
         ReactDOM.render(
-            <GenericPost post={postShouldBeRender} />,
+            <React.Fragment>
+                <PageTitle name={postShouldBeRender.title} />
+                <GenericPost post={postShouldBeRender} />
+            </React.Fragment>,
             reactRoot,() => {
                 router.updatePageLinks();
             }

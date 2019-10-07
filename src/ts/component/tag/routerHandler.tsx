@@ -14,6 +14,7 @@ import * as terms from './terms';
 import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
+import PageTitle from '../page-title';
 
 const DEFAULT_POSTS_PER_PAGE = 10;
 let postsPerPage = 0;
@@ -36,8 +37,11 @@ export function renderArchiveOfTag() {
     });
     if (tagShouldBeDisplayed != null) {
         ReactDOM.render(
-            <GenericTag tag={tagShouldBeDisplayed} numberOfResults={foundPosts}
-                pageContent={postsShouldBeRendered} pagination={pagination} />,
+            <React.Fragment>
+                <PageTitle name={terms.titleOfPageOfTag(tagShouldBeDisplayed.name)} />
+                <GenericTag tag={tagShouldBeDisplayed} numberOfResults={foundPosts}
+                    pageContent={postsShouldBeRendered} pagination={pagination} />
+            </React.Fragment>,
             reactRoot, () => {
                 router.updatePageLinks();
             }

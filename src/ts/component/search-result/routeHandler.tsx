@@ -21,6 +21,7 @@ import { isNum } from '../../service/validator';
 import { ResultOfSearch } from '../../model/search-results';
 import { TypeOfContent } from '../../model/general-types';
 import { FoundPublication } from '../../model/search-results';
+import PageTitle from '../page-title';
 
 let DEFAULT_PUBLICATIONS_PER_PAGE = 10;
 let DEFAULT_TAXONOMIES_PER_PAGE = 14;
@@ -239,9 +240,12 @@ export const renderResultOfSearch = () => {
         addRegistryOfPostOrPage(pub.slug, pub.type);
     });
     ReactDOM.render(
-        <GenericSearchResults result={resultOfSearch}
-            onPageOfFoundCategoriesChanged={onPageOfFoundCategoriesChanged} 
-            onPageOfFoundTagsChanged={onPageOfFoundTagsChanged} />,
+        <React.Fragment>
+            <PageTitle name={terms.createTitleOfPageOfSearchResults(resultOfSearch.query)} />
+            <GenericSearchResults result={resultOfSearch}
+                onPageOfFoundCategoriesChanged={onPageOfFoundCategoriesChanged} 
+                onPageOfFoundTagsChanged={onPageOfFoundTagsChanged} />
+        </React.Fragment>,
         reactRoot,
         () => { router.updatePageLinks(); }
     );

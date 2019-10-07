@@ -25,6 +25,7 @@ export interface Archive<T extends Term> {
 declare global {
     interface Window { 
         wp:{
+            siteName:string;//網站名稱。可能是中文也可能是英文。
             siteUrl:string;
             titleBar:{
                 menuItems:MenuItem[];

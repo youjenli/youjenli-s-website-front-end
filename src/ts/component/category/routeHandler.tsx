@@ -15,7 +15,7 @@ import * as terms from './terms';
 import { navigateToHomeWithErrorMessage } from '../../index';
 import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
 import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
-
+import PageTitle from '../page-title';
 
 const DEFAULT_POSTS_PER_PAGE = 10;
 let postsPerPage = 10;
@@ -29,8 +29,11 @@ const renderThePageOfCategory = () => {
         addRegistryOfPostOrPage(post.slug, post.type);
     });
     ReactDOM.render(
-        <GenericCategory category={taxonomy} numberOfResults={foundPosts}
-            pageContent={postsShouldBeRendered} pagination={pagination} />,
+        <React.Fragment>
+           <PageTitle name={terms.titleOfPageOfCategory(taxonomy.name)} />
+           <GenericCategory category={taxonomy} numberOfResults={foundPosts}
+                pageContent={postsShouldBeRendered} pagination={pagination} />
+        </React.Fragment>,
         reactRoot, () => {
             router.updatePageLinks();
         }
