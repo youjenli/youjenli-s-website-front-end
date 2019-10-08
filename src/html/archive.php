@@ -60,7 +60,7 @@
                 foundPosts:<?php echo $wp_query->found_posts; ?>,
                 posts:[
                     <?php while ( have_posts() ) : the_post();?>
-                    <?php get_template_part('template-parts/encode-post-to-json') ?>
+                    <?php get_template_part('template-parts/encapsulate-post-to-json') ?>
                     <?php endwhile; ?>
                 ]
             }

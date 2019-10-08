@@ -21,7 +21,7 @@
         window.wp.recentPosts = [
         <?php while ( have_posts() ) {
             the_post();
-            get_template_part('template-parts/encode-post-to-json');
+            get_template_part('template-parts/encapsulate-post-to-json');
         } //have_posts() 結尾 ?>
         ];
     </script>

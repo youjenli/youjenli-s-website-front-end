@@ -1,23 +1,24 @@
 import { Category, Tag } from './terms';
 import { TypeOfContent } from './general-types';
 
-export interface CoreAttributesOfPublication {
+export interface Content {
     type:TypeOfContent;
     id:number;
+    date:Date;
+    modified?:Date;
     title:string;
     slug:string;
     url:string;
-    estimatedReadingTimes:number;
+    commentPermitted?:boolean;
 }
 
-export interface Publication extends CoreAttributesOfPublication { 
-    date:Date;
-    modified?:Date;
+export interface Publication extends Content { 
     excerpt?:string;
     thumbnail?:{
         url:string;
         caption?:string;
     }
+    estimatedReadingTimes:number;
 }
 
 export interface MetaDataOfPost extends Publication {

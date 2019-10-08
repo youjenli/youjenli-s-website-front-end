@@ -62,6 +62,12 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                 estimatedReadingTimes:isNum(estimatedReadingTimes) && estimatedReadingTimes > 0 ? estimatedReadingTimes : 0
                             };
 
+                            if (rawDataOfPage.comment_status === 'open') {
+                                model.commentPermitted = true;
+                            } else {
+                                model.commentPermitted = false;
+                            }
+
                             const additionalPromises = [];
                             if (rawDataOfPage.featured_media) {
                                 additionalPromises.push(

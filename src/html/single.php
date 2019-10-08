@@ -20,7 +20,7 @@
         window.wp.completePosts = [
         <?php while ( have_posts() ) {
             the_post();  // 這是此 post 物件的起點 
-            get_template_part('template-parts/encode-post-to-json');
+            get_template_part('template-parts/encapsulate-post-to-json');
         } //have_posts() 結尾 ?>
         ];
     </script>

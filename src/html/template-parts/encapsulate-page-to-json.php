@@ -1,5 +1,5 @@
 {
-    <?php get_template_part('template-parts/encode-publication-to-json') ?>
+    <?php get_template_part('template-parts/encapsulate-publication-to-json') ?>
     <?php if ($post->post_parent) : 
         $parent = get_post($post->post_parent); 
         $parentObj = array(

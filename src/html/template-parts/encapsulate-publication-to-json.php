@@ -32,10 +32,12 @@ if ( is_home() || is_front_page() ) {
 }?>
 thumbnail:<?php echo json_encode($thumbnail); ?>,
 <?php endif; ?>
-<?php 
-$estimatedReadingTimes = get_post_meta($post->ID, $name_of_custom_field_estimatedReadingTimes, true);
-if ( is_numeric( $estimatedReadingTimes ) ) : ?>
+<?php if ( !is_home() && !is_front_page() ) :
+  $estimatedReadingTimes = get_post_meta($post->ID, $name_of_custom_field_estimatedReadingTimes, true);
+  if ( is_numeric( $estimatedReadingTimes ) ) : ?>
 estimatedReadingTimes:<?php echo json_encode( $estimatedReadingTimes ) ?>,
-<?php else: ?>
+  <?php else: ?>
 estimatedReadingTimes:0,
-<?php endif ?>
+  <?php endif; ?>
+commentPermitted:<?php echo json_encode( comments_open() ) ?>,
+<?php endif; ?>

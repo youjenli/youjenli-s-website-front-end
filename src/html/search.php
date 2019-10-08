@@ -49,9 +49,9 @@
                         因此只根據 post_type 決定產生 json 物件的模組。
                     */
                     if ( 'post' == get_post_type() ) {
-                        get_template_part('template-parts/encode-post-to-json');
+                        get_template_part('template-parts/encapsulate-post-to-json');
                     } else {
-                        get_template_part('template-parts/encode-page-to-json');
+                        get_template_part('template-parts/encapsulate-page-to-json');
                     }
                 }?>]
             },

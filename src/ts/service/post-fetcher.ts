@@ -105,6 +105,12 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                         metaDataOfPost['estimatedReadingTimes'] = 0;
                                     }
 
+                                    if (post.comment_status === 'open') {
+                                        metaDataOfPost['commentPermitted'] = true;
+                                    } else {
+                                        metaDataOfPost['commentPermitted'] = false;
+                                    }
+
                                     //準備分類資料
                                     if (post.categories.length > 0) {
                                         /*因為暫時沒空完全搞懂 wordpress rest api 的實作方式以便加入分類名稱的資訊到上面去
