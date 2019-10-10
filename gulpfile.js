@@ -26,13 +26,7 @@ const gzip = require('gulp-gzip');
 const gunzip = require('gulp-gunzip');
 const GulpSSH = require('gulp-ssh');
 const path = require('path');
-
-function isObject(unknown) {
-    if (typeof unknown === 'object' && unknown !== null) {
-        return true;
-    } 
-    return false;
-}
+const _ = require('lodash');
 
 const srcRoot = path.join(__dirname, 'src');
 const distRoot = path.join(__dirname, 'dist'); //輸出建置成品的路徑
@@ -43,7 +37,7 @@ const cssArtifacts = ['**/*.css', '**/*.css.map'];
 const nameOfImgAssets = ['*.png', '*.svg', '*.jpeg'].map(filePattern => path.join('img', filePattern));
 
 const buildSettings = require('./build-settings');
-const deploymentConfig = isObject(buildSettings.deploy) ? buildSettings.deploy : {} ;
+const deploymentConfig = _.isPlainObject(buildSettings.deploy) ? buildSettings.deploy : {} ;
 const prefixOfArchive = `wp-${deploymentConfig.nameOfTheme ? deploymentConfig.nameOfTheme : 'youjenli' }-theme`;
 
 function removeHtmlArtifact() {
@@ -82,8 +76,8 @@ gulp.task('cleanArchives', gulp.series(function cleanArchivesTask(){
 
 const tsEntryFiles = ['src/ts/index.tsx'];
 let tsConfig = null;
-if (isObject(buildSettings.js) && isObject(buildSettings.js.tsConfig)) {
-    tsConfig = buildSettings.js.tsConfig;
+if (_.isPlainObject(buildSettings.build.js) && _.isPlainObject(buildSettings.build.js.tsConfig)) {
+    tsConfig = buildSettings.build.js.tsConfig;
 } else {
     tsConfig = {
         "compilerOptions": {
@@ -122,7 +116,7 @@ function transpileTS() {
                   entries: tsEntryFiles,
                   cache:{},
                   packageCache:{},
-                  debug: isObject(buildSettings.js) && buildSettings.js.sourceMap //是否包含 sourcemap
+                  debug: _.isPlainObject(buildSettings.build.js) && buildSettings.build.js.sourceMap //是否包含 sourcemap
               })
               .plugin(tsify, transpileConfig)
               .bundle()
@@ -133,7 +127,7 @@ function transpileTS() {
               //欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
               .pipe(buffer());
 
-    if (isObject(buildSettings.js) && buildSettings.js.minify == true) {
+    if (_.isPlainObject(buildSettings.build.js) && buildSettings.build.js.minify == true) {
         //如果要建置生產環境的場景，那就壓縮 js 檔
         transpile = 
             transpile.pipe(minify({
@@ -161,9 +155,9 @@ gulp.task('prepareJS', prepareJSTask);
 
 const cssSrcRoot = path.join(srcRoot, 'css');
 let cleanCSSConfig = null;
-if (isObject(buildSettings.css)) {
-    const retrievedValue = buildSettings.css.cleanCSSConfig;
-    if (isObject(retrievedValue)) {
+if (_.isPlainObject(buildSettings.build.css)) {
+    const retrievedValue = buildSettings.build.css.cleanCSSConfig;
+    if (_.isPlainObject(retrievedValue)) {
         cleanCSSConfig = retrievedValue;
     }
 } else {
@@ -176,7 +170,7 @@ if (isObject(buildSettings.css)) {
 }
 
 function transpileSCSS() {
-    if (isObject(buildSettings.css) && buildSettings.css.sourceMap == true) {
+    if (_.isPlainObject(buildSettings.build.css) && buildSettings.build.css.sourceMap == true) {
         return gulp.src([path.join(cssSrcRoot, 'style.scss')], {base:cssSrcRoot})
                     /*
                     sass() 這部分除了包含轉譯 scss，它還會利用 scss 自訂的 css import 語法機制將其他 css 檔案
@@ -223,6 +217,7 @@ const prepareImgTask = gulp.series(removeImgArtifact,
 gulp.task('prepareImg', prepareImgTask);
 
 const htmlSrcRoot = path.join(srcRoot, 'html');
+
 const pathOfHtmlSrcFiles = nameOfhtmlSrcFile.map(filePattern => path.join(htmlSrcRoot, filePattern));
 function copyHtmlFilesTask(){
     /*
@@ -233,12 +228,12 @@ function copyHtmlFilesTask(){
 }
 
 let variableSubstitutionTask = null;
-if (isObject(buildSettings.html) && isObject(buildSettings.html.variableSubstitution)) {
-    const parallelTasks = Object.keys(buildSettings.html.variableSubstitution).map(function(key) {
-        if (isObject(buildSettings.html.variableSubstitution[key])) {
+if (_.isPlainObject(buildSettings.build.html) && _.isPlainObject(buildSettings.build.html.variableSubstitution)) {
+    const parallelTasks = Object.keys(buildSettings.build.html.variableSubstitution).map(function(key) {
+        if (_.isPlainObject(buildSettings.build.html.variableSubstitution[key])) {
             return () => {
                 return gulp.src(path.join(distRoot, key), {base:distRoot})
-                           .pipe(template(buildSettings.html.variableSubstitution[key]))
+                           .pipe(template(buildSettings.build.html.variableSubstitution[key]))
                            .pipe(gulp.dest(distRoot));
             }
         } else {
@@ -338,9 +333,7 @@ function generateDeployTask() {
             */
         }
  
-        extractArchiveAndDeployToServer  = function doNothing(done) {
-            done();
-        };
+        extractArchiveAndDeployToServer  = function doNothing(done) { done(); }
     } else {
         /* 若部署目標不在本地，那就建立 SSH 連線。
          */

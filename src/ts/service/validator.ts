@@ -18,3 +18,7 @@ export function isNum(param):boolean {
         https://codepen.io/youjenli/pen/XWrambm?editors=1111
     */
 }
+
+export function isObject(obj):boolean {
+    return typeof obj === 'object' && obj !== null;
+}

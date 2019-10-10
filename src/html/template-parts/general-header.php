@@ -24,7 +24,10 @@
 <script>
     window.wp = {
         siteName:<?php echo json_encode( get_bloginfo('name', 'raw') ); ?>,
-        siteUrl:<?php echo json_encode( untrailingslashit($url) ); ?>
+        siteUrl:<?php echo json_encode( untrailingslashit($url) ); ?>,
+        disquz:{
+            shortName:'<%= shortNameOfForum %>'
+        }
     }
 </script>
 <?php 

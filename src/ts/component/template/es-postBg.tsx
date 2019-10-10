@@ -1,5 +1,7 @@
 import * as React from 'react';
 import * as termsOfArticle from '../post/terms';
+import DisquzMessageBoard from './disquz';
+import { isObject } from '../../service/validator';
 
 interface PropsOfPostBackgroundOnExternalScreen {
     baseZIndex:number;
@@ -28,7 +30,13 @@ interface PropsOfPostBackgroundOnExternalScreen {
             bottom:number;
         }
         post:string;
-    }
+    },
+    comment?:{
+        id:string;
+        title?:string;
+        url?:string;
+        categoryId?:string;
+    };
 }
 
 export default class PostBackgroundOnExternalScreen extends React.Component<PropsOfPostBackgroundOnExternalScreen> {
@@ -89,6 +97,9 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
                     {tocElement}
                     <div dangerouslySetInnerHTML={{__html:this.props.content.post}}></div>
                 </div>
+                { isObject(this.props.comment) ? 
+                    <DisquzMessageBoard id={this.props.comment.id} title={this.props.comment.title} 
+                        url={this.props.comment.url} categoryId={this.props.comment.categoryId} /> : null }
             </div>
         );
     }    

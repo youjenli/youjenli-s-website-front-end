@@ -3,6 +3,7 @@ import { ParsedPost } from '../../model/posts';
 import MobilePostHeader from '../template/mobile-header-of-article';
 import PostInfo from '../template/post-info';
 import Gist from './gist';
+import DisquzMessageBoard from '../template/disquz';
 
 interface PropsOfTabletPostPage {
     viewportWidth:number;
@@ -32,6 +33,10 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
             fontSizeOfGist = (vw + 1640)/148;
         }
 
+        const threadId = `${this.props.post.type}-${this.props.post.id}`;
+        const threadTitle = this.props.post.title;
+        //categoryId
+
         if (this.props.post.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
             const styleOfImg = {
@@ -58,6 +63,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <div id="postBg" style={styleOfPostBg} className="tb post">
                         <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistTitle} content={this.props.post.gist}/>
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
                     </div>;
             } else {
                 const styleOfPostBg = {
@@ -65,7 +71,9 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 }
 
                 postCtnrElement = 
-                    <div id="postBg" style={styleOfPostBg} className="tb post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    <div id="postBg" style={styleOfPostBg} className="tb post" >
+                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}></div>
+                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
                     </div>;
             }
             
@@ -76,9 +84,9 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                             styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={`${fontSizeOfPostInfo * 1.5}px`} 
                             estimatedReadingTimes={this.props.post.estimatedReadingTimes} >
                             <img src={post.thumbnail.url} style={styleOfImg} />
-                        </PostInfo>                        
-                    </MobilePostHeader>                    
-                    {postCtnrElement}                        
+                        </PostInfo>
+                    </MobilePostHeader>
+                    {postCtnrElement}
                 </React.Fragment>
             );
         } else {
@@ -104,8 +112,7 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                         title={title} decorationLine={decorationLine} >
                         <PostInfo categories={post.categories} tags={post.tags} date={post.date} modified={post.modified} 
                             styleOfPostInfo={styleOfPostInfo} marginBottomOfLastItem={'0px'} estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
-                        <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} 
-                                    content={this.props.post.gist}/>
+                        <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} content={this.props.post.gist}/>
                     </MobilePostHeader>
             } else {
                 postHeaderElement = 
@@ -119,8 +126,10 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
 
             return (
                 <React.Fragment>
-                    {postHeaderElement}    
-                    <div id="postBg" style={styleOfPostBg} className="tb post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    {postHeaderElement}
+                    <div id="postBg" style={styleOfPostBg} className="tb post" >
+                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
                     </div>
                 </React.Fragment>
             );

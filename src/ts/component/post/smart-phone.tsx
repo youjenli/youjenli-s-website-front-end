@@ -3,6 +3,7 @@ import { ParsedPost } from '../../model/posts';
 import MobileHeaderOfArticle from '../template/mobile-header-of-article';
 import PostInfo from '../template/post-info';
 import Gist from './gist';
+import DisquzMessageBoard from '../template/disquz';
 
 interface PropsOfSmartPhonePostPage {
     viewportWidth:number;
@@ -32,6 +33,10 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             fontSizeOfGist = 14;
         }
 
+        const threadId = `${this.props.post.type}-${this.props.post.id}`;
+        const threadTitle = this.props.post.title;
+        //categoryId
+
         if (this.props.post.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
             const styleOfImg = {
@@ -54,13 +59,16 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     <div id="postBg" className="sp post">
                         <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} content={this.props.post.gist}/>
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
                     </div>;
             } else {
                 const styleOfPostBg = {
                     paddingTop:'1.5em'
                 }
                 postCtnrElement = 
-                    <div id="postBg" className="sp post" style={styleOfPostBg} dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    <div id="postBg" className="sp post" style={styleOfPostBg} >
+                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
                     </div>;
             }
  
@@ -115,7 +123,9 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             return (
                 <React.Fragment>
                     {postHeaderElement}
-                    <div id="postBg" style={styleOfPostBg} className="sp post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}>
+                    <div id="postBg" style={styleOfPostBg} className="sp post" >
+                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
                     </div>
                 </React.Fragment>
             );

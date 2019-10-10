@@ -49,6 +49,9 @@ declare global {
                所以還是以陣列的形式接收資料。
             */
             completePages?:Page[];
+            disquz?:{
+                shortName:string;
+            }
             search?:{
                 query:string;
                 publications:{

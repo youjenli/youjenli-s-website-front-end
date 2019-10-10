@@ -47,6 +47,7 @@
     "gulp-template": "^5.0.0",
     "gulp-uglify": "^3.0.2",
     "gulp-untar": "0.0.8",
+    "lodash": "^4.17.15",
     "navigo": "^7.1.2",
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",

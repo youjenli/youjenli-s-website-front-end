@@ -59,6 +59,11 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
             },
             post:doc.body.innerHTML
         }
+        const settingsOfMessageBoard = {
+            id:`${this.props.post.type}-${this.props.post.id}`,
+            title:this.props.post.title,
+            //categoryId
+        }
 
         if (post.thumbnail) {
             let postBgElement = null;
@@ -71,14 +76,15 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 postBgElement = (
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                        toc={toc} content={contentOfPost}>
+                        toc={toc} content={contentOfPost} comment={settingsOfMessageBoard} >
                         <Gist content={this.props.post.gist}/>
                     </PostBackgroundOnExternalScreen>
                 );
             } else {
                 postBgElement = (<PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
-                            width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                toc={toc} content={contentOfPost} />);
+                                    width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
+                                    toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} />
+                            );
             }
             //設定內容的 post 屬性。
             contentOfPost['post'] = doc.body.innerHTML;
@@ -138,7 +144,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     {postHeader}
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}  className="les" 
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
-                        toc={toc} content={contentOfPost}/>
+                        toc={toc} content={contentOfPost} comment={settingsOfMessageBoard} />
                 </React.Fragment>
             );
         }

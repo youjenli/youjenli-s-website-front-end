@@ -57,6 +57,11 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                 content:tocElement.innerHTML
             }
         }
+        const settingsOfMessageBoard = {
+            id:`${this.props.post.type}-${this.props.post.id}`,
+            title:this.props.post.title
+            //categoryId:
+        }
 
         if (post.thumbnail) {
             
@@ -70,14 +75,14 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                 postBg = (
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                        toc={toc} content={contentOfPost}>
+                        toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} >
                         <Gist content={this.props.post.gist}/>
                     </PostBackgroundOnExternalScreen>
                 );
             } else {
                 postBg = <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                             width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                            toc={toc} content={contentOfPost}/>;
+                            toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} />;
             }
             //設定內容的 post 屬性。
             contentOfPost['post'] = doc.body.innerHTML;
@@ -138,7 +143,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                     {postHeader}
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
-                        toc={toc} content={contentOfPost} />
+                        toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} />
                 </React.Fragment>
             );
         }

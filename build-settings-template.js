@@ -6,53 +6,59 @@ const os = require('os');
     這樣乾脆把所有設定整理到同一個檔案，統一在此調整設定。
 */
 module.exports = {
-    css:{
-        //是否透過 gulp 的 sourcemap 套件產生 css 的 source map。
-        sourceMap:false,
-        /*
-            用來設定 CleanCSS 的資訊物件，欲了解可設定的參數請參閱 cleanCSS 原始碼網站:
-            https://github.com/jakubpawlowicz/clean-css
-        */
-        cleanCSSConfig:{
-            //適用於生產環境的設定
-            /*"inline":["local"],
-            "level":1*/
-            //適用於開發的設定
-            "format":"beautify",
-            "inline":["local"],
-            "level":1,
-            "sourceMap":true
-        }
-    },
-    js:{
-        //給 typescript transpiler 的設定，格式與 tsconfig.js 相同
-        tsConfig:{
-            "compilerOptions": {
-                "lib":["dom", "es6"],
-                "target":"es5",
-                "jsx":"react"
+    build:{
+        css:{
+            //是否透過 gulp 的 sourcemap 套件產生 css 的 source map。
+            sourceMap:false,
+            /*
+                用來設定 CleanCSS 的資訊物件，欲了解可設定的參數請參閱 cleanCSS 原始碼網站:
+                https://github.com/jakubpawlowicz/clean-css
+            */
+            cleanCSSConfig:{
+                //適用於生產環境的設定
+                /*"inline":["local"],
+                "level":1*/
+                //適用於開發的設定
+                "format":"beautify",
+                "inline":["local"],
+                "level":1,
+                "sourceMap":true
             }
         },
-        //是否產生 source map
-        sourceMap:false,
-        //是否壓縮 js 檔案
-        minify:true
-    },
-    html:{
-        /*
-            部分功能需要先替換 php 程式中的參數才可正常使用。
-            以下是替換的參數內容設定:
-        */
-        variableSubstitution:{
+        js:{
+            //給 typescript transpiler 的設定，格式與 tsconfig.js 相同
+            tsConfig:{
+                "compilerOptions": {
+                    "lib":["dom", "es6"],
+                    "target":"es5",
+                    "jsx":"react"
+                }
+            },
+            //是否產生 source map
+            sourceMap:false,
+            //是否壓縮 js 檔案
+            minify:true
+        },
+        html:{
             /*
-              客戶端的 navigo router 必須擁有包含通訊協定的完整 host name，因此我得透過 wordpress 的 api 輸出此資訊到客戶端
-              然而我必須在呼叫 wordpress 的 api 時，指定網站的通訊協定；在此同時，開發模式和生產模式的通訊協定又不同，
-              因此要替換此 php 指令稿當中呼叫 wordpress api 提供網站名稱的函式之參數。
-
-              檔案參數的路徑參考基準是 html 資料夾的路徑，也就是 /src/html
+                部分功能需要先替換 php 程式中的參數才可正常使用。
+                以下是替換的參數內容設定:
             */
-            "template-parts/general-header.php":{
-                protocol:'https'
+            variableSubstitution:{
+                "template-parts/general-header.php":{
+                    /*
+                      客戶端的 navigo router 必須擁有包含通訊協定的完整 host name，因此我得透過 wordpress 的 api 輸出此資訊到客戶端
+                      然而我必須在呼叫 wordpress 的 api 時，指定網站的通訊協定；在此同時，開發模式和生產模式的通訊協定又不同，
+                      因此要替換此 php 指令稿當中呼叫 wordpress api 提供網站名稱的函式之參數。
+    
+                      檔案參數的路徑參考基準是 html 資料夾的路徑，也就是 /src/html
+                    */
+                    protocol:'https',
+                    /*
+                        若要使用 disquz 留言板，那要設定留言板的名稱：
+                    */
+                    shortNameOfForum:''
+                }
             }
         }
     },
