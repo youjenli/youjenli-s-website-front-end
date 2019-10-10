@@ -12,7 +12,7 @@ import GenericTag from './generic';
 import { navigateToHomeWithErrorMessage } from '../../index';
 import * as terms from './terms';
 import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
-import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
 import PageTitle from '../page-title';
 
@@ -33,7 +33,7 @@ const resetStateOfHandler = () => {
 
 export function renderArchiveOfTag() {
     postsShouldBeRendered.forEach(post => {
-        addRegistryOfPostOrPage(post.slug, post.type);
+        addTypeOfPostOrPage(post.slug, post.type);
     });
     if (tagShouldBeDisplayed != null) {
         ReactDOM.render(

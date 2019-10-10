@@ -8,14 +8,14 @@ import GenericPage from './generic';
 import { fetchPages, ConfigurationOfFetching } from '../../service/page-fetcher';
 import { navigateToHomeWithErrorMessage } from '../../index';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
-import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import * as terms from '../template/terms';
 import PageTitle from '../page-title';
 
 let pageShouldBeRendered:Page = null;
 
 export function renderPage() {
-    addRegistryOfPostOrPage(pageShouldBeRendered.slug, pageShouldBeRendered.type);
+    addTypeOfPostOrPage(pageShouldBeRendered.slug, pageShouldBeRendered.type);
     if (pageShouldBeRendered != null) {
         ReactDOM.render(
             <React.Fragment>

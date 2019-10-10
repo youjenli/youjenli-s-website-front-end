@@ -14,7 +14,7 @@ import { fetchPosts } from '../../service/post-fetcher';
 import * as terms from './terms';
 import { navigateToHomeWithErrorMessage } from '../../index';
 import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
-import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import PageTitle from '../page-title';
 
 const DEFAULT_POSTS_PER_PAGE = 10;
@@ -26,7 +26,7 @@ let pagination:pg.Pagination = null;
 
 const renderThePageOfCategory = () => {
     postsShouldBeRendered.forEach(post => {
-        addRegistryOfPostOrPage(post.slug, post.type);
+        addTypeOfPostOrPage(post.slug, post.type);
     });
     ReactDOM.render(
         <React.Fragment>

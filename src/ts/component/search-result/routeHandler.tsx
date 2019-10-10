@@ -16,7 +16,7 @@ import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-
 import { ConfigurationOfPublicationFetching } from '../../service/search';
 import { ConfigurationOfFetching as ConfigurationOfCategoryFetching } from '../../service/category-fetcher';
 import { ConfigurationOfFetching as ConfigurationOfTagFetching } from '../../service/tag-fetcher';
-import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import { isNum } from '../../service/validator';
 import { ResultOfSearch } from '../../model/search-results';
 import { TypeOfContent } from '../../model/general-types';
@@ -237,7 +237,7 @@ const onPageOfFoundTagsChanged:PageClickedHandler = (page:number):void => {
 
 export const renderResultOfSearch = () => {
     resultOfSearch.publications.pageContent.forEach(pub => {
-        addRegistryOfPostOrPage(pub.slug, pub.type);
+        addTypeOfPostOrPage(pub.slug, pub.type);
     });
     ReactDOM.render(
         <React.Fragment>

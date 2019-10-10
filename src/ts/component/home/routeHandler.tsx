@@ -10,8 +10,8 @@ import * as terms from '../terms';
 import debounce from '../../service/debounce';
 import {interpretQueryString} from '../../service/interpreter';
 import {convertGMTDateToLocalDate} from '../../service/formatters';
-import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
-import { isNum } from '../../service/validator';
+import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
+import { isNum, isNotBlank } from '../../service/validator';
 import PageTitle from '../page-title';
 
 let postsPerPage = 12;
@@ -38,9 +38,9 @@ export function renderHomePage(query?:any)
             而是直接以第二個參數──也就是請求字串取代第一個參數，因此這裡才要解析第一個參數。
         */
         const queryParams = interpretQueryString(query);
-        if (queryParams && queryParams[queryParametersOfHome.ERROR_MSG] != null) {
+        if (queryParams && isNotBlank(queryParams[queryParametersOfHome.ERROR_MSG])) {
             const msgList = queryParams[queryParametersOfHome.ERROR_MSG].split(',')
-                                .map(param => decodeURI(param));
+                                .map(param => decodeURIComponent(param));
                             /*
                               註：在讀 Navigo 程式碼之後發現它不會自動為 route 編碼，
                               但是當它透過瀏覽器的歷史紀錄 API 更新目前網頁所在的路徑時，
@@ -51,7 +51,7 @@ export function renderHomePage(query?:any)
 
         /* 把前面 before hook 收集到的文章加入專頁和文章的註冊紀錄 */
         postsShouldBeRender.forEach(post => {
-            addRegistryOfPostOrPage(post.slug, post.type);
+            addTypeOfPostOrPage(post.slug, post.type);
         });
 
         ReactDOM.render(
@@ -60,7 +60,7 @@ export function renderHomePage(query?:any)
                 <GenericHomePage posts={postsShouldBeRender} errorMsg={errorMsgShouldBeRender} 
                     onWidgetOfErrorMsgDismissed={() => { errorMsgShouldBeRender = [] /* 重置錯誤訊息的狀態 */}} />
             </React.Fragment>,
-            reactRoot,
+            reactRoot
         );
     } else {//處理最嚴重的意外情況
         ReactDOM.render(<SevereErrorPage />,reactRoot);

@@ -1,6 +1,6 @@
 /// <reference path="../../model/global-vars.d.ts" />
 import { isNotBlank } from '../../service/validator';
-import { addRegistryOfPostOrPage } from '../post-page-routeWrapper';
+import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 
 let menuItems = null;
 
@@ -10,7 +10,7 @@ export function loadMenuItems() {
     } else if (Array.isArray(window.wp.titleBar.menuItems)) {
         menuItems = window.wp.titleBar.menuItems.filter( item => {
             if (isNotBlank(item.type) && isNotBlank(item.name) && isNotBlank(item.url) && isNotBlank(item.slug)) {
-                addRegistryOfPostOrPage(item.slug, item.type);
+                addTypeOfPostOrPage(item.slug, item.type);
                 return true;
             } else {
                 return false;

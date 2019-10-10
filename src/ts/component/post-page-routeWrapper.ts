@@ -2,6 +2,9 @@ import { renderPost, routeEventHandlers as routeEventHandlersOfPost } from './po
 import { renderPage, routeEventHandlers as routeEventHandlersOfPage } from './page/routeHandler';
 import { isNotBlank } from '../service/validator';
 import { TypeOfContent } from '../model/general-types';
+import { navigateToHomeWithErrorMessage } from '../index';
+import { router } from '../service/router';
+import * as terms from './terms';
 
 /*
     這個套件的功能是用來幫 route 辨識文章和專頁的 slug。
@@ -15,7 +18,7 @@ import { TypeOfContent } from '../model/general-types';
 
 const registryOfPostAndPage = [];
 
-export function addRegistryOfPostOrPage(slug:string, type:TypeOfContent):void {
+export function addTypeOfPostOrPage(slug:string, type:TypeOfContent):void {
     if (isNotBlank(slug) && type) {
         registryOfPostAndPage[slug] = type;
     }
@@ -39,9 +42,13 @@ export const generalHooksForPostAndPage = {
                     currentStateOfRootSlug = TypeOfContent.Page;
                     break;
                 default:
-                    //todo 無法判斷資源類型，因此要導回首頁 
+                    const path = router.lastRouteResolved().url;
+                    navigateToHomeWithErrorMessage(terms.cannotFindTheCorrespondingTypeOfPublicationWithProvidingSlug(path));
                     break;
             }
+        } else {
+            const path = router.lastRouteResolved().url;
+            navigateToHomeWithErrorMessage(terms.cannotFindTheCorrespondingTypeOfPublicationWithProvidingSlug(path));
         }
         
         //接著根據前一步推斷的結果委派對應模組的 hook 來處理

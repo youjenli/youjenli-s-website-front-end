@@ -106,6 +106,18 @@
             //關閉快取以便診斷問題
             "disableNetworkCache":true
         },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome -> home",
+            "url": "http://127.0.0.1",
+            "pathMapping": {
+                "/": "${workspaceFolder}",
+                "/wp-content/themes/youjenli/": "${workspaceFolder}"
+            },
+            //關閉快取以便診斷問題
+            "disableNetworkCache":true
+        },
         {/*
             使用 firefox debug 的前提是有安裝第三方套件 Debugger for firefox。
             除此之外，還需要到 firefox debugger 在 vscode 增加的設定項目 firefox.executable 指定 firefox 的位置，
@@ -174,7 +186,7 @@
             "type": "firefox",
             "request":"launch",
             "name": "Firefox -> search",
-            "url": "http://127.0.0.1/search/second",
+            "url": "http://127.0.0.1/search/gogogo",
             "reAttach": true,
             "pathMappings": [{
                 "url":"/",
@@ -202,7 +214,7 @@
             "type": "firefox",
             "request": "launch",
             "name": "Firefox -> post",
-            "url": "http://127.0.0.1/twelfth-post",
+            "url": "http://127.0.0.1/212-2/",
             "reAttach": true,
             "pathMappings": [{
                 "url":"/",
