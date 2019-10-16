@@ -7,15 +7,19 @@ export function isNotBlank(str:string):boolean {
     return isString(str) && str !== '';
 }
 
+/*
+    判斷參數的型態是否為數值，而且又是有理數──也就是不含 NaN、正負無限大。
+*/
 export function isNum(param):boolean {
-    return param && !isNaN(param);
+    return typeof param == 'number' && param == Number(param) && Number.isFinite(param) === true;
     /*
-        判斷是否為數字的原理：
-        1. 前面讀取變數 param 可以過濾掉 undefined, null, 空字串的情況。
-        2. 後面 !isNaN 可以接著過濾掉內容為 undefined, null 的字串，但是又會讓純數值字串通過。
+        這個函式早先使用 !NaN 判斷 param 的做法沒有考慮到數值、null、undefined 以外其他型態的資料，
+        例如 !isNaN(' ') 的結果就是 true，而且邏輯上也非常合理。
+        
+        為解決這個問題我參考了以下範例改寫實作：
+        https://codepen.io/grok/pen/LvOQbW?editors=0010
 
-        欲進一步了解運作邏輯，可參閱這個實驗
-        https://codepen.io/youjenli/pen/XWrambm?editors=1111
+        註：param == Number(param) 這句是利用 NaN 絕對不等於自己的特性過濾掉 NaN
     */
 }
 
