@@ -13,6 +13,7 @@ export interface ConfigurationOfFetching {
     page?:number;
     id?:number;
     slug?:string;
+    status?:string;
     per_page?:number;
     include?:number[];
 }
@@ -29,7 +30,13 @@ export function fetchPages(params:ConfigurationOfFetching):Promise<ResultOfFetch
         if (isNotBlank(params.slug)) {
             reqConfig.params['slug'] = params.slug;
         }
-        
+
+        if (isNotBlank(params.status)) {
+            reqConfig.params['status'] = params.status;
+        } else {
+            reqConfig.params['status'] = 'publish';
+        }
+
         reqConfig.params['page'] = params.page || 1;
         
         if (params.per_page) {
