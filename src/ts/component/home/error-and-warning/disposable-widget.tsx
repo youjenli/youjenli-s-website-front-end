@@ -23,6 +23,7 @@ export class DisposableWidget extends React.Component<PropsOfDisposableWidget, S
         this.ref = React.createRef();
     }
     ref
+    countDown
     onWidgetClicked() {
         /*呼叫 ref 之後要加上 current 才能找到目前的元素，否則瀏覽器將回覆沒有 classList 屬性的訊息
             詳見: https://reactjs.org/docs/refs-and-the-dom.html
@@ -43,10 +44,13 @@ export class DisposableWidget extends React.Component<PropsOfDisposableWidget, S
                 this.ref.current.classList.add('flash');
             }, 500);            
         }
-        //倒數計時結束後，移除錯誤訊息視窗。
-        window.setTimeout(() => {
+        //倒數計時結束後，移除錯誤訊息欄位。
+        this.countDown = window.setTimeout(() => {
             this.onWidgetClicked();
         }, 10000);
+    }
+    componentWillUnmount() {
+        window.clearTimeout(this.countDown);
     }
     render() {
         if (this.state.widgetOfErrorShouldExists) {
