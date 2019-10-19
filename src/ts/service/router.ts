@@ -24,6 +24,8 @@ export function extractPathFromUrl(url:string):string {
 /*
   實驗發現一定要給 Navigo root 的路徑。
   此路徑要包含通訊協定和 host name，缺一不可，否則它會無法正常解析部分路徑。
+
+  產生 navigo 實例的時候不需要在 root (host name) 後面加上「/」，否則 navigo 會重覆為路徑加上斜線，導致問題。
 */
 const navigo:Navigo = new Navigo(siteUrl, false);
 

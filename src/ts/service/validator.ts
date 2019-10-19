@@ -23,6 +23,17 @@ export function isNum(param):boolean {
     */
 }
 
+/*
+    這個函式的用途是辨識參數的型態是否為 object，但排除 null。
+*/
 export function isObject(obj):boolean {
     return typeof obj === 'object' && obj !== null;
+}
+
+export function isFunc(obj):boolean {
+    return !!(obj && obj.constructor && obj.call && obj.apply);
+    /*
+        這個函式參考自以下討論串
+        https://stackoverflow.com/a/6000016/3754778
+    */
 }

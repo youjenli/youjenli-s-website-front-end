@@ -30,6 +30,7 @@ declare global {
             titleBar:{
                 menuItems:MenuItem[];
             };
+            responseCode:number;
             paginationSettings:SettingsOfPagination;
             pagination:Pagination;
             // posts 是首頁的文章列表

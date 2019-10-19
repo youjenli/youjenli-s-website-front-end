@@ -1,11 +1,11 @@
-import Axios from 'axios';
+import Axios, { CancelToken } from 'axios';
 import { convertGMTDateToLocalDate } from './formatters';
 import * as terms from './terms';
 import { PostEntity, CategoryEntityInEmbedContext, TagEntityInEmbedContext } from '../model/wp-rest-api';
 import { ResultOfFetching } from '../model/general-types';
 import { fetchMedia } from '../service/media-fetcher';
 import { Post } from '../model/posts';
-import { isNotBlank } from './validator';
+import { isNotBlank, isObject } from './validator';
 import { CustomFields } from '../model/wp-rest-api';
 import { isNum } from '../service/validator';
 
@@ -17,13 +17,14 @@ export interface ConfigurationOfFetching {
     tags?:number[];
     per_page?:number;
     search?:string;
+    cancelToken?:CancelToken
 }
 
 export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetching<Post>> {
     const reqConfig = {
         params:{}
     };
-    if (params) {
+    if (isObject(params)) {
         if (isNotBlank(params.slug)) {
             reqConfig.params['slug'] = params.slug;
         }
@@ -42,38 +43,42 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
             reqConfig.params['tags'] = params.tags.toString();
         }
 
-        if (params.per_page) {
+        if (isNum(params.per_page)) {
             reqConfig.params['per_page'] = params.per_page;
         }
 
         if (isNotBlank(params.search)) {
             reqConfig.params['search'] = params.search;
         }
+
+        if (params.cancelToken) {
+            reqConfig['cancelToken'] = params.cancelToken;
+        }
     }
 
     return new Promise<ResultOfFetching<Post>>((resolve, reject) => {
                     Axios.get<PostEntity[]>('/wp-json/wp/v2/posts', reqConfig)
-                        .then((responseOfQueryOfFrontPage) => {
-                        /*
-                            要處理的事情
-                            3. 處理 excerpt 帶有 html 格式的問題
-                            https://wordpress.org/support/topic/wordpress-com-forums-support-blog-post-excerpt-in-rest-api-call/
-                            4. 讀出 response header X-WP-TotalPages 的值以便傳給樣板
-                            方法是取得 response.headers，做法可參考
-                            https://codepen.io/youjenli/pen/BeVVgq?editors=1111
-                        */
-                        if (responseOfQueryOfFrontPage && responseOfQueryOfFrontPage.status == 200) {
-                            let isComplete = true;
-                            if (Array.isArray(responseOfQueryOfFrontPage.data) && responseOfQueryOfFrontPage.data.length > 0) {
-                                const result = responseOfQueryOfFrontPage.data;
-                                let categoriesAppearedInFrontPage = [];//要查詢的分類 id 列表
-                                let tagsAppearedInFrontPage = [];//要查詢的標籤 id 列表
-                                let featuredMediaAppearedInFrontPage = [];//要查詢的意象圖 id 列表
-                                const postsWaitingForDataOfCategories = [];//要查詢分類名稱的陣列
-                                const postsWaitingForDataOfTags = [];//要查詢標籤的陣例
-                                const mappingsOfFeaturedMediaIdAndPost = [];//對應 feature_media id 和一系列發表物的 map
-                                let dataOfPosts = [];//最後要提供給樣板的發表物
-                                for (let k = 0 ; k < result.length ; k ++) {
+                            .then((responseOfQueryOfFrontPage) => {
+                            /*
+                                要處理的事情
+                                3. 處理 excerpt 帶有 html 格式的問題
+                                https://wordpress.org/support/topic/wordpress-com-forums-support-blog-post-excerpt-in-rest-api-call/
+                                4. 讀出 response header X-WP-TotalPages 的值以便傳給樣板
+                                方法是取得 response.headers，做法可參考
+                                https://codepen.io/youjenli/pen/BeVVgq?editors=1111
+                            */
+                            if (responseOfQueryOfFrontPage && responseOfQueryOfFrontPage.status == 200) {
+                                let isComplete = true;
+                                if (Array.isArray(responseOfQueryOfFrontPage.data) && responseOfQueryOfFrontPage.data.length > 0) {
+                                    const result = responseOfQueryOfFrontPage.data;
+                                    let categoriesAppearedInFrontPage = [];//要查詢的分類 id 列表
+                                    let tagsAppearedInFrontPage = [];//要查詢的標籤 id 列表
+                                    let featuredMediaAppearedInFrontPage = [];//要查詢的意象圖 id 列表
+                                    const postsWaitingForDataOfCategories = [];//要查詢分類名稱的陣列
+                                    const postsWaitingForDataOfTags = [];//要查詢標籤的陣例
+                                    const mappingsOfFeaturedMediaIdAndPost = [];//對應 feature_media id 和一系列發表物的 map
+                                    let dataOfPosts = [];//最後要提供給樣板的發表物
+                                    for (let k = 0 ; k < result.length ; k ++) {
                                     const post = result[k];
                                     const metaDataOfPost = {
                                         type:post.type,
@@ -155,10 +160,10 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                         }
                                     }
                                     dataOfPosts.push(metaDataOfPost);
-                                }
-                            
-                                const additionalRequests = [];
-                                if (categoriesAppearedInFrontPage.length > 0) {
+                                    }
+                                
+                                    const additionalRequests = [];
+                                    if (categoriesAppearedInFrontPage.length > 0) {
                                     const config ={ 
                                         params:{
                                             context:'embed',
@@ -214,9 +219,9 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                                     return error;
                                              });
                                     additionalRequests.push(promiseOfCategoryReq);
-                                }
-                            
-                                if (tagsAppearedInFrontPage.length > 0) {
+                                    }
+                                
+                                    if (tagsAppearedInFrontPage.length > 0) {
                                     const config ={ 
                                         params:{
                                             context:'embed',
@@ -271,10 +276,10 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                                 return error;
                                             });
                                     additionalRequests.push(promiseOfTagReq);
-                                }
-
-                            
-                                if (featuredMediaAppearedInFrontPage.length > 0) {
+                                    }
+                                
+                                
+                                    if (featuredMediaAppearedInFrontPage.length > 0) {
                                     const promiseOfFeaturedMediaReq = 
                                             fetchMedia({
                                                     include:featuredMediaAppearedInFrontPage,
@@ -324,39 +329,38 @@ export function fetchPosts(params:ConfigurationOfFetching):Promise<ResultOfFetch
                                                     return error;
                                                 });
                                     additionalRequests.push(promiseOfFeaturedMediaReq);
-                                }
-
-                                Promise.all(additionalRequests)
-                                       .then(() => {
-                                           resolve({
-                                               modelObjs:<Post[]>dataOfPosts,
-                                               response:responseOfQueryOfFrontPage,
-                                               isComplete:isComplete
+                                    }
+                                
+                                    Promise.all(additionalRequests)
+                                           .then(() => {
+                                               resolve({
+                                                   modelObjs:<Post[]>dataOfPosts,
+                                                   response:responseOfQueryOfFrontPage,
+                                                   isComplete:isComplete
+                                               });
                                            });
-                                       });
+                                } else {
+                                    resolve({
+                                        modelObjs:[],
+                                        response:responseOfQueryOfFrontPage,
+                                        isComplete:isComplete
+                                    });
+                                }
                             } else {
-                                resolve({
-                                    modelObjs:[],
+                                /* 
+                                   因為在開發時無法判斷什麼情況導致 axios 不送回任何物件，或著請求成功，但結果卻不是 200，
+                                   所以暫時先按照 Axios Promise Catch 的回傳格式送請求資訊給此函式的使用者。
+                                 */
+                                reject({
+                                    request:responseOfQueryOfFrontPage.request,
                                     response:responseOfQueryOfFrontPage,
-                                    isComplete:isComplete
+                                    message:terms.theResponseStatusCodeIsNot200(terms.postInWP),
+                                    config:responseOfQueryOfFrontPage.config
                                 });
                             }
-                        } else {
-                            /* 
-                               因為在開發時無法判斷什麼情況導致 axios 不送回任何物件，或著請求成功，但結果卻不是 200，
-                               所以暫時先按照 Axios Promise Catch 的回傳格式送請求資訊給此函式的使用者。
-                             */
-                            reject({
-                                request:responseOfQueryOfFrontPage.request,
-                                response:responseOfQueryOfFrontPage,
-                                message:terms.theResponseStatusCodeIsNot200(terms.postInWP),
-                                config:responseOfQueryOfFrontPage.config
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        //這種情況只把 Axios 錯誤訊息原封不動地交給此函式的使用者處理，不事先處理。
-                        reject(error);
-                    });
-    });
+                        })
+                        .catch(error => { //這種情況只把 Axios 錯誤訊息原封不動地交給此函式的使用者處理，不事先處理。
+                            reject(error);
+                        });
+            });
 }

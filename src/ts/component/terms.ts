@@ -16,6 +16,7 @@ export const regrettablyNotifyUserAboutSevereError = '很抱歉，此頁面發�
 export const explanationOfTheSituation = '若您看到此頁面，那表示此網頁有重要功能發生嚴重問題，使它無法繼續呈現網站內容。';
 export const pleaseReconnectToThisSiteLater = '麻煩您稍後再嘗試重新連線。';
 export const sorryForTheInconvenience = '不好意思，造成您的不便';
-export function cannotFindTheCorrespondingTypeOfPublicationWithProvidingSlug(path:string):string {
-    return `很抱歉。系統無法找到對應路徑「${path}」的發表物，因此將您導引至首頁。請稍後再嘗試連結該頁。`;
+export const pageNotFound = '404 page not found.';
+export function systemDoesNotServeContentCorrespondingToProvidedPath(path:string):string {
+    return `系統無對應路徑「${path}」的內容，因此呈現首頁的內容供您參考。`;
 };

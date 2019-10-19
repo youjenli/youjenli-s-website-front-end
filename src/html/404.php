@@ -1,28 +1,13 @@
 <?php 
     /*
         因為暫時還拿不定主意要把 404 頁面設計成什麼樣子，
-        所以目前處理這些問題的方法是呈現首頁的內容並附上錯誤訊息，
-        等到將來有 404 頁面的設計靈感時，再來實現更嚴謹的設計。
+        所以目前處理這些問題的方法是呈現首頁的內容並由客戶端附上錯誤訊息，
+        待將來有 404 頁面的設計靈感時，再來實現更嚴謹的設計。
+    */
+    global $wp_query, $wp_the_query;
+    $wp_query = new WP_Query();
+    $wp_query->query( '' );
+    $wp_the_query = $wp_query;
 
-        此解決方案不能透過伺服器內部的 url rewrite，因為會有客戶端網址和伺服器不一樣的問題。
-        在想到更週延的做法之前先用 http response code 301 導向至首頁。
-    */
-    header("HTTP/1.1 301 Moved Permanently");
-    $errorMsg = '未找到對應路徑「' . $_SERVER['REQUEST_URI'] . '」的資源，因此重新導向至首頁。';
-    /*
-        註：客戶端 router 功能的 handler 從請求參數得此錯誤訊息後會加入解碼，照理說我應該在此先為網址編碼。
-        但或許是因為 php 會自動編碼的關係，所以實測發現即便此處不編碼，客戶端仍可以得到正確的資訊。
-    */
-
-    /*
-        雖然請求參數在 http 規格中無字元數量上限，但一般建議最多參數長度不超過 2048，
-        因此這邊會檢查參數長度，若太長則提供簡短版的訊息。
-        
-        2039 = 2048 - 「errorMsg= 的字元數量」
-    */
-    if (strlen($errorMsg) >= 2039 ) {
-        $errorMsg = '未找到對應您存取的路徑之資源，因此重新導向至首頁。';
-    }
-    $url = get_bloginfo('url') . '/?errorMsg=' . $errorMsg;
-    header("Location: " . $url);
+    get_template_part( 'front-page' );
 ?>

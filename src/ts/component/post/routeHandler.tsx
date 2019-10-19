@@ -4,7 +4,7 @@ import {router} from '../../service/router';
 import { navigateToHomeWithErrorMessage } from '../../index';
 import {Post} from '../../model/posts';
 import { fetchPosts, ConfigurationOfFetching } from '../../service/post-fetcher';
-import {isString} from '../../service/validator';
+import { isNotBlank, isFunc, isObject } from '../../service/validator';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import GenericPost from './generic';
@@ -13,6 +13,7 @@ import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-
 import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import * as terms from '../template/terms';
 import PageTitle from '../page-title';
+import { ResultOfFetching } from '../../model/general-types';
 
 let postShouldBeRender:Post = null;
 
@@ -34,6 +35,27 @@ export function renderPost() {
         因為前一階段 (before) 可能會找不到資料，進而導向其他路徑，使這階段拿不到文章的資訊，
         因此只在postShouldBeRender 存在的情況下去產生畫面，其他狀況就讓它過去。
     */
+}
+
+export const createResultHandlerOfSinglePostFetching = (
+                cb:{ doIfResultIsNotEmpty?:(result:ResultOfFetching<Post>) => void,
+                    doIfResultIsEmpty?:(result:ResultOfFetching<Post>) => void  }) => {
+    return (result:ResultOfFetching<Post>) => {
+        if (result.modelObjs.length > 0) {
+            postShouldBeRender = result.modelObjs[0];
+
+            //接下來處理快取問題。
+            if (result.isComplete) {
+                addRecord(TypesOfCachedItem.Post, result.modelObjs[0].slug, result.modelObjs[0]);
+            }
+            if (isObject(cb) && isFunc(cb.doIfResultIsNotEmpty)) {
+                cb.doIfResultIsNotEmpty(result);
+            }
+        } else if (isObject(cb) && isFunc(cb.doIfResultIsEmpty)) {
+            cb.doIfResultIsEmpty(result);
+        }
+        return result;
+    };
 }
 
 /*
@@ -65,7 +87,7 @@ export const routeEventHandlers = {
             delete window.wp.completePosts;
             delete window.wp.pagination;
             done();
-        } else if (isString(params.slug)) {//抓取文章
+        } else if (isNotBlank(params.slug)) {//抓取文章
             
             const record = getRecord(TypesOfCachedItem.Post, params.slug);
             if (record) {
@@ -73,24 +95,21 @@ export const routeEventHandlers = {
                 done();
             } else {
                 const config:ConfigurationOfFetching = {
-                    slug:params.slug
+                    slug:decodeURIComponent(params.slug)
+                    /*
+                        注意，不曉得是 xmlhttprequest 或是 axios 設計的緣故，開發者不需要事先為查詢參數編碼，
+                        只要直接遞交參數內容給請求設定即可，因此這邊要先把來自伺服器或非同步請求的已編碼 slug 解碼。
+                    */
                 }
                 fetchPosts(config)
-                    .then((result) => {
-                        if (result.modelObjs.length > 0) {
-                            postShouldBeRender = result.modelObjs[0];
-
-                            //接下來處理快取問題。
-                            if (result.isComplete) {
-                                addRecord(TypesOfCachedItem.Post, params.slug, result.modelObjs[0]);
-                            }
-                        } else {
-                            /* 查無文章時，導向首頁並通報異常。 */
-                            //不要監聽 scroll 事件，以免發生異常。
-                            navigateToHomeWithErrorMessage(`${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
-                        }
-                        done();
-                    })
+                    .then(createResultHandlerOfSinglePostFetching({
+                                doIfResultIsNotEmpty:() => { done(); },
+                                doIfResultIsEmpty:()=> {
+                                    /* 查無文章時，導向首頁並通報異常。 */
+                                    navigateToHomeWithErrorMessage(`${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
+                                }
+                            })
+                    )
                     .catch(() => {
                         navigateToHomeWithErrorMessage(terms.failedToLoadThePage(router.lastRouteResolved().url));
                     });

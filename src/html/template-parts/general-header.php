@@ -25,6 +25,7 @@
     window.wp = {
         siteName:<?php echo json_encode( get_bloginfo('name', 'raw') ); ?>,
         siteUrl:<?php echo json_encode( untrailingslashit($url) ); ?>,
+        responseCode:<?php echo isset( $response_code ) ? $response_code : 200; ?>,
         disquz:{
             shortName:'<%= shortNameOfForum %>'
         }

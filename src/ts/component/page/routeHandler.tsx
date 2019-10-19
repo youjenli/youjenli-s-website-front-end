@@ -1,6 +1,6 @@
 import {reactRoot} from '../../index';
 import {router} from '../../service/router';
-import {isString} from '../../service/validator';
+import { isNotBlank, isFunc, isObject } from '../../service/validator';
 import { Page } from '../../model/posts';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -11,6 +11,7 @@ import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-
 import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import * as terms from '../template/terms';
 import PageTitle from '../page-title';
+import { ResultOfFetching } from '../../model/general-types';
 
 let pageShouldBeRendered:Page = null;
 
@@ -34,6 +35,27 @@ export function renderPage() {
     */
 }
 
+export const createResultHandlerOfPageFetching = (
+                cb:{ doIfResultIsNotEmpty?:(result:ResultOfFetching<Page>) => void,
+                     doIfResultIsEmpty?:(result:ResultOfFetching<Page>) => void }) => {
+    return (result:ResultOfFetching<Page>) => {
+        if (result.modelObjs.length > 0) {
+            pageShouldBeRendered = result.modelObjs[0];
+
+            //再來處理快取問題。
+            if (result.isComplete) {
+                addRecord(TypesOfCachedItem.Page, result.modelObjs[0].slug, result.modelObjs[0]);
+            }
+            if (isObject(cb) && isFunc(cb.doIfResultIsNotEmpty)) {
+                cb.doIfResultIsNotEmpty(result);
+            }
+        } else if (isObject(cb) && isFunc(cb.doIfResultIsEmpty)) {
+            cb.doIfResultIsEmpty(result);
+        }
+        return result;
+    };
+}
+
 /*
   實驗發現 wordpress 的 rest api 沒有引入文章、專頁的分頁功能。
   當使用者發送請求給伺服器時，伺服器會一口氣回傳整篇文章…包含文章裡面的分頁點。
@@ -54,7 +76,7 @@ export const routeEventHandlers = {
             delete window.wp.completePages;
             delete window.wp.pagination;
             done();
-        } else if (isString(params.slug)) {//抓取文章
+        } else if (isNotBlank(params.slug)) {//抓取文章
 
             const record = getRecord(TypesOfCachedItem.Page, params.slug);
             if (record) {
@@ -63,24 +85,21 @@ export const routeEventHandlers = {
             } else {
                 //查無此頁的快取紀錄
                 const config:ConfigurationOfFetching = {
-                    slug:params.slug
+                    slug:decodeURIComponent(params.slug)
+                    /*
+                        注意，不曉得是 xmlhttprequest 或是 axios 設計的緣故，開發者不需要事先為查詢參數編碼，
+                        只要直接遞交參數內容給請求設定即可，因此這邊要先把來自伺服器或非同步請求的已編碼 slug 解碼。
+                    */
                 }
                 fetchPages(config)
-                    .then(result => {
-                        if (result.modelObjs.length > 0) {
-                            pageShouldBeRendered = result.modelObjs[0];
-
-                            //再來處理快取問題。
-                            if (result.isComplete) {
-                                addRecord(TypesOfCachedItem.Page, params.slug, pageShouldBeRendered);
-                            }
-
-                            done();
-                        } else {
-                            /* 查無文章時，導向首頁並通報異常。 */
-                            navigateToHomeWithErrorMessage(`${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
-                        }
-                    })
+                    .then(createResultHandlerOfPageFetching({
+                                doIfResultIsNotEmpty:() => { done(); },
+                                doIfResultIsEmpty:() => {
+                                    /* 查無文章時，導向首頁並通報異常。 */
+                                    navigateToHomeWithErrorMessage(`${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
+                                }
+                            })
+                    )
                     .catch(() => {
                         navigateToHomeWithErrorMessage(terms.failedToLoadThePage(router.lastRouteResolved().url));
                     })

@@ -16,13 +16,13 @@
             * 連結
     */
 ?>
-<?php get_template_part('template-parts/general-header') ?>
+<?php get_template_part('template-parts/general-header'); ?>
     <script>
         window.wp.recentPosts = [
-        <?php while ( have_posts() ) {
-            the_post();
-            get_template_part('template-parts/encapsulate-post-to-json');
-        } //have_posts() 結尾 ?>
+            <?php while ( have_posts() ) {
+                the_post();
+                get_template_part('template-parts/encapsulate-post-to-json');
+            } //have_posts() 結尾 ?>
         ];
     </script>
 </head>

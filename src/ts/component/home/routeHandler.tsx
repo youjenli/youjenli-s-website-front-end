@@ -16,9 +16,9 @@ import PageTitle from '../page-title';
 
 let postsPerPage = 12;
 let postsShouldBeRender:MetaDataOfPost[] = null;
+let errorMsgShouldBeRender:string[] = null;
 let currentPage:number = 0;
 let totalPages:number = 0;
-let errorMsgShouldBeRender:string[] = null;
 let shouldRegisterScrollListener = true;
 let isFetching = false;
 
@@ -26,7 +26,7 @@ export const queryParametersOfHome = {
     ERROR_MSG:'errorMsg'
 }
 
-export function renderHomePage(query?:any) 
+export function renderHomePage(query?:any)
         /* 這裡 query 的型態不能訂為 string，否則 tsc 會斷定它在 router 註冊的程式碼有型態問題 */ {
     if (postsShouldBeRender != null) {
         
@@ -117,7 +117,7 @@ function setupStateOfHomePage() {
 }
 
 export const routeEventHandlers = {
-    before: function (done, params) {
+    before: (done, params) => {
         setupStateOfHomePage();
 
         if (window.wp.recentPosts) {
@@ -182,12 +182,12 @@ export const routeEventHandlers = {
                 });
         }
     },
-    after: function() {
+    after: () => {
         if (shouldRegisterScrollListener) {
             window.addEventListener('scroll', debouncedScrollEventHandler);
         }
     },
-    leave: function() {
+    leave: () => {
         //移除此頁面的狀態
         postsShouldBeRender = null;
         currentPage = null;
