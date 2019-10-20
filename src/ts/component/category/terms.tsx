@@ -20,8 +20,8 @@ export function learnMoreAboutThisCategoryAndRelatedPosts(nameOfCategory:string)
     return `了解「${nameOfCategory}」分類以及底下的文章。`;
 };
 
-export function cannotFindACategoryRelatedToGivenPath(path:string) {
-    return `無法查詢到對應路徑「${path}」的分類。系統重新導向至首頁。`;
+export function cannotFindAnyCategoryCorrespondingToGivenPath(path:string) {
+    return `沒有對應路徑「${path}」的分類。`;
 }
 
 export function invalidPathForArchiveOfCategory(path:string) {
@@ -29,8 +29,12 @@ export function invalidPathForArchiveOfCategory(path:string) {
 }
 
 export function didNotSuccessfullyGetTheCategoryCorrespondingToGivenPath(path:string) {
-    return `未順利取得對應路徑「${path}」的分類資訊，請稍後再重新嘗試。`;
+    return `未順利取得對應路徑「${path}」的分類資訊。`;
 };
+
+export const thereforeTheHomePageIsPresentedToYou = '因此呈現首頁內容給您參考。'
+
+export const pleaseTryAgainToAccessThisCategoryLater = '請稍後再嘗試存取此分類。';
 
 export const categoryDoesNotHaveParent = '此分類沒有母分類。';
 

@@ -117,7 +117,7 @@ function setupStateOfHomePage() {
 }
 
 export const routeEventHandlers = {
-    before: (done, params) => {
+    before: (done, params?) => {
         setupStateOfHomePage();
 
         if (window.wp.recentPosts) {

@@ -163,8 +163,48 @@
         {
             "type": "firefox",
             "request":"launch",
+            "name": "Firefox -> category root",
+            "url": "http://127.0.0.1/category",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                /* 注意：除了網站根路徑以外，此處 url　必須按照 firefox debugger　範例展示的樣子填寫絕對路徑，不能填相對路徑。
+                　　另外，host name 部分也必須和網頁上面的 js 檔案路徑完成相同，即便兩者指的 ip 位置一樣。
+                　　也就是說，當網頁上指的位置是 127.0.0.1，那填 localhost 就不會有效。
+                    
+                   以上狀況適用於 firefox debugger 1.8.0。
+                */
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        },
+        {
+            "type": "firefox",
+            "request":"launch",
             "name": "Firefox -> parent category",
             "url": "http://127.0.0.1/category/it-tech/",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                /* 注意：除了網站根路徑以外，此處 url　必須按照 firefox debugger　範例展示的樣子填寫絕對路徑，不能填相對路徑。
+                　　另外，host name 部分也必須和網頁上面的 js 檔案路徑完成相同，即便兩者指的 ip 位置一樣。
+                　　也就是說，當網頁上指的位置是 127.0.0.1，那填 localhost 就不會有效。
+                    
+                   以上狀況適用於 firefox debugger 1.8.0。
+                */
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        },
+        {
+            "type": "firefox",
+            "request":"launch",
+            "name": "Firefox -> category does not exist",
+            "url": "http://127.0.0.1/category/hello/world/123",
             "reAttach": true,
             "pathMappings": [{
                 "url":"/",

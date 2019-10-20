@@ -3,11 +3,10 @@
    對應路徑與路徑處理函式
 */
 import { router } from './service/router';
-import { placeHolderForPage, pageIndicator, removePageIndicatorFromUrl } from './model/pagination';
+import { placeHolderForPage, pageIndicator } from './model/pagination';
 import { queryParametersOfHome } from './component/home/routeHandler';
-import * as termsOfCategory from './component/category/terms';
 import { renderHomePage, routeEventHandlers as routeEventHandlersOfHome } from './component/home/routeHandler';
-import { renderArchiveOfCategory } from './component/category/routeHandler';
+import { routeHandlerOfCategory, routeEventHandlersOfCategory } from './component/category/routeHandler';
 import { renderArchiveOfTag, routeEventHandlersOfTag } from './component/tag/routerHandler';
 import { generalHooksForPostAndPage, generalHandlerForPostAndPage } from './component/post-page-routeWrapper';
 import { renderResultOfSearch, routeEventHandlers as routeEventHandlersOfSearch } from './component/search-result/routeHandler';
@@ -21,31 +20,6 @@ export const reactRoot = document.getElementById('react-root');
   這樣它才能早在其他頁面模組取得分頁列的資訊並刪除分頁設定之前就先保留分頁介面的設定。
 */
 const paginationPath = pageIndicator.replace(placeHolderForPage, ':page');
-
-const generalHandlerOfCategory = (params) => {
-    let paramsOfCategory = {};
-    let route = router.lastRouteResolved().url;
-    route = removePageIndicatorFromUrl(route);
-    let slugs = route.split('/').slice(1);//因為 navigo 會在路徑開頭加上「/」導致分拆之後第一個元素必為空字串，所以要彈出開頭第一個元素
-    let filteredSlugs = slugs.filter( token => token !== '' );
-    if (filteredSlugs.length == slugs.length && filteredSlugs.length >= 2) {
-        /*
-          當解析出來的元串組都沒有空白的部分，而且長度超過基準路徑的階層數（b c 也是 category 那樣一層），此時路徑格式正確。
-          接下來要繼續解析其他參數
-        */
-        paramsOfCategory['slug'] = filteredSlugs.pop();
-        if (params && isNum(params['page'])) {
-            paramsOfCategory['page'] = parseInt(params['page']);
-        } else {
-            paramsOfCategory['page'] = 1;
-        }
-        
-        renderArchiveOfCategory(paramsOfCategory);
-    } else {
-        /* 若路徑格式不正確，則轉發往首頁 */
-        navigateToHomeWithErrorMessage(termsOfCategory.invalidPathForArchiveOfCategory(router.lastRouteResolved().url));
-    }
-};
 
 /*
     為確保後端明明找不到對應網址的內容，但前端卻在初始化的時候又另外發請求去查詢內容，
@@ -72,11 +46,15 @@ if (isNum(window.wp.responseCode) && window.wp.responseCode == 404) {
 }
 
 /*
-    註：要比對的路徑前面有沒有加斜線的意義不同。
+    註：
+    1.要比對的路徑前面有沒有加斜線的意義不同。
     若有加斜線，則表示要比對的路徑是接續在稍早設定的根路徑之後，反之則表示只要欲導向路徑的結尾符合比對路徑結構即可。
     因此若有 A => /:slug/page/:number，B => :slug/page/:number 兩個比對路徑，
     則路徑 http://host-name/path/to/something/page/123 會符合 B 路徑，slug 的值是 something，number 的值是 123，但是不符合 A 路徑。
     路徑 C => http://host-name/something/page/123 才會符合 A，但是 C 也同時符合 B。
+
+    2. 若有一路徑設定為 category/:slug，則當請求路徑是 category 時，navigo 不會視為符合此路徑。
+    這種情況要額外建立沒有參數的路徑來導引處理函式。
 
     附帶一提，如果要導引的路徑以相對於根路徑的格式表達，例如 path/to/something，那前面有沒有加斜線都沒差。
 
@@ -84,8 +62,9 @@ if (isNum(window.wp.responseCode) && window.wp.responseCode == 404) {
     https://codepen.io/youjenli/pen/zYYoojQ
 */
 router
-    .on(`/category/*/${paginationPath}`, { as:'category with page number', uses:generalHandlerOfCategory})
-    .on(`/category/*`, { as:'category', uses:generalHandlerOfCategory})
+    .on(`/category/*/${paginationPath}`, { as:'category with page number', uses:routeHandlerOfCategory }, routeEventHandlersOfCategory)
+    .on(`/category/*`, { as:'category', uses:routeHandlerOfCategory }, routeEventHandlersOfCategory)
+    .on('/category', { as:'category without slug', uses:routeHandlerOfCategory }, routeEventHandlersOfCategory)
     .on(`/tag/:slug`, { as:'tag', uses:renderArchiveOfTag }, routeEventHandlersOfTag)
     .on(`/tag/:slug/${paginationPath}`, { as:'tag with page number', uses:renderArchiveOfTag }, routeEventHandlersOfTag)
     .on(`/search/:keyword`, { as:'search', uses:renderResultOfSearch }, routeEventHandlersOfSearch)
