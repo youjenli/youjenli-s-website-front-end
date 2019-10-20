@@ -16,7 +16,7 @@ import * as generalTerms from '../terms';
 import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
 import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import PageTitle from '../page-title';
-import { renderHomePage, routeEventHandlers as routeEventHandlerOfHome, queryParametersOfHome } from '../home/routeHandler';
+import { renderHomePage, routeEventHandlers as routeEventHandlersOfHome, queryParametersOfHome } from '../home/routeHandler';
 import { removePageIndicatorFromUrl } from '../../model/pagination';
 
 const DEFAULT_POSTS_PER_PAGE = 10;
@@ -55,18 +55,21 @@ const resetStateOfHandler = () => {
     foundPosts = 0;
     postsPerPage = DEFAULT_POSTS_PER_PAGE;
     pagination = null;
-    routeEventHandlersOfCategory.after = defaultEventHandlers.after;
-    routeEventHandlersOfCategory.leave = defaultEventHandlers.leave;
 }
 
 const displayHomePageWithErrorMsg = (errorMsg:string) => {
     new Promise((resolve) => {
         //先執行 before 函式
-        routeEventHandlerOfHome.before(resolve);
+        routeEventHandlersOfHome.before(resolve);
     }).then(() => {
         /* 待 before 函式執行完畢，接著更新此 route 的 after 和 leave hook，然後產生首頁畫面 */
-        routeEventHandlersOfCategory.after = routeEventHandlerOfHome.after;
-        routeEventHandlersOfCategory.leave = routeEventHandlerOfHome.leave;
+        routeEventHandlersOfCategory.after = routeEventHandlersOfHome.after;
+        routeEventHandlersOfCategory.leave = () => {
+            routeEventHandlersOfHome.leave();
+            //既然前面調整了事件處理器，那這邊就要再改回來，不然之後再請求特定頁面的時，系統就故障了。
+            routeEventHandlersOfCategory.after = defaultEventHandlers.after;
+            routeEventHandlersOfCategory.leave = defaultEventHandlers.leave;
+        };
         const query = `${queryParametersOfHome.ERROR_MSG}=${encodeURIComponent(errorMsg)}`;
         renderHomePage(query);
     });
