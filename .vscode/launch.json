@@ -203,7 +203,7 @@
         {
             "type": "firefox",
             "request":"launch",
-            "name": "Firefox -> category does not exist",
+            "name": "Firefox -> the category does not exist",
             "url": "http://127.0.0.1/category/hello/world/123",
             "reAttach": true,
             "pathMappings": [{
@@ -223,8 +223,36 @@
         {
             "type": "firefox",
             "request":"launch",
+            "name": "Firefox -> tag root",
+            "url": "http://127.0.0.1/tag",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        },
+        {
+            "type": "firefox",
+            "request":"launch",
             "name": "Firefox -> tag",
             "url": "http://127.0.0.1/tag/first/",
+            "reAttach": true,
+            "pathMappings": [{
+                "url":"/",
+                "path": "${workspaceFolder}"
+            },{
+                "url":"http://127.0.0.1/wp-content/themes/youjenli/",
+                "path": "${workspaceFolder}"
+            }]
+        },
+        {
+            "type": "firefox",
+            "request":"launch",
+            "name": "Firefox -> tag does not exist",
+            "url": "http://127.0.0.1/tag/aoipgjapwoegombpas/",
             "reAttach": true,
             "pathMappings": [{
                 "url":"/",

@@ -7,7 +7,7 @@ import { placeHolderForPage, pageIndicator } from './model/pagination';
 import { queryParametersOfHome } from './component/home/routeHandler';
 import { renderHomePage, routeEventHandlers as routeEventHandlersOfHome } from './component/home/routeHandler';
 import { routeHandlerOfCategory, routeEventHandlersOfCategory } from './component/category/routeHandler';
-import { renderArchiveOfTag, routeEventHandlersOfTag } from './component/tag/routerHandler';
+import { routeHandlerOfTag, routeEventHandlersOfTag } from './component/tag/routerHandler';
 import { generalHooksForPostAndPage, generalHandlerForPostAndPage } from './component/post-page-routeWrapper';
 import { renderResultOfSearch, routeEventHandlers as routeEventHandlersOfSearch } from './component/search-result/routeHandler';
 import { routeNotFoundHandler, eventHandlersOfExceptionFlow } from './component/routeNotFoundHandler';
@@ -65,8 +65,9 @@ router
     .on(`/category/*/${paginationPath}`, { as:'category with page number', uses:routeHandlerOfCategory }, routeEventHandlersOfCategory)
     .on(`/category/*`, { as:'category', uses:routeHandlerOfCategory }, routeEventHandlersOfCategory)
     .on('/category', { as:'category without slug', uses:routeHandlerOfCategory }, routeEventHandlersOfCategory)
-    .on(`/tag/:slug`, { as:'tag', uses:renderArchiveOfTag }, routeEventHandlersOfTag)
-    .on(`/tag/:slug/${paginationPath}`, { as:'tag with page number', uses:renderArchiveOfTag }, routeEventHandlersOfTag)
+    .on(`/tag/:slug/${paginationPath}`, { as:'tag with page number', uses:routeHandlerOfTag }, routeEventHandlersOfTag)
+    .on(`/tag/:slug`, { as:'tag', uses:routeHandlerOfTag }, routeEventHandlersOfTag)
+    .on('/tag', { as:'tag without slug', uses:routeHandlerOfTag }, routeEventHandlersOfTag)
     .on(`/search/:keyword`, { as:'search', uses:renderResultOfSearch }, routeEventHandlersOfSearch)
     .on(`/search/:keyword/${paginationPath}`, { as:'search with page number', uses:renderResultOfSearch }, routeEventHandlersOfSearch)
     .on('/:slug', { as:'post or page', uses:generalHandlerForPostAndPage }, generalHooksForPostAndPage)
