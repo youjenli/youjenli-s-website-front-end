@@ -13,7 +13,7 @@ import * as terms from './terms';
 import * as generalTerms from '../terms';
 import { TypesOfCachedItem, addRecord, getRecord, deleteRecord } from '../../service/cache-of-pagination';
 import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
-import { isNotBlank, isObject } from '../../service/validator';
+import { isNotBlank, isObject, isFunc } from '../../service/validator';
 import PageTitle from '../page-title';
 import { renderHomePage, routeEventHandlers as routeEventHandlersOfHome, queryParametersOfHome } from '../home/routeHandler';
 
@@ -24,6 +24,37 @@ let postsShouldBeRendered:MetaDataOfPost[] = null;
 let foundPosts:number = 0;
 let pagination:pg.Pagination = null;
 
+let isProgressAbnormal:boolean = false;
+let renderHomePageWithErrorMsg = null;
+
+const renderThePageOfTag = () => {
+    if (isProgressAbnormal && isFunc(renderHomePageWithErrorMsg)) {
+        renderHomePageWithErrorMsg();
+    } else {
+        postsShouldBeRendered.forEach(post => {
+            addTypeOfPostOrPage(post.slug, post.type);
+        });
+        ReactDOM.render(
+            <React.Fragment>
+                <PageTitle name={terms.titleOfPageOfTag(tagShouldBeDisplayed.name)} />
+                <GenericTag tag={tagShouldBeDisplayed} numberOfResults={foundPosts}
+                    pageContent={postsShouldBeRendered} pagination={pagination} />
+            </React.Fragment>,
+            reactRoot, () => {
+                router.updatePageLinks();
+            }
+        );
+    }
+}
+
+export let routeHandlerOfTag = () => {
+    if (isProgressAbnormal && isFunc(renderHomePageWithErrorMsg)) {
+        renderHomePageWithErrorMsg();
+    } else {
+        renderThePageOfTag();
+    }
+};
+
 const resetStateOfHandler = () => {
     postsShouldBeRendered = null;
     tagShouldBeDisplayed = null;
@@ -32,43 +63,16 @@ const resetStateOfHandler = () => {
     pagination = null;
 }
 
-const defaultHandlerOfTag = () => {
-    postsShouldBeRendered.forEach(post => {
-        addTypeOfPostOrPage(post.slug, post.type);
-    });
-    ReactDOM.render(
-        <React.Fragment>
-            <PageTitle name={terms.titleOfPageOfTag(tagShouldBeDisplayed.name)} />
-            <GenericTag tag={tagShouldBeDisplayed} numberOfResults={foundPosts}
-                pageContent={postsShouldBeRendered} pagination={pagination} />
-        </React.Fragment>,
-        reactRoot, () => {
-            router.updatePageLinks();
-        }
-    )
-}
-
-export let routeHandlerOfTag = defaultHandlerOfTag;
-
-const displayHomePageWithErrorMsg = (done, errorMsg:string) => {
-    routeEventHandlersOfTag.after = routeEventHandlersOfHome.after;
-    routeEventHandlersOfTag.leave = () => {
-        routeEventHandlersOfHome.leave();
-        
-        //記得還原本來的路由設定
-        routeEventHandlersOfTag = defaultEventHandlers
-        routeHandlerOfTag = defaultHandlerOfTag;
-    }
-    routeHandlerOfTag = () => {
-        const query = 
-            `${queryParametersOfHome.ERROR_MSG}=${errorMsg}`;
+const prepareToPresentHomePageWithErrorMsg = (done, errorMsg:string) => {
+    isProgressAbnormal = true;
+    renderHomePageWithErrorMsg = () => {
+        const query = `${queryParametersOfHome.ERROR_MSG}=${encodeURIComponent(errorMsg)}`;
         renderHomePage(query);
     }
-    
     routeEventHandlersOfHome.before(done);
 }
 
-const defaultEventHandlers = {
+export const routeEventHandlersOfTag = {
     before:function(done, params) {
         if (isObject(params)) {
             const slug = params['slug'];
@@ -281,13 +285,13 @@ const defaultEventHandlers = {
                                         .finally(() => done() );
                             } else {
                                 //查無此標籤，呈現首頁內容。
-                                displayHomePageWithErrorMsg(done,
+                                prepareToPresentHomePageWithErrorMsg(done,
                                     terms.cannotFindATagCorrespondingRelatedToGivenPath(router.lastRouteResolved().url))
                             }
                         })
                         .catch(() => {
                             //查詢標籤作業失敗，呈現首頁內容。
-                            displayHomePageWithErrorMsg(done,
+                            prepareToPresentHomePageWithErrorMsg(done,
                                 terms.didNotSuccessfullyGetTheTagCorrespondingToGivenPath(router.lastRouteResolved().url))
                         });
                 }
@@ -296,12 +300,20 @@ const defaultEventHandlers = {
             /*
                 因為沒有提供標籤的 slug，所以調整後續掛勾和處理函式，然後展示首頁內容 todo 搬函式的位置
             */
-            displayHomePageWithErrorMsg(done,
+            prepareToPresentHomePageWithErrorMsg(done,
                 encodeURIComponent(generalTerms.systemDoesNotServeContentCorrespondingToProvidedPath(router.lastRouteResolved().url)));
         }
     },
-    after:() => {},
-    leave:() => {}
-}//defaultEventHandlers 結束
-
-export let routeEventHandlersOfTag = defaultEventHandlers;
+    after:() => {
+        if (isProgressAbnormal && isFunc(routeEventHandlersOfHome.after)) {
+            routeEventHandlersOfHome.after();
+        }
+    },
+    leave:() => {
+        if (isProgressAbnormal && isFunc(routeEventHandlersOfHome.leave)) {
+            routeEventHandlersOfHome.leave();
+        }
+        isProgressAbnormal = false;
+        renderHomePageWithErrorMsg = null;
+    }
+}//routeEventHandlersOfTag 結束
