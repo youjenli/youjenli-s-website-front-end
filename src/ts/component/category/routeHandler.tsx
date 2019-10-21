@@ -8,7 +8,7 @@ import {MetaDataOfPost} from '../../model/posts';
 import {Category} from '../../model/terms';
 import GenericCategory from './generic';
 import { convertGMTDateToLocalDate } from '../../service/formatters';
-import { isNotBlank, isObject } from '../../service/validator';
+import { isNotBlank, isObject, isFunc } from '../../service/validator';
 import { fetchCategories, fetchNodesInCategoryTree } from '../../service/category-fetcher';
 import { fetchPosts } from '../../service/post-fetcher';
 import * as terms from './terms';
@@ -25,6 +25,7 @@ let taxonomy:Category = null;
 let postsShouldBeRendered:MetaDataOfPost[] = null;
 let foundPosts = 0;
 let pagination:pg.Pagination = null;
+let isProgressAbnormal:boolean = false;
 
 const renderThePageOfCategory = () => {
     postsShouldBeRendered.forEach(post => {
@@ -42,12 +43,19 @@ const renderThePageOfCategory = () => {
     )
 }
 
-const defaultEventHandlers = {
-    after:() => {},
-    leave:() => {}
+export const routeEventHandlersOfCategory = {
+    after:() => {
+        if (isProgressAbnormal && isFunc(routeEventHandlersOfHome.after)) {
+            routeEventHandlersOfHome.after();
+        }
+    },
+    leave:() => {
+        if (isProgressAbnormal && isFunc(routeEventHandlersOfHome.leave)) {
+            routeEventHandlersOfHome.leave();
+        }
+        isProgressAbnormal = false;
+    }
 };
-
-export const routeEventHandlersOfCategory = defaultEventHandlers;
 
 const resetStateOfHandler = () => {
     postsShouldBeRendered = null;
@@ -57,19 +65,13 @@ const resetStateOfHandler = () => {
     pagination = null;
 }
 
-const displayHomePageWithErrorMsg = (errorMsg:string) => {
+const presentHomePageWithErrorMsg = (errorMsg:string) => {
+    isProgressAbnormal = true;
     new Promise((resolve) => {
         //先執行 before 函式
         routeEventHandlersOfHome.before(resolve);
     }).then(() => {
         /* 待 before 函式執行完畢，接著更新此 route 的 after 和 leave hook，然後產生首頁畫面 */
-        routeEventHandlersOfCategory.after = routeEventHandlersOfHome.after;
-        routeEventHandlersOfCategory.leave = () => {
-            routeEventHandlersOfHome.leave();
-            //既然前面調整了事件處理器，那這邊就要再改回來，不然之後再請求特定頁面的時，系統就故障了。
-            routeEventHandlersOfCategory.after = defaultEventHandlers.after;
-            routeEventHandlersOfCategory.leave = defaultEventHandlers.leave;
-        };
         const query = `${queryParametersOfHome.ERROR_MSG}=${encodeURIComponent(errorMsg)}`;
         renderHomePage(query);
     });
@@ -372,14 +374,14 @@ export const routeHandlerOfCategory = (params) => {
                                         const errorMsg = terms.didNotSuccessfullyGetTheCategoryCorrespondingToGivenPath(router.lastRouteResolved().url)
                                                         +terms.thereforeTheHomePageIsPresentedToYou
                                                         +terms.pleaseTryAgainToAccessThisCategoryLater;
-                                        displayHomePageWithErrorMsg(errorMsg);
+                                        presentHomePageWithErrorMsg(errorMsg);
                                     }
                                 });
                         } else {
                             //查無此 slug，重新導向至首頁。
                             const errorMsg = terms.cannotFindAnyCategoryCorrespondingToGivenPath(router.lastRouteResolved().url)
                                             +terms.thereforeTheHomePageIsPresentedToYou;
-                            displayHomePageWithErrorMsg(errorMsg);
+                            presentHomePageWithErrorMsg(errorMsg);
                         }
                     })
                     .catch(error => {
@@ -387,18 +389,18 @@ export const routeHandlerOfCategory = (params) => {
                         console.log(error.response);
                         const errorMsg = terms.didNotSuccessfullyGetTheCategoryCorrespondingToGivenPath(router.lastRouteResolved().url)
                                         +terms.thereforeTheHomePageIsPresentedToYou;
-                        displayHomePageWithErrorMsg(errorMsg);
+                        presentHomePageWithErrorMsg(errorMsg);
                     });
                 }
           }
         } else {
             //沒有提供分類名稱，呈現首頁並提示沒有對應此路徑的內容。
             const errorMsg = generalTerms.systemDoesNotServeContentCorrespondingToProvidedPath(router.lastRouteResolved().url);
-            displayHomePageWithErrorMsg(errorMsg);
+            presentHomePageWithErrorMsg(errorMsg);
         }
     } else {
         //有空的路徑階層 => 路徑格式不正確，呈現首頁並提示路徑格式不正確
         const errorMsg = terms.invalidPathForArchiveOfCategory(router.lastRouteResolved().url);
-        displayHomePageWithErrorMsg(errorMsg);
+        presentHomePageWithErrorMsg(errorMsg);
     }
 };
