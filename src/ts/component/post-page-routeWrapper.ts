@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { renderPost, routeEventHandlers as routeEventHandlersOfPost, createResultHandlerOfSinglePostFetching } from './post/routeHandler';
+import { routeHandlerOfPost, routeEventHandlersOfPost, createResultHandlerOfSinglePostFetching } from './post/routeHandler';
 import { routeHandlerOfPage, routeEventHandlersOfPage, createResultHandlerOfPageFetching } from './page/routeHandler';
 import { renderHomePage, routeEventHandlers as routeEventHandlerOfHome, queryParametersOfHome } from './home/routeHandler';
 import { isNotBlank } from '../service/validator';
@@ -64,7 +64,7 @@ const searchAndSetTheTypeOfPublication = (slug:string):Promise<void> => {
                     .then(createResultHandlerOfSinglePostFetching({ 
                                 doIfResultIsNotEmpty:() => {
                                     routeEventHandler = routeEventHandlersOfPost;
-                                    routeHandler = renderPost;
+                                    routeHandler = routeHandlerOfPost;
                                     cancelTokenOfPageFetching.cancel();
                                 }
                             })
@@ -111,7 +111,7 @@ export const generalHooksForPostAndPage = {
         new Promise<TypeOfContent>((resolve) => {
             if (Array.isArray(window.wp.completePosts)) {
                 routeEventHandler = routeEventHandlersOfPost;
-                routeHandler = renderPost;
+                routeHandler = routeHandlerOfPost;
                 resolve();
             } else if (Array.isArray(window.wp.completePages)) {
                 routeEventHandler = routeEventHandlersOfPage;
@@ -122,7 +122,7 @@ export const generalHooksForPostAndPage = {
                     switch (registryOfPostAndPage[params.slug]) {
                         case TypeOfContent.Post:
                             routeEventHandler = routeEventHandlersOfPost;
-                            routeHandler = renderPost;
+                            routeHandler = routeHandlerOfPost;
                             resolve();
                             break;
                         case TypeOfContent.Page:

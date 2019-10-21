@@ -1,7 +1,6 @@
 /// <reference path="../../model/global-vars.d.ts"/>
 import {reactRoot} from '../../index';
 import {router} from '../../service/router';
-import { navigateToHomeWithErrorMessage } from '../../index';
 import {Post} from '../../model/posts';
 import { fetchPosts, ConfigurationOfFetching } from '../../service/post-fetcher';
 import { isNotBlank, isFunc, isObject } from '../../service/validator';
@@ -14,10 +13,12 @@ import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import * as terms from '../template/terms';
 import PageTitle from '../page-title';
 import { ResultOfFetching } from '../../model/general-types';
+import { renderHomePage, routeEventHandlers as routeEventHandlersOfHome, queryParametersOfHome } from '../home/routeHandler';
 
 let postShouldBeRender:Post = null;
+let isProgressAbnormal:boolean = false;
 
-export function renderPost() {
+const defaultRouteHandler = () => {
     addTypeOfPostOrPage(postShouldBeRender.slug, postShouldBeRender.type);
     if (postShouldBeRender != null) {
         ReactDOM.render(
@@ -36,6 +37,16 @@ export function renderPost() {
         因此只在postShouldBeRender 存在的情況下去產生畫面，其他狀況就讓它過去。
     */
 }
+
+let renderHomePageWithErrorMsg = null;
+
+export let routeHandlerOfPost = () => {
+    if (isProgressAbnormal && isFunc(renderHomePageWithErrorMsg)) {
+        renderHomePageWithErrorMsg();
+    } else {
+        defaultRouteHandler();
+    }
+};
 
 export const createResultHandlerOfSinglePostFetching = (
                 cb:{ doIfResultIsNotEmpty?:(result:ResultOfFetching<Post>) => void,
@@ -58,13 +69,21 @@ export const createResultHandlerOfSinglePostFetching = (
     };
 }
 
+const prepareToPresentHomePageWithErrorMessage = (done, errorMsg:string) => {
+    isProgressAbnormal = true;
+    renderHomePageWithErrorMsg = () => {
+        const query = `${queryParametersOfHome.ERROR_MSG}=${errorMsg}`
+        renderHomePage(query);
+    }
+    routeEventHandlersOfHome.before(done);
+}
+
 /*
   實驗發現 wordpress 的 rest api 沒有引入文章、專頁的分頁功能。
   當使用者發送請求給伺服器時，伺服器會一口氣回傳整篇文章…包含文章裡面的分頁點。
   因此既然我要採用非同步請求取得文章，那這個分頁功能就無法完整實作，乾脆就不採用分頁機制囉。
 */
-
-export const routeEventHandlers = {
+export const routeEventHandlersOfPost = {
     before: function (done, params) {
 
         postShouldBeRender = null;
@@ -106,22 +125,34 @@ export const routeEventHandlers = {
                                 doIfResultIsNotEmpty:() => { done(); },
                                 doIfResultIsEmpty:()=> {
                                     /* 查無文章時，導向首頁並通報異常。 */
-                                    navigateToHomeWithErrorMessage(`${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
+                                    prepareToPresentHomePageWithErrorMessage(done,
+                                        `${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
                                 }
                             })
                     )
                     .catch(() => {
-                        navigateToHomeWithErrorMessage(terms.failedToLoadThePage(router.lastRouteResolved().url));
+                        prepareToPresentHomePageWithErrorMessage(done, terms.failedToLoadThePage(router.lastRouteResolved().url));
                     });
             }
         } else {
             /* 既沒有從伺服器來的文章，又沒有客戶端要請求的文章匿稱時，導向首頁並通報異常。
             */
-            navigateToHomeWithErrorMessage(`${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
+            prepareToPresentHomePageWithErrorMessage(done, `${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
         }
     },
-    leave: function() {
-        //移除已配置的資源
-        postShouldBeRender = null;
+    after: () => {
+        if (isProgressAbnormal && isFunc(routeEventHandlersOfHome.after)) {
+            routeEventHandlersOfHome.after();
+        }
+    },
+    leave: () => {
+        if (isProgressAbnormal  && isFunc(routeEventHandlersOfHome.after)) {
+            routeEventHandlersOfHome.leave();
+        } else {
+            //移除已配置的資源
+            postShouldBeRender = null;
+        }
+        renderHomePageWithErrorMsg = null;
+        isProgressAbnormal = false;
     }
 };
