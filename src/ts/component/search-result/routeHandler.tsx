@@ -1,5 +1,4 @@
 import { router } from '../../service/router';
-import { navigateToHomeWithErrorMessage } from '../../index';
 import { getPagination, getBaseUrl, defaultEndSize, defaultMidSize } from '../../model/pagination';
 import { reactRoot } from '../../index';
 import * as React from 'react';
@@ -103,34 +102,28 @@ function fetchCategoriesAndHandleResult(config:ConfigurationOfCategoriesFetching
 }
 
 const onPageOfFoundCategoriesChanged:PageClickedHandler = (page:number):void => {
-    if (resultOfSearch && resultOfSearch.categories.pagination) {
-        const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
-        if (record.categories.pageContent[page]) {
-            //快取中有紀錄，從裡面拿資料
-            loadFoundCategoriesFromCache(record, page);
-            renderResultOfSearch();
-        } else {
-            fetchCategoriesAndHandleResult({
-                page:page,
-                includeParent:false,
-                per_page:resultOfSearch.categories.pagination.itemsPerPage,
-                search:resultOfSearch.query
-            })
-            .catch(() => {
-                /* 將此頁內容標記為有缺漏，讓畫面元件呈現合適的內容給使用者
-                 */
-                resultOfSearch.categories.pageContent = null;
-            })
-            .finally(() => {
-                renderResultOfSearch();
-            });
-        }
+    const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
+    if (record.categories.pageContent[page]) {
+        //快取中有紀錄，從裡面拿資料
+        loadFoundCategoriesFromCache(record, page);
+        renderResultOfSearch();
     } else {
-        /*
-          狀態異常，導向首頁並說明狀況
-        */
-        navigateToHomeWithErrorMessage(terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.category));
+        fetchCategoriesAndHandleResult({
+            page:page,
+            includeParent:false,
+            per_page:resultOfSearch.categories.pagination.itemsPerPage,
+            search:resultOfSearch.query
+        })
+        .catch(() => {
+            /* 將此頁內容標記為有缺漏，讓畫面元件呈現合適的內容給使用者
+             */
+            resultOfSearch.categories.pageContent = null;
+        })
+        .finally(() => {
+            renderResultOfSearch();
+        });
     }
+
 }
 
 function loadFoundTagsFromCache(record:CacheRecordOfResultOfSearch, page:number):void {
@@ -207,31 +200,24 @@ function fetchTagsAndHandleResult(config:ConfigurationOfTagFetching):Promise<Res
 }
 
 const onPageOfFoundTagsChanged:PageClickedHandler = (page:number):void => {
-    if (resultOfSearch && resultOfSearch.tags.pagination) {
-        const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
-        if (record.tags.pageContent[page]) {
-            //快取中有紀錄，從裡面拿資料
-            loadFoundTagsFromCache(record, page);
-        } else {
-            fetchTagsAndHandleResult({
-                page:page,
-                per_page:resultOfSearch.tags.pagination.itemsPerPage,
-                search:resultOfSearch.query
-            })
-            .catch(() => {
-                /* 將此頁內容標記為有缺漏，讓畫面元件呈現合適的內容給使用者
-                 */
-                resultOfSearch.tags.pageContent = null;
-            })
-            .finally(() => {
-                renderResultOfSearch();
-            });
-        }
+    const record = getRecord(TypesOfCachedItem.Search, resultOfSearch.query);
+    if (record.tags.pageContent[page]) {
+        //快取中有紀錄，從裡面拿資料
+        loadFoundTagsFromCache(record, page);
     } else {
-        /*
-          狀態異常，導向首頁並說明狀況
-        */
-        navigateToHomeWithErrorMessage(terms.paginationOfTaxonomiesAreMalfunctioning(terms.Taxonomy.tag));
+        fetchTagsAndHandleResult({
+            page:page,
+            per_page:resultOfSearch.tags.pagination.itemsPerPage,
+            search:resultOfSearch.query
+        })
+        .catch(() => {
+            /* 將此頁內容標記為有缺漏，讓畫面元件呈現合適的內容給使用者
+             */
+            resultOfSearch.tags.pageContent = null;
+        })
+        .finally(() => {
+            renderResultOfSearch();
+        });
     }
 }
 
