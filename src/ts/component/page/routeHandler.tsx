@@ -6,16 +6,17 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import GenericPage from './generic';
 import { fetchPages, ConfigurationOfFetching } from '../../service/page-fetcher';
-import { navigateToHomeWithErrorMessage } from '../../index';
 import { TypesOfCachedItem, addRecord, getRecord } from '../../service/cache-of-pagination';
 import { addTypeOfPostOrPage } from '../post-page-routeWrapper';
 import * as terms from '../template/terms';
 import PageTitle from '../page-title';
 import { ResultOfFetching } from '../../model/general-types';
+import { renderHomePage, routeEventHandlers as routeEventHandlersOfHome, queryParametersOfHome } from '../home/routeHandler';
 
 let pageShouldBeRendered:Page = null;
+let isProgressAbnormal:boolean = false;
 
-export function renderPage() {
+const defaultRouteHandler = () => {
     addTypeOfPostOrPage(pageShouldBeRendered.slug, pageShouldBeRendered.type);
     if (pageShouldBeRendered != null) {
         ReactDOM.render(
@@ -34,6 +35,16 @@ export function renderPage() {
         因此只在 pageShouldBeRendered 存在的情況下去產生畫面，其他狀況就讓它過去。
     */
 }
+
+let renderHomePageWithErrorMsg = null;
+
+export let routeHandlerOfPage = () => {
+    if (isProgressAbnormal && isFunc(renderHomePageWithErrorMsg)) {
+        renderHomePageWithErrorMsg();
+    } else {
+        defaultRouteHandler();
+    }
+};
 
 export const createResultHandlerOfPageFetching = (
                 cb:{ doIfResultIsNotEmpty?:(result:ResultOfFetching<Page>) => void,
@@ -56,13 +67,21 @@ export const createResultHandlerOfPageFetching = (
     };
 }
 
+const prepareToPresentHomePageWithErrorMessage = (done, errorMsg:string) => {
+    isProgressAbnormal = true;
+    renderHomePageWithErrorMsg = () => {
+        const query = `${queryParametersOfHome.ERROR_MSG}=${errorMsg}`
+        renderHomePage(query);
+    }
+    routeEventHandlersOfHome.before(done);
+}
+
 /*
   實驗發現 wordpress 的 rest api 沒有引入文章、專頁的分頁功能。
   當使用者發送請求給伺服器時，伺服器會一口氣回傳整篇文章…包含文章裡面的分頁點。
   因此既然我要採用非同步請求取得文章，那這個分頁功能就無法完整實作，乾脆就不採用分頁機制囉。
 */
-
-export const routeEventHandlers = {
+export const routeEventHandlersOfPage = {
     before: function (done, params) {
 
         pageShouldBeRendered = null;
@@ -76,8 +95,11 @@ export const routeEventHandlers = {
             delete window.wp.completePages;
             delete window.wp.pagination;
             done();
-        } else if (isNotBlank(params.slug)) {//抓取文章
-
+        } else {//需要抓取文章
+            /*
+                因為 post-slug wrapper 會先檢查 slug 是否為空，所以這邊不需要再檢查。
+                如果頁面內容不是跟隨網頁來，那這裡就一定有 slug。
+            */
             const record = getRecord(TypesOfCachedItem.Page, params.slug);
             if (record) {
                 pageShouldBeRendered = record;
@@ -95,23 +117,32 @@ export const routeEventHandlers = {
                     .then(createResultHandlerOfPageFetching({
                                 doIfResultIsNotEmpty:() => { done(); },
                                 doIfResultIsEmpty:() => {
-                                    /* 查無文章時，導向首頁並通報異常。 */
-                                    navigateToHomeWithErrorMessage(`${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
+                                    /* 查無文章時，呈現首頁並通報異常。 */
+                                    prepareToPresentHomePageWithErrorMessage(done,
+                                        `${terms.thePublicationYouArelookingForDoesNotExist(router.lastRouteResolved().url)}${terms.thereforeYouWillBeRedirectToTheHomePage}`)
                                 }
                             })
                     )
                     .catch(() => {
-                        navigateToHomeWithErrorMessage(terms.failedToLoadThePage(router.lastRouteResolved().url));
-                    })
+                        prepareToPresentHomePageWithErrorMessage(done,
+                            terms.failedToLoadThePage(router.lastRouteResolved().url))
+                    });
             }
-        } else {
-            /* 既沒有從伺服器來的文章，又沒有客戶端要請求的文章匿稱時，導向首頁並通報異常。
-            */
-            navigateToHomeWithErrorMessage(`${terms.neitherTheDataNorTheSlugOfPublicationIsAvailable}${terms.thereforeYouWillBeRedirectToTheHomePage}`);
         }
     },
-    leave: function() {
-        //移除已配置的資源
-        pageShouldBeRendered = null;
+    after: () => {
+        if (isProgressAbnormal && isFunc(routeEventHandlersOfHome.after)) {
+            routeEventHandlersOfHome.after();
+        }
+    },
+    leave: () => {
+        if (isProgressAbnormal  && isFunc(routeEventHandlersOfHome.after)) {
+            routeEventHandlersOfHome.leave();
+        } else {
+            //移除已配置的資源
+            pageShouldBeRendered = null;
+        }
+        renderHomePageWithErrorMsg = null;
+        isProgressAbnormal = false;
     }
 };

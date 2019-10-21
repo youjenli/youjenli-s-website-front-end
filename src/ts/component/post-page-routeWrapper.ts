@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { renderPost, routeEventHandlers as routeEventHandlersOfPost, createResultHandlerOfSinglePostFetching } from './post/routeHandler';
-import { renderPage, routeEventHandlers as routeEventHandlersOfPage, createResultHandlerOfPageFetching } from './page/routeHandler';
+import { routeHandlerOfPage, routeEventHandlersOfPage, createResultHandlerOfPageFetching } from './page/routeHandler';
 import { renderHomePage, routeEventHandlers as routeEventHandlerOfHome, queryParametersOfHome } from './home/routeHandler';
 import { isNotBlank } from '../service/validator';
 import { TypeOfContent } from '../model/general-types';
@@ -82,7 +82,7 @@ const searchAndSetTheTypeOfPublication = (slug:string):Promise<void> => {
                     .then(createResultHandlerOfPageFetching({
                                 doIfResultIsNotEmpty:() => {
                                     routeEventHandler = routeEventHandlersOfPage;
-                                    routeHandler = renderPage;
+                                    routeHandler = routeHandlerOfPage;
                                     cancelTokenOfPostFetching.cancel();
                                 }
                             })
@@ -115,7 +115,7 @@ export const generalHooksForPostAndPage = {
                 resolve();
             } else if (Array.isArray(window.wp.completePages)) {
                 routeEventHandler = routeEventHandlersOfPage;
-                routeHandler = renderPage;
+                routeHandler = routeHandlerOfPage;
                 resolve();
             } else if (isNotBlank(params.slug)) {
                 if (isNotBlank(registryOfPostAndPage[params.slug])) {
@@ -127,7 +127,7 @@ export const generalHooksForPostAndPage = {
                             break;
                         case TypeOfContent.Page:
                             routeEventHandler = routeEventHandlersOfPage;
-                            routeHandler = renderPage;
+                            routeHandler = routeHandlerOfPage;
                             resolve();
                             break;
                         default://有 slug 的註冊紀錄，但內容型態不正確，則再次查詢特定文章或頁面。
