@@ -1,6 +1,8 @@
 const gulp = require('gulp');
-const del = require('del');
 const clean = require('gulp-clean');
+const tar = require('gulp-tar');
+const gzip = require('gulp-gzip');
+const GulpSSH = require('gulp-ssh');
 const browserify = require("browserify");
 const source = require('vinyl-source-stream');
 const tsify = require("tsify");
@@ -16,63 +18,61 @@ const flatten = require('gulp-flatten');
   但我還是選用它，原因是 gulp-template 的說明簡單易懂，而且剛好可以簡單的解決我的問題。
 */
 const template = require('gulp-template');
+const FtpClient = require('ftp');
+const fsPromises = require('fs').promises;
 const dateFormat = require('dateformat');
+const del = require('del');
 /*
   因為 Linux 上面要安裝其他套件才能解壓縮 zip 檔，所以後來改用 tar 和 gz 來封裝場景。
 */
-const tar = require('gulp-tar');
-const untar = require('gulp-untar');
-const gzip = require('gulp-gzip');
-const gunzip = require('gulp-gunzip');
-const GulpSSH = require('gulp-ssh');
 const path = require('path');
+const upath = require('upath');
 const _ = require('lodash');
 
+const buildSettings = require('./build-settings');
 const srcRoot = path.join(__dirname, 'src');
 const distRoot = path.join(__dirname, 'dist'); //輸出建置成品的路徑
+const pathOfNewArchives = path.join(__dirname, 'archives');//存放場景壓檔案的目錄
 const jsBundleName = 'index';
-const jsArtifacts = [`**/${jsBundleName}.js`, `**/${jsBundleName}.js.map`];
-const nameOfhtmlSrcFile = ['**/*.php', '**/*.html'];
+const patternsOfHtmlSrcFile = ['**/*.php', '**/*.html'];
 const cssArtifacts = ['**/*.css', '**/*.css.map'];
+const jsArtifacts = [`**/${jsBundleName}.js`, `**/${jsBundleName}.js.map`];
 const nameOfImgAssets = ['*.png', '*.svg', '*.jpeg'].map(filePattern => path.join('img', filePattern));
-
-const buildSettings = require('./build-settings');
-const deploymentConfig = _.isPlainObject(buildSettings.deploy) ? buildSettings.deploy : {} ;
-const prefixOfArchive = `wp-${deploymentConfig.nameOfTheme ? deploymentConfig.nameOfTheme : 'youjenli' }-theme`;
+const prefixOfArchive = `wp-${buildSettings.theme.name ? buildSettings.theme.name : 'youjenli' }-theme`;
 
 function removeHtmlArtifact() {
     return gulp.src(
-                    nameOfhtmlSrcFile.map(filePattern => path.join(distRoot, filePattern)), {read:false})
+                    patternsOfHtmlSrcFile.map(filePattern => path.join(distRoot, filePattern)), {read:false})
                 .pipe(clean());
 }
+
 function removeJSArtifact() {
     return gulp.src(
                     jsArtifacts.map(filePattern => path.join(distRoot, filePattern)), {read:false})
                 .pipe(clean());
 }
 
-const removeCSSArtifactTask = gulp.series(function removeCSSArtifact(){
+function removeCSSArtifact(){
     return gulp.src(cssArtifacts.map(filePattern => path.join(distRoot, filePattern)), {read:false})
                 .pipe(clean());
-});
+}
 
 function removeImgArtifact() {
     return gulp.src(nameOfImgAssets.map(srcFiles => path.join(distRoot, srcFiles)), {
                         read:false,
-                         //註：加入 allowEmpty 以免 gulp 因為讀不到目錄而報錯
-                         allowEmpty:true
+                        //註：加入 allowEmpty 以免 gulp 因為讀不到目錄而報錯
+                        allowEmpty:true
                     })
                 .pipe(clean());
 }
 
-//清空輸出打包成品的資料夾
-const cleanTask = gulp.series(removeHtmlArtifact, removeJSArtifact, removeCSSArtifactTask, removeImgArtifact);
-gulp.task('clean', cleanTask);
+gulp.task('cleanArchives', function cleanArchives() {
+        return gulp.src(upath.join(pathOfNewArchives, `${prefixOfArchive}*.tar.gz`), {read:false})
+                   .pipe(clean());
+});
 
-gulp.task('cleanArchives', gulp.series(function cleanArchivesTask(){
-    return gulp.src(path.join(distRoot, `${prefixOfArchive}*.zip`), {read:false})
-                .pipe(clean());
-}));
+//清空輸出打包成品的資料夾
+gulp.task('clean', gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeImgArtifact, removeJSArtifact));
 
 const tsEntryFiles = ['src/ts/index.tsx'];
 let tsConfig = null;
@@ -136,7 +136,7 @@ function transpileTS() {
                              min:'.js'
                          }
                      }))
-                     .pipe(gulp.dest(distRoot)); 
+                     .pipe(gulp.dest(distRoot));
     } else {
         /* 
           如果要建置開發環境的場景，那就輸出 sourcemap。
@@ -203,22 +203,21 @@ function transpileSCSS() {
     }
 }
 
-const prepareCSSTask = gulp.series(removeCSSArtifactTask, transpileSCSS);
+const prepareCSSTask = gulp.series(removeCSSArtifact, transpileSCSS);
 gulp.task('prepareCSS', prepareCSSTask);
 
 const imgSrcFiles = nameOfImgAssets.map((img) => {
-    return path.join('src', img);
+    return path.join(srcRoot, img);
 });
 const prepareImgTask = gulp.series(removeImgArtifact, 
     function copyImgs() {
-        return gulp.src(imgSrcFiles, { base:'src' })
+        return gulp.src(imgSrcFiles, { base:srcRoot })
                 .pipe(gulp.dest(distRoot));
     });
 gulp.task('prepareImg', prepareImgTask);
 
 const htmlSrcRoot = path.join(srcRoot, 'html');
-
-const pathOfHtmlSrcFiles = nameOfhtmlSrcFile.map(filePattern => path.join(htmlSrcRoot, filePattern));
+const pathOfHtmlSrcFiles = ['**/*.php', '**/*.html'].map(filePattern => path.join(htmlSrcRoot, filePattern));
 function copyHtmlFilesTask(){
     /*
       這邊之所以要排除 general-header.php 的原因是我們稍後要根據建置模式產生對應的樣板內容
@@ -251,121 +250,198 @@ gulp.task('prepareHtml', prepareHtmlTask);
 
 const buildTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask);
 gulp.task('build', buildTask);
+gulp.task('default', buildTask);
 
-let nameOfArchive = null;
+function notifyUserThatTheDeploymentTaskWillNotDoAnything() {
+    console.log('Therefore a function that does nothing will be create for deployment task instead.');
+}
 
-function packArtifactTask() {
-    const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
-    nameOfArchive = `${prefixOfArchive}-${createDate}.tar.gz`;
+function doNothing(done){ done(); }
 
-    const itemsToArchive = ['**/*.php'].concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
-                        .map(filePattern => path.join(distRoot, filePattern));
+function createTaskToDeployTheme(distRoot) {
+    const deploymentConfig = _.isObjectLike(buildSettings.deploy) ? buildSettings.deploy : {};
+    //先檢查參數是否正確
+    if (!_.isString(deploymentConfig.path)) {
+        console.log('Target path is a mandatory setting for deployment task.');
+        notifyUserThatTheDeploymentTaskWillNotDoAnything();
+        return doNothing;
+    }
 
-    return gulp.src(itemsToArchive, {base:distRoot})
-            .pipe(tar(nameOfArchive))
-            .pipe(gzip({
-                append:false
-                /*  
-                    gulp-gzip 套件預設會在檔案名稱後面加上 .gz，因此這裡要以 append 參數指定不增加副檔名，
-                    這樣才能確保 nameOfArchive 變數有完整的套件檔名給後面函式採用。
-                    https://www.npmjs.com/package/gulp-gzip
+    switch (deploymentConfig.method) {
+        case 'ssh':
+        case 'ftp':
+            if (!_.isObjectLike(deploymentConfig.host)) {
+                console.log(`Host of deployment is a mandatory setting for deployment task.`);
+                notifyUserThatTheDeploymentTaskWillNotDoAnything();
+                return doNothing;
+            }
+            if (!_.isString(deploymentConfig.host.name)) {
+                console.log(`Host name is a mandatory setting for deployment task.`);
+                notifyUserThatTheDeploymentTaskWillNotDoAnything();
+                return doNothing;
+            }
+        case 'ssh':
+            const itemsToArchive = patternsOfHtmlSrcFile.concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
+                                        .map(filePattern => path.join(distRoot, filePattern));
+            let nameOfNewArchive = null;
+            
+            const packArtifact = () => {
+                    const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
+                    nameOfNewArchive = `${prefixOfArchive}-${createDate}.tar.gz`;
+                    return gulp.src(itemsToArchive, {base:distRoot})
+                               .pipe(tar(nameOfNewArchive))
+                               .pipe(gzip({
+                                   append:false
+                                   /*  
+                                       gulp-gzip 套件預設會在檔案名稱後面加上 .gz，因此這裡要以 append 參數指定不增加副檔名，
+                                       這樣才能確保 nameOfArchive 變數有完整的套件檔名給後面函式採用。
+                                       https://www.npmjs.com/package/gulp-gzip
+                                   */
+                               }))
+                               .pipe(gulp.dest(pathOfNewArchives));
+            }
+            
+            /* 若部署目標不在本地，那就建立 SSH 連線。
+             */
+            const gulpSSH = new GulpSSH({
+                ignoreErrors:false,
+                sshConfig:Object.assign({
+                    host:deploymentConfig.host.name
+                }, deploymentConfig.host)
+            });
+            const transferArchiveToRemoteServer = () => {
+                return gulp.src(path.join(pathOfNewArchives, nameOfNewArchive), {base:pathOfNewArchives})
+                            .pipe(gulpSSH.dest('/tmp'));
+            }
+            const extractArchiveAndDeployTheWebsite = () => {
+                let pathOfTheme = `/tmp/${buildSettings.theme.name}`;
+                let pathOfArchiveOnRemoteHost = `/tmp/${nameOfNewArchive}`;
+                return gulpSSH.exec([
+                    `rm -rf ${pathOfTheme}`,
+                    `mkdir ${pathOfTheme}`,
+                    `tar -zxf ${pathOfArchiveOnRemoteHost} -C ${pathOfTheme}`,
+                    `sudo rm -rf ${deploymentConfig.path}/${buildSettings.theme.name}`,
+                    `sudo cp -r ${pathOfTheme} ${deploymentConfig.path}`,
+                    `rm -rf ${pathOfTheme}`,
+                    `rm ${pathOfArchiveOnRemoteHost}`
+                ]);
+            };
+            return gulp.series(packArtifact, transferArchiveToRemoteServer, extractArchiveAndDeployTheWebsite);
+        case 'ftp':
+            const uploadThemeFilesToRemoteServer = () => {
+                /*
+                    這邊 ftp 客戶端是採用 node-ftp 套件
+                    https://www.npmjs.com/package/ftp
+
+                    之所以沒有採用 promise-ftp 的原因是實作完成後發現程式使用的 event listener 竟然超出 node.js 上限，
+                    而且建置作業還會卡在部署步驟無法正常結束，因此最後以下列做法完成此功能。
                 */
-            }))
-            .pipe(gulp.dest(distRoot));
+                const settings = {
+                    host:deploymentConfig.host.name,
+                    port:deploymentConfig.host.port | 21,
+                    secure:true,
+                    secureOptions:{
+                        /*
+                            根據以下連結的資料可知新版 node.js 建立 TLS 連線時，會檢查網站的 ip 是否在伺服器安全憑證的 security alternative names 清單上面。
+                            然而，因為我的伺服器沒有綁固定 ip，而是交由主機服務商動態指派 ip 並藉由其 dns 服務引導我的網域之請求，
+                            所以伺服器 ip 極有可能不在主機服務商替我申請的 SSL 憑證上面。
+                            為解決這個問題，我們必須在 node-ftp 套件 connect 函式的參數欄位 secureOptions 設定 node.js TLS 套件的設定，
+                            指定 rejectUnauthorized 為 false，這樣才能正常連到遠端 ftp 伺服器。
+                            https://stackoverflow.com/questions/31861109/tls-what-exactly-does-rejectunauthorized-mean-for-me
+                        */
+                        rejectUnauthorized:false
+                    },
+                    user:deploymentConfig.host.username,
+                    password:deploymentConfig.host.password
+                };
+                const client = new FtpClient();
+                return new Promise((outerResolve, outerReject) => {
+                            client.on('ready', () => {
+                                const remoteThemeFolder = upath.join(deploymentConfig.path, buildSettings.theme.name);
+                                const transferFilesToRemoteRecursivelyAndSynchronized = (pathRelativeToThemeRoot) => {
+                                    const localPathOfFile = upath.join(distRoot, pathRelativeToThemeRoot);
+                                    const pathOfFileOnRemoteServer = upath.toUnix(upath.join(remoteThemeFolder, pathRelativeToThemeRoot));
+                                    return fsPromises.stat(localPathOfFile)
+                                              .catch(error => {
+                                                  const msg = `Can not get the stats of ${localPathOfFile}. ${error}`;
+                                                  throw msg;
+                                              })
+                                              .then(stat => {
+                                                    return new Promise((resolve, reject) => {
+                                                          if (stat.isDirectory()) {
+                                                            client.mkdir(pathOfFileOnRemoteServer, true, error => {
+                                                                if (error) {
+                                                                    const msg = `Can not create directory ${pathOfFileOnRemoteServer} on remote ftp server. ${error} `;
+                                                                    reject(msg);
+                                                                } else {
+                                                                    console.log(`Folder ${pathOfFileOnRemoteServer} on remote ftp server has been created successfully.`);
+                                                                    fsPromises.readdir(localPathOfFile)
+                                                                              .catch(error => {
+                                                                                  const msg = `Can not get the list of files in ${localPathOfFile}. ${error}`;
+                                                                                  reject(msg);
+                                                                              })
+                                                                              .then(files => {
+                                                                                  Promise.all(
+                                                                                             files.map(file => {
+                                                                                                 return transferFilesToRemoteRecursivelyAndSynchronized(upath.join(pathRelativeToThemeRoot, file));
+                                                                                             })
+                                                                                         ).then(() => {
+                                                                                             resolve();
+                                                                                         });
+                                                                              });
+                                                                }
+                                                            });
+                                                          } else {
+                                                              client.put(localPathOfFile, pathOfFileOnRemoteServer, error => {
+                                                                  if (error) {
+                                                                      const msg = `Can not transfer file ${localPathOfFile} to ${pathOfFileOnRemoteServer} on remote ftp server.`;
+                                                                      reject(msg);
+                                                                  } else {
+                                                                      console.log(`File ${localPathOfFile} has been successfully transfered to ${pathOfFileOnRemoteServer} on remote ftp server.`);
+                                                                      resolve();
+                                                                  }
+                                                              });
+                                                          }
+                                                    });
+                                              });
+                                };
+                                transferFilesToRemoteRecursivelyAndSynchronized('.')
+                                    .finally(() => {
+                                        client.end();
+                                    })
+                                    .then(() => {
+                                        outerResolve();
+                                    })
+                                    .catch(error => {
+                                        const msg = `Fail to transfer your theme to remote ftp server. Root cause: ${error}`;
+                                        outerReject(msg);
+                                    });
+                            });
+                            client.on('error', error => {
+                                const msg = `Can not connect to remote ftp server, error code ${error}. Connection settings : ${settings}`;
+                                outerReject(msg);
+                            })
+                            client.connect(settings);
+                        });
+            }
+            return gulp.series(uploadThemeFilesToRemoteServer);
+        case 'copy':
+            return function copyArtifactsToLocalPath(){
+                       /* 若部署目標是本地端的目錄，那直接解壓縮場景檔到目的地即可。 */
+                       const destPath = upath.join(deploymentConfig.path, buildSettings.theme.name);
+                       return gulp.src(upath.join(distRoot, '*'), {base:distRoot})
+                                  .pipe(gulp.dest(destPath));
+                   };
+        default:
+            //缺少重要設定，直接拋出異常。
+            console.log('The method specified for deployment can not be recognized.');
+            notifyUserThatTheDeploymentTaskWillNotDoAnything();
+            return doNothing;
+    }
 }
 
-const archiveTask = gulp.series(buildTask, packArtifactTask);
-gulp.task('archive', archiveTask);
-gulp.task('default', archiveTask);
-
-function generateDeployTask() {
-    let pathToArchive = null;
-    function validateDeploymentConfigTask(done) {
-        if (!deploymentConfig) {
-            throw new Error('Configuration of deployment does not exists!');
-        }
-        if (!deploymentConfig.target) {
-            throw new Error(`Target of deployment is a mandatory setting for deployment task.`);
-        }
-        if (!deploymentConfig.target.host) {
-            throw new Error(`Host name is a mandatory setting for deployment task.`);
-        }
-        if (!deploymentConfig.dest) {
-            throw new Error('Destination path of archive is a mandatory setting for deployment task.');
-        }
-        if (!deploymentConfig.nameOfTheme) {
-            throw new Error('The name of theme is a mandatory setting for deployment task.');
-        }
-        
-        if (deploymentConfig.archive) {
-            pathToArchive = deploymentConfig.archive;
-        }
-        /*
-            如果檢查發現這次建置作業的 nameOfArchive 變數有內容，這表示這次建置作業有打包套件，
-            因此就部署這個套件，不套用設定檔指定的套件。
-        */
-        if (nameOfArchive) {
-            pathToArchive = path.join(distRoot, nameOfArchive);
-        }
-        
-        if (!nameOfArchive) {
-            throw new Error('Did not found any archive that is ready for deploy.');
-        }
-        done();
-    }
-
-    let copyArchive = null, extractArchiveAndDeployToServer = null;
-    const targetName = deploymentConfig.target.host;
-    if (targetName == 'local') {
-        /* 若部署目標是本地端的目錄，那直接解壓縮場景檔到目的地即可。 */
-        const destPath = path.join(deploymentConfig.dest, deploymentConfig.nameOfTheme);
-        copyArchive = () => {
-            return del(destPath, {force:true})
-                    .then(() => {
-                        gulp.src(pathToArchive)
-                            .pipe(gunzip())
-                            .pipe(untar())
-                            .pipe(gulp.dest(destPath));
-                    });
-            /*註：
-                gulp 允許作業回傳 promise 通知它作業結束，不一定要呼叫它會提供的 done callback
-                https://gulpjs.com/docs/en/getting-started/async-completion
-            */
-        }
- 
-        extractArchiveAndDeployToServer  = function doNothing(done) { done(); }
-    } else {
-        /* 若部署目標不在本地，那就建立 SSH 連線。
-         */
-        const gulpSSH = new GulpSSH({
-            ignoreErrors:false,
-            sshConfig:deploymentConfig.target
-        });
-        copyArchive = () => {
-            return gulp.src(pathToArchive)
-                        .pipe(gulpSSH.dest('/tmp'));
-        }
-        
-        extractArchiveAndDeployToServer = function extractAndMoveTheWebsite() {
-            let pathOfTheme = `/tmp/${deploymentConfig.nameOfTheme}`;
-            let pathOfArchiveOnRemoteHost = `/tmp/${path.basename(pathToArchive)}`;
-            return gulpSSH.exec([
-                `rm -rf ${pathOfTheme}`,
-                `mkdir ${pathOfTheme}`,
-                `tar -zxf ${pathOfArchiveOnRemoteHost} -C ${pathOfTheme}`,
-                `sudo rm -rf ${deploymentConfig.dest}/${deploymentConfig.nameOfTheme}`,
-                `sudo cp -r ${pathOfTheme} ${deploymentConfig.dest}`,
-                `rm -rf ${pathOfTheme}`,
-                `rm ${pathOfArchiveOnRemoteHost}`
-            ]);
-        };
-    }
-
-    return gulp.series(validateDeploymentConfigTask, copyArchive, extractArchiveAndDeployToServer);
-}
-
-const deployTask = generateDeployTask();
-gulp.task('deploy', gulp.series(archiveTask, deployTask));
+const deployTask = createTaskToDeployTheme(distRoot);
+gulp.task('deploy', deployTask);
 
 const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
 const cssSrcFiles = ['src/css/**/*.css', 'src/css/**/*.scss'];
@@ -373,7 +449,6 @@ const cssSrcFiles = ['src/css/**/*.css', 'src/css/**/*.scss'];
   注意，雖然前面程式的路徑都已經改由 path 產生以便適應 windows 工作環境，
   但是因為這邊 gulp watch 只接受 unix-like 系統格式的路徑，所以這邊不需要透過 path 重新產生路徑。
   */
-
 function monitorSrcAndRebuildTask() {
         gulp.watch(pathOfHtmlSrcFiles, prepareHtmlTask),
         gulp.watch(cssSrcFiles, prepareCSSTask),
