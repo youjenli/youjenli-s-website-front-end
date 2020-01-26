@@ -1,5 +1,8 @@
 node_modules
 
+# vscode 的除錯設定檔
+/.vscode/launch.json
+
 #擺放建置成品的目錄
 /dist
 

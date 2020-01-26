@@ -1,7 +1,7 @@
 const fsPromises = require('fs').promises;
 const _ = require('lodash');
 
-const createVscodeLaunchConfigGenerator = (rootPathOfSite, themeName, pages) => {
+const createVscodeLaunchConfigGenerator = (urlOfWebsite, themeName, pages) => {
     return function createVscodeLaunchConfig() {
         const settings = {
             // Use IntelliSense to learn about possible attributes.
@@ -21,7 +21,7 @@ const createVscodeLaunchConfigGenerator = (rootPathOfSite, themeName, pages) => 
 
         const home = Object.assign({
             "name": `chrome 首頁`,
-            "url": `${rootPathOfSite}`
+            "url": `${urlOfWebsite}`
         }, templateOfConfig);
 
         settings['configurations'] = [home];
