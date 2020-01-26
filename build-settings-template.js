@@ -5,7 +5,12 @@ const os = require('os');
     之所以把所有建置設定集中在此檔案，原因是我一直無法簡單的餵代表建置模式的作業系統環境變數給 gulp 程序，
     這樣乾脆把所有設定整理到同一個檔案，統一在此調整設定。
 */
+const hostName = 'localhost';
 module.exports = {
+    theme:{
+        //場景的名稱
+        name:'helloworld'
+    },
     build:{
         css:{
             //是否透過 gulp 的 sourcemap 套件產生 css 的 source map。
@@ -62,10 +67,6 @@ module.exports = {
             }
         }
     },
-    theme:{
-        //場景的名稱
-        name:'helloworld'
-    },
     //專案的部署設定
     deploy:{
         /*
@@ -77,7 +78,7 @@ module.exports = {
         host:{
             /*要部署的目標伺服器。如果只是要透過檔案系統直接部署到本地其他資料夾，那 host 區塊可以不填任何參數，然後可以忽略其他參數。
             */ 
-            name:'localhost',
+            name:hostName,
             //若要部署到遠端伺服器才要填寫接下來四項參數
             port:22,//ssh 或 ftp 連線的埠號
             username:'account',//ssh 或 ftp 的帳號
@@ -119,5 +120,14 @@ module.exports = {
           若只是透過檔案系統部署到本地，那這裡就可以自由填寫相對或絕對路徑。
         */
         path:'/var/www/html/projectName/wp-content/themes',
+    },
+    launch:{
+        protocol:'https',//指定預設頁面的傳輸協定
+        pages:[//列出要產生 vscode 執行設定的網頁
+            {
+                name:'chrome 查無此資源',
+                url:`https://${hostName}/category/3345678`
+            }
+        ]
     }
 }
