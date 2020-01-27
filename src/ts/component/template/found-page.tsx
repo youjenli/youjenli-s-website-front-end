@@ -37,7 +37,7 @@ export class TemplateOfFoundPage extends React.Component<PropsOfTemplateOfFoundP
             styleOfPost['paddingRight'] = `${this.props.paddingLeftRight}px`;
         }
 
-        const month = formatMonthOrDayTo2Digits(this.props.page.date.getMonth());
+        const month = formatMonthOrDayTo2Digits(this.props.page.date.getMonth() + 1);
         const day = formatMonthOrDayTo2Digits(this.props.page.date.getDate());
 
         let styleOfDate = {};

@@ -52,7 +52,7 @@ interface DefaultRecentPostWithoutImgProps {
 
 export default class DefaultRecentPostWithoutImg extends React.Component<DefaultRecentPostWithoutImgProps> {
     render() {
-        const month = formatMonthOrDayTo2Digits(this.props.postInfoBar.titleBar.date.getMonth());
+        const month = formatMonthOrDayTo2Digits(this.props.postInfoBar.titleBar.date.getMonth() + 1);
         const day = formatMonthOrDayTo2Digits(this.props.postInfoBar.titleBar.date.getDate());
 
         let styleOfPost = {

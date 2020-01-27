@@ -133,12 +133,12 @@ export default class MobileHorizontalRecentPostWithoutImg extends React.Componen
             tags = (<span className="noData" key={0}>{terms.postWasNotTagged}</span>);
         }
         
-        const publishMonth = formatMonthOrDayTo2Digits(this.props.postInfoBar.date.getMonth());
+        const publishMonth = formatMonthOrDayTo2Digits(this.props.postInfoBar.date.getMonth() + 1);
         const publishDay = formatMonthOrDayTo2Digits(this.props.postInfoBar.date.getDate());
         
         let lastUpdate = null;
         if (this.props.postInfoBar.modified) {
-            const modifiedMonth = formatMonthOrDayTo2Digits(this.props.postInfoBar.modified.getMonth());
+            const modifiedMonth = formatMonthOrDayTo2Digits(this.props.postInfoBar.modified.getMonth() + 1);
             const modifiedDay = formatMonthOrDayTo2Digits(this.props.postInfoBar.modified.getDate());
             lastUpdate = `${terms.infoSeparater}${terms.lastModified} ${this.props.postInfoBar.modified.getFullYear()}/${modifiedMonth}/${modifiedDay}`;
         }

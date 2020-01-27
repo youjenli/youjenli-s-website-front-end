@@ -67,12 +67,12 @@ interface PropsOfPublishInfo {
 export class PublishInfo extends React.Component<PropsOfPublishInfo> {
 
     render() {
-        const publishMonth = formatMonthOrDayTo2Digits(this.props.date.getMonth());
+        const publishMonth = formatMonthOrDayTo2Digits(this.props.date.getMonth() + 1);
         const publishDay = formatMonthOrDayTo2Digits(this.props.date.getDate());
         
         let lastUpdate = null;
         if (this.props.modified !== this.props.date) {//若發佈日期和修改日期相同，則不顯示最後修改日期
-            const modifiedMonth = formatMonthOrDayTo2Digits(this.props.modified.getMonth());
+            const modifiedMonth = formatMonthOrDayTo2Digits(this.props.modified.getMonth() + 1);
             const modifiedDay = formatMonthOrDayTo2Digits(this.props.modified.getDate());
             lastUpdate = `${terms.clauseSeparater}${terms.lastModified} ${this.props.modified.getFullYear()}/${modifiedMonth}/${modifiedDay}`;
         }

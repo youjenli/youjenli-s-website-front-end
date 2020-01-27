@@ -44,7 +44,7 @@ export default class MobileRecentPostWithImg extends React.Component<PropsOfMobi
             classesOfTitle += ' blank';
         }
 
-        const month = formatMonthOrDayTo2Digits(this.props.date.getMonth());
+        const month = formatMonthOrDayTo2Digits(this.props.date.getMonth() + 1);
         const day = formatMonthOrDayTo2Digits(this.props.date.getDate());
 
         let styleOfPost = {
