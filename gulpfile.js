@@ -273,215 +273,211 @@ if (!_.isString(deploymentConfig.path)) {
     console.log('Therefore a function that does nothing will be create for the theme deployment task.');
     deployTask = doNothing;
 } else {
-    switch (deploymentConfig.method) {
-        case 'ssh':
-        case 'ftp':
+    const createDeployTask = () => {
+        if (deploymentConfig.method == 'ssh' || deploymentConfig.method == 'ftp') {
             if (!hostObjExists) {
                 console.log(`Host settings for the theme deployment task was not configured.`);
                 console.log('Therefore a function that does nothing will be create for the theme deployment task.');
-                deployTask = doNothing;
-                break;
+                return doNothing;
             }
             if (!hostNameExists) {
                 console.log(`Host name for the theme deployment task was not configured.`);
                 console.log('Therefore a function that does nothing will be create for the theme deployment task.');
-                deployTask = doNothing;
-                break;
+                return doNothing;
             }
-        case 'ssh':
-            const itemsToArchive = patternsOfHtmlSrcFile.concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
-                                                        .map(filePattern => path.join(distRoot, filePattern));
-            let nameOfNewArchive = null;
-            
-            const packArtifact = () => {
-                    const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
-                    nameOfNewArchive = `${prefixOfArchive}-${createDate}.tar.gz`;
-                    return gulp.src(itemsToArchive, {base:distRoot})
-                               .pipe(tar(nameOfNewArchive))
-                               .pipe(gzip({
-                                   append:false
-                                   /*  
-                                       gulp-gzip 套件預設會在檔案名稱後面加上 .gz，因此這裡要以 append 參數指定不增加副檔名，
-                                       這樣才能確保 nameOfArchive 變數有完整的套件檔名給後面函式採用。
-                                       https://www.npmjs.com/package/gulp-gzip
-                                   */
-                               }))
-                               .pipe(gulp.dest(pathOfNewArchives));
-            }
-            
-            /* 若部署目標不在本地，那就建立 SSH 連線。
-             */
-            const gulpSSH = new GulpSSH({
-                ignoreErrors:false,
-                sshConfig:Object.assign({
-                    host:deploymentConfig.host.name
-                }, deploymentConfig.host)
-            });
-            const transferArchiveToRemoteServer = () => {
-                return gulp.src(path.join(pathOfNewArchives, nameOfNewArchive), {base:pathOfNewArchives})
-                            .pipe(gulpSSH.dest('/tmp'));
-            }
-            const extractArchiveAndDeployTheWebsite = () => {
-                let pathOfTheme = `/tmp/${themeName}`;
-                let pathOfArchiveOnRemoteHost = `/tmp/${nameOfNewArchive}`;
-                return gulpSSH.exec([
-                    `rm -rf ${pathOfTheme}`,
-                    `mkdir ${pathOfTheme}`,
-                    `tar -zxf ${pathOfArchiveOnRemoteHost} -C ${pathOfTheme}`,
-                    `sudo rm -rf ${deploymentConfig.path}/${themeName}`,
-                    `sudo cp -r ${pathOfTheme} ${deploymentConfig.path}`,
-                    `rm -rf ${pathOfTheme}`,
-                    `rm ${pathOfArchiveOnRemoteHost}`
-                ]);
-            };
-            deployTask = gulp.series(packArtifact, transferArchiveToRemoteServer, extractArchiveAndDeployTheWebsite);
-            break;
-        case 'ftp':
-            const uploadThemeFilesToRemoteServer = () => {
-                /*
-                    這邊 ftp 客戶端是採用 node-ftp 套件
-                    https://www.npmjs.com/package/ftp
-    
-                    之所以沒有採用 promise-ftp 的原因是實作完成後發現程式使用的 event listener 竟然超出 node.js 上限，
-                    而且建置作業還會卡在部署步驟無法正常結束，因此最後以下列做法完成此功能。
-                */
-                const settings = {
-                    host:deploymentConfig.host.name,
-                    port:deploymentConfig.host.port | 21,
-                    secure:true,
-                    secureOptions:{
-                        /*
-                            根據以下連結的資料可知新版 node.js 建立 TLS 連線時，會檢查網站的 ip 是否在伺服器安全憑證的 security alternative names 清單上面。
-                            然而，因為我的伺服器沒有綁固定 ip，而是交由主機服務商動態指派 ip 並藉由其 dns 服務引導我的網域之請求，
-                            所以伺服器 ip 極有可能不在主機服務商替我申請的 SSL 憑證上面。
-                            為解決這個問題，我們必須在 node-ftp 套件 connect 函式的參數欄位 secureOptions 設定 node.js TLS 套件的設定，
-                            指定 rejectUnauthorized 為 false，這樣才能正常連到遠端 ftp 伺服器。
-                            https://stackoverflow.com/questions/31861109/tls-what-exactly-does-rejectunauthorized-mean-for-me
-                        */
-                        rejectUnauthorized:false
-                    },
-                    user:deploymentConfig.host.username,
-                    password:deploymentConfig.host.password
+        }
+        
+        switch (deploymentConfig.method) {
+            case 'ssh':
+                const itemsToArchive = patternsOfHtmlSrcFile.concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
+                                                            .map(filePattern => path.join(distRoot, filePattern));
+                let nameOfNewArchive = null;
+                
+                const packArtifact = () => {
+                        const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
+                        nameOfNewArchive = `${prefixOfArchive}-${createDate}.tar.gz`;
+                        return gulp.src(itemsToArchive, {base:distRoot})
+                                   .pipe(tar(nameOfNewArchive))
+                                   .pipe(gzip({
+                                       append:false
+                                       /*  
+                                           gulp-gzip 套件預設會在檔案名稱後面加上 .gz，因此這裡要以 append 參數指定不增加副檔名，
+                                           這樣才能確保 nameOfArchive 變數有完整的套件檔名給後面函式採用。
+                                           https://www.npmjs.com/package/gulp-gzip
+                                       */
+                                   }))
+                                   .pipe(gulp.dest(pathOfNewArchives));
+                }
+
+                const gulpSSH = new GulpSSH({
+                    ignoreErrors:false,
+                    sshConfig:Object.assign({
+                        host:deploymentConfig.host.name
+                    }, deploymentConfig.host)
+                });
+                const transferArchiveToRemoteServer = () => {
+                    return gulp.src(path.join(pathOfNewArchives, nameOfNewArchive), {base:pathOfNewArchives})
+                                .pipe(gulpSSH.dest('/tmp'));
+                }
+                const extractArchiveAndDeployTheWebsite = () => {
+                    let pathOfTheme = `/tmp/${themeName}`;
+                    let pathOfArchiveOnRemoteHost = `/tmp/${nameOfNewArchive}`;
+                    return gulpSSH.exec([
+                        `rm -rf ${pathOfTheme}`,
+                        `mkdir ${pathOfTheme}`,
+                        `tar -zxf ${pathOfArchiveOnRemoteHost} -C ${pathOfTheme}`,
+                        `sudo rm -rf ${deploymentConfig.path}/${themeName}`,
+                        `sudo cp -r ${pathOfTheme} ${deploymentConfig.path}`,
+                        `rm -rf ${pathOfTheme}`,
+                        `rm ${pathOfArchiveOnRemoteHost}`
+                    ]);
                 };
-                const client = new FtpClient();
-                return new Promise((outerResolve, outerReject) => {
-                            client.on('ready', () => {
-                                let remoteThemeFolder = upath.join(deploymentConfig.path, themeName);
-                                if (remoteThemeFolder.substring(0, 1) != '/') {
-                                    remoteThemeFolder = '/' + remoteThemeFolder;
-                                }
-                                /*
-                                    先透過 ftp 的 cwd 指令檢查要部署場景的目錄是否存在。
-                                    若存在的話就先刪除，接著再部署場景。
-                                */
-                                new Promise(resolve => {
-                                    client.cwd(remoteThemeFolder, error => {
-                                        if (error) {
-                                            //原本的目錄應該不存在，因此不需要刪除。
-                                            resolve();
-                                        } else {
-                                            console.log('The theme folder already exists. It will be deleted before deployment of the new theme.');
-                                            client.rmdir(remoteThemeFolder, true, error => {
-                                                if (error) {
-                                                    const msg = `Can not remove remote theme folder ${remoteThemeFolder} before deploy. ${error}`;
-                                                    client.end();
-                                                    outerReject(msg);
-                                                } else {
-                                                    console.log(`Successfully removed theme folder ${remoteThemeFolder} on the remote ftp server.`);
-                                                    resolve();
-                                                }
-                                            });
-                                        }
-                                    });
-                                }).then(() => {
-                                    const transferFilesToRemoteRecursivelyAndSynchronized = (pathRelativeToThemeRoot) => {
-                                        const localPathOfFile = upath.join(distRoot, pathRelativeToThemeRoot);
-                                        const pathOfFileOnRemoteServer = upath.toUnix(upath.join(remoteThemeFolder, pathRelativeToThemeRoot));
-                                        return fsPromises.stat(localPathOfFile)
-                                                         .then(stat => {
-                                                                return new Promise((resolve, reject) => {
-                                                                        if (stat.isDirectory()) {
-                                                                            client.mkdir(pathOfFileOnRemoteServer, true, error => {
-                                                                                if (error) {
-                                                                                    const msg = `Can not create directory ${pathOfFileOnRemoteServer} on the remote ftp server. ${error} `;
-                                                                                    reject(msg);
-                                                                                } else {
-                                                                                    console.log(`Folder ${pathOfFileOnRemoteServer} on the remote ftp server has been created successfully.`);
-                                                                                    fsPromises.readdir(localPathOfFile)
-                                                                                              .then(files => {
-                                                                                                  Promise.all(
-                                                                                                             files.map(file => {
-                                                                                                                 return transferFilesToRemoteRecursivelyAndSynchronized(upath.join(pathRelativeToThemeRoot, file));
-                                                                                                             })
-                                                                                                         ).then(() => {
-                                                                                                             resolve();
-                                                                                                         });
-                                                                                              })
-                                                                                              .catch(error => {
-                                                                                                  const msg = `Can not get the list of files in ${localPathOfFile}. ${error}`;
-                                                                                                  reject(msg);
-                                                                                              });
-                                                                                }
-                                                                            });
-                                                                        } else {
-                                                                            client.put(localPathOfFile, pathOfFileOnRemoteServer, error => {
-                                                                                if (error) {
-                                                                                    const msg = `Can not transfer file ${localPathOfFile} to ${pathOfFileOnRemoteServer} on the remote ftp server.`;
-                                                                                    reject(msg);
-                                                                                } else {
-                                                                                    console.log(`File ${localPathOfFile} has been successfully transfered to ${pathOfFileOnRemoteServer} on the remote ftp server.`);
-                                                                                    resolve();
-                                                                                }
-                                                                            });
-                                                                        }
-                                                                });
-                                                         })
-                                                         .catch(error => {
-                                                             const msg = `Can not get the stats of ${localPathOfFile}. ${error}`;
-                                                             throw msg;
-                                                         });
-                                    };
-                                    transferFilesToRemoteRecursivelyAndSynchronized('.')
-                                        .finally(() => {
-                                            client.end();
-                                        })
-                                        .then(() => {
-                                            outerResolve();
-                                        })
-                                        .catch(error => {
-                                            const msg = `Fail to transfer your theme to remote ftp server. Root cause: ${error}`;
-                                            outerReject(msg);
+                return gulp.series(packArtifact, transferArchiveToRemoteServer, extractArchiveAndDeployTheWebsite);
+            case 'ftp':
+                const uploadThemeFilesToRemoteServer = () => {
+                    /*
+                        這邊 ftp 客戶端是採用 node-ftp 套件
+                        https://www.npmjs.com/package/ftp
+        
+                        之所以沒有採用 promise-ftp 的原因是實作完成後發現程式使用的 event listener 竟然超出 node.js 上限，
+                        而且建置作業還會卡在部署步驟無法正常結束，因此最後以下列做法完成此功能。
+                    */
+                    const settings = {
+                        host:deploymentConfig.host.name,
+                        port:deploymentConfig.host.port | 21,
+                        secure:true,
+                        secureOptions:{
+                            /*
+                                根據以下連結的資料可知新版 node.js 建立 TLS 連線時，會檢查網站的 ip 是否在伺服器安全憑證的 security alternative names 清單上面。
+                                然而，因為我的伺服器沒有綁固定 ip，而是交由主機服務商動態指派 ip 並藉由其 dns 服務引導我的網域之請求，
+                                所以伺服器 ip 極有可能不在主機服務商替我申請的 SSL 憑證上面。
+                                為解決這個問題，我們必須在 node-ftp 套件 connect 函式的參數欄位 secureOptions 設定 node.js TLS 套件的設定，
+                                指定 rejectUnauthorized 為 false，這樣才能正常連到遠端 ftp 伺服器。
+                                https://stackoverflow.com/questions/31861109/tls-what-exactly-does-rejectunauthorized-mean-for-me
+                            */
+                            rejectUnauthorized:false
+                        },
+                        user:deploymentConfig.host.username,
+                        password:deploymentConfig.host.password
+                    };
+                    const client = new FtpClient();
+                    return new Promise((outerResolve, outerReject) => {
+                                client.on('ready', () => {
+                                    let remoteThemeFolder = upath.join(deploymentConfig.path, themeName);
+                                    if (remoteThemeFolder.substring(0, 1) != '/') {
+                                        remoteThemeFolder = '/' + remoteThemeFolder;
+                                    }
+                                    /*
+                                        先透過 ftp 的 cwd 指令檢查要部署場景的目錄是否存在。
+                                        若存在的話就先刪除，接著再部署場景。
+                                    */
+                                    new Promise(resolve => {
+                                        client.cwd(remoteThemeFolder, error => {
+                                            if (error) {
+                                                //原本的目錄應該不存在，因此不需要刪除。
+                                                resolve();
+                                            } else {
+                                                console.log('The theme folder already exists. It will be deleted before deployment of the new theme.');
+                                                client.rmdir(remoteThemeFolder, true, error => {
+                                                    if (error) {
+                                                        const msg = `Can not remove remote theme folder ${remoteThemeFolder} before deploy. ${error}`;
+                                                        client.end();
+                                                        outerReject(msg);
+                                                    } else {
+                                                        console.log(`Successfully removed theme folder ${remoteThemeFolder} on the remote ftp server.`);
+                                                        resolve();
+                                                    }
+                                                });
+                                            }
                                         });
-                                });//刪除目標資料匣之後的 then 函式
+                                    }).then(() => {
+                                        const transferFilesToRemoteRecursivelyAndSynchronized = (pathRelativeToThemeRoot) => {
+                                            const localPathOfFile = upath.join(distRoot, pathRelativeToThemeRoot);
+                                            const pathOfFileOnRemoteServer = upath.toUnix(upath.join(remoteThemeFolder, pathRelativeToThemeRoot));
+                                            return fsPromises.stat(localPathOfFile)
+                                                             .then(stat => {
+                                                                    return new Promise((resolve, reject) => {
+                                                                            if (stat.isDirectory()) {
+                                                                                client.mkdir(pathOfFileOnRemoteServer, true, error => {
+                                                                                    if (error) {
+                                                                                        const msg = `Can not create directory ${pathOfFileOnRemoteServer} on the remote ftp server. ${error} `;
+                                                                                        reject(msg);
+                                                                                    } else {
+                                                                                        console.log(`Folder ${pathOfFileOnRemoteServer} on the remote ftp server has been created successfully.`);
+                                                                                        fsPromises.readdir(localPathOfFile)
+                                                                                                  .then(files => {
+                                                                                                      Promise.all(
+                                                                                                                 files.map(file => {
+                                                                                                                     return transferFilesToRemoteRecursivelyAndSynchronized(upath.join(pathRelativeToThemeRoot, file));
+                                                                                                                 })
+                                                                                                             ).then(() => {
+                                                                                                                 resolve();
+                                                                                                             });
+                                                                                                  })
+                                                                                                  .catch(error => {
+                                                                                                      const msg = `Can not get the list of files in ${localPathOfFile}. ${error}`;
+                                                                                                      reject(msg);
+                                                                                                  });
+                                                                                    }
+                                                                                });
+                                                                            } else {
+                                                                                client.put(localPathOfFile, pathOfFileOnRemoteServer, error => {
+                                                                                    if (error) {
+                                                                                        const msg = `Can not transfer file ${localPathOfFile} to ${pathOfFileOnRemoteServer} on the remote ftp server.`;
+                                                                                        reject(msg);
+                                                                                    } else {
+                                                                                        console.log(`File ${localPathOfFile} has been successfully transfered to ${pathOfFileOnRemoteServer} on the remote ftp server.`);
+                                                                                        resolve();
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                    });
+                                                             })
+                                                             .catch(error => {
+                                                                 const msg = `Can not get the stats of ${localPathOfFile}. ${error}`;
+                                                                 throw msg;
+                                                             });
+                                        };
+                                        transferFilesToRemoteRecursivelyAndSynchronized('.')
+                                            .finally(() => {
+                                                client.end();
+                                            })
+                                            .then(() => {
+                                                outerResolve();
+                                            })
+                                            .catch(error => {
+                                                const msg = `Fail to transfer your theme to remote ftp server. Root cause: ${error}`;
+                                                outerReject(msg);
+                                            });
+                                    });//刪除目標資料匣之後的 then 函式
+                                });
+                                client.on('error', error => {
+                                    const msg = `Can not connect to remote ftp server, error code ${error}. Connection settings : ${settings}`;
+                                    outerReject(msg);
+                                })
+                                client.connect(settings);
                             });
-                            client.on('error', error => {
-                                const msg = `Can not connect to remote ftp server, error code ${error}. Connection settings : ${settings}`;
-                                outerReject(msg);
-                            })
-                            client.connect(settings);
-                        });
-            }
-            deployTask = gulp.series(uploadThemeFilesToRemoteServer);
-            break;
-        case 'copy':
-            deployTask = function copyArtifactsToLocalPath(){
-                /* 若部署目標是本地端的目錄，那直接解壓縮場景檔到目的地即可。 */
-                const destPath = upath.join(deploymentConfig.path, themeName);
-                return del(destPath)
-                         .then(() => {
-                             console.log(`Previous installation of theme in ${destPath} has been removed.`);
-                             gulp.src(upath.join(distRoot, '*'), {base:distRoot})
-                                 .pipe(gulp.dest(destPath));
-                         });
-            };
-            break;
-        default:
-            //缺少重要設定，直接拋出異常。
-            console.log('The method specified for deployment can not be recognized.');
-            console.log('Therefore a function that does nothing will be create for deployment task.');
-            deployTask = doNothing;
-            break;
+                }
+                return gulp.series(uploadThemeFilesToRemoteServer);
+            case 'copy':
+                return function copyArtifactsToLocalPath(){
+                    /* 若部署目標是本地端的目錄，那直接解壓縮場景檔到目的地即可。 */
+                    const destPath = upath.join(deploymentConfig.path, themeName);
+                    return del(destPath)
+                             .then(() => {
+                                 console.log(`Previous installation of theme in ${destPath} has been removed.`);
+                                 gulp.src(upath.join(distRoot, '*'), {base:distRoot})
+                                     .pipe(gulp.dest(destPath));
+                             });
+                };
+            default:
+                //缺少重要設定，直接拋出異常。
+                console.log('The method specified for deployment can not be recognized.');
+                console.log('Therefore a function that does nothing will be create for deployment task.');
+                return doNothing;
+        }
     }
+    deployTask = createDeployTask();
 }
 gulp.task('deploy', deployTask);
 
