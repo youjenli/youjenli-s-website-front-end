@@ -34,7 +34,14 @@ thumbnail:<?php echo json_encode($thumbnail); ?>,
 <?php endif; ?>
 <?php if ( !is_home() && !is_front_page() ) :
   $estimatedReadingTimes = get_post_meta($post->ID, $name_of_custom_field_estimatedReadingTimes, true);
-  if ( is_numeric( $estimatedReadingTimes ) ) : ?>
+  if ( is_numeric( $estimatedReadingTimes ) ) : 
+  /*
+    註：這裡有個奇怪的問題，那就是不管有沒有用 intval 處理 $estimatedReadingTimes 的值，
+    也不管後面是否用 json_encode 處理 $estimatedReadingTimes，
+    網頁都會拿到型態為字串的 estimatedReadingTimes，
+    因此後來前端乾脆直接產生介面上的閱讀時間而不像先前一樣先辨識文章 estimatedReadingTimes 屬性的型態再決定是否產生閱讀時間說明。
+  */
+  ?>
 estimatedReadingTimes:<?php echo json_encode( $estimatedReadingTimes ) ?>,
   <?php else: ?>
 estimatedReadingTimes:0,

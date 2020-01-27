@@ -31,7 +31,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
             tocElement.parentElement.removeChild(tocElement);
             const widthOfToc = maxWidthOfTitle * 0.382;
             const fontSizeOfTocItems = widthOfToc / 20;
-            const paddingLeftRightOfToc = fontSizeOfTocItems;        
+            const paddingLeftRightOfToc = fontSizeOfTocItems;
             const fontSizeOfTitleOfToc = (widthOfToc - 2 * fontSizeOfTocItems) / 16;
             toc = {
                 width:widthOfToc,
