@@ -227,8 +227,7 @@ export const routeEventHandlersOfTag = {
                     const config = {
                         slug:decodeURIComponent(slug)
                         /*
-                            注意，不曉得是 xmlhttprequest 或是 axios 設計的緣故，開發者不需要事先為查詢參數編碼，
-                            只要直接遞交參數內容給請求設定即可，因此這邊要先把來自伺服器或非同步請求的已編碼 slug 解碼。
+                            註：因為 navigo 不會將參數內容解碼，所以這邊要先將 slug 解碼，否則後續請求作業之參數會引用到亂碼。
                         */
                     }
                     fetchTags(config)

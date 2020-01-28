@@ -346,7 +346,11 @@ export const routeEventHandlers = {
             delete window.wp.pagination;
             done();
         } else {
-            let keyword = params['keyword'];
+            let keyword = decodeURIComponent(params['keyword']);
+            /*
+                註：因為 navigo 不會將參數內容解碼，所以這邊要先將查詢關鍵字解碼，
+                否則後續搜尋內容的請求會採用亂碼作為查詢詞。
+            */
             const record = getRecord(TypesOfCachedItem.Search, keyword);
             if (record) {
                 const tasksAwaitedToBeExecute = [];
