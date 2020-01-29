@@ -9,38 +9,81 @@ const createVscodeLaunchConfigGenerator = (urlOfWebsite, themeName, pages) => {
             // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
             version: "0.2.0"
         };
-        const templateOfConfig = {
-            "type": "chrome",
-            "request": "launch",
-            "pathMapping": {
+
+        const templateOfChromeConfig = {
+            type: "chrome",
+            request: "launch",
+            pathMapping: {
                 "/": "${workspaceFolder}",
                 [`/wp-content/themes/${themeName}/`]:"${workspaceFolder}"
             },
             "disableNetworkCache":true
         }
 
-        const home = Object.assign({
+        const templateOfFirefoxConfig = {
+            type: "firefox",
+            request:"launch",
+            reAttach: true,
+            pathMappings: [{
+                url:"/",
+                path: "${workspaceFolder}"
+            },{
+                url:`http://${urlOfWebsite}/wp-content/themes/${themeName}/`,
+                path: "${workspaceFolder}"
+            }]
+        }
+
+        let createLaunchConfigWithChrome = () => {};
+        let createLaunchConfigWithFirefox = () => {};
+        if (Array.isArray(pages)) {
+            createLaunchConfigWithChrome = () => {
+                pages.forEach(page => {
+                    if (_.isObjectLike(page)) {
+                        const pageName = page.name;
+                        const pageUrl = page.url;
+                        if (_.isString(pageName) && pageName != '' && _.isString(pageUrl) && pageName != '') {
+                            const launchSetting = Object.assign({
+                                "name": `chrome ${pageName}`,
+                                "url": pageUrl
+                            }, templateOfChromeConfig);
+                            settings['configurations'].push(launchSetting);
+                        }
+                    }
+                });
+            }
+
+            createLaunchConfigWithFirefox = () => {
+                pages.forEach(page => {
+                    if (_.isObjectLike(page)) {
+                        const pageName = page.name;
+                        const pageUrl = page.url;
+                        if (_.isString(pageName) && pageName != '' && _.isString(pageUrl) && pageName != '') {
+                            const launchSetting = Object.assign({
+                                "name": `Firefox ${pageName}`,
+                                "url": pageUrl
+                            }, templateOfFirefoxConfig);
+                            settings['configurations'].push(launchSetting);
+                        }
+                    }
+                });
+            }
+        }
+
+        const openHomeWithChrome = Object.assign({
             "name": `chrome 首頁`,
             "url": `${urlOfWebsite}`
-        }, templateOfConfig);
+        }, templateOfChromeConfig);
+        settings['configurations'] = [openHomeWithChrome];
+        createLaunchConfigWithChrome();
 
-        settings['configurations'] = [home];
+        const openHomeWithFirefox = Object.assign({
+            "name": "Firefox 首頁",
+            "url": `${urlOfWebsite}`
+        }, templateOfFirefoxConfig);
+        settings['configurations'].push(openHomeWithFirefox);
+        createLaunchConfigWithFirefox();
 
-        if (Array.isArray(pages)) {
-            pages.forEach(page => {
-                if (_.isObjectLike(page)) {
-                    const pageName = page.name;
-                    const pageUrl = page.url;
-                    if (_.isString(pageName) && pageName != '' && _.isString(pageUrl) && pageName != '') {
-                        const launchSetting = Object.assign({
-                            "name": `chrome ${pageName}`,
-                            "url": pageUrl
-                        }, templateOfConfig);
-                        settings['configurations'].push(launchSetting);
-                    }
-                }
-            });
-        }
+
         return new Promise((resolve, reject) => {
                     fsPromises.stat('./.vscode')
                               .then(stats => {
