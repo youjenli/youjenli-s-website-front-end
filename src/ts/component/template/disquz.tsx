@@ -51,15 +51,18 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
     }
     render() {
         if (this.shouldLoadForum) {
+            const styleOfDisquz = {
+                marginBottom:'2em'
+            }
             return (
                 <React.Fragment>
-                    <div id="disqus_thread"></div>
                     <noscript>
                         Please enable JavaScript to view the 
                         <a href="https://disqus.com/?ref_noscript" rel="nofollow">
                             comments powered by Disqus.
                         </a>
                     </noscript>
+                    <div id="disqus_thread" style={styleOfDisquz}></div>
                 </React.Fragment>
             );
         } else {
