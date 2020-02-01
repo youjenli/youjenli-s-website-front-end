@@ -1,3 +1,4 @@
+/// <reference path="../../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import * as terms from './terms';
 import { isNum } from '../../../service/validator';
@@ -50,7 +51,7 @@ export default class GreetingMessage extends React.Component<PropsOfGreetingMess
             style['fontSize'] = 0;
             return (
                 <div className="greetings" style={style}>
-                    <img src="img/hello.png" style={styleOfLine} alt="您好~" /><img src="img/i-am-youjenli.png" style={styleOfLine} alt="我是李祐任！" />
+                    <img src={window.wp.themeUrl + "img/hello.png"} style={styleOfLine} alt="您好~" /><img src={window.wp.themeUrl + "img/i-am-youjenli.png"} style={styleOfLine} alt="我是李祐任！" />
                 </div>
             )
         }

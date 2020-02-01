@@ -1,3 +1,4 @@
+/// <reference path="../../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import * as terms from './terms';
 import GreetingMessage from './greeting';
@@ -85,7 +86,7 @@ export default class SloganOnTablet extends React.Component<PropsOfSloganOnTable
                     <div className="picAndGtCtnr">
                         <div className="myPic">
                             <div className="l1bg" style={styleOfL1bg}></div>
-                            <img className="portrait" src="img/portrait-5-3rd.png" style={styleOfMyPic}/>
+                            <img className="portrait" src={window.wp.themeUrl + "img/portrait-5-3rd.png"} style={styleOfMyPic}/>
                         </div>
                         <div className="gtPanel" style={styleOfGtPanel}>
                             <GreetingMessage fontSize={fontSizeOfGreetings} />

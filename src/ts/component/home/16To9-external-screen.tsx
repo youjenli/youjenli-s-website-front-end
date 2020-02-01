@@ -1,3 +1,4 @@
+/// <reference path="../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import * as terms from './slogan/terms';
 import {MetaDataOfPost} from '../../model/posts';
@@ -65,7 +66,7 @@ export default class HomeOf16To9ExternalScreen extends React.Component<PropsOfHo
                 paddingLeft:paddingLeftOfPicAndGtPanelCtnr
             },
             portrait:{
-                imgUrl:"img/portrait-16-9th.png",
+                imgUrl:window.wp.themeUrl + "img/portrait-16-9th.png",
                 width:portraitWidth,
                 height:portraitHeight,
                 l1bg:{

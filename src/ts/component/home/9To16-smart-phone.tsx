@@ -1,3 +1,4 @@
+/// <reference path="../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import SloganOnSmartPhone from './slogan/smart-phone-slogan';
 
@@ -25,7 +26,7 @@ export default class HomeOf9To16SmartPhone extends React.Component<PropsOfHomeOf
                 leftRight:marginLeftRightOfL1bg
             },
             portrait:{
-                imgUrl:'img/portrait-5-3rd.png',
+                imgUrl:window.wp.themeUrl + 'img/portrait-5-3rd.png',
                 width:widthOfPortrait,
                 height:heightOfPortrait,
                 topShift:-1 * topShiftOfPortrait,

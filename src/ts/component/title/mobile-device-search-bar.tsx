@@ -1,3 +1,4 @@
+/// <reference path="../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
 import * as terms from './terms';
@@ -92,7 +93,7 @@ export default class MobileDeviceSearchBar extends React.Component<MobileDeviceS
                       defaultValue={terms.searchFieldPlaceHolder} ref={ ref => this.searchField = ref }/>
                 }
                 <div className="search-btn" title={terms.titleOfSearchBtn} style={styleOfSearchBtn}>
-                    <img  src="img/search-btn-mobile.svg"
+                    <img  src={window.wp.themeUrl + "img/search-btn-mobile.svg"}
                         style={styleOfSearchIcon} alt={terms.altOfSearchIcon}/>
                 </div>                
             </div>

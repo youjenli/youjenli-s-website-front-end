@@ -26,7 +26,18 @@ declare global {
     interface Window { 
         wp:{
             siteName:string;//網站名稱。可能是中文也可能是英文。
+            /*
+                以下參數的用途是讓 navigo 知道 site url，這樣解析路徑的規則就不用寫死在客戶端。
+                site_url 是當使用者加上 wp-admin 之後就可以存取到管理介面的路徑。
+                https://developer.wordpress.org/reference/functions/get_site_url/
+            */
             siteUrl:string;
+            /*
+                themeUrl 的用途是提供場景的路徑給前端，這樣前端才可以讀取到圖片的網址。
+                這邊之所以要利用這項參數傳遞網址，而不用 base 屬性的原因是那會導致頁面內的錨點功能採用 base 屬性指定的路徑，
+                進而導致頁面內的導覽功能失效，因此這邊要透過參數傳遞場景路徑。
+            */
+            themeUrl:string;
             titleBar:{
                 menuItems:MenuItem[];
             };

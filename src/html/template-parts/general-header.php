@@ -9,7 +9,6 @@
 ?>
 <title></title>
 <link rel="stylesheet" type="text/css" href="<?php echo get_theme_file_uri('style.css') ?>">
-<base href="<?php echo trailingslashit(get_template_directory_uri()) ?>" />
 <?php 
     /*
       以下參數的用途是讓 navigo 知道 site url，這樣解析路徑的規則就不用寫死在客戶端。
@@ -25,6 +24,10 @@
     window.wp = {
         siteName:<?php echo json_encode( get_bloginfo('name', 'raw') ); ?>,
         siteUrl:<?php echo json_encode( untrailingslashit($url) ); ?>,
+        <?php 
+            // themeUrl 的用途是讓前端知道場景的路徑，這樣才可以提供圖片網址給前端頁面
+        ?>
+        themeUrl:<?php echo json_encode( trailingslashit( get_template_directory_uri() ) ); ?>,
         responseCode:<?php echo http_response_code(); ?>,
         disquz:{
             shortName:'<%= shortNameOfForum %>'

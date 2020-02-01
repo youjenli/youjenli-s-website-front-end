@@ -1,3 +1,4 @@
+/// <reference path="../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import { isString, isNotBlank } from '../../service/validator';
 import { MenuItem } from '../../model/global-vars';
@@ -240,7 +241,7 @@ export default class MobileDeviceTitleBar extends
                 } else {
                     additionalClass = 'others';
                 }
-                const urlOfIcon = isNotBlank(dataOfItem.pathOfIcon) ? dataOfItem.pathOfIcon : 'img/terms-category.svg';
+                const urlOfIcon = isNotBlank(dataOfItem.pathOfIcon) ? dataOfItem.pathOfIcon : window.wp.themeUrl + 'img/terms-category.svg';
                 return (
                     <a className={`link item ${additionalClass}`} style={styleOfItem} 
                         key={keyOfItem} href={dataOfItem.url} id={id} data-navigo>

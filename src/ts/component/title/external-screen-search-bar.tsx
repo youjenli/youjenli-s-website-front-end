@@ -1,3 +1,4 @@
+/// <reference path="../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import {isPlaceHolderOfInputSupported} from '../../service/featureDetection';
 import * as terms from './terms';
@@ -95,7 +96,7 @@ export default class ExternalScreenSearchBar extends React.Component<ExternalScr
                         }}
                         defaultValue={terms.searchFieldPlaceHolder} ref={ ref => this.searchField = ref } />
                 }                
-                <img className="search-btn" src="img/search-btn.svg" style={searchBtnStyle} title={terms.titleOfSearchBtn} 
+                <img className="search-btn" src={window.wp.themeUrl + "img/search-btn.svg"} style={searchBtnStyle} title={terms.titleOfSearchBtn} 
                     alt={terms.altOfSearchIcon} onClick={this.onSearchButtonClicked}/>
             </div>
         );//註:不能為了刪減網頁大小而刪除 search-btn svg 圖示的 width, height 和 viewBox ，否則它可能會不受外框的拘束而卡掉更多的空間。

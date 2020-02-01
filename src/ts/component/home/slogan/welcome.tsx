@@ -1,3 +1,4 @@
+/// <reference path="../../../model/global-vars.d.ts"/>
 import * as React from 'react';
 import { isFontSupported } from '../../../service/featureDetection';
 import { isNum } from '../../../service/validator';
@@ -44,7 +45,7 @@ export default class WelcomeMessage extends React.Component<PropsOfWelcomeMessag
             }
             style['height'] = `${this.props.fontSize}px`;
             return (
-                <img src="img/welcome-msg.png" alt="歡迎來到我的個人網站！" style={style} />
+                <img src={window.wp.themeUrl + "img/welcome-msg.png"} alt="歡迎來到我的個人網站！" style={style} />
             )
         }
     }
