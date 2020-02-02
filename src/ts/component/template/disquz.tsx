@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { isNotBlank } from '../../service/validator';
 import { router } from '../../service/router';
+import { WelcomeToLeaveYourComment } from './terms';
 
 interface PropsOfDisquzMessageBoard {
     id:string;
@@ -21,7 +22,20 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
     componentDidMount() {
         if (this.shouldLoadForum) {
             const props = this.props;
-            window['disquz_config'] = function() {
+            /*
+                雖然整合說明上指示提供參數的方法是
+                var disqus_config = function () {
+                    // Replace PAGE_URL with your page's canonical URL variable
+                    this.page.url = PAGE_URL;
+
+                    // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                    this.page.identifier = PAGE_IDENTIFIER; 
+                };
+                https://help.disqus.com/en/articles/1717112-universal-embed-code
+
+                但實際使用發現還是要註冊 disquz_config 函式才有用。
+            */
+            window['disquz_config'] = function (){
                 this.page.identifier = props.id;
                 if (isNotBlank(props.title)) {
                     this.page.title = props.title;
@@ -36,7 +50,7 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
                 }
             }
     
-            var d = document, s = d.createElement('script');
+            const d = document, s = d.createElement('script');
             s.src = `https://${window.wp.disquz.shortName}.disqus.com/embed.js`;
             s.setAttribute('data-timestamp', Date.parse(new Date().toString()).toString());
             /*
@@ -51,11 +65,21 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
     }
     render() {
         if (this.shouldLoadForum) {
+            const styleOfDisquzBlock = {
+                margin:'1em 0', 
+                fontSize:'1.15em',
+                color:'#232323',
+                fontWeight:600
+            }
             const styleOfDisquz = {
                 marginBottom:'2em'
             }
             return (
                 <React.Fragment>
+                    <hr />
+                    <div style={styleOfDisquzBlock}>
+                        <WelcomeToLeaveYourComment />
+                    </div>
                     <noscript>
                         Please enable JavaScript to view the 
                         <a href="https://disqus.com/?ref_noscript" rel="nofollow">

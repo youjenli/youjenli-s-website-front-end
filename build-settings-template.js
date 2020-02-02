@@ -60,7 +60,7 @@ module.exports = {
                     */
                     protocol:'https',
                     /*
-                        若要使用 disquz 留言板，那要設定留言板的名稱：
+                        若要使用 disqus 留言板，那要設定留言板的名稱：
                     */
                     shortNameOfForum:''
                 }
