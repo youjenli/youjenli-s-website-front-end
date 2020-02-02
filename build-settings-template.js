@@ -6,6 +6,7 @@ const os = require('os');
     這樣乾脆把所有設定整理到同一個檔案，統一在此調整設定。
 */
 const hostName = 'localhost';
+const rootPathOfJsInThisTheme = 'js';
 module.exports = {
     theme:{
         //場景的名稱
@@ -31,18 +32,33 @@ module.exports = {
             }
         },
         js:{
-            //給 typescript transpiler 的設定，格式與 tsconfig.js 相同
-            tsConfig:{
-                "compilerOptions": {
-                    "lib":["dom", "es6"],
-                    "target":"es5",
-                    "jsx":"react"
+            /*
+                bundles 欄位是用來指定要以哪些 ts 或 js 檔案作為程式執行點打包 js 應用程式。
+            */
+            bundles:[
+                {
+                    fileName:'index.js',//打包好的 js 檔案名稱
+                    /*
+                        要令 browserify 從哪些 ts 檔案開始產生前端 js 檔案。
+                        要注意的是就算有多個檔案，最後他們仍會被包含在同一個 js 檔案中。
+                    */
+                    entryFiles:['src/ts/index.tsx'], 
+                    //給 typescript transpiler 的設定，格式與 tsconfig.js 相同
+                    tsConfig:{
+                        "compilerOptions": {
+                            "lib":["dom", "es6"],
+                            "target":"es5",
+                            "jsx":"react"
+                        }
+                    },
+                    //是否產生 source map
+                    sourceMap:true,
+                    //是否壓縮 js 檔案
+                    minify:false,
+                    //此 js 檔案要擺放的路徑，相對於場景的根路徑。
+                    pathRelativeToThemeRoot:rootPathOfJsInThisTheme
                 }
-            },
-            //是否產生 source map
-            sourceMap:false,
-            //是否壓縮 js 檔案
-            minify:true
+            ]
         },
         html:{
             /*

@@ -42,6 +42,8 @@ const themeName = _.isObjectLike(buildSettings.theme) && _.isString(buildSetting
                     buildSettings.theme.name : 'youjenli'
 const prefixOfArchive = `wp-${themeName}-theme`;
 
+function doNothing(done){ done(); }
+
 function removeHtmlArtifact() {
     return gulp.src(
                     patternsOfHtmlSrcFile.map(filePattern => path.join(distRoot, filePattern)), {read:false})
@@ -76,83 +78,114 @@ gulp.task('cleanArchives', function cleanArchives() {
 //清空輸出打包成品的資料夾
 gulp.task('clean', gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeImgArtifact, removeJSArtifact));
 
-const tsEntryFiles = ['src/ts/index.tsx'];
-let tsConfig = null;
-if (_.isPlainObject(buildSettings.build.js) && _.isPlainObject(buildSettings.build.js.tsConfig)) {
-    tsConfig = buildSettings.build.js.tsConfig;
-} else {
-    tsConfig = {
-        "compilerOptions": {
-            "lib":["dom", "es6"],
-            "target":"es5",
-            "jsx":"react"
-        }
-    };
-}
-
-/*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
-    所以下面要把 tsconfig 的 compilerOptions 往外提出來
-*/
-const transpileConfig = {};
-if (tsConfig.hasOwnProperty('compilerOptions')) {
-    Object.assign(transpileConfig, tsConfig.compilerOptions);
-    delete transpileConfig.compilerOptions;
-}
-//提出 compilterOption 之後就是複製其他欄位
-Object.assign(transpileConfig, tsConfig);
-
-function transpileTS() {
-    /*
-        先前改用 gulp-typescript 的原因是原本使用的 browserify 的方法在 gulp 4.0 沒辦法正常使用。
-        但是後來發現 gulp-typescript 沒辦法解決 js 檔案的整併問題，那得引入其他擴充套件來解決。
-        後來還是回頭研究 browserify ，這才發現搭配 gulp 3.0 使用的 event-stream 已停止維護，
-        而且 browserify 根本不需要透過 event-stream 整併所有 js 檔案的內容，只要照下面的方式設定並調用對應的擴充套件即可。
-        欲了解詳情可參閱以下使用說明
-        https://github.com/browserify/browserify#usage
-
-        註：gulp 4.0 的任務函式仍支援兩種結束方式: 1. 回傳 gulp 串流 2. 呼叫 gulp 注入給任務函式的 done 函式。
-    */
-    let transpile = 
-            browserify({ //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
-                  basedir: '.',
-                  entries: tsEntryFiles,
-                  cache:{},
-                  packageCache:{},
-                  debug: _.isPlainObject(buildSettings.build.js) && buildSettings.build.js.sourceMap //是否包含 sourcemap
-              })
-              .plugin(tsify, transpileConfig)
-              .bundle()
-              //必須要使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
-              //source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
-              .pipe(source(`${jsBundleName}.js`)) // 透過 vinyl-source-stream 轉換前面的建置成果為 gulp 可輸出的串流
-              //這裡應該可以寫死檔名沒有關係，因為這是打包所有 js 模組的檔名。
-              //欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
-              .pipe(buffer());
-
-    if (_.isPlainObject(buildSettings.build.js) && buildSettings.build.js.minify == true) {
-        //如果要建置生產環境的場景，那就壓縮 js 檔
-        transpile = 
-            transpile.pipe(minify({
-                         noSource:true,
-                         ext:{
-                             min:'.js'
-                         }
-                     }))
-                     .pipe(gulp.dest(distRoot));
-    } else {
-        /* 
-          如果要建置開發環境的場景，那就輸出 sourcemap。
-          這裡使用 gulp sourcemap 套件的方法很不循常，但這是我摸索出的有效方法。
-          這足以整合 gulp、browserify 和 gulp-sourcemap。
+function createTsConfig(obj) {
+    let tsConfig = null;
+    if (_.isPlainObject(obj)) {
+        tsConfig = obj;
+        /*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
+            所以下面要把 tsconfig 的 compilerOptions 往外提出來
         */
-        transpile =
-            transpile.pipe(sourcemaps.init({loadMaps: true}))
-                     .pipe(sourcemaps.write('./'));
+        if (obj.hasOwnProperty('compilerOptions')) {
+            const compilerOptions = obj.compilerOptions;
+            delete obj.compilerOptions;
+            tsConfig = Object.assign(obj, compilerOptions);
+        }
+    } else {
+        tsConfig = {
+            "compilerOptions": {
+                "lib":["dom", "es6"],
+                "target":"es5",
+                "jsx":"react"
+            }
+        };
     }
-    return transpile.pipe(gulp.dest(distRoot));
+    return tsConfig;
 }
-const prepareJSTask = gulp.series(removeJSArtifact, transpileTS);
 
+function createPrepareJsTask() {
+    const build = buildSettings.build;
+    if (_.isArray(build.js.bundles) || build.js.bundles.length <= 0) {
+        const bundleTasks = build.js.bundles.map((bundle, idx) => {
+            if (_.isEmpty(bundle.fileName)) {
+                console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have a name.`);
+                console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
+                return doNothing;
+            }
+            if (!_.isArray(bundle.entryFiles) || bundle.entryFiles.length <= 0) {
+                console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have entry files.`);
+                console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
+                return doNothing;
+            }
+
+            /*
+                先前改用 gulp-typescript 的原因是原本使用的 browserify 的方法在 gulp 4.0 沒辦法正常使用。
+                但是後來發現 gulp-typescript 沒辦法解決 js 檔案的整併問題，那得引入其他擴充套件來解決。
+                後來還是回頭研究 browserify ，這才發現搭配 gulp 3.0 使用的 event-stream 已停止維護，
+                而且 browserify 根本不需要透過 event-stream 整併所有 js 檔案的內容，只要照下面的方式設定並調用對應的擴充套件即可。
+                欲了解詳情可參閱以下使用說明
+                https://github.com/browserify/browserify#usage
+            */
+            const includeSrcMap = bundle.sourceMap === true ? true : false;
+            let pathRelativeToThemeRoot = bundle.pathRelativeToThemeRoot;
+            if (!_.isString(pathRelativeToThemeRoot)) {
+                pathRelativeToThemeRoot = '';
+            }
+            let bundleTask = (done) => {
+                    const transpile = 
+                        browserify({ //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
+                            basedir: '.',
+                            entries: bundle.entryFiles,
+                            cache:{},
+                            packageCache:{},
+                            debug:includeSrcMap  //是否包含 sourcemap
+                        })
+                        .plugin(tsify, createTsConfig(bundle.tsConfig))
+                        .bundle()
+                        /*  為了運用 gulp 建立程式檔案，這裡使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
+                            source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
+                            欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
+                        */
+                        .pipe(source(bundle.fileName))
+                        .pipe(buffer());
+                    
+                    if (bundle.minify === true) {//如果要壓縮 js 檔
+                        transpile.pipe(minify({
+                                     noSource:includeSrcMap,
+                                     ext:{
+                                         min:'.js'
+                                     }
+                                 }));
+                    } else if (includeSrcMap) {
+                        /* 
+                            若不壓縮 js，則視情況輸出 source map。
+                            這裡使用 gulp sourcemap 套件的方法很不循常，但這是我摸索出的有效方法。
+                            這足以整合 gulp、browserify 和 gulp-sourcemap。
+                        */
+                        transpile.pipe(sourcemaps.init({loadMaps: true}))
+                                 .pipe(sourcemaps.write('./'));
+                    }
+                    transpile.pipe(
+                        gulp.dest(upath.join(distRoot, pathRelativeToThemeRoot)
+                    ));
+                    done();
+            };//end bundleTask
+            return bundleTask;
+        });
+        return gulp.parallel(bundleTasks);
+    } else {
+        console.log('The build settings of JavaScript is blank');
+        console.log('Therefore a function that does nothing will be used as the prepareJs task.');
+        return doNothing;
+    }
+}
+
+if (!_.isObjectLike(buildSettings.build)) {
+    throw 'Missing build settings of html, css and JavaScript.';
+}
+if (!_.isObjectLike(buildSettings.build.js)) {
+    throw 'Missing build settings of JavaScript.';
+}
+const prepareJSTask = gulp.series(removeJSArtifact, createPrepareJsTask());
 gulp.task('prepareJS', prepareJSTask);
 
 const cssSrcRoot = path.join(srcRoot, 'css');
@@ -254,8 +287,6 @@ const buildTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, p
 gulp.task('build', buildTask);
 gulp.task('default', buildTask);
 
-function doNothing(done){ done(); }
-
 const deploymentConfig = _.isObjectLike(buildSettings.deploy) ? buildSettings.deploy : {};
 let deployTask = null;
 
@@ -270,19 +301,19 @@ if (!_.isObjectLike(deploymentConfig.host)) {
 //先檢查參數是否正確
 if (!_.isString(deploymentConfig.path)) {
     console.log('Target path for the theme deployment task was not configured.');
-    console.log('Therefore a function that does nothing will be create for the theme deployment task.');
+    console.log('Therefore a function that does nothing will be used as the theme deployment task.');
     deployTask = doNothing;
 } else {
     const createDeployTask = () => {
         if (deploymentConfig.method == 'ssh' || deploymentConfig.method == 'ftp') {
             if (!hostObjExists) {
                 console.log(`Host settings for the theme deployment task was not configured.`);
-                console.log('Therefore a function that does nothing will be create for the theme deployment task.');
+                console.log('Therefore a function that does nothing will be used as the theme deployment task.');
                 return doNothing;
             }
             if (!hostNameExists) {
                 console.log(`Host name for the theme deployment task was not configured.`);
-                console.log('Therefore a function that does nothing will be create for the theme deployment task.');
+                console.log('Therefore a function that does nothing will be used as the theme deployment task.');
                 return doNothing;
             }
         }
@@ -473,7 +504,7 @@ if (!_.isString(deploymentConfig.path)) {
             default:
                 //缺少重要設定，直接拋出異常。
                 console.log('The method specified for deployment can not be recognized.');
-                console.log('Therefore a function that does nothing will be create for deployment task.');
+                console.log('Therefore a function that does nothing will be used as deployment task.');
                 return doNothing;
         }
     }
@@ -484,7 +515,7 @@ gulp.task('deploy', deployTask);
 let vscodeLaunchCOnfigTask = null;
 if (!hostObjExists || !hostNameExists) {
     console.log(`Host name for the vscode launch config generation task was not configured.`);
-    console.log('Therefore a function that does nothing will be create for the vscode launch config generation task.');
+    console.log('Therefore a function that does nothing will be used as the vscode launch config generation task.');
     vscodeLaunchCOnfigTask = doNothing;
 } else {
     let pages = null, protocol = 'https';
