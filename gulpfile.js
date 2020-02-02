@@ -25,19 +25,18 @@ const del = require('del');
 /*
   因為 Linux 上面要安裝其他套件才能解壓縮 zip 檔，所以後來改用 tar 和 gz 來封裝場景。
 */
-const path = require('path');
 const upath = require('upath');
 const _ = require('lodash');
 
 const buildSettings = require('./build-settings');
-const srcRoot = path.join(__dirname, 'src');
-const distRoot = path.join(__dirname, 'dist'); //輸出建置成品的路徑
-const pathOfNewArchives = path.join(__dirname, 'archives');//存放場景壓檔案的目錄
+const srcRoot = upath.join(__dirname, 'src');
+const distRoot = upath.join(__dirname, 'dist'); //輸出建置成品的路徑
+const pathOfNewArchives = upath.join(__dirname, 'archives');//存放場景壓檔案的目錄
 const jsBundleName = 'index';
 const patternsOfHtmlSrcFile = ['**/*.php', '**/*.html'];
 const cssArtifacts = ['**/*.css', '**/*.css.map'];
 const jsArtifacts = [`**/${jsBundleName}.js`, `**/${jsBundleName}.js.map`];
-const nameOfImgAssets = ['*.png', '*.svg', '*.jpeg'].map(filePattern => path.join('img', filePattern));
+const nameOfImgAssets = ['*.png', '*.svg', '*.jpeg'].map(filePattern => upath.join('img', filePattern));
 const themeName = _.isObjectLike(buildSettings.theme) && _.isString(buildSettings.theme.name) && buildSettings.theme.name !== '' ?
                     buildSettings.theme.name : 'youjenli'
 const prefixOfArchive = `wp-${themeName}-theme`;
@@ -46,23 +45,23 @@ function doNothing(done){ done(); }
 
 function removeHtmlArtifact() {
     return gulp.src(
-                    patternsOfHtmlSrcFile.map(filePattern => path.join(distRoot, filePattern)), {read:false})
+                    patternsOfHtmlSrcFile.map(filePattern => upath.join(distRoot, filePattern)), {read:false})
                 .pipe(clean());
 }
 
 function removeJSArtifact() {
     return gulp.src(
-                    jsArtifacts.map(filePattern => path.join(distRoot, filePattern)), {read:false})
+                    jsArtifacts.map(filePattern => upath.join(distRoot, filePattern)), {read:false})
                 .pipe(clean());
 }
 
 function removeCSSArtifact(){
-    return gulp.src(cssArtifacts.map(filePattern => path.join(distRoot, filePattern)), {read:false})
+    return gulp.src(cssArtifacts.map(filePattern => upath.join(distRoot, filePattern)), {read:false})
                 .pipe(clean());
 }
 
 function removeImgArtifact() {
-    return gulp.src(nameOfImgAssets.map(srcFiles => path.join(distRoot, srcFiles)), {
+    return gulp.src(nameOfImgAssets.map(srcFiles => upath.join(distRoot, srcFiles)), {
                         read:false,
                         //註：加入 allowEmpty 以免 gulp 因為讀不到目錄而報錯
                         allowEmpty:true
@@ -188,7 +187,7 @@ if (!_.isObjectLike(buildSettings.build.js)) {
 const prepareJSTask = gulp.series(removeJSArtifact, createPrepareJsTask());
 gulp.task('prepareJS', prepareJSTask);
 
-const cssSrcRoot = path.join(srcRoot, 'css');
+const cssSrcRoot = upath.join(srcRoot, 'css');
 let cleanCSSConfig = null;
 if (_.isPlainObject(buildSettings.build.css)) {
     const retrievedValue = buildSettings.build.css.cleanCSSConfig;
@@ -219,7 +218,7 @@ function transpileSCSS() {
                   .pipe(cleanCSS(cleanCSSConfig))
                   .pipe(gulp.dest(distRoot));
     } else {
-        return gulp.src([path.join(cssSrcRoot, 'style.scss')], {base:'.'})
+        return gulp.src([upath.join(cssSrcRoot, 'style.scss')], {base:'.'})
                    .pipe(sourcemaps.init())
                    .pipe(sass())
                    .pipe(buffer())
@@ -242,7 +241,7 @@ const prepareCSSTask = gulp.series(removeCSSArtifact, transpileSCSS);
 gulp.task('prepareCSS', prepareCSSTask);
 
 const imgSrcFiles = nameOfImgAssets.map((img) => {
-    return path.join(srcRoot, img);
+    return upath.join(srcRoot, img);
 });
 const prepareImgTask = gulp.series(removeImgArtifact, 
     function copyImgs() {
@@ -251,8 +250,8 @@ const prepareImgTask = gulp.series(removeImgArtifact,
     });
 gulp.task('prepareImg', prepareImgTask);
 
-const htmlSrcRoot = path.join(srcRoot, 'html');
-const pathOfHtmlSrcFiles = ['**/*.php', '**/*.html'].map(filePattern => path.join(htmlSrcRoot, filePattern));
+const htmlSrcRoot = upath.join(srcRoot, 'html');
+const pathOfHtmlSrcFiles = ['**/*.php', '**/*.html'].map(filePattern => upath.join(htmlSrcRoot, filePattern));
 function copyHtmlFilesTask(){
     /*
       這邊之所以要排除 general-header.php 的原因是我們稍後要根據建置模式產生對應的樣板內容
@@ -266,7 +265,7 @@ if (_.isPlainObject(buildSettings.build.html) && _.isPlainObject(buildSettings.b
     const parallelTasks = Object.keys(buildSettings.build.html.variableSubstitution).map(function(key) {
         if (_.isPlainObject(buildSettings.build.html.variableSubstitution[key])) {
             return () => {
-                return gulp.src(path.join(distRoot, key), {base:distRoot})
+                return gulp.src(upath.join(distRoot, key), {base:distRoot})
                            .pipe(template(buildSettings.build.html.variableSubstitution[key]))
                            .pipe(gulp.dest(distRoot));
             }
@@ -321,7 +320,7 @@ if (!_.isString(deploymentConfig.path)) {
         switch (deploymentConfig.method) {
             case 'ssh':
                 const itemsToArchive = patternsOfHtmlSrcFile.concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
-                                                            .map(filePattern => path.join(distRoot, filePattern));
+                                                            .map(filePattern => upath.join(distRoot, filePattern));
                 let nameOfNewArchive = null;
                 
                 const packArtifact = () => {
@@ -347,7 +346,7 @@ if (!_.isString(deploymentConfig.path)) {
                     }, deploymentConfig.host)
                 });
                 const transferArchiveToRemoteServer = () => {
-                    return gulp.src(path.join(pathOfNewArchives, nameOfNewArchive), {base:pathOfNewArchives})
+                    return gulp.src(upath.join(pathOfNewArchives, nameOfNewArchive), {base:pathOfNewArchives})
                                 .pipe(gulpSSH.dest('/tmp'));
                 }
                 const extractArchiveAndDeployTheWebsite = () => {
