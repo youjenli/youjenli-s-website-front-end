@@ -36,7 +36,9 @@ module.exports = {
                 }
             ]
         },
-        js:{
+        ts:{
+            //是否壓縮 js 檔案
+            uglify:false,
             sourceMap:true,//是否產生 source map
             /*
                 指定要以哪些 ts 或 js 檔案作為程式執行點打包 js 應用程式。
@@ -57,8 +59,6 @@ module.exports = {
                             "jsx":"react"
                         }
                     },
-                    //是否壓縮 js 檔案
-                    uglify:false,
                     //此 js 檔案要擺放的路徑，相對於場景的根路徑。
                     pathRelativeToThemeRoot:rootPathOfJsInThisTheme
                 }

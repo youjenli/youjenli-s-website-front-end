@@ -76,27 +76,56 @@ gulp.task('cleanArchives', function cleanArchives() {
 //清空輸出打包成品的資料夾
 gulp.task('clean', gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeImgArtifact, removeJSArtifact));
 
-let prepareJsTask, prepareCssTask, prepareHtmlTask;
+let transpileTsTask, prepareCssTask, prepareHtmlTask;
 if (!_.isObjectLike(buildSettings.build)) {
     console.log('Build configuration of html, css and JavaScript does not exist.');
-    console.log('Therefore a function that does nothing will be used as the prepareJs task, the prepareCss task and the prepareHtml task.');
-    prepareJsTask = doNothing;
+    console.log('Therefore a function that does nothing will be used as the transpileTs task, the prepareCss task and the prepareHtml task.');
+    transpileTsTask = doNothing;
     prepareCssTask = doNothing;
     prepareHtmlTask = doNothing;
 } else {
-    if (_.isObjectLike(buildSettings.build.js)) {
-        function createPrepareJsTask() {
-            const build = buildSettings.build;
-            if (_.isArray(build.js.bundles) && !build.js.bundles.length <= 0) {
-                const srcMapShouldBeIncluded = build.js.sourceMap === true ? true : false;
-                const bundleTasks = build.js.bundles.map((bundle, idx) => {
+    const build = buildSettings.build;
+    if (_.isObjectLike(build.ts)) {
+        function createTanspileTsTask() {
+            if (_.isArray(build.ts.bundles) && !build.ts.bundles.length <= 0) {
+                const srcMapShouldBeIncluded = build.ts.sourceMap === true ? true : false;
+                const jsShouldBeUglified = build.ts.uglify === true ? true : false;
+
+                let doUglifyTask = function(transpile) { return transpile; }
+                if (jsShouldBeUglified) {
+                    if (srcMapShouldBeIncluded) {
+                        doUglifyTask = function(transpile) {
+                            return  transpile.pipe(sourcemaps.init({loadMaps: true}))
+                                              /*
+                                                 改成可以建置多個 bundle 以後，我試了解種設定都無法令 gulp-minify 產生 js 壓縮檔，
+                                                 因此決定改用 TypeScript 官方和 gulp 官方推薦的 gulp-uglify 來負責壓縮 js 檔案。
+
+                                                 https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
+                                              */
+                                              .pipe(uglify())
+                                              /*
+                                                 改成可以建置多個 bundle 以後，我發現除非 sourcemaps.write 改為不帶參數，
+                                                 也就是直接將 source map 寫到 js 檔案中，否則不管怎麼調整 sourcemaps 設定，
+                                                 它都不會輸出 source map 檔案。這狀況的原因不明，但既然可以減少瀏覽器發送一個請求，
+                                                 那似乎也不壞，就這樣做吧。
+                                              */
+                                              .pipe(sourcemaps.write())
+                        };
+                    } else {
+                        doUglifyTask = function(transpile) {
+                            return transpile.pipe(uglify());
+                        }
+                    }
+                }
+
+                const bundleTasks = build.ts.bundles.map((bundle, idx) => {
                     if (_.isEmpty(bundle.fileName)) {
-                        console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have a name.`);
+                        console.log(`The TypeScript source code transpile settings located at the order ${idx + 1} does not have a name.`);
                         console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
                         return doNothing;
                     }
                     if (!_.isArray(bundle.entryFiles) || bundle.entryFiles.length <= 0) {
-                        console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have entry files.`);
+                        console.log(`The TypeScript source code transpile settings located at the order ${idx + 1} does not have entry files.`);
                         console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
                         return doNothing;
                     }
@@ -136,69 +165,50 @@ if (!_.isObjectLike(buildSettings.build)) {
                     if (!_.isString(pathWherebundleResides)) {
                         pathWherebundleResides = '';
                     }
+
                     const bundleJsTask = () => {
-                            const transpile = 
-                                browserify({ //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
-                                    basedir: '.',
-                                    entries: bundle.entryFiles,
-                                    cache:{},
-                                    packageCache:{},
-                                    debug:srcMapShouldBeIncluded  //是否包含 sourcemap
-                                })
-                                .plugin(tsify, createTsConfig(bundle.tsConfig))
-                                .bundle()
-                                /*  為了運用 gulp 建立程式檔案，這裡使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
-                                    source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
-                                    欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
-                                */
-                                .pipe(source(bundle.fileName))
-                                .pipe(buffer());
-                            
-                            if (bundle.uglify == true) {
-                                if (srcMapShouldBeIncluded) {
-                                    transpile.pipe(sourcemaps.init({loadMaps: true}))
-                                             /*
-                                                改成可以建置多個 bundle 以後，我試了解種設定都無法令 gulp-minify 產生 js 壓縮檔，
-                                                因此決定改用 TypeScript 官方和 gulp 官方推薦的 gulp-uglify 來負責壓縮 js 檔案。
-        
-                                                https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
-                                             */
-                                             .pipe(uglify())
-                                             /*
-                                                改成可以建置多個 bundle 以後，我發現除非 sourcemaps.write 改為不帶參數，
-                                                也就是直接將 source map 寫到 js 檔案中，否則不管怎麼調整 sourcemaps 設定，
-                                                它都不會輸出 source map 檔案。這狀況的原因不明，但既然可以減少瀏覽器發送一個請求，
-                                                那似乎也不壞，就這樣做吧。
-                                             */
-                                             .pipe(sourcemaps.write())
-                                } else {
-                                    transpile.pipe(uglify());
-                                }
-                            }
-                            return transpile.pipe(
-                                gulp.dest(upath.join(distFolder, pathWherebundleResides))
-                            );
+                            const transpile = browserify({//browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
+                                                    basedir: '.',
+                                                    entries: bundle.entryFiles,
+                                                    cache:{},
+                                                    packageCache:{},
+                                                    debug:srcMapShouldBeIncluded  //是否包含 sourcemap
+                                                })
+                                                .plugin(tsify, createTsConfig(bundle.tsConfig))
+                                                .bundle()
+                                                /*  為了運用 gulp 建立程式檔案，這裡使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
+                                                    source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
+                                                    欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
+                                                */
+                                                .pipe(source(bundle.fileName))
+                                                .pipe(buffer());
+                            return doUglifyTask(transpile)
+                                        .pipe(gulp.dest(upath.join(distFolder, pathWherebundleResides)));
                     };//end bundleTask
+                    Object.defineProperty(bundleJsTask, 'name', 
+                            {
+                                value:`Prepare ${bundle.fileName}.`,
+                                writable: false
+                            });
                     return bundleJsTask;
                 });
                 return gulp.parallel(bundleTasks);
             } else {
-                console.log('The build settings of JavaScript is blank');
-                console.log('Therefore a function that does nothing will be used as the prepareJs task.');
+                console.log('The transpile settings of TypeScript source code is blank');
+                console.log('Therefore a function that does nothing will be used as the transpileTs task.');
                 return doNothing;
             }
         }
         
-        prepareJsTask = gulp.series(removeJSArtifact, createPrepareJsTask());
+        transpileTsTask = gulp.series(removeJSArtifact, createTanspileTsTask());
     } else {
-        console.log('Build configuration of JavaScript does not exist.');
-        console.log('Therefore a function that does nothing will be used as the prepareJs task.');
-        prepareJsTask = doNothing;
+        console.log('Transpile configuration of TypeScript source code does not exist.');
+        console.log('Therefore a function that does nothing will be used as the transpileTs task.');
+        transpileTsTask = doNothing;
     }
 
     if (_.isObjectLike(buildSettings.build.css)) {
         function createPrepareCssTask() {
-            const build = buildSettings.build;
             if (_.isArray(build.css.bundles) && !build.css.bundles.length <= 0) {
                 const srcMapShouldBeIncluded = build.css.sourceMap === true ? true : false;
                 let bundleTasks = null;
@@ -300,7 +310,7 @@ if (!_.isObjectLike(buildSettings.build)) {
         prepareCssTask = gulp.series(removeCSSArtifact, createPrepareCssTask());
     } else {
         console.log('Build configuration of CSS does not exist.');
-        console.log('Therefore a function that does nothing will be used as the prepareJs task.');
+        console.log('Therefore a function that does nothing will be used as the transpileTs task.');
         prepareCssTask = doNothing;
     }
 
@@ -336,7 +346,7 @@ if (!_.isObjectLike(buildSettings.build)) {
     }
 }
 
-gulp.task('prepareJs', prepareJsTask);
+gulp.task('transpileTs', transpileTsTask);
 gulp.task('prepareCss', prepareCssTask);
 gulp.task('prepareHtml', prepareHtmlTask);
 
@@ -350,7 +360,7 @@ const prepareImgTask = gulp.series(removeImgArtifact,
     });
 gulp.task('prepareImg', prepareImgTask);
 
-const buildTask = gulp.parallel(prepareJsTask, prepareCssTask, prepareImgTask, prepareHtmlTask);
+const buildTask = gulp.parallel(transpileTsTask, prepareCssTask, prepareImgTask, prepareHtmlTask);
 gulp.task('build', buildTask);
 gulp.task('default', buildTask);
 
@@ -608,7 +618,7 @@ const cssSrcFiles = [upath.join(srcFolder, 'css/**/*.css'), upath.join(srcFolder
 function monitorSrcAndRebuildTask() {
         gulp.watch(pathOfHtmlSrcFiles, prepareHtmlTask),
         gulp.watch(cssSrcFiles, prepareCSSTask),
-        gulp.watch(tsSrcFiles, prepareJsTask),
+        gulp.watch(tsSrcFiles, transpileTsTask),
         gulp.watch(imgSrcFiles, prepareImgTask)
 };
 /*
