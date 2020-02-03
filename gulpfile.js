@@ -29,13 +29,12 @@ const upath = require('upath');
 const _ = require('lodash');
 
 const buildSettings = require('./build-settings');
-const srcRoot = upath.join(__dirname, 'src');
-const distRoot = upath.join(__dirname, 'dist'); //輸出建置成品的路徑
-const pathOfNewArchives = upath.join(__dirname, 'archives');//存放場景壓檔案的目錄
-const jsBundleName = 'index';
-const patternsOfHtmlSrcFile = ['**/*.php', '**/*.html'];
+const srcFolder = 'src';
+const distFolder = 'dist'; //輸出建置成品的路徑
+const pathOfNewArchives = 'archives';//存放場景壓檔案的目錄
+const webPageArtifacts = ['**/*.php', '**/*.html'];
 const cssArtifacts = ['**/*.css', '**/*.css.map'];
-const jsArtifacts = [`**/${jsBundleName}.js`, `**/${jsBundleName}.js.map`];
+const jsArtifacts = [`**/*.js`, `**/*.js.map`];
 const nameOfImgAssets = ['*.png', '*.svg', '*.jpeg'].map(filePattern => upath.join('img', filePattern));
 const themeName = _.isObjectLike(buildSettings.theme) && _.isString(buildSettings.theme.name) && buildSettings.theme.name !== '' ?
                     buildSettings.theme.name : 'youjenli'
@@ -45,23 +44,23 @@ function doNothing(done){ done(); }
 
 function removeHtmlArtifact() {
     return gulp.src(
-                    patternsOfHtmlSrcFile.map(filePattern => upath.join(distRoot, filePattern)), {read:false})
+                    webPageArtifacts.map(filePattern => upath.join(distFolder, filePattern)), {read:false})
                 .pipe(clean());
 }
 
 function removeJSArtifact() {
     return gulp.src(
-                    jsArtifacts.map(filePattern => upath.join(distRoot, filePattern)), {read:false})
+                    jsArtifacts.map(filePattern => upath.join(distFolder, filePattern)), {read:false})
                 .pipe(clean());
 }
 
 function removeCSSArtifact(){
-    return gulp.src(cssArtifacts.map(filePattern => upath.join(distRoot, filePattern)), {read:false})
+    return gulp.src(cssArtifacts.map(filePattern => upath.join(distFolder, filePattern)), {read:false})
                 .pipe(clean());
 }
 
 function removeImgArtifact() {
-    return gulp.src(nameOfImgAssets.map(srcFiles => upath.join(distRoot, srcFiles)), {
+    return gulp.src(nameOfImgAssets.map(srcFiles => upath.join(distFolder, srcFiles)), {
                         read:false,
                         //註：加入 allowEmpty 以免 gulp 因為讀不到目錄而報錯
                         allowEmpty:true
@@ -77,216 +76,266 @@ gulp.task('cleanArchives', function cleanArchives() {
 //清空輸出打包成品的資料夾
 gulp.task('clean', gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeImgArtifact, removeJSArtifact));
 
-function createTsConfig(obj) {
-    let tsConfig = null;
-    if (_.isPlainObject(obj)) {
-        tsConfig = obj;
-        /*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
-            所以下面要把 tsconfig 的 compilerOptions 往外提出來
-        */
-        if (obj.hasOwnProperty('compilerOptions')) {
-            const compilerOptions = obj.compilerOptions;
-            delete obj.compilerOptions;
-            tsConfig = Object.assign(obj, compilerOptions);
-        }
-    } else {
-        tsConfig = {
-            "compilerOptions": {
-                "lib":["dom", "es6"],
-                "target":"es5",
-                "jsx":"react"
-            }
-        };
-    }
-    return tsConfig;
-}
-
-function createPrepareJsTask() {
-    const build = buildSettings.build;
-    if (_.isArray(build.js.bundles) || build.js.bundles.length <= 0) {
-        const bundleTasks = build.js.bundles.map((bundle, idx) => {
-            if (_.isEmpty(bundle.fileName)) {
-                console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have a name.`);
-                console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
-                return doNothing;
-            }
-            if (!_.isArray(bundle.entryFiles) || bundle.entryFiles.length <= 0) {
-                console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have entry files.`);
-                console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
-                return doNothing;
-            }
-
-            /*
-                先前改用 gulp-typescript 的原因是原本使用的 browserify 的方法在 gulp 4.0 沒辦法正常使用。
-                但是後來發現 gulp-typescript 沒辦法解決 js 檔案的整併問題，那得引入其他擴充套件來解決。
-                後來還是回頭研究 browserify ，這才發現搭配 gulp 3.0 使用的 event-stream 已停止維護，
-                而且 browserify 根本不需要透過 event-stream 整併所有 js 檔案的內容，只要照下面的方式設定並調用對應的擴充套件即可。
-                欲了解詳情可參閱以下使用說明
-                https://github.com/browserify/browserify#usage
-            */
-            const includeSrcMap = bundle.sourceMap === true ? true : false;
-            let jsFolderPathRelativeToThemeRoot = bundle.pathRelativeToThemeRoot;
-            if (!_.isString(jsFolderPathRelativeToThemeRoot)) {
-                jsFolderPathRelativeToThemeRoot = '';
-            }
-            let bundleTask = () => {
-                    const transpile = 
-                        browserify({ //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
-                            basedir: '.',
-                            entries: bundle.entryFiles,
-                            cache:{},
-                            packageCache:{},
-                            debug:includeSrcMap  //是否包含 sourcemap
-                        })
-                        .plugin(tsify, createTsConfig(bundle.tsConfig))
-                        .bundle()
-                        /*  為了運用 gulp 建立程式檔案，這裡使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
-                            source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
-                            欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
-                        */
-                        .pipe(source(bundle.fileName))
-                        .pipe(buffer());
-                    
-                    if (bundle.uglify == true) {
-                        if (includeSrcMap) {
-                            transpile.pipe(sourcemaps.init({loadMaps: true}))
-                                     /*
-                                        改成可以建置多個 bundle 以後，我試了解種設定都無法令 gulp-minify 產生 js 壓縮檔，
-                                        因此決定改用 TypeScript 官方和 gulp 官方推薦的 gulp-uglify 來負責壓縮 js 檔案。
-
-                                        https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
-                                     */
-                                     .pipe(uglify())
-                                     /*
-                                        改成可以建置多個 bundle 以後，我發現除非 sourcemaps.write 改為不帶參數，
-                                        也就是直接將 source map 寫到 js 檔案中，否則不管怎麼調整 sourcemaps 設定，
-                                        它都不會輸出 source map 檔案。這狀況的原因不明，但既然可以減少瀏覽器發送一個請求，
-                                        那似乎也不壞，就這樣做吧。
-                                     */
-                                     .pipe(sourcemaps.write())
-                        } else {
-                            transpile.pipe(uglify());
-                        }
-                    }
-                    return transpile.pipe(
-                        gulp.dest(upath.join(distRoot, jsFolderPathRelativeToThemeRoot))
-                    );
-            };//end bundleTask
-            return bundleTask;
-        });
-        return gulp.parallel(bundleTasks);
-    } else {
-        console.log('The build settings of JavaScript is blank');
-        console.log('Therefore a function that does nothing will be used as the prepareJs task.');
-        return doNothing;
-    }
-}
-
+let prepareJsTask, prepareCssTask, prepareHtmlTask;
 if (!_.isObjectLike(buildSettings.build)) {
-    throw 'Missing build settings of html, css and JavaScript.';
-}
-if (!_.isObjectLike(buildSettings.build.js)) {
-    throw 'Missing build settings of JavaScript.';
-}
-const prepareJSTask = gulp.series(removeJSArtifact, createPrepareJsTask());
-gulp.task('prepareJS', prepareJSTask);
-
-const cssSrcRoot = upath.join(srcRoot, 'css');
-let cleanCSSConfig = null;
-if (_.isPlainObject(buildSettings.build.css)) {
-    const retrievedValue = buildSettings.build.css.cleanCSSConfig;
-    if (_.isPlainObject(retrievedValue)) {
-        cleanCSSConfig = retrievedValue;
-    }
+    console.log('Build configuration of html, css and JavaScript does not exist.');
+    console.log('Therefore a function that does nothing will be used as the prepareJs task, the prepareCss task and the prepareHtml task.');
+    prepareJsTask = doNothing;
+    prepareCssTask = doNothing;
+    prepareHtmlTask = doNothing;
 } else {
-    cleanCSSConfig = {
-        "format":"beautify",
-        "inline":["local"],
-        "level":1,
-        "sourceMap":true
-    };
-}
-
-function transpileSCSS() {
-    if (_.isPlainObject(buildSettings.build.css) && buildSettings.build.css.sourceMap == true) {
-        return gulp.src([path.join(cssSrcRoot, 'style.scss')], {base:cssSrcRoot})
+    if (_.isObjectLike(buildSettings.build.js)) {
+        function createPrepareJsTask() {
+            const build = buildSettings.build;
+            if (_.isArray(build.js.bundles) && !build.js.bundles.length <= 0) {
+                const bundleTasks = build.js.bundles.map((bundle, idx) => {
+                    if (_.isEmpty(bundle.fileName)) {
+                        console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have a name.`);
+                        console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
+                        return doNothing;
+                    }
+                    if (!_.isArray(bundle.entryFiles) || bundle.entryFiles.length <= 0) {
+                        console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have entry files.`);
+                        console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
+                        return doNothing;
+                    }
+                    
+                    function createTsConfig(obj) {
+                        let tsConfig = null;
+                        if (_.isPlainObject(obj)) {
+                            tsConfig = obj;
+                            /*因為 tsify 接收參數的格式在 compilerOptions 的部分比 tsconfig 高一層, 
+                                所以下面要把 tsconfig 的 compilerOptions 往外提出來
+                            */
+                            if (obj.hasOwnProperty('compilerOptions')) {
+                                const compilerOptions = obj.compilerOptions;
+                                delete obj.compilerOptions;
+                                tsConfig = Object.assign(obj, compilerOptions);
+                            }
+                        } else {
+                            tsConfig = {
+                                "compilerOptions": {
+                                    "lib":["dom", "es6"],
+                                    "target":"es5",
+                                    "jsx":"react"
+                                }
+                            };
+                        }
+                        return tsConfig;
+                    }
                     /*
-                    sass() 這部分除了包含轉譯 scss，它還會利用 scss 自訂的 css import 語法機制將其他 css 檔案
-                    合併到主要的 css 檔案裡，但是不包含把 css 檔案串連起來。
+                        先前改用 gulp-typescript 的原因是原本使用的 browserify 的方法在 gulp 4.0 沒辦法正常使用。
+                        但是後來發現 gulp-typescript 沒辦法解決 js 檔案的整併問題，那得引入其他擴充套件來解決。
+                        後來還是回頭研究 browserify ，這才發現搭配 gulp 3.0 使用的 event-stream 已停止維護，
+                        而且 browserify 根本不需要透過 event-stream 整併所有 js 檔案的內容，只要照下面的方式設定並調用對應的擴充套件即可。
+                        欲了解詳情可參閱以下使用說明
+                        https://github.com/browserify/browserify#usage
                     */
-                   .pipe(sass())
-                   .pipe(buffer())
-                   /*
-                     cleanCSS() 包含合併 css 檔案、簡化或壓縮 css 語法，例如使用功能相同但是更簡短的語法替代原本的 css 語法。
-                   */
-                  .pipe(cleanCSS(cleanCSSConfig))
-                  .pipe(gulp.dest(distRoot));
+                    const srcMapShouldBeIncluded = bundle.sourceMap === true ? true : false;
+                    let jsFolderPathRelativeToThemeRoot = bundle.pathRelativeToThemeRoot;
+                    if (!_.isString(jsFolderPathRelativeToThemeRoot)) {
+                        jsFolderPathRelativeToThemeRoot = '';
+                    }
+                    let bundleJsTask = () => {
+                            const transpile = 
+                                browserify({ //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
+                                    basedir: '.',
+                                    entries: bundle.entryFiles,
+                                    cache:{},
+                                    packageCache:{},
+                                    debug:srcMapShouldBeIncluded  //是否包含 sourcemap
+                                })
+                                .plugin(tsify, createTsConfig(bundle.tsConfig))
+                                .bundle()
+                                /*  為了運用 gulp 建立程式檔案，這裡使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
+                                    source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
+                                    欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
+                                */
+                                .pipe(source(bundle.fileName))
+                                .pipe(buffer());
+                            
+                            if (bundle.uglify == true) {
+                                if (srcMapShouldBeIncluded) {
+                                    transpile.pipe(sourcemaps.init({loadMaps: true}))
+                                             /*
+                                                改成可以建置多個 bundle 以後，我試了解種設定都無法令 gulp-minify 產生 js 壓縮檔，
+                                                因此決定改用 TypeScript 官方和 gulp 官方推薦的 gulp-uglify 來負責壓縮 js 檔案。
+        
+                                                https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
+                                             */
+                                             .pipe(uglify())
+                                             /*
+                                                改成可以建置多個 bundle 以後，我發現除非 sourcemaps.write 改為不帶參數，
+                                                也就是直接將 source map 寫到 js 檔案中，否則不管怎麼調整 sourcemaps 設定，
+                                                它都不會輸出 source map 檔案。這狀況的原因不明，但既然可以減少瀏覽器發送一個請求，
+                                                那似乎也不壞，就這樣做吧。
+                                             */
+                                             .pipe(sourcemaps.write())
+                                } else {
+                                    transpile.pipe(uglify());
+                                }
+                            }
+                            return transpile.pipe(
+                                gulp.dest(upath.join(distFolder, jsFolderPathRelativeToThemeRoot))
+                            );
+                    };//end bundleTask
+                    return bundleJsTask;
+                });
+                return gulp.parallel(bundleTasks);
+            } else {
+                console.log('The build settings of JavaScript is blank');
+                console.log('Therefore a function that does nothing will be used as the prepareJs task.');
+                return doNothing;
+            }
+        }
+        
+        prepareJsTask = gulp.series(removeJSArtifact, createPrepareJsTask());
     } else {
-        return gulp.src([upath.join(cssSrcRoot, 'style.scss')], {base:'.'})
-                   .pipe(sourcemaps.init())
-                   .pipe(sass())
-                   .pipe(buffer())
-                   .pipe(cleanCSS(cleanCSSConfig))
-                   .pipe(sourcemaps.write('./'))
-                   /*
-                     如果以上作業的 gulp 基礎路徑不像現在一樣是「.」，那最後輸出樣式到 distRoot 時，
-                     gulp 就會在 distRoot 裡面重建 . 到原始碼之間的階層，導致 gulp 後續要打包成場景時找不到樣式檔案，
-                     或是讓場景無法照原先的規劃在場景根目錄找到樣式。
-                     但如果把 gulp 基礎路徑設定為 cssSrcRoot，那又會導致 scss 樣式檔案在瀏覽器 debugger 裡面出現的目錄階層
-                     與專案目錄和 js 原始碼目錄階層不同。
-                     為解決這個問題，這邊使用 flatten 在 sourcemap 輸出之後打平路徑階層，最後才輸出至 distRoot。
-                   */
-                   .pipe(flatten())
-                   .pipe(gulp.dest(distRoot));
+        console.log('Build configuration of JavaScript does not exist.');
+        console.log('Therefore a function that does nothing will be used as the prepareJs task.');
+        prepareJsTask = doNothing;
+    }
+
+    if (_.isObjectLike(buildSettings.build.css)) {
+        function createPrepareCssTask() {
+            const build = buildSettings.build;
+            if (_.isArray(build.css.bundles) && !build.css.bundles.length <= 0) {
+                const srcMapShouldBeIncluded = build.css.sourceMap === true ? true : false;
+                let bundleTasks = null;
+                if (srcMapShouldBeIncluded) {
+                    bundleTasks = build.css.bundles.map((bundle, idx) => {
+                        if (_.isEmpty(bundle.entryFile)) {
+                            console.log(`The CSS bundle settings located at the order ${idx + 1} does not specify it's entry file.`);
+                            console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
+                            return doNothing;
+                        }
+    
+                        let cleanCSSConfig = bundle.cleanCSSConfig;
+                        if (!_.isPlainObject(cleanCSSConfig)) {
+                            cleanCSSConfig = {
+                                "format":"beautify",
+                                "inline":["local"],
+                                "level":1,
+                                "sourceMap":srcMapShouldBeIncluded
+                            };
+                        }
+                        const bundleCss = () => {
+                            return gulp.src(bundle.entryFile, {base:srcFolder})
+                                       .pipe(sourcemaps.init())
+                                       .pipe(sass())
+                                       .pipe(buffer())
+                                       .pipe(cleanCSS(cleanCSSConfig))
+                                       .pipe(sourcemaps.write('./'))
+                                       /*
+                                           如果以上作業的 gulp 基礎路徑不像現在一樣是「.」，那最後輸出樣式到 distRoot 時，
+                                           gulp 就會在 distRoot 裡面重建 . 到原始碼之間的階層，導致 gulp 後續要打包成場景時找不到樣式檔案，
+                                           或是讓場景無法照原先的規劃在場景根目錄找到樣式。
+                                           但如果把 gulp 基礎路徑設定為 cssSrcRoot，那又會導致 scss 樣式檔案在瀏覽器 debugger 裡面出現的目錄階層
+                                           與專案目錄和 js 原始碼目錄階層不同。
+                                           為解決這個問題，這邊使用 flatten 在 sourcemap 輸出之後打平路徑階層，最後才輸出至 distRoot。
+                                       */
+                                       .pipe(flatten())
+                                       .pipe(gulp.dest(distFolder));
+                        }
+                        return bundleCss;
+                    });
+                } else {
+                    bundleTasks = build.css.bundles.map((bundle, idx) => {
+                        if (_.isEmpty(bundle.entryFile)) {
+                            console.log(`The CSS bundle settings located at the order ${idx + 1} does not specify it's entry file.`);
+                            console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
+                            return doNothing;
+                        }
+    
+                        let cleanCSSConfig = bundle.cleanCSSConfig;
+                        if (!_.isPlainObject(cleanCSSConfig)) {
+                            cleanCSSConfig = {
+                                "format":"beautify",
+                                "inline":["local"],
+                                "level":1,
+                                "sourceMap":srcMapShouldBeIncluded
+                            };
+                        }
+
+                        const bundleCss = () => {
+                            return gulp.src(bundle.entryFile, {base:srcFolder})
+                                       /*
+                                           sass() 這部分除了包含轉譯 scss，它還會利用 scss 自訂的 css import 語法機制將其他 css 檔案
+                                           合併到主要的 css 檔案裡，但是不包含把 css 檔案串連起來。
+                                       */
+                                       .pipe(sass())
+                                       .pipe(buffer())
+                                       /*
+                                           cleanCSS() 包含合併 css 檔案、簡化或壓縮 css 語法，例如使用功能相同但是更簡短的語法替代原本的 css 語法。
+                                       */
+                                       .pipe(cleanCSS(cleanCSSConfig))
+                                       .pipe(gulp.dest(distFolder));
+                        }
+                        return bundleCss;
+                    });
+                }
+                return gulp.parallel(bundleTasks);
+            } else {
+                console.log('The build settings of CSS is blank');
+                console.log('Therefore a function that does nothing will be used as the prepareCss task.');
+                return doNothing;
+            }
+        }
+
+        prepareCssTask = gulp.series(removeCSSArtifact, createPrepareCssTask());
+    } else {
+        console.log('Build configuration of CSS does not exist.');
+        console.log('Therefore a function that does nothing will be used as the prepareJs task.');
+        prepareCssTask = doNothing;
+    }
+
+    if (_.isPlainObject(buildSettings.build.html) && _.isPlainObject(buildSettings.build.html.variableSubstitution)) {
+        const htmlSrcRoot = upath.join(srcFolder, 'html');
+        const pathOfHtmlSrcFiles = ['**/*.php', '**/*.html'].map(filePattern => upath.join(htmlSrcRoot, filePattern));
+
+        function copyHtmlFilesTask(){
+            /*
+              這邊之所以要排除 general-header.php 的原因是我們稍後要根據建置模式產生對應的樣板內容
+            */
+            return gulp.src(pathOfHtmlSrcFiles, { base: htmlSrcRoot})
+                       .pipe(gulp.dest(distFolder));
+        }
+
+        const parallelTasks = Object.keys(buildSettings.build.html.variableSubstitution).map(function(key) {
+            if (_.isPlainObject(buildSettings.build.html.variableSubstitution[key])) {
+                return () => {
+                    return gulp.src(upath.join(distFolder, key), {base:distFolder})
+                               .pipe(template(buildSettings.build.html.variableSubstitution[key]))
+                               .pipe(gulp.dest(distFolder));
+                }
+            } else {
+                return (done) => { done() };
+            }
+        });
+        const variableSubstitutionTask = gulp.parallel(...parallelTasks);
+        prepareHtmlTask = gulp.series(removeHtmlArtifact, gulp.series(copyHtmlFilesTask, variableSubstitutionTask));
+    } else {
+        console.log('Missing the variable substitution settings for prepareHtml task.');
+        console.log('Therefore a function that does nothing will be used as the prepareHtml task.');
+        prepareHtmlTask = doNothing;
     }
 }
 
-const prepareCSSTask = gulp.series(removeCSSArtifact, transpileSCSS);
-gulp.task('prepareCSS', prepareCSSTask);
+gulp.task('prepareJs', prepareJsTask);
+gulp.task('prepareCss', prepareCssTask);
+gulp.task('prepareHtml', prepareHtmlTask);
 
 const imgSrcFiles = nameOfImgAssets.map((img) => {
-    return upath.join(srcRoot, img);
+    return upath.join(srcFolder, img);
 });
 const prepareImgTask = gulp.series(removeImgArtifact, 
     function copyImgs() {
-        return gulp.src(imgSrcFiles, { base:srcRoot })
-                .pipe(gulp.dest(distRoot));
+        return gulp.src(imgSrcFiles, { base:srcFolder })
+                .pipe(gulp.dest(distFolder));
     });
 gulp.task('prepareImg', prepareImgTask);
 
-const htmlSrcRoot = upath.join(srcRoot, 'html');
-const pathOfHtmlSrcFiles = ['**/*.php', '**/*.html'].map(filePattern => upath.join(htmlSrcRoot, filePattern));
-function copyHtmlFilesTask(){
-    /*
-      這邊之所以要排除 general-header.php 的原因是我們稍後要根據建置模式產生對應的樣板內容
-    */
-    return gulp.src(pathOfHtmlSrcFiles, { base: htmlSrcRoot})
-               .pipe(gulp.dest(distRoot));
-}
-
-let variableSubstitutionTask = null;
-if (_.isPlainObject(buildSettings.build.html) && _.isPlainObject(buildSettings.build.html.variableSubstitution)) {
-    const parallelTasks = Object.keys(buildSettings.build.html.variableSubstitution).map(function(key) {
-        if (_.isPlainObject(buildSettings.build.html.variableSubstitution[key])) {
-            return () => {
-                return gulp.src(upath.join(distRoot, key), {base:distRoot})
-                           .pipe(template(buildSettings.build.html.variableSubstitution[key]))
-                           .pipe(gulp.dest(distRoot));
-            }
-        } else {
-            return (done) => { done() };
-        }
-    });
-    variableSubstitutionTask = gulp.parallel(...parallelTasks);
-} else {
-    variableSubstitutionTask = (done) => { done() };
-}
-
-const prepareHtmlTask = gulp.series(removeHtmlArtifact, gulp.series(copyHtmlFilesTask, variableSubstitutionTask));
-
-gulp.task('prepareHtml', prepareHtmlTask);
-
-const buildTask = gulp.parallel(prepareJSTask, prepareCSSTask, prepareImgTask, prepareHtmlTask);
+const buildTask = gulp.parallel(prepareJsTask, prepareCssTask, prepareImgTask, prepareHtmlTask);
 gulp.task('build', buildTask);
 gulp.task('default', buildTask);
 
@@ -323,14 +372,14 @@ if (!_.isString(deploymentConfig.path)) {
         
         switch (deploymentConfig.method) {
             case 'ssh':
-                const itemsToArchive = patternsOfHtmlSrcFile.concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
-                                                            .map(filePattern => upath.join(distRoot, filePattern));
+                const itemsToArchive = webPageArtifacts.concat(cssArtifacts).concat(jsArtifacts).concat(nameOfImgAssets)
+                                                            .map(filePattern => upath.join(distFolder, filePattern));
                 let nameOfNewArchive = null;
                 
                 const packArtifact = () => {
                         const createDate = dateFormat(new Date(), "yyyy-mmdd-HHMM");
                         nameOfNewArchive = `${prefixOfArchive}-${createDate}.tar.gz`;
-                        return gulp.src(itemsToArchive, {base:distRoot})
+                        return gulp.src(itemsToArchive, {base:distFolder})
                                    .pipe(tar(nameOfNewArchive))
                                    .pipe(gzip({
                                        append:false
@@ -426,7 +475,7 @@ if (!_.isString(deploymentConfig.path)) {
                                         });
                                     }).then(() => {
                                         const transferFilesToRemoteRecursivelyAndSynchronized = (pathRelativeToThemeRoot) => {
-                                            const localPathOfFile = upath.join(distRoot, pathRelativeToThemeRoot);
+                                            const localPathOfFile = upath.join(distFolder, pathRelativeToThemeRoot);
                                             const pathOfFileOnRemoteServer = upath.toUnix(upath.join(remoteThemeFolder, pathRelativeToThemeRoot));
                                             return fsPromises.stat(localPathOfFile)
                                                              .then(stat => {
@@ -500,7 +549,7 @@ if (!_.isString(deploymentConfig.path)) {
                     return del(destPath)
                              .then(() => {
                                  console.log(`Previous installation of theme in ${destPath} has been removed.`);
-                                 gulp.src(upath.join(distRoot, '*'), {base:distRoot})
+                                 gulp.src(upath.join(distFolder, '*'), {base:distFolder})
                                      .pipe(gulp.dest(destPath));
                              });
                 };
@@ -535,8 +584,8 @@ if (!hostObjExists || !hostNameExists) {
 }
 gulp.task('vscodeLaunchConfig', vscodeLaunchCOnfigTask);
 
-const tsSrcFiles = ['src/ts/**/*.ts', 'src/ts/**/*.tsx'];
-const cssSrcFiles = ['src/css/**/*.css', 'src/css/**/*.scss'];
+const tsSrcFiles = [upath.join(srcFolder, 'ts/**/*.ts'), upath.join(srcFolder, 'ts/**/*.tsx')];
+const cssSrcFiles = [upath.join(srcFolder, 'css/**/*.css'), upath.join(srcFolder,  'css/**/*.scss')];
 /*
   注意，雖然前面程式的路徑都已經改由 path 產生以便適應 windows 工作環境，
   但是因為這邊 gulp watch 只接受 unix-like 系統格式的路徑，所以這邊不需要透過 path 重新產生路徑。
@@ -544,7 +593,7 @@ const cssSrcFiles = ['src/css/**/*.css', 'src/css/**/*.scss'];
 function monitorSrcAndRebuildTask() {
         gulp.watch(pathOfHtmlSrcFiles, prepareHtmlTask),
         gulp.watch(cssSrcFiles, prepareCSSTask),
-        gulp.watch(tsSrcFiles, prepareJSTask),
+        gulp.watch(tsSrcFiles, prepareJsTask),
         gulp.watch(imgSrcFiles, prepareImgTask)
 };
 /*

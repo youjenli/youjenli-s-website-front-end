@@ -14,22 +14,27 @@ module.exports = {
     },
     build:{
         css:{
-            //是否透過 gulp 的 sourcemap 套件產生 css 的 source map。
-            sourceMap:false,
-            /*
-                用來設定 CleanCSS 的資訊物件，欲了解可設定的參數請參閱 cleanCSS 原始碼網站:
-                https://github.com/jakubpawlowicz/clean-css
-            */
-            cleanCSSConfig:{
-                //適用於生產環境的設定
-                /*"inline":["local"],
-                "level":1*/
-                //適用於開發的設定
-                "format":"beautify",
-                "inline":["local"],
-                "level":1,
-                "sourceMap":true
-            }
+            sourceMap:true,//是否為這些 css 檔案產生 source map。
+            bundles:[
+                {
+                    entryFile:'src/css/style.scss',
+                    /*
+                        用來設定 CleanCSS 的資訊物件，欲了解可設定的參數請參閱 cleanCSS 原始碼網站:
+                        https://github.com/jakubpawlowicz/clean-css
+                    */
+                    cleanCSSConfig:{
+                        //適用於生產環境的設定
+                        /*"inline":["local"],
+                        "level":1, 
+                        "sourceMap":false*/
+                        //適用於開發的設定
+                        "format":"beautify",
+                        "inline":["local"],
+                        "level":1,
+                        "sourceMap":true
+                    }
+                }
+            ]
         },
         js:{
             /*
