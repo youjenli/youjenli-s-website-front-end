@@ -1,12 +1,22 @@
 const fs = require('fs');
 const os = require('os');
+const upath = require('upath');
 
 /*
     之所以把所有建置設定集中在此檔案，原因是我一直無法簡單的餵代表建置模式的作業系統環境變數給 gulp 程序，
     這樣乾脆把所有設定整理到同一個檔案，統一在此調整設定。
 */
 const hostName = 'localhost';
-const rootPathOfJsInThisTheme = 'js';
+const jsFolderRelativeToThemeRoot = 'js';
+const cssFolderRelativeToThemeRoot = 'css';
+const prismLanguageBundles = fs.readdirSync('src/js/prism-components')
+                               .map(fileName => {
+                                    return {
+                                       fileName:fileName,
+                                       entryFiles:['src/js/prism-components/' + fileName],
+                                       pathRelativeToThemeRoot:path.join(jsFolderRelativeToThemeRoot, 'prism-components')
+                                    };
+                                });
 module.exports = {
     theme:{
         //場景的名稱
@@ -32,7 +42,17 @@ module.exports = {
                         "inline":["local"],
                         "level":1,
                         "sourceMap":true
-                    }
+                    },
+                    pathRelativeToThemeRoot:cssFolderRelativeToThemeRoot
+                },{
+                    entryFile:'src/css/prism.css',
+                    cleanCSSConfig:{
+                        "format":"beautify",
+                        "inline":["local"],
+                        "level":1,
+                        "sourceMap":true
+                    },
+                    pathRelativeToThemeRoot:cssFolderRelativeToThemeRoot
                 }
             ]
         },
@@ -50,7 +70,7 @@ module.exports = {
                         要令 browserify 從哪些 ts 檔案開始產生前端 js 檔案。
                         要注意的是就算有多個檔案，最後他們仍會被包含在同一個 js 檔案中。
                     */
-                    entryFiles:['src/ts/index.tsx'], 
+                    entryFiles:['src/ts/index.tsx'],
                     //給 typescript transpiler 的設定，格式與 tsconfig.js 相同
                     tsConfig:{
                         "compilerOptions": {
@@ -59,9 +79,28 @@ module.exports = {
                             "jsx":"react"
                         }
                     },
-                    //此 js 檔案要擺放的路徑，相對於場景的根路徑。
-                    pathRelativeToThemeRoot:rootPathOfJsInThisTheme
+                    pathRelativeToThemeRoot:jsFolderRelativeToThemeRoot
                 }
+            ]
+        },
+        js:{
+            //是否壓縮 js 檔案
+            uglify:false,
+            sourceMap:true,//是否產生 source map
+            /*
+                指定要以哪些 ts 或 js 檔案作為程式執行點打包 js 應用程式。
+            */
+            bundles:[
+                {
+                    fileName:'prism.js',
+                    entryFiles:['src/js/prism.js'],
+                    pathRelativeToThemeRoot:jsFolderRelativeToThemeRoot
+                },{
+                    fileName:'prism-config.js',
+                    entryFiles:['src/js/prism-config.js'],
+                    pathRelativeToThemeRoot:jsFolderRelativeToThemeRoot
+                },
+                ...prismLanguageBundles
             ]
         },
         html:{
