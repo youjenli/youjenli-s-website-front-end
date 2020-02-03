@@ -6,7 +6,7 @@ const GulpSSH = require('gulp-ssh');
 const browserify = require("browserify");
 const source = require('vinyl-source-stream');
 const tsify = require("tsify");
-const minify = require('gulp-minify');
+const uglify = require('gulp-uglify');
 const sourcemaps = require('gulp-sourcemaps');
 const buffer = require('vinyl-buffer');
 const sass = require('gulp-sass');
@@ -125,11 +125,11 @@ function createPrepareJsTask() {
                 https://github.com/browserify/browserify#usage
             */
             const includeSrcMap = bundle.sourceMap === true ? true : false;
-            let pathRelativeToThemeRoot = bundle.pathRelativeToThemeRoot;
-            if (!_.isString(pathRelativeToThemeRoot)) {
-                pathRelativeToThemeRoot = '';
+            let jsFolderPathRelativeToThemeRoot = bundle.pathRelativeToThemeRoot;
+            if (!_.isString(jsFolderPathRelativeToThemeRoot)) {
+                jsFolderPathRelativeToThemeRoot = '';
             }
-            let bundleTask = (done) => {
+            let bundleTask = () => {
                     const transpile = 
                         browserify({ //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
                             basedir: '.',
@@ -147,26 +147,30 @@ function createPrepareJsTask() {
                         .pipe(source(bundle.fileName))
                         .pipe(buffer());
                     
-                    if (bundle.minify === true) {//如果要壓縮 js 檔
-                        transpile.pipe(minify({
-                                     noSource:includeSrcMap,
-                                     ext:{
-                                         min:'.js'
-                                     }
-                                 }));
-                    } else if (includeSrcMap) {
-                        /* 
-                            若不壓縮 js，則視情況輸出 source map。
-                            這裡使用 gulp sourcemap 套件的方法很不循常，但這是我摸索出的有效方法。
-                            這足以整合 gulp、browserify 和 gulp-sourcemap。
-                        */
-                        transpile.pipe(sourcemaps.init({loadMaps: true}))
-                                 .pipe(sourcemaps.write('./'));
+                    if (bundle.uglify == true) {
+                        if (includeSrcMap) {
+                            transpile.pipe(sourcemaps.init({loadMaps: true}))
+                                     /*
+                                        改成可以建置多個 bundle 以後，我試了解種設定都無法令 gulp-minify 產生 js 壓縮檔，
+                                        因此決定改用 TypeScript 官方和 gulp 官方推薦的 gulp-uglify 來負責壓縮 js 檔案。
+
+                                        https://github.com/gulpjs/gulp/blob/master/docs/recipes/browserify-uglify-sourcemap.md
+                                     */
+                                     .pipe(uglify())
+                                     /*
+                                        改成可以建置多個 bundle 以後，我發現除非 sourcemaps.write 改為不帶參數，
+                                        也就是直接將 source map 寫到 js 檔案中，否則不管怎麼調整 sourcemaps 設定，
+                                        它都不會輸出 source map 檔案。這狀況的原因不明，但既然可以減少瀏覽器發送一個請求，
+                                        那似乎也不壞，就這樣做吧。
+                                     */
+                                     .pipe(sourcemaps.write())
+                        } else {
+                            transpile.pipe(uglify());
+                        }
                     }
-                    transpile.pipe(
-                        gulp.dest(upath.join(distRoot, pathRelativeToThemeRoot)
-                    ));
-                    done();
+                    return transpile.pipe(
+                        gulp.dest(upath.join(distRoot, jsFolderPathRelativeToThemeRoot))
+                    );
             };//end bundleTask
             return bundleTask;
         });

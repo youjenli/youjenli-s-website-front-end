@@ -54,7 +54,7 @@ module.exports = {
                     //是否產生 source map
                     sourceMap:true,
                     //是否壓縮 js 檔案
-                    minify:false,
+                    uglify:false,
                     //此 js 檔案要擺放的路徑，相對於場景的根路徑。
                     pathRelativeToThemeRoot:rootPathOfJsInThisTheme
                 }
@@ -79,6 +79,9 @@ module.exports = {
                         若要使用 disqus 留言板，那要設定留言板的名稱：
                     */
                     shortNameOfForum:''
+                },
+                "template-parts/general-content.php":{
+                    rootPathOfJs:'js' //javascript 執行檔在場景中的路徑
                 }
             }
         }
