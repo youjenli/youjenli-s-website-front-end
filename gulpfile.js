@@ -88,6 +88,7 @@ if (!_.isObjectLike(buildSettings.build)) {
         function createPrepareJsTask() {
             const build = buildSettings.build;
             if (_.isArray(build.js.bundles) && !build.js.bundles.length <= 0) {
+                const srcMapShouldBeIncluded = build.js.sourceMap === true ? true : false;
                 const bundleTasks = build.js.bundles.map((bundle, idx) => {
                     if (_.isEmpty(bundle.fileName)) {
                         console.log(`The JavaScript bundle settings located at the order ${idx + 1} does not have a name.`);
@@ -131,12 +132,11 @@ if (!_.isObjectLike(buildSettings.build)) {
                         欲了解詳情可參閱以下使用說明
                         https://github.com/browserify/browserify#usage
                     */
-                    const srcMapShouldBeIncluded = bundle.sourceMap === true ? true : false;
                     let jsFolderPathRelativeToThemeRoot = bundle.pathRelativeToThemeRoot;
                     if (!_.isString(jsFolderPathRelativeToThemeRoot)) {
                         jsFolderPathRelativeToThemeRoot = '';
                     }
-                    let bundleJsTask = () => {
+                    const bundleJsTask = () => {
                             const transpile = 
                                 browserify({ //browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
                                     basedir: '.',
