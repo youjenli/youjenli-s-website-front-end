@@ -132,9 +132,9 @@ if (!_.isObjectLike(buildSettings.build)) {
                         欲了解詳情可參閱以下使用說明
                         https://github.com/browserify/browserify#usage
                     */
-                    let jsFolderPathRelativeToThemeRoot = bundle.pathRelativeToThemeRoot;
-                    if (!_.isString(jsFolderPathRelativeToThemeRoot)) {
-                        jsFolderPathRelativeToThemeRoot = '';
+                    let pathWherebundleResides = bundle.pathRelativeToThemeRoot;
+                    if (!_.isString(pathWherebundleResides)) {
+                        pathWherebundleResides = '';
                     }
                     const bundleJsTask = () => {
                             const transpile = 
@@ -176,7 +176,7 @@ if (!_.isObjectLike(buildSettings.build)) {
                                 }
                             }
                             return transpile.pipe(
-                                gulp.dest(upath.join(distFolder, jsFolderPathRelativeToThemeRoot))
+                                gulp.dest(upath.join(distFolder, pathWherebundleResides))
                             );
                     };//end bundleTask
                     return bundleJsTask;
@@ -219,6 +219,12 @@ if (!_.isObjectLike(buildSettings.build)) {
                                 "sourceMap":srcMapShouldBeIncluded
                             };
                         }
+
+                        let pathWherebundleResides = bundle.pathRelativeToThemeRoot;
+                        if (!_.isString(pathWherebundleResides)) {
+                            pathWherebundleResides = '';
+                        }
+
                         const bundleCss = () => {
                             return gulp.src(bundle.entryFile, {base:srcFolder})
                                        .pipe(sourcemaps.init())
@@ -235,7 +241,9 @@ if (!_.isObjectLike(buildSettings.build)) {
                                            為解決這個問題，這邊使用 flatten 在 sourcemap 輸出之後打平路徑階層，最後才輸出至 distRoot。
                                        */
                                        .pipe(flatten())
-                                       .pipe(gulp.dest(distFolder));
+                                       .pipe(
+                                           gulp.dest(upath.join(distFolder, pathWherebundleResides))
+                                        );
                         }
                         return bundleCss;
                     });
@@ -257,6 +265,11 @@ if (!_.isObjectLike(buildSettings.build)) {
                             };
                         }
 
+                        let pathWherebundleResides = bundle.pathRelativeToThemeRoot;
+                        if (!_.isString(pathWherebundleResides)) {
+                            pathWherebundleResides = '';
+                        }
+
                         const bundleCss = () => {
                             return gulp.src(bundle.entryFile, {base:srcFolder})
                                        /*
@@ -269,7 +282,9 @@ if (!_.isObjectLike(buildSettings.build)) {
                                            cleanCSS() 包含合併 css 檔案、簡化或壓縮 css 語法，例如使用功能相同但是更簡短的語法替代原本的 css 語法。
                                        */
                                        .pipe(cleanCSS(cleanCSSConfig))
-                                       .pipe(gulp.dest(distFolder));
+                                       .pipe(
+                                            gulp.dest(upath.join(distFolder, pathWherebundleResides))
+                                        );
                         }
                         return bundleCss;
                     });
