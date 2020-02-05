@@ -106,22 +106,21 @@ module.exports = {
                 以下是替換的參數內容設定:
             */
             variableSubstitution:{
-                "template-parts/general-header.php":{
+                "template-parts/parameters.php": {
                     /*
                       客戶端的 navigo router 必須擁有包含通訊協定的完整 host name，因此我得透過 wordpress 的 api 輸出此資訊到客戶端
                       然而我必須在呼叫 wordpress 的 api 時，指定網站的通訊協定；在此同時，開發模式和生產模式的通訊協定又不同，
                       因此要替換此 php 指令稿當中呼叫 wordpress api 提供網站名稱的函式之參數。
-    
+                
                       檔案參數的路徑參考基準是 html 資料夾的路徑，也就是 /src/html
                     */
-                    protocol:'https',
+                    connectionProtocolOfThisSite: 'https',
                     /*
-                        若要使用 disqus 留言板，那要設定留言板的名稱：
+                        若要使用 disqus 留言板，那要在以下欄位提供留言板的名稱：
                     */
-                    shortNameOfForum:''
-                },
-                "template-parts/general-content.php":{
-                    rootPathOfJs:'js' //javascript 執行檔在場景中的路徑
+                    shortNameOfDisqusForum: 'youjenli-dev',
+                    //JavaScript 程式碼的根路徑，相對於場景根路徑
+                    pathOfJsSrcFiles: jsFolderRelativeToThemeRoot
                 }
             }
         }

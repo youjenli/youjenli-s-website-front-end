@@ -9,7 +9,9 @@
 ?>
 <title></title>
 <link rel="stylesheet" type="text/css" href="<?php echo get_theme_file_uri('style.css') ?>">
-<?php 
+<?php
+    //載入包含 $pathOfJsSrcFiles, $connectionProtocolOfThisSite, $shortNameOfDisqusForum 在內的參數
+    require('parameters.php');
     /*
       以下參數的用途是讓 navigo 知道 site url，這樣解析路徑的規則就不用寫死在客戶端。
       site_url 是當使用者加上 wp-admin 之後就可以存取到管理介面的路徑。
@@ -18,19 +20,20 @@
       get_site_url 函式最後一項參數的奇怪符號是 gulp 所調用的 Lodash/Underscore 樣板引擎之記號。
       我們在打包場景之前要透過樣板引擎調整這裡的設定，使它能符合場景的使用情境（開發/生產環境）
     */
-    $url = get_site_url(null, '', '<%= protocol %>');
+    $url = get_site_url(null, '', $connectionProtocolOfThisSite);
 ?>
 <script>
     window.wp = {
         siteName:<?php echo json_encode( get_bloginfo('name', 'raw') ); ?>,
         siteUrl:<?php echo json_encode( untrailingslashit($url) ); ?>,
+        pathOfJsSrc:<?php echo json_encode( $pathOfJsSrcFiles ); ?>,
         <?php 
             // themeUrl 的用途是讓前端知道場景的路徑，這樣才可以提供圖片網址給前端頁面
         ?>
         themeUrl:<?php echo json_encode( trailingslashit( get_template_directory_uri() ) ); ?>,
         responseCode:<?php echo http_response_code(); ?>,
         disquz:{
-            shortName:'<%= shortNameOfForum %>'
+            shortName:<?php echo json_encode( $shortNameOfDisqusForum ) ?>
         }
     }
 </script>
