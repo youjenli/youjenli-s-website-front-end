@@ -119,7 +119,7 @@ if (!_.isObjectLike(buildSettings.build)) {
             }
 
             const transpileTypeScriptSrcTasks = build.ts.bundles.map((bundle, idx) => {
-                if (_.isEmpty(bundle.fileName)) {
+                if (_.isEmpty(bundle.outputFileName)) {
                     console.log(`The TypeScript source code transpile settings located at the order ${idx + 1} does not have a name.`);
                     console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
                     return doNothing;
@@ -201,14 +201,14 @@ if (!_.isObjectLike(buildSettings.build)) {
                                                 source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
                                                 欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
                                             */
-                                            .pipe(source(bundle.fileName))
+                                            .pipe(source(bundle.outputFileName))
                                             .pipe(buffer());
                         return doUglifyTask(bundleTask)
                                     .pipe(gulp.dest(upath.join(distFolder, pathWherebundleResides)));
                 };//end bundleTask
                 Object.defineProperty(createBundle, 'name', 
                         {
-                            value:`Prepare ${bundle.fileName}.`,
+                            value:`Prepare ${bundle.outputFileName}.`,
                             writable: false
                         });
                 return createBundle;
@@ -263,7 +263,7 @@ if (!_.isObjectLike(buildSettings.build)) {
             }
 
             const bundleTasks = build.js.bundles.map((bundle, idx) => {
-                if (_.isEmpty(bundle.fileName)) {
+                if (_.isEmpty(bundle.outputFileName)) {
                     console.log(`The JavaScript source code bundle settings located at the order ${idx + 1} does not have a name.`);
                     console.log('Therefore a function that does nothing will be used as the bundle task for this bundle.');
                     return doNothing;
@@ -292,14 +292,14 @@ if (!_.isObjectLike(buildSettings.build)) {
                                             source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
                                             欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
                                         */
-                                        .pipe(source(bundle.fileName))
+                                        .pipe(source(bundle.outputFileName))
                                         .pipe(buffer());
                         return doUglifyTask(task)
                                     .pipe(gulp.dest(upath.join(distFolder, pathWherebundleResides)));
                 };//end bundleTask
                 Object.defineProperty(bundleTask, 'name', 
                         {
-                            value:`Prepare ${bundle.fileName}.`,
+                            value:`Prepare ${bundle.outputFileName}.`,
                             writable: false
                         });
                 return bundleTask;

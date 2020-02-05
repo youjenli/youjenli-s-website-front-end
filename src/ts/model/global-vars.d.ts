@@ -38,7 +38,9 @@ declare global {
                 進而導致頁面內的導覽功能失效，因此這邊要透過參數傳遞場景路徑。
             */
             themeUrl:string;
-            pathOfJsSrcFiles:string; //JavaScript 程式碼的根路徑，相對於場景根路徑
+            jsSrcFolder:string;
+            urlOfPrismJsSrcFile:string,
+            urlOfPrismCssSrcFile:string
             titleBar:{
                 menuItems:MenuItem[];
             };

@@ -4,5 +4,5 @@
     require('parameters.php');
 ?>
 <div id="react-root"></div>
-<script type="text/javascript" src="<?php echo get_theme_file_uri( path_join($pathOfJsSrcFiles, 'index.js') ); ?>"></script>
+<script type="text/javascript" src="<?php echo get_theme_file_uri( $pathOfMainJsOutputFile ); ?>"></script>
 <?php //https://developer.wordpress.org/reference/functions/path_join/ ?>

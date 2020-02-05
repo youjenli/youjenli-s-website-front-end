@@ -9,18 +9,30 @@ const upath = require('upath');
 const hostName = 'localhost';
 const jsFolderRelativeToThemeRoot = 'js';
 const cssFolderRelativeToThemeRoot = 'css';
+const pathOfPrismComponents = upath.join(jsFolderRelativeToThemeRoot, 'prism-components');
 const prismLanguageBundles = fs.readdirSync('src/js/prism-components')
-                               .map(fileName => {
-                                    return {
-                                       fileName:fileName,
-                                       entryFiles:['src/js/prism-components/' + fileName],
-                                       pathRelativeToThemeRoot:path.join(jsFolderRelativeToThemeRoot, 'prism-components')
-                                    };
-                                });
+    .map(fileName => {
+        return {
+            entryFiles: ['src/js/prism-components/' + fileName],
+            outputFileName: fileName,
+            pathRelativeToThemeRoot: pathOfPrismComponents
+        };
+    });
+const nameOfMainCssSrcFile = 'style.scss';
+const nameOfMainCssOutputFile = upath.basename(nameOfMainCssSrcFile, '.scss') + '.css';
+const pathOfMainCssOutputFile = upath.join(cssFolderRelativeToThemeRoot, nameOfMainCssOutputFile);
+const nameOfMainJsEntryFile = 'index.js';
+const pathOfMainJsOutputFile = upath.join(jsFolderRelativeToThemeRoot, nameOfMainJsEntryFile);
+
+const nameOfPrismCssFile = 'prism.css';
+const nameOfPrismJsFile = 'prism.js';
+const pathOfPrismJsSrcFile = upath.join(jsFolderRelativeToThemeRoot, nameOfPrismJsFile);
+const pathOfPrismCssSrcFile = upath.join(cssFolderRelativeToThemeRoot, nameOfPrismCssFile);
+
 module.exports = {
     theme:{
         //場景的名稱
-        name:'helloworld'
+        name:'youjenli'
     },
     build:{
         css:{
@@ -43,6 +55,7 @@ module.exports = {
                         "level":1,
                         "sourceMap":true
                     },
+                    outputFileName: nameOfMainCssOutputFile,
                     pathRelativeToThemeRoot:cssFolderRelativeToThemeRoot
                 },{
                     entryFile:'src/css/prism.css',
@@ -52,6 +65,7 @@ module.exports = {
                         "level":1,
                         "sourceMap":true
                     },
+                    outputFileName: nameOfPrismCssFile,
                     pathRelativeToThemeRoot:cssFolderRelativeToThemeRoot
                 }
             ]
@@ -65,7 +79,6 @@ module.exports = {
             */
             bundles:[
                 {
-                    fileName:'index.js',//打包好的 js 檔案名稱
                     /*
                         要令 browserify 從哪些 ts 檔案開始產生前端 js 檔案。
                         要注意的是就算有多個檔案，最後他們仍會被包含在同一個 js 檔案中。
@@ -79,7 +92,8 @@ module.exports = {
                             "jsx":"react"
                         }
                     },
-                    externalAmbientModule:'prismjs',
+                    excludeAmbientModule: 'prismjs',
+                    outputFileName: nameOfMainJsEntryFile, //打包好的 js 檔案名稱
                     pathRelativeToThemeRoot:jsFolderRelativeToThemeRoot
                 }
             ]
@@ -93,9 +107,9 @@ module.exports = {
             */
             bundles:[
                 {
-                    fileName:'prism.js',
-                    entryFiles:['src/js/prism.js'],
-                    pathRelativeToThemeRoot:jsFolderRelativeToThemeRoot
+                    entryFiles: ['src/js/prism.js'],
+                    outputFileName: nameOfPrismJsFile,
+                    pathRelativeToThemeRoot: jsFolderRelativeToThemeRoot
                 },
                 ...prismLanguageBundles
             ]
@@ -119,8 +133,11 @@ module.exports = {
                         若要使用 disqus 留言板，那要在以下欄位提供留言板的名稱：
                     */
                     shortNameOfDisqusForum: 'youjenli-dev',
-                    //JavaScript 程式碼的根路徑，相對於場景根路徑
-                    pathOfJsSrcFiles: jsFolderRelativeToThemeRoot
+                    jsSrcFolder:jsFolderRelativeToThemeRoot, //存放 javascript 執行檔的路徑，相對於場景根路徑。
+                    pathOfMainCssOutputFile: pathOfMainCssOutputFile, //主要 css 檔案的路徑，相對於場景根路徑。
+                    pathOfMainJsOutputFile: pathOfMainJsOutputFile, //主要 js 檔案的路徑，相對於場景根路徑。
+                    pathOfPrismJsSrcFile: pathOfPrismJsSrcFile, //prismjs 的 js 檔案路徑，相對於場景根路徑。
+                    pathOfPrismCssSrcFile: pathOfPrismCssSrcFile, //prismjs 的 css 檔案路徑，相對於場景根路徑。
                 }
             }
         }
@@ -170,10 +187,6 @@ module.exports = {
             */
             //password:'****'
         },
-        /*要部署的壓縮檔相對於建置指令稿的路徑與名稱。
-          建置指令稿只有在無法從前面其他作業得到壓縮檔的名稱時，才會使用這裡的設定。
-          這項設定的用途是給開發者可以在不另外打包的情況下能夠藉由這項參數指示建置指令稿部署 wordpress 場景。 */
-        archive:'./dist/wp-youjenli-website.zip',
         /*要部署場景的路徑，尾端不用加斜線。
           若只是透過檔案系統部署到本地，那這裡就可以自由填寫相對或絕對路徑。
         */

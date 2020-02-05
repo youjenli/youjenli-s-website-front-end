@@ -6,12 +6,13 @@
         3. 標題列設定
         4. 文章分頁設定
     */
-?>
-<title></title>
-<link rel="stylesheet" type="text/css" href="<?php echo get_theme_file_uri('style.css') ?>">
-<?php
+
     //載入包含 $pathOfJsSrcFiles, $connectionProtocolOfThisSite, $shortNameOfDisqusForum 在內的參數
     require('parameters.php');
+?>
+<title></title>
+<link rel="stylesheet" type="text/css" href="<?php echo get_theme_file_uri( $pathOfMainCssOutputFile ); ?>">
+<?php
     /*
       以下參數的用途是讓 navigo 知道 site url，這樣解析路徑的規則就不用寫死在客戶端。
       site_url 是當使用者加上 wp-admin 之後就可以存取到管理介面的路徑。
@@ -26,7 +27,17 @@
     window.wp = {
         siteName:<?php echo json_encode( get_bloginfo('name', 'raw') ); ?>,
         siteUrl:<?php echo json_encode( untrailingslashit($url) ); ?>,
-        pathOfJsSrc:<?php echo json_encode( $pathOfJsSrcFiles ); ?>,
+        <?php /*
+            jsSrcFolder 是存放 javascript 執行檔的路徑，相對於場景根路徑。
+            這個參數是讓前端可以生成 prism 語言套件的存放路徑。
+        */ ?>
+        jsSrcFolder:<?php echo json_encode( $jsSrcFolder ); ?>,
+        <?php /*
+            以下兩項參數是 prismjs 的 js 檔和 css 檔案之完整 url。
+            提供路徑給前端的目的是讓前端可以視情況載入 prismjs 套件。
+        */ ?>
+        urlOfPrismJsSrcFile:<?php echo json_encode( get_theme_file_uri( $pathOfPrismJsSrcFile ) ); ?>,
+        urlOfPrismCssSrcFile:<?php echo json_encode( get_theme_file_uri( $pathOfPrismCssSrcFile ) ); ?>,
         <?php 
             // themeUrl 的用途是讓前端知道場景的路徑，這樣才可以提供圖片網址給前端頁面
         ?>
