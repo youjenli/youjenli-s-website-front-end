@@ -166,8 +166,14 @@ if (!_.isObjectLike(buildSettings.build)) {
                     pathWherebundleResides = '';
                 }
 
-                const transpile = () => {
-                        const transpile = browserify({//browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
+                let excludedAmbientModule = [];
+                if ( _.isArray(bundle.excludeAmbientModule) ||
+                        (_.isString(bundle.excludeAmbientModule) && !_.isEmpty(bundle.excludeAmbientModule) ) ) {
+                    excludedAmbientModule = bundle.excludeAmbientModule;
+                }
+
+                const createBundle = () => {
+                        let bundleTask = browserify({//browserify 會一併打包專案的依賴函式庫 , 也就是 React 和 ReactDOM
                                                 basedir: '.',
                                                 entries: bundle.entryFiles,
                                                 cache:{},
@@ -175,6 +181,21 @@ if (!_.isObjectLike(buildSettings.build)) {
                                                 debug:srcMapShouldBeIncluded  //是否包含 sourcemap
                                             })
                                             .plugin(tsify, createTsConfig(bundle.tsConfig))
+                                            /*
+                                                external 的用途是向 browserify 指示不要一併打包的「專案外部」依賴套件。
+                                                引入這項作業的目的是讓前端可以視情況載入 prismjs。
+                                                
+                                                欲了解 external 可參閱
+                                                https://stackoverflow.com/questions/29222745/how-do-i-exclude-the-requirereact-from-my-browserified-bundle
+                                                或是 browserify 的官方文件
+                                                https://github.com/browserify/browserify#usage
+
+                                                注意，雖然這邊不管是否要排除特定模組的做法對於不需排除的模組而言毫無必要，
+                                                但之所以這樣做的原因是我在開發過程中發現若不一氣喝成地呼叫 browserify 的函式，
+                                                那麼後面 doUglify 執行時就會找不到 browserify 的 pipe 函式，具體原因不明，
+                                                因此只好採用這種做法。
+                                            */
+                                            .external(excludedAmbientModule)
                                             .bundle()
                                             /*  為了運用 gulp 建立程式檔案，這裡使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
                                                 source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
@@ -182,15 +203,15 @@ if (!_.isObjectLike(buildSettings.build)) {
                                             */
                                             .pipe(source(bundle.fileName))
                                             .pipe(buffer());
-                        return doUglifyTask(transpile)
+                        return doUglifyTask(bundleTask)
                                     .pipe(gulp.dest(upath.join(distFolder, pathWherebundleResides)));
                 };//end bundleTask
-                Object.defineProperty(transpile, 'name', 
+                Object.defineProperty(createBundle, 'name', 
                         {
                             value:`Prepare ${bundle.fileName}.`,
                             writable: false
                         });
-                return transpile;
+                return createBundle;
             });
 
             /*

@@ -79,6 +79,7 @@ module.exports = {
                             "jsx":"react"
                         }
                     },
+                    externalAmbientModule:'prismjs',
                     pathRelativeToThemeRoot:jsFolderRelativeToThemeRoot
                 }
             ]
@@ -94,10 +95,6 @@ module.exports = {
                 {
                     fileName:'prism.js',
                     entryFiles:['src/js/prism.js'],
-                    pathRelativeToThemeRoot:jsFolderRelativeToThemeRoot
-                },{
-                    fileName:'prism-config.js',
-                    entryFiles:['src/js/prism-config.js'],
                     pathRelativeToThemeRoot:jsFolderRelativeToThemeRoot
                 },
                 ...prismLanguageBundles
