@@ -4,6 +4,9 @@ import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import PostInfo from '../template/post-info';
 import PostBackgroundOnExternalScreen from '../template/es-postBg';
 import Gist from './gist';
+import { trailingSlashIt } from '../../service/formatters';
+import { isNotBlank } from '../../service/validator';
+import * as Prism from 'prismjs';
 
 interface PropsOfExternalScreenPostPage {
     viewportWidth:number;
@@ -57,10 +60,20 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                 content:tocElement.innerHTML
             }
         }
+
+        let loadPrismJs = null;
+        const codeBlocks = document.querySelectorAll("code[class*='language-']");
+        if (codeBlocks.length >= 0 && Prism == undefined) {
+            let pathOfJsSrc = 'js';
+            if (isNotBlank(window.wp.pathOfJsSrcFiles)) {
+                pathOfJsSrc = window.wp.pathOfJsSrcFiles;
+            }
+            loadPrismJs = (<script src={trailingSlashIt(pathOfJsSrc) + "prism.js"}></script>);
+        }
+
         const settingsOfMessageBoard = {
             id:`${this.props.post.type}-${this.props.post.id}`,
             title:this.props.post.title
-            //categoryId:
         }
 
         if (post.thumbnail) {
@@ -73,16 +86,24 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
 
             if (this.props.post.gist) {
                 postBg = (
-                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
-                        width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                        toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} >
-                        <Gist content={this.props.post.gist}/>
-                    </PostBackgroundOnExternalScreen>
+                    <React.Fragment>
+                        <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
+                            width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
+                            toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} >
+                            <Gist content={this.props.post.gist}/>
+                        </PostBackgroundOnExternalScreen>
+                        {loadPrismJs}
+                    </React.Fragment>
                 );
             } else {
-                postBg = <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
+                postBg = (
+                    <React.Fragment>
+                        <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                             width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                            toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} />;
+                            toc={toc} content={contentOfPost} comment={settingsOfMessageBoard} />
+                        {loadPrismJs}
+                    </React.Fragment>
+                );
             }
             //設定內容的 post 屬性。
             contentOfPost['post'] = doc.body.innerHTML;
@@ -144,6 +165,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="es"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
                         toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} />
+                    {loadPrismJs}
                 </React.Fragment>
             );
         }

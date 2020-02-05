@@ -174,14 +174,18 @@ if (!_.isObjectLike(buildSettings.build)) {
                                                 packageCache:{},
                                                 debug:srcMapShouldBeIncluded  //是否包含 sourcemap
                                             })
-                                            .plugin(tsify, createTsConfig(bundle.tsConfig))
-                                            .bundle()
-                                            /*  為了運用 gulp 建立程式檔案，這裡使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
-                                                source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
-                                                欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
-                                            */
-                                            .pipe(source(bundle.fileName))
-                                            .pipe(buffer());
+                                            .plugin(tsify, createTsConfig(bundle.tsConfig));
+                        if (_.isArrayLike(bundle.excludeAmbientModule)
+                                || (_.isString(bundle.excludeAmbientModule) && !_.isEmpty(bundle.excludeAmbientModule) ) ) {
+                            transpile.external(bundle.excludeAmbientModule);
+                        }
+                        transpile.bundle()
+                                 /*  為了運用 gulp 建立程式檔案，這裡使用 vinyl-source-stream 將 browserify 輸出的串流轉成可交給 gulp 輸出為檔案的格式。
+                                     source 裡面指定要輸出的檔名即可，不用像過去一樣引用其他輸入的原始碼檔名。
+                                     欲了解詳情可參閱 https://www.typescriptlang.org/docs/handbook/gulp.html
+                                 */
+                                 .pipe(source(bundle.fileName))
+                                 .pipe(buffer());
                         return doUglifyTask(transpile)
                                     .pipe(gulp.dest(upath.join(distFolder, pathWherebundleResides)));
                 };//end bundleTask

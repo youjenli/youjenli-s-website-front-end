@@ -8,6 +8,9 @@ import TabletPostPage from './tablet';
 import SmartPhonePostPage from './smart-phone';
 import {Post, ParsedPost} from '../../model/posts';
 import * as terms from './terms';
+import { isNotBlank } from '../../service/validator';
+import { trailingSlashIt } from '../../service/formatters';
+import * as Prism from 'prismjs';
 
 interface PropsOfPostPage {
     post:Post;
@@ -110,6 +113,16 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                     }   
                 }
                 
+                let loadPrismJs = null;
+                const codeBlocks = document.querySelectorAll("code[class*='language-']");
+                if (codeBlocks.length >= 0 && Prism == undefined) {
+                    let pathOfJsSrc = 'js';
+                    if (isNotBlank(window.wp.pathOfJsSrcFiles)) {
+                        pathOfJsSrc = window.wp.pathOfJsSrcFiles;
+                    }
+                    loadPrismJs = (<script src={trailingSlashIt(pathOfJsSrc) + "prism.js"}></script>);
+                }
+                
                 if (vw > 432) {
                     return (
                         <div id="post" className="bg mbl">
@@ -118,6 +131,7 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                             </MobileDeviceTitleBar>
                             <TabletPostPage viewportWidth={this.state.viewportWidth}
                                 baseZIndex={baseZIndex} remFontSize={18} post={parsedPost}/>
+                            {loadPrismJs}
                         </div>
                     );
                 } else {
@@ -128,6 +142,7 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                             </MobileDeviceTitleBar>
                             <SmartPhonePostPage viewportWidth={this.state.viewportWidth}
                                     baseZIndex={baseZIndex} remFontSize={16} post={parsedPost}/>
+                            {loadPrismJs}
                         </div>
                     );
                 }
