@@ -36,7 +36,7 @@ module.exports = {
     },
     build:{
         css:{
-            sourceMap:true,//是否為這些 css 檔案產生 source map。
+            sourceMap: true, //是否為這些 css 檔案產生 source map。
             bundles:[
                 {
                     entryFile:'src/css/style.scss',
@@ -71,9 +71,7 @@ module.exports = {
             ]
         },
         ts:{
-            //是否壓縮 js 檔案
-            uglify:false,
-            sourceMap:true,//是否產生 source map
+            sourceMap: true, //是否壓縮 js 指令稿並產生 source map
             /*
                 指定要以哪些 ts 或 js 檔案作為程式執行點打包 js 應用程式。
             */
@@ -99,9 +97,8 @@ module.exports = {
             ]
         },
         js:{
-            //是否壓縮 js 檔案
-            uglify:false,
-            sourceMap:true,//是否產生 source map
+            uglify: true, //是否壓縮 js 指令稿
+            sourceMap: true, //是否產生 source map
             /*
                 指定要以哪些 ts 或 js 檔案作為程式執行點打包 js 應用程式。
             */

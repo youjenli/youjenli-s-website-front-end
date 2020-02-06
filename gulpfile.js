@@ -91,7 +91,7 @@ if (!_.isObjectLike(buildSettings.build)) {
             const srcMapShouldBeIncluded = build.ts.sourceMap === true ? true : false;
             const jsShouldBeUglified = build.ts.uglify === true ? true : false;
 
-            let doUglifyTask = function(transpile) { return transpile; }
+            let doUglifyTask = function(transpile) { return transpile; };
             if (jsShouldBeUglified) {
                 if (srcMapShouldBeIncluded) {
                     doUglifyTask = function(transpile) {
@@ -109,11 +109,18 @@ if (!_.isObjectLike(buildSettings.build)) {
                                              它都不會輸出 source map 檔案。這狀況的原因不明，但既然可以減少瀏覽器發送一個請求，
                                              那似乎也不壞，就這樣做吧。
                                           */
-                                          .pipe(sourcemaps.write())
+                                          .pipe(sourcemaps.write());
                     };
                 } else {
                     doUglifyTask = function(transpile) {
                         return transpile.pipe(uglify());
+                    }
+                }
+            } else {
+                if (srcMapShouldBeIncluded) {
+                    doUglifyTask = function(transpile) {
+                        return transpile.pipe(sourcemaps.init({loadMaps: true}))
+                                        .pipe(sourcemaps.write());
                     }
                 }
             }
@@ -235,11 +242,11 @@ if (!_.isObjectLike(buildSettings.build)) {
             const srcMapShouldBeIncluded = build.js.sourceMap === true ? true : false;
             const jsShouldBeUglified = build.js.uglify === true ? true : false;
 
-            let doUglifyTask = function(browserify) { return browserify; }
+            let doUglifyTask = function(bundleTask) { return bundleTask };
             if (jsShouldBeUglified) {
                 if (srcMapShouldBeIncluded) {
-                    doUglifyTask = function(broserify) {
-                        return  broserify.pipe(sourcemaps.init({loadMaps: true}))
+                    doUglifyTask = function(bundleTask) {
+                        return  bundleTask.pipe(sourcemaps.init({loadMaps: true}))
                                           /*
                                              改成可以建置多個 bundle 以後，我試了解種設定都無法令 gulp-minify 產生 js 壓縮檔，
                                              因此決定改用 TypeScript 官方和 gulp 官方推薦的 gulp-uglify 來負責壓縮 js 檔案。
@@ -256,8 +263,15 @@ if (!_.isObjectLike(buildSettings.build)) {
                                           .pipe(sourcemaps.write())
                     };
                 } else {
-                    doUglifyTask = function(transpile) {
-                        return transpile.pipe(uglify());
+                    doUglifyTask = function(bundleTask) {
+                        return bundleTask.pipe(uglify());
+                    }
+                }
+            } else {
+                if (srcMapShouldBeIncluded) {
+                    doUglifyTask = function(bundleTask) {
+                        return bundleTask.pipe(sourcemaps.init({loadMaps: true}))
+                                        .pipe(sourcemaps.write());
                     }
                 }
             }
@@ -704,11 +718,11 @@ if (!_.isString(deploymentConfig.path)) {
 }
 gulp.task('deploy', deployTask);
 
-let vscodeLaunchCOnfigTask = null;
+let vscodeLaunchConfigTask = null;
 if (!hostObjExists || !hostNameExists) {
     console.log(`Host name for the vscode launch config generation task was not configured.`);
     console.log('Therefore a function that does nothing will be used as the vscode launch config generation task.');
-    vscodeLaunchCOnfigTask = doNothing;
+    vscodeLaunchConfigTask = doNothing;
 } else {
     let pages = null, protocol = 'https';
     if (_.isObjectLike(buildSettings.launch)){
@@ -720,9 +734,9 @@ if (!hostObjExists || !hostNameExists) {
         }
     }
     const createVscodeLaunchConfigGenerator = require('./gulpfile-vscode-launch-config');
-    vscodeLaunchCOnfigTask = createVscodeLaunchConfigGenerator(`${protocol}://${deploymentConfig.host.name}`, themeName, pages);
+    vscodeLaunchConfigTask = createVscodeLaunchConfigGenerator(`${protocol}://${deploymentConfig.host.name}`, themeName, pages);
 }
-gulp.task('vscodeLaunchConfig', vscodeLaunchCOnfigTask);
+gulp.task('vscodeLaunchConfig', vscodeLaunchConfigTask);
 
 const jsSrcFiles = [upath.join(srcFolder, 'js/**/*.js')];
 const tsSrcFiles = [upath.join(srcFolder, 'ts/**/*.ts'), upath.join(srcFolder, 'ts/**/*.tsx')];
