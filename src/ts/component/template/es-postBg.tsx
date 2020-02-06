@@ -99,7 +99,8 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
                 </div>
                 { isObject(this.props.comment) ? 
                     <DisquzMessageBoard id={this.props.comment.id} title={this.props.comment.title} 
-                        url={this.props.comment.url} categoryId={this.props.comment.categoryId} /> : null }
+                        url={this.props.comment.url} categoryId={this.props.comment.categoryId} 
+                        backgroundColorOfDocument={"rgb(255,253,249)"} /> : null }
             </div>
         );
     }    

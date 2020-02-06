@@ -9,6 +9,8 @@ interface PropsOfDisquzMessageBoard {
     url?:string;
     title?:string;
     categoryId?:string;
+    //以下參數的用途是為了讓留言板區域分隔線的背景色能夠跟文章區域的背景色相同。
+    backgroundColorOfDocument:string;
 }
 
 export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMessageBoard> {
@@ -65,7 +67,7 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
     }
     render() {
         if (this.shouldLoadForum) {
-            const styleOfDisquzBlock = {
+            const styleOfWelcomeMessage = {
                 margin:'1em 0', 
                 fontSize:'1.15em',
                 color:'#232323',
@@ -74,12 +76,37 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
             const styleOfDisquz = {
                 marginBottom:'2em'
             }
+            const styleOfHr = {
+                margin:'1.75em 0',
+                borderLeft:'none',
+                borderRight:'none',
+                borderTop:'thin solid #333',
+                borderBottom:'thin solid #333',
+                color:'#333',
+                height:'0.15em',
+                display:'flex',
+                justifyContent:'center',
+                alignItems:'center',
+                overflow:'visible'
+            }
+    
+            const styleOfSymbol = {
+                fontSize:'1.25em',
+                minWidth:'1em',
+                /*
+                    說來奇怪， 照 react 定義 css 屬性的規律和型態宣告來看，text-align 屬性的名稱應該要叫作 textAlign 才對，
+                    可是實際上若那樣寫，則 vscode 的語法檢查器會抱怨型態不正確。試來試去最後像下面這樣寫。
+                */
+                'text-align':'center',
+                backgroundColor:this.props.backgroundColorOfDocument
+            }
+
             return (
                 <React.Fragment>
-                    <hr />
-                    <div style={styleOfDisquzBlock}>
-                        <WelcomeToLeaveYourComment />
+                    <div className="hr" style={styleOfHr} >
+                        <span style={styleOfSymbol} >§</span>
                     </div>
+                    <WelcomeToLeaveYourComment style={styleOfWelcomeMessage} />
                     <noscript>
                         Please enable JavaScript to view the 
                         <a href="https://disqus.com/?ref_noscript" rel="nofollow">

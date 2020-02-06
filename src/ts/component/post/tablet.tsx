@@ -14,6 +14,7 @@ interface PropsOfTabletPostPage {
 
 export default class TabletPostPage extends React.Component<PropsOfTabletPostPage> {
     render() {
+        const colorOfBackgroundOfPost = 'rgba(255,242,223,32)';
         const post = this.props.post, vw = this.props.viewportWidth;
         const maxWidthOfTitle = vw - 2 * this.props.remFontSize;
         const fontSizeOfTitle = (5 * vw + 1688) / 148;
@@ -63,7 +64,9 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     <div id="postBg" style={styleOfPostBg} className="tb post">
                         <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistTitle} content={this.props.post.gist}/>
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
-                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
+                        { this.props.post.commentPermitted ?
+                            <DisquzMessageBoard id={threadId} title={threadTitle}
+                                backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
                     </div>;
             } else {
                 const styleOfPostBg = {
@@ -73,7 +76,9 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 postCtnrElement = 
                     <div id="postBg" style={styleOfPostBg} className="tb post" >
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}></div>
-                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
+                        { this.props.post.commentPermitted ?
+                            <DisquzMessageBoard id={threadId} title={threadTitle}
+                                backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
                     </div>;
             }
             
@@ -129,7 +134,9 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                     {postHeaderElement}
                     <div id="postBg" style={styleOfPostBg} className="tb post" >
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
-                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
+                        { this.props.post.commentPermitted ?
+                            <DisquzMessageBoard id={threadId} title={threadTitle}
+                                backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
                     </div>
                 </React.Fragment>
             );

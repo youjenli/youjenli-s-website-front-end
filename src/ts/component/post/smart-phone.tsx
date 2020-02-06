@@ -14,6 +14,7 @@ interface PropsOfSmartPhonePostPage {
 
 export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhonePostPage> {
     render() {
+        const colorOfBackgroundOfPost = 'rgba(255,242,223,32)';
         const post = this.props.post, vw = this.props.viewportWidth;
         const maxWidthOfTitle = vw - 2 * this.props.remFontSize;
         const fontSizeOfTitle = (vw + 1024) / 56;
@@ -35,7 +36,6 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
 
         const threadId = `${this.props.post.type}-${this.props.post.id}`;
         const threadTitle = this.props.post.title;
-        //categoryId
 
         if (this.props.post.thumbnail) {
             const heightOfImg = maxWidthOfTitle * 0.6;
@@ -59,7 +59,9 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     <div id="postBg" className="sp post">
                         <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistIndicator} content={this.props.post.gist}/>
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
-                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
+                        { this.props.post.commentPermitted ? 
+                            <DisquzMessageBoard id={threadId} title={threadTitle}
+                                backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
                     </div>;
             } else {
                 const styleOfPostBg = {
@@ -68,7 +70,9 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                 postCtnrElement = 
                     <div id="postBg" className="sp post" style={styleOfPostBg} >
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
-                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
+                        { this.props.post.commentPermitted ? 
+                            <DisquzMessageBoard id={threadId} title={threadTitle}
+                                backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
                     </div>;
             }
  
@@ -125,7 +129,9 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     {postHeaderElement}
                     <div id="postBg" style={styleOfPostBg} className="sp post" >
                         <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
-                        { this.props.post.commentPermitted ? <DisquzMessageBoard id={threadId} title={threadTitle} /> : null }
+                        { this.props.post.commentPermitted ?
+                            <DisquzMessageBoard id={threadId} title={threadTitle}
+                                backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
                     </div>
                 </React.Fragment>
             );

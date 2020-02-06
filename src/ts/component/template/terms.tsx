@@ -21,12 +21,12 @@ export function thePublicationYouArelookingForDoesNotExist(path:string):string {
     return `未找到對應您提供的路徑「${path}」之文章。`;
 }
 
-export class WelcomeToLeaveYourComment extends React.Component {
+export class WelcomeToLeaveYourComment extends React.Component<{style?:React.CSSProperties}> {
     render() {
         return (
-            <React.Fragment>
+            <div style={this.props.style}>
                 為讓您不必申請本站帳號即可留言討論，本站委由 <a href="https://disqus.com/">Disqus</a> 提供以下留言功能。歡迎發表心得感想與意見！
-            </React.Fragment>
+            </div>
         );
     }
 }
