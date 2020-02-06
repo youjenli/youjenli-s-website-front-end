@@ -28,15 +28,15 @@ const createVscodeLaunchConfigGenerator = (urlOfWebsite, themeName, pages) => {
                 url:"/",
                 path: "${workspaceFolder}"
             },{
-                url:`http://${urlOfWebsite}/wp-content/themes/${themeName}/`,
+                url:`${urlOfWebsite}/wp-content/themes/${themeName}/`,
                 path: "${workspaceFolder}"
             }]
         }
 
-        let createLaunchConfigWithChrome = () => {};
-        let createLaunchConfigWithFirefox = () => {};
+        let createLaunchConfigForChrome = () => {};
+        let createLaunchConfigForFirefox = () => {};
         if (Array.isArray(pages)) {
-            createLaunchConfigWithChrome = () => {
+            createLaunchConfigForChrome = () => {
                 pages.forEach(page => {
                     if (_.isObjectLike(page)) {
                         const pageName = page.name;
@@ -52,7 +52,7 @@ const createVscodeLaunchConfigGenerator = (urlOfWebsite, themeName, pages) => {
                 });
             }
 
-            createLaunchConfigWithFirefox = () => {
+            createLaunchConfigForFirefox = () => {
                 pages.forEach(page => {
                     if (_.isObjectLike(page)) {
                         const pageName = page.name;
@@ -74,14 +74,14 @@ const createVscodeLaunchConfigGenerator = (urlOfWebsite, themeName, pages) => {
             "url": `${urlOfWebsite}`
         }, templateOfChromeConfig);
         settings['configurations'] = [openHomeWithChrome];
-        createLaunchConfigWithChrome();
+        createLaunchConfigForChrome();
 
         const openHomeWithFirefox = Object.assign({
             "name": "Firefox 首頁",
             "url": `${urlOfWebsite}`
         }, templateOfFirefoxConfig);
         settings['configurations'].push(openHomeWithFirefox);
-        createLaunchConfigWithFirefox();
+        createLaunchConfigForFirefox();
 
 
         return new Promise((resolve, reject) => {
