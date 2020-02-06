@@ -5,6 +5,7 @@ import PostBackgroundOnExternalScreen from '../template/es-postBg';
 import { PublishInfo } from '../template/post-info'
 import {CategoryIcon} from '../template/icons';
 import {LinkOfParent} from '../template/terms';
+import { loadPrism } from '../../service/runtime-script-loader';
 
 interface PropsOfExternalScreenPage {
     viewportWidth:number;
@@ -14,6 +15,10 @@ interface PropsOfExternalScreenPage {
 }
 
 export default class ExternalScreenPage extends React.Component<PropsOfExternalScreenPage> {
+    onMount = () => {};
+    componentDidMount() {
+        this.onMount();
+    }
     render() {
         const page = this.props.page;
         let maxWidthOfTitle = 1024;
@@ -51,6 +56,22 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                 },
                 paddingLeftRight:paddingLeftRightOfToc,
                 content:tocElement.innerHTML
+            }
+        }
+
+        const codeBlocks = doc.querySelectorAll("code[class*='language-']");
+        if (codeBlocks.length > 0) {
+            this.onMount = () => {
+                loadPrism(() => {
+                    /*
+                        因為前面會先查查是否有附帶 language- 的類別名稱的元素，而且 prismjs 又有 highlightElement 函式，
+                        所以用這函式強化找到的元素似乎是最合適、最有效率的做法，但實驗發現這項做法沒有效果。
+                        雖然 prismjs 執行沒有異常，但是卻無法在使用者請求後續其他頁面的時候強化頁面內容，
+                        除非使用 highlightAll 函式。
+                        因此沒有充足時間查明問題源頭的情況下就暫時先用這個方法實現功能，以後有時間再仔細診斷問題吧。
+                    */
+                    window['Prism'].highlightAll();
+                });
             }
         }
 

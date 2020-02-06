@@ -8,6 +8,7 @@ import TabletPostPage from './tablet';
 import SmartPhonePostPage from './smart-phone';
 import {Post, ParsedPost} from '../../model/posts';
 import * as terms from './terms';
+import { loadPrism } from '../../service/runtime-script-loader';
 
 interface PropsOfPostPage {
     post:Post;
@@ -27,9 +28,11 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
             viewportHeight:calculateViewPortHeight()
         }
     }
+    onMount = () => {}
     componentDidMount() {
         window.addEventListener('resize', this.calculateViewPortDimensions);
         window.addEventListener('orientationchange', this.calculateViewPortDimensions);
+        this.onMount();
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this.calculateViewPortDimensions);
@@ -109,15 +112,31 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                         );
                     }   
                 }
-                
+
+                const codeBlocks = doc.querySelectorAll("code[class*='language-']");
+                if (codeBlocks.length > 0) {
+                    this.onMount = () => {
+                        loadPrism(() => {
+                            /*
+                                因為前面會先查查是否有附帶 language- 的類別名稱的元素，而且 prismjs 又有 highlightElement 函式，
+                                所以用這函式強化找到的元素似乎是最合適、最有效率的做法，但實驗發現這項做法沒有效果。
+                                雖然 prismjs 執行沒有異常，但是卻無法在使用者請求後續其他頁面的時候強化頁面內容，
+                                除非使用 highlightAll 函式。
+                                因此沒有充足時間查明問題源頭的情況下就暫時先用這個方法實現功能，以後有時間再仔細診斷問題吧。
+                            */
+                            window['Prism'].highlightAll();
+                        });
+                    }
+                }
+
                 if (vw > 432) {
                     return (
                         <div id="post" className="bg mbl">
                             <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20}>
                                 {tocElement}
                             </MobileDeviceTitleBar>
-                            <TabletPostPage viewportWidth={this.state.viewportWidth}
-                                baseZIndex={baseZIndex} remFontSize={18} post={parsedPost}/>
+                            <TabletPostPage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
+                                remFontSize={18} post={parsedPost} />
                         </div>
                     );
                 } else {
@@ -126,8 +145,8 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                             <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20}>
                                 {tocElement}
                             </MobileDeviceTitleBar>
-                            <SmartPhonePostPage viewportWidth={this.state.viewportWidth}
-                                    baseZIndex={baseZIndex} remFontSize={16} post={parsedPost}/>
+                            <SmartPhonePostPage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
+                                remFontSize={16} post={parsedPost} />
                         </div>
                     );
                 }

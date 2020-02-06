@@ -4,6 +4,7 @@ import DefaultHeaderOfArticle from '../template/es-header-of-article';
 import PostInfo from '../template/post-info';
 import Gist from './gist';
 import PostBackgroundOnExternalScreen from '../template/es-postBg';
+import { loadPrism } from '../../service/runtime-script-loader';
 
 interface PropsOfLargeExternalScreenPostPage {
     viewportWidth:number;
@@ -13,6 +14,15 @@ interface PropsOfLargeExternalScreenPostPage {
 }
 
 export default class LargeExternalScreenPostPage extends React.Component<PropsOfLargeExternalScreenPostPage> {
+    constructor(props) {
+        super(props);
+        this.backgroundRef = React.createRef();
+    }
+    backgroundRef;
+    onMount = () => {};
+    componentDidMount(){
+        this.onMount();
+    }
     render() {
         const post = this.props.post;
         const maxWidthOfTitle = (this.props.viewportWidth >= 1657 ? this.props.viewportWidth * 0.618 : 1024 );
@@ -46,7 +56,23 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 content:tocElement.innerHTML
             }
         }
-        
+
+        const codeBlocks = doc.querySelectorAll("code[class*='language-']");
+        if (codeBlocks.length > 0) {
+            this.onMount = () => {
+                loadPrism(() => {
+                    /*
+                        因為前面會先查查是否有附帶 language- 的類別名稱的元素，而且 prismjs 又有 highlightElement 函式，
+                        所以用這函式強化找到的元素似乎是最合適、最有效率的做法，但實驗發現這項做法沒有效果。
+                        雖然 prismjs 執行沒有異常，但是卻無法在使用者請求後續其他頁面的時候強化頁面內容，
+                        除非使用 highlightAll 函式。
+                        因此沒有充足時間查明問題源頭的情況下就暫時先用這個方法實現功能，以後有時間再仔細診斷問題吧。
+                    */
+                    window['Prism'].highlightAll();
+                });
+            }
+        }
+
         const widthOfPostBg = 0.764 * this.props.viewportWidth;
         const marginTopOfPostContent = this.props.remFontSize * 2;
         const marginBottomOfPostContent = this.props.remFontSize * 2;
@@ -62,7 +88,6 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
         const settingsOfMessageBoard = {
             id:`${this.props.post.type}-${this.props.post.id}`,
             title:this.props.post.title,
-            //categoryId
         }
 
         if (post.thumbnail) {
@@ -76,15 +101,16 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                 postBgElement = (
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                        toc={toc} content={contentOfPost} comment={settingsOfMessageBoard} >
-                        <Gist content={this.props.post.gist}/>
+                        toc={toc} content={contentOfPost} comment={settingsOfMessageBoard} ref={this.backgroundRef} >
+                        <Gist content={this.props.post.gist} />
                     </PostBackgroundOnExternalScreen>
                 );
             } else {
-                postBgElement = (<PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
-                                    width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
-                                    toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} />
-                            );
+                postBgElement = (
+                    <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex} className="les"
+                                width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg}
+                                toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} ref={this.backgroundRef} />
+                );
             }
             //設定內容的 post 屬性。
             contentOfPost['post'] = doc.body.innerHTML;
@@ -144,7 +170,7 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                     {postHeader}
                     <PostBackgroundOnExternalScreen baseZIndex={this.props.baseZIndex}  className="les" 
                         width={widthOfPostBg} padding={paddingOfPostBg} marginBottom={marginBottomOfPostBg} 
-                        toc={toc} content={contentOfPost} comment={settingsOfMessageBoard} />
+                        toc={toc} content={contentOfPost} comment={settingsOfMessageBoard} ref={this.backgroundRef} />
                 </React.Fragment>
             );
         }
