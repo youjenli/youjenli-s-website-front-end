@@ -3,19 +3,57 @@
     .menu #toc{
         border-bottom:1px solid #979797;
         width:100%;
-        
+
         .title {
             margin:0.5em 0;
         }
-    
+
         .sap {
             border-radius:2.5px;
         }
-        
-        .content {
-            /* 要取消 content 這個 ol 的 margin，
-                否則畫面上會有 ol 的 margin-block-start , margin-block-end 之 1em margin*/
-            margin:0;        
+        ol {
+            /* ol 元素預設有 padding-left 以便給 li 元素的項目符號有足夠的顯示空間，但我不需要這個。 */
+            padding-left: 0;
+
+            &.content {
+                /*
+                    內層清單項目以包覆其元素的 ol 之 margin-left 做出它的縮排，
+                    因此 ol 的 margin-left 隨著外層 li 清單記號的寬度而調整，
+                    但預設是下面指定的 1.25em。
+                */
+                ol {
+                    margin-left:1.25em;
+                }
+
+                & > li {
+                    list-style-type:decimal;
+                    list-style-position: inside;
+                    & > ol {
+                        margin-left:1.25em;
+                        & > li {
+                            list-style-type:decimal-leading-zero;
+                            & > ol {
+                                margin-left:1.5em;
+                                & > li {
+                                    list-style-type:upper-roman;
+                                    & > ol {
+                                        margin-left:1em;
+                                        & > li {
+                                            list-style-type:upper-latin;
+                                            & > ol {
+                                                margin-left:1em;
+                                                & > li {
+                                                    list-style-type:lower-latin;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -26,13 +64,6 @@
         }
         .content {
             font-size:22.2px;
-            & > li {
-                margin-left:2em;
-                margin-right:0.5em;
-            } 
-            ol {
-                margin-left:1.5em;
-            }
             li {
                 margin-top:0.8em;
                 margin-bottom:0.8em;
@@ -49,13 +80,6 @@
             height:4px;
         }
         .content {
-            & > li {
-                margin-left:calc(8px + 1.5em);
-                margin-right:8px;
-            } 
-            ol {
-                margin-left:1.5em
-            }
             li {
                 margin-top:0.5em;
                 margin-bottom:0.5em;

@@ -16,34 +16,47 @@
         }
     }
     ol {
-        padding-left:0;
-    }
-    .content {
-        & > li {
-            margin-left:2em;
-            margin-right:1em;
-        }
-        ol {
-            margin-left:1.75em;
-        }
-        li {
-            list-style-type:decimal;
-            ol li {
-                /* 註: 因為 deciaml-leading-zero, upper-roman, upper-latin, lower-latin 
-                    這些項目符號可以只用一個字母就表達單一項目，所以 ol 左邊只要留下 1.5em 的寬度即夠用。 */
-                list-style-type:decimal-leading-zero;
-                ol {
-                    margin-left:1.5em;
-                    li {
-                    list-style-type:upper-roman;
-                        ol {
+        /* ol 元素預設有 padding-left 以便給 li 元素的項目符號有足夠的顯示空間，但我不需要這個。 */
+        padding-left: 0;
+
+        &.content {
+            /*
+                內層清單項目以包覆其元素的 ol 之 margin-left 做出它的縮排，
+                因此 ol 的 margin-left 隨著外層 li 清單記號的寬度而調整，
+                但預設是下面指定的 1.25em。
+            */
+            ol {
+                margin-left:1.25em;
+            }
+
+            li {
+                color:#576373;
+                & > * {
+                    color:#576373;
+                }
+            }
+    
+            & > li {
+                list-style-type:decimal;
+                list-style-position: inside;
+                & > ol {
+                    margin-left:1.25em;
+                    & > li {
+                        list-style-type:decimal-leading-zero;
+                        & > ol {
                             margin-left:1.5em;
-                            li {
-                                list-style-type:upper-latin;
-                                ol {
-                                    margin-left:1.5em;
-                                    li {
-                                        list-style-type:lower-latin;
+                            & > li {
+                                list-style-type:upper-roman;
+                                & > ol {
+                                    margin-left:1em;
+                                    & > li {
+                                        list-style-type:upper-latin;
+                                        & > ol {
+                                            margin-left:1em;
+                                            & > li {
+                                                list-style-type:lower-latin;
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -51,13 +64,6 @@
                     }
                 }
             }
-        }
-    }
-    li {
-        list-style-position:outside;
-        color:#576373;
-        & > * {
-            color:#576373;
         }
     }
 }
