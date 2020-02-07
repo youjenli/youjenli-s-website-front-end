@@ -95,16 +95,18 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
                 minWidth:'1em',
                 /*
                     說來奇怪， 照 react 定義 css 屬性的規律和型態宣告來看，text-align 屬性的名稱應該要叫作 textAlign 才對，
-                    可是實際上若那樣寫，則 vscode 的語法檢查器會抱怨型態不正確。試來試去最後像下面這樣寫。
+                    可是實際上若那樣寫，則 vscode 的語法檢查器會抱怨型態不正確，但型態定義檔上面的屬性名稱卻又是 textAlign。
+                    若以 [text-align] 表達屬性則 react 又會拋出錯誤訊息。
+                    最後試來試去只能寫成 textAlign，但是在下面的 react 元件中強制轉型為 React.CSSProperties 的型態。
                 */
-                'text-align':'center',
+                textAlign:'center',
                 backgroundColor:this.props.backgroundColorOfDocument
-            }
+            };
 
             return (
                 <React.Fragment>
                     <div className="hr" style={styleOfHr} >
-                        <span style={styleOfSymbol} >§</span>
+                        <span style={styleOfSymbol as React.CSSProperties} >§</span>
                     </div>
                     <WelcomeToLeaveYourComment style={styleOfWelcomeMessage} />
                     <noscript>
