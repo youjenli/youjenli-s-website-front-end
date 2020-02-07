@@ -26,7 +26,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
     render() {
         const post = this.props.post;
         let maxWidthOfTitle = 1024;
-        let marginTopOfPostContent = this.props.remFontSize * 1.5;    
+        let marginTopOfPostContent = this.props.remFontSize * 1.5;
         let marginBottomOfPostContent = this.props.remFontSize * 1.5;
         let marginBottomOfPostBg = this.props.remFontSize * 2;/*數值缺規格，待確認 */
         let widthOfPostBg = this.props.viewportWidth * 0.382 + 632.832;
@@ -35,17 +35,9 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
             name:post.title,
             maxWidth:maxWidthOfTitle
         };
-        
         const heightOfImg = maxWidthOfTitle * 0.6;
         const parser = new DOMParser();
         const doc = parser.parseFromString(this.props.post.content, 'text/html');
-        const contentOfPost = {
-            margin:{
-                top:marginTopOfPostContent,
-                bottom:marginBottomOfPostContent
-            },
-            post:doc.body.innerHTML
-        }
         const tocElement = doc.getElementById('toc');
         let toc = null;
         if (tocElement) {
@@ -82,6 +74,14 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                     window['Prism'].highlightAll();
                 });
             }
+        }
+
+        const contentOfPost = {
+            margin:{
+                top:marginTopOfPostContent,
+                bottom:marginBottomOfPostContent
+            },
+            post:doc.body.innerHTML
         }
 
         const settingsOfMessageBoard = {
@@ -154,7 +154,7 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
                             marginBottomOfLastItem='0px'  estimatedReadingTimes={this.props.post.estimatedReadingTimes}/>
                         <Gist content={this.props.post.gist} />
                     </DefaultHeaderOfArticle>
-                ); 
+                );
             } else {
                 postHeader = (
                     <DefaultHeaderOfArticle baseZIndex={this.props.remFontSize + 1} className="es"
