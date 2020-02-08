@@ -95,7 +95,7 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
                 {this.props.children}
                 <div className="content post" style={styleOfPostContent}>
                     {tocElement}
-                    <div dangerouslySetInnerHTML={{__html:this.props.content.post}}></div>
+                    <div className="article" dangerouslySetInnerHTML={{__html:this.props.content.post}}></div>
                 </div>
                 { isObject(this.props.comment) ? 
                     <DisquzMessageBoard id={this.props.comment.id} title={this.props.comment.title} 
