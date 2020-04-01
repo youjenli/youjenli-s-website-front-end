@@ -423,7 +423,7 @@ if (!_.isObjectLike(buildSettings.build)) {
                         return bundleCss;
                     });
                 }
-                return gulp.series(removeJSArtifact, gulp.parallel(bundleTasks));
+                return gulp.parallel(bundleTasks);
             } else {
                 console.log('The build settings of CSS is blank');
                 console.log('Therefore a function that does nothing will be used as the prepareCss task.');
