@@ -131,9 +131,24 @@
                 font-size:22px;
             }
             img {
-                /*圖示的編排方式？*/
                 margin:1.5em auto;
+                max-width:62%;
             }
+            .gallary {
+                width:100%;
+                padding:0.75em 0;
+                display:flex;
+                flex-wrap:wrap;
+                align-items:center;
+                justify-content:space-evenly;
+                  
+                img {
+                  margin:0.75em 0;
+                  object-fit:contain;
+                  width:38%;
+                }
+              }
+            
             &:after {
                 content:"";
                 display:block;
