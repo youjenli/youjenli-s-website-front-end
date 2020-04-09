@@ -91,6 +91,7 @@
     }
 }
 
+$marginTopBottomOfEmbbedItem: 1.5em;
 #postBg.les, #postBg.es {
     font-size:18px;
     line-height: 1.55;
@@ -130,27 +131,28 @@
             h5 {
                 font-size:22px;
             }
+
             img {
-                margin:1.5em auto;
+                margin:$marginTopBottomOfEmbbedItem auto;
                 max-width:62%;
             }
+
             .gallary {
                 width:100%;
-                padding:0.75em 0;
+                margin:$marginTopBottomOfEmbbedItem 0;
                 display:flex;
                 flex-wrap:wrap;
                 align-items:center;
                 justify-content:space-evenly;
                   
                 img {
-                  margin:0.75em 0;
+                  margin:$marginTopBottomOfEmbbedItem/2 0;
                   object-fit:contain;
-                  width:38%;
                 }
             }
             
             .ytvideo { 
-                margin:1.5em auto;
+                margin:$marginTopBottomOfEmbbedItem auto;
                 display:block;
                 width:560px;
                 height:336px;
@@ -158,12 +160,12 @@
 
             .ytvideo-box {
                 width:100%;
-                margin:1.5em 0;
+                margin:$marginTopBottomOfEmbbedItem 0;
                 display:flex;
                 justify-content:space-evenly;
                 flex-wrap:wrap;
                 .ytvideo {
-                  margin:0.75em;
+                  margin:$marginTopBottomOfEmbbedItem/2 0;
                 }
             }
 
@@ -203,6 +205,13 @@
     }
     .content.post, .content.page {
         .article {
+
+            .gallary {
+                img {
+                    width:38%;
+                }
+            }
+
             .ytvideo-box {
                 .ytvideo {
                     width:420px;
@@ -231,6 +240,13 @@
     }
     .content.post, .content.page {
         .article {
+
+            .gallary {
+                img {
+                    width:43%;
+                }
+            }
+
             .ytvideo-box {
                 .ytvideo {
                     width:400px;
