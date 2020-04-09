@@ -147,8 +147,26 @@
                   object-fit:contain;
                   width:38%;
                 }
-              }
+            }
             
+            .ytvideo { 
+                margin:1.5em auto;
+                display:block;
+                width:560px;
+                height:336px;
+            }
+
+            .ytvideo-box {
+                width:100%;
+                margin:1.5em 0;
+                display:flex;
+                justify-content:space-evenly;
+                flex-wrap:wrap;
+                .ytvideo {
+                  margin:0.75em;
+                }
+            }
+
             &:after {
                 content:"";
                 display:block;
@@ -183,6 +201,16 @@
             }
         }
     }
+    .content.post, .content.page {
+        .article {
+            .ytvideo-box {
+                .ytvideo {
+                    width:420px;
+                    height:252px;
+                }
+            }
+        }
+    }
 }
 
 /* 以下是一般外接螢幕專用的樣式 */
@@ -198,6 +226,16 @@
             li {
                 margin-top:0.6em;
                 margin-bottom:0.6em;
+            }
+        }
+    }
+    .content.post, .content.page {
+        .article {
+            .ytvideo-box {
+                .ytvideo {
+                    width:400px;
+                    height:240px;
+                }
             }
         }
     }

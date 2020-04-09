@@ -135,12 +135,23 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
                         </div>
                     );
                 } else {
+                    const remFontSize = 16;
+                    const ytvideos = doc.querySelectorAll('.ytvideo');
+                    if (ytvideos.length > 0) {
+                        const ytvideoWidth = this.state.viewportWidth - 2 * remFontSize;
+                        const ytvideoHeight = this.state.viewportWidth * 0.6;
+                        ytvideos.forEach(ytvideo => {
+                            ytvideo.setAttribute('width', `${ytvideoWidth.toString()}px`);
+                            ytvideo.setAttribute('height', `${ytvideoHeight.toString()}px`);
+                        });
+                    }
+
                     return (
                         <div id="page" className="bg mbl">
                             <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} >
                                 {tocElement}
                             </MobileDeviceTitleBar>
-                            <SmartPhonePage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={16} 
+                            <SmartPhonePage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={remFontSize} 
                                 page={parsedPage} />
                         </div>
                     );

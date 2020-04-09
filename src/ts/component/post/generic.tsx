@@ -140,13 +140,24 @@ export default class GenericPost extends React.Component<PropsOfPostPage, StateO
                         </div>
                     );
                 } else {
+                    const remFontSize = 16;
+                    const ytvideos = doc.querySelectorAll('.ytvideo');
+                    if (ytvideos.length > 0) {
+                        const ytvideoWidth = this.state.viewportWidth - 2 * remFontSize;
+                        const ytvideoHeight = this.state.viewportWidth * 0.6;
+                        ytvideos.forEach(ytvideo => {
+                            ytvideo.setAttribute('width', `${ytvideoWidth.toString()}px`);
+                            ytvideo.setAttribute('height', `${ytvideoHeight.toString()}px`);
+                        });
+                    }
+
                     return (
                         <div id="post" className="bg mbl">
                             <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20}>
                                 {tocElement}
                             </MobileDeviceTitleBar>
                             <SmartPhonePostPage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex}
-                                remFontSize={16} post={parsedPost} />
+                                remFontSize={remFontSize} post={parsedPost} />
                         </div>
                     );
                 }
