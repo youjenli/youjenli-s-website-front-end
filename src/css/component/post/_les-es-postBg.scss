@@ -174,8 +174,30 @@ $marginTopBottomOfEmbbedItem: 1.5em;
                 display:block;
                 clear:both;
             }
+
+            /*
+              設定以下三項的目的是讓文章的清單項目符號不會突出其他列文字，
+              同時又不致於讓較長的清單內容不會與清單第一列文字對齊。
+            */
+            ul, ol {
+                position:relative;
+            }
+
+            ul {
+                left:1.25em;
+            }
+
+            ol {
+                left:1.4em;
+            }
+
             li {
                 margin:0.5em 0;
+                /*
+                  這一項的用途是把內容較長的清單項目折到下一列，
+                  否則在 position:relative, left:1.25em 作用下可能會凸出邊界。
+                */
+                margin-right:1px;
             }
 
             /* 為 slideshow 加上置中對齊的樣式。 */
