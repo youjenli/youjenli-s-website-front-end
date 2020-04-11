@@ -22,11 +22,11 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
     render() {
         const page = this.props.page;
         let maxWidthOfTitle = 1024;
-        let marginTopOfPostContent = this.props.remFontSize * 1.5;    
+        let marginTopOfPostContent = this.props.remFontSize * 1.5;
         let marginBottomOfPostContent = this.props.remFontSize * 1.5;
         let marginBottomOfPostBg = this.props.remFontSize * 2;
         let widthOfPostBg = this.props.viewportWidth * 0.382 + 632.832;
-        let paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;        
+        let paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;
         const fontSizeOfTitle = 45;
         const title = {
             name:page.title,
@@ -73,6 +73,16 @@ export default class ExternalScreenPage extends React.Component<PropsOfExternalS
                     window['Prism'].highlightAll();
                 });
             }
+        }
+
+        const slideshows = doc.querySelectorAll('.slideshow');
+        if (slideshows.length > 0) {
+            const widthOfSlideshow = maxWidthOfTitle * 0.94;
+            const heightOfSlideshow = widthOfSlideshow * 0.75;
+            slideshows.forEach(slideshow => {
+                slideshow.setAttribute('width', `${widthOfSlideshow.toString()}px`);
+                slideshow.setAttribute('height', `${heightOfSlideshow.toString()}px`);
+            });
         }
 
         let parentInfoElement = null;

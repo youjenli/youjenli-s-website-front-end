@@ -78,6 +78,17 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
         const marginBottomOfPostContent = this.props.remFontSize * 2;
         const paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;
         const marginBottomOfPostBg = this.props.remFontSize * 2;
+
+        const slideshows = doc.querySelectorAll('.slideshow');
+        if (slideshows.length > 0) {
+            const widthOfSlideshow = maxWidthOfTitle * 0.82;
+            const heightOfSlideshow = widthOfSlideshow * 0.75;
+            slideshows.forEach(slideshow => {
+                slideshow.setAttribute('width', `${widthOfSlideshow.toString()}px`);
+                slideshow.setAttribute('height', `${heightOfSlideshow.toString()}px`);
+            });
+        }
+
         const contentOfPost = {
             margin:{
                 top:marginTopOfPostContent,
@@ -112,15 +123,13 @@ export default class LargeExternalScreenPostPage extends React.Component<PropsOf
                                 toc={toc} content={contentOfPost}  comment={settingsOfMessageBoard} ref={this.backgroundRef} />
                 );
             }
-            //設定內容的 post 屬性。
-            contentOfPost['post'] = doc.body.innerHTML;
 
             /* 接下來要準備 post-header 的內容 */
             const titleBg = {
                 paddingBottom:heightOfImg * 0.618/* 注意，不用加上發佈資訊的下沿，那部分由 postInfo 的樣式來設定 */
             };
             /* 如果畫面上有照片那要為 post info 加上 padding bottom 以便使 post info 跟圖片或裝飾線保持距離 */
-            
+
             let styleOfImg = {
                 height:`${heightOfImg}px`
             }

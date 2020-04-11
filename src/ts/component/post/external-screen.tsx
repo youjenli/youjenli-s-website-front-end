@@ -76,6 +76,16 @@ export default class ExternalScreenPostPage extends React.Component<PropsOfExter
             }
         }
 
+        const slideshows = doc.querySelectorAll('.slideshow');
+        if (slideshows.length > 0) {
+            const widthOfSlideshow = maxWidthOfTitle * 0.94;
+            const heightOfSlideshow = widthOfSlideshow * 0.75;
+            slideshows.forEach(slideshow => {
+                slideshow.setAttribute('width', `${widthOfSlideshow.toString()}px`);
+                slideshow.setAttribute('height', `${heightOfSlideshow.toString()}px`);
+            });
+        }
+
         const contentOfPost = {
             margin:{
                 top:marginTopOfPostContent,

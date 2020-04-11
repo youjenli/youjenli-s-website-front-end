@@ -72,8 +72,18 @@ export default class LargeExternalScreenPage extends React.Component<PropsOfLarg
         const widthOfPostBg = 0.764 * this.props.viewportWidth;
         const marginTopOfPostContent = this.props.remFontSize * 2;
         const marginBottomOfPostContent = this.props.remFontSize * 2;
-        const paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;        
-        const marginBottomOfPostBg = this.props.remFontSize * 2;       
+        const paddingLeftRightOfPosgBg = (widthOfPostBg - maxWidthOfTitle) / 2;
+        const marginBottomOfPostBg = this.props.remFontSize * 2;
+
+        const slideshows = doc.querySelectorAll('.slideshow');
+        if (slideshows.length > 0) {
+            const widthOfSlideshow = maxWidthOfTitle * 0.82;
+            const heightOfSlideshow = widthOfSlideshow * 0.75;
+            slideshows.forEach(slideshow => {
+                slideshow.setAttribute('width', `${widthOfSlideshow.toString()}px`);
+                slideshow.setAttribute('height', `${heightOfSlideshow.toString()}px`);
+            });
+        }
 
         let parentInfoElement = null;
         if (this.props.page.parent) {

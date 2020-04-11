@@ -125,24 +125,47 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
                 const parsedPage:ParsedPage = Object.assign({ dom:doc }, page);
 
                 if (vw > 432) {
+                    const remFontSize = 18;
+                    const widthOfContent = this.state.viewportWidth - 2 * remFontSize;
+                    const slideshows = doc.querySelectorAll('.slideshow');
+                    if (slideshows.length > 0) {
+                        const widthOfSlideshow = widthOfContent;
+                        const heightOfSlideshow = widthOfSlideshow * 0.75;
+                        slideshows.forEach(slideshow => {
+                            slideshow.setAttribute('width', `${widthOfSlideshow}px`);
+                            slideshow.setAttribute('height', `${heightOfSlideshow}px`);
+                        });
+                    }
+
                     return (
                         <div id="page" className="bg mbl">
                             <MobileDeviceTitleBar  className="tb" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} >
                                 {tocElement}
                             </MobileDeviceTitleBar>
-                            <TabletPage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={18}
+                            <TabletPage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={remFontSize}
                                 page={parsedPage} />
                         </div>
                     );
                 } else {
                     const remFontSize = 16;
+                    const maxWidthOfContent = this.state.viewportWidth - 2 * remFontSize;
                     const ytvideos = doc.querySelectorAll('.ytvideo');
                     if (ytvideos.length > 0) {
-                        const ytvideoWidth = this.state.viewportWidth - 2 * remFontSize;
+                        const ytvideoWidth = maxWidthOfContent;
                         const ytvideoHeight = this.state.viewportWidth * 0.6;
                         ytvideos.forEach(ytvideo => {
                             ytvideo.setAttribute('width', `${ytvideoWidth.toString()}px`);
                             ytvideo.setAttribute('height', `${ytvideoHeight.toString()}px`);
+                        });
+                    }
+
+                    const slideshows = doc.querySelectorAll('.slideshow');
+                    if (slideshows.length > 0) {
+                        const widthOfSlideshow = maxWidthOfContent;
+                        const heightOfSlideshow = widthOfSlideshow * 0.75;
+                        slideshows.forEach(slideshow => {
+                            slideshow.setAttribute('width', `${widthOfSlideshow.toString()}px`);
+                            slideshow.setAttribute('height', `${heightOfSlideshow.toString()}px`);
                         });
                     }
 
@@ -151,7 +174,7 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
                             <MobileDeviceTitleBar className="sp" viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex + 20} >
                                 {tocElement}
                             </MobileDeviceTitleBar>
-                            <SmartPhonePage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={remFontSize} 
+                            <SmartPhonePage viewportWidth={this.state.viewportWidth} baseZIndex={baseZIndex} remFontSize={remFontSize}
                                 page={parsedPage} />
                         </div>
                     );

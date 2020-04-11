@@ -203,7 +203,7 @@ $marginTopBottomOfEmbbedItem: 1.5em;
             /* 為 slideshow 加上置中對齊的樣式。 */
             .slideshow {
                 display:block;
-                margin:1.5em auto;
+                margin:$marginTopBottomOfEmbbedItem auto;
             }
         }
     }
