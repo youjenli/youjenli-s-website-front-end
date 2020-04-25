@@ -43,7 +43,7 @@
             3. 一定要加入 post_type 參數指定查詢的資料類型，否則執行此函數什麼都拿不到。
         */
         $me = get_posts( array(
-            'pagename' => 'me',
+            'pagename' => 'about-myself',
             'post_type' => 'page'
         ) );
         
@@ -53,7 +53,7 @@
         }
         
         $mySite = get_posts( array(
-            'pagename' => 'mysite',
+            'pagename' => 'about-this-website',
             'post_type' => 'page'
         ) );
 
