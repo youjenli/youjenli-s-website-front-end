@@ -12,8 +12,26 @@ $marginTopBottomOfEmbbedItem: 1.5em;
 
     &.post, &.page {
 
-        img {
+        img, figure {
+            display:block;
             margin:$marginTopBottomOfEmbbedItem auto;
+            max-width:100%;
+        }
+
+        figure {
+            img {
+                width:100%;
+            }
+
+            figcaption {
+                text-align: center;
+                margin:0 auto;
+                font-size:0.8em;
+            }
+
+            img + caption {
+                margin-top:-$marginTopBottomOfEmbbedItem*2/3;
+            }
         }
 
         .gallary {
@@ -24,10 +42,12 @@ $marginTopBottomOfEmbbedItem: 1.5em;
             align-items:center;
             justify-content:space-evenly;
               
-            img {
+            img, figure {
               margin:$marginTopBottomOfEmbbedItem/2 0;
-              object-fit:contain;
-              max-width:100%;
+            }
+
+            img {
+                object-fit:contain;
             }
         }
 
