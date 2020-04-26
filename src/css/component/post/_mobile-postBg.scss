@@ -71,6 +71,19 @@ $marginTopBottomOfEmbbedItem: 1.5em;
             display:block;
             margin:$marginTopBottomOfEmbbedItem auto;
         }
+
+        p, blockquote, cite {
+            white-space:pre-line;
+        }
+        
+        blockquote, cite {
+            font-weight:300;
+        }
+        
+        blockquote {
+            font-style:italic;
+            margin:initial 2em;
+        }
     }
 }
 
