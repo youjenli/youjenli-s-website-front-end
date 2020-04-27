@@ -96,6 +96,7 @@ declare global {
                 category?:Archive<Category>;
                 tag?:Archive<Tag>;
             }
-        }
+        },
+        DISQUS:any
     }
 }

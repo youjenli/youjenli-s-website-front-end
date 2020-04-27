@@ -13,31 +13,20 @@ interface PropsOfDisquzMessageBoard {
     backgroundColorOfDocument:string;
 }
 
+let disqusLibhadBeenLoaded:boolean = false;
+
 export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMessageBoard> {
     constructor(props) {
         super(props);
         if (isNotBlank(window.wp.disquz.shortName)) {
-            this.shouldLoadForum = true;
+            this.shouldLoadDisqusForum = true;
         }
     }
-    shouldLoadForum = false;
+    shouldLoadDisqusForum = false;
     componentDidMount() {
-        if (this.shouldLoadForum) {
+        if (this.shouldLoadDisqusForum) {
             const props = this.props;
-            /*
-                雖然整合說明上指示提供參數的方法是
-                var disqus_config = function () {
-                    // Replace PAGE_URL with your page's canonical URL variable
-                    this.page.url = PAGE_URL;
-
-                    // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-                    this.page.identifier = PAGE_IDENTIFIER; 
-                };
-                https://help.disqus.com/en/articles/1717112-universal-embed-code
-
-                但實際使用發現還是要註冊 disquz_config 函式才有用。
-            */
-            window['disquz_config'] = function (){
+            const config = function(){
                 this.page.identifier = props.id;
                 if (isNotBlank(props.title)) {
                     this.page.title = props.title;
@@ -51,22 +40,42 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
                     this.page.category_id = props.categoryId;
                 }
             }
-    
-            const d = document, s = d.createElement('script');
-            s.src = `https://${window.wp.disquz.shortName}.disqus.com/embed.js`;
-            s.setAttribute('data-timestamp', Date.parse(new Date().toString()).toString());
-            /*
-                data-timestamp 參數要填寫以 milliseconds 計算的時間，
-                但因為有些瀏覽器仍不支援 Date 的 valueOf 參數，所以要用以下相對較早支援的語法來強制轉換。
-                Date.parse(new Date().toString()).toString()
-                欲了解其他可行做法，可參考：
-                https://codepen.io/youjenli/pen/KKKwRwY?editors=1011
-            */
-            (d.head || d.body).appendChild(s);
+            window['disquz_config'] = config;
+            if (disqusLibhadBeenLoaded) {
+                window.DISQUS.reset({
+                    reload:true
+                });
+            } else {
+                /*
+                    雖然整合說明上指示提供參數的方法是
+                    var disqus_config = function () {
+                        // Replace PAGE_URL with your page's canonical URL variable
+                        this.page.url = PAGE_URL;
+                    
+                        // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                        this.page.identifier = PAGE_IDENTIFIER; 
+                    };
+                    https://help.disqus.com/en/articles/1717112-universal-embed-code
+                
+                    但實際使用發現還是要註冊 disquz_config 函式才有用。
+                */
+                const d = document, s = d.createElement('script');
+                s.src = `https://${window.wp.disquz.shortName}.disqus.com/embed.js`;
+                s.setAttribute('data-timestamp', Date.parse(new Date().toString()).toString());
+                /*
+                    data-timestamp 參數要填寫以 milliseconds 計算的時間，
+                    但因為有些瀏覽器仍不支援 Date 的 valueOf 參數，所以要用以下相對較早支援的語法來強制轉換。
+                    Date.parse(new Date().toString()).toString()
+                    欲了解其他可行做法，可參考：
+                    https://codepen.io/youjenli/pen/KKKwRwY?editors=1011
+                */
+                (d.head || d.body).appendChild(s);
+                disqusLibhadBeenLoaded = true;
+            }
         }
     }
     render() {
-        if (this.shouldLoadForum) {
+        if (this.shouldLoadDisqusForum) {
             const styleOfWelcomeMessage = {
                 margin:'1em 0', 
                 fontSize:'1.15em',
@@ -102,7 +111,7 @@ export default class DisquzMessageBoard extends React.Component<PropsOfDisquzMes
                 textAlign:'center',
                 backgroundColor:this.props.backgroundColorOfDocument
             };
-
+    
             return (
                 <React.Fragment>
                     <div className="hr" style={styleOfHr} >
