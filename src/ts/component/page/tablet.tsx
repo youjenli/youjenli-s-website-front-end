@@ -58,7 +58,7 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
                             <img src={page.thumbnail.url} style={styleOfImg} />
                         </div>
                     </MobilePostHeader>
-                    <div id="postBg" style={styleOfPostBg} className="tb" 
+                    <div id="postBg" style={styleOfPostBg} className="tb page" 
                         dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}>
                     </div>
                 </React.Fragment>
@@ -80,7 +80,7 @@ export default class TabletPage extends React.Component<PropsOfTabletPage> {
                             {publishInfo}
                         </div>
                     </MobilePostHeader> 
-                    <div id="postBg" style={styleOfPostBg} className="tb" dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}>
+                    <div id="postBg" style={styleOfPostBg} className="tb page" dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}>
                     </div>
                 </React.Fragment>
             );

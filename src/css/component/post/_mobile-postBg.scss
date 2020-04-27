@@ -1,4 +1,5 @@
 $marginTopBottomOfEmbbedItem: 1.5em;
+
 #postBg.tb, #postBg.sp {
     padding-left:1em;
     padding-right:1em;
@@ -10,8 +11,7 @@ $marginTopBottomOfEmbbedItem: 1.5em;
         margin-top:0;
     }
 
-    &.post, &.page {
-
+    .post, &.page {
         img, figure {
             display:block;
             margin:$marginTopBottomOfEmbbedItem auto;
@@ -85,10 +85,11 @@ $marginTopBottomOfEmbbedItem: 1.5em;
             margin:initial 2em;
         }
     }
+
 }
 
-#postBg.tb, #postBg.tb{
-    &.post, &.page {
+#postBg.tb {
+    .post, &.page {
         font-size:18px;
         line-height: 1.65;
         margin-bottom:2em;
@@ -117,13 +118,11 @@ $marginTopBottomOfEmbbedItem: 1.5em;
         li {
             margin:0.5em 0;
         }
-
     }
-
 }
 
-#postBg.sp.post, #postBg.sp.page {
-    &.post, &.page {
+#postBg.sp {
+    .post, &.page {
         font-size:16px;
         line-height: 1.65;
         margin-bottom:2em;

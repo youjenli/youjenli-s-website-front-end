@@ -68,8 +68,8 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
                     paddingTop:'1.5em'
                 }
                 postCtnrElement = 
-                    <div id="postBg" className="sp post" style={styleOfPostBg} >
-                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                    <div id="postBg" className="sp" style={styleOfPostBg} >
+                        <div className="post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                         { this.props.post.commentPermitted ? 
                             <DisquzMessageBoard id={threadId} title={threadTitle}
                                 backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
@@ -127,8 +127,8 @@ export default class SmartPhonePostPage extends React.Component<PropsOfSmartPhon
             return (
                 <React.Fragment>
                     {postHeaderElement}
-                    <div id="postBg" style={styleOfPostBg} className="sp post" >
-                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                    <div id="postBg" style={styleOfPostBg} className="sp" >
+                        <div className="post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                         { this.props.post.commentPermitted ?
                             <DisquzMessageBoard id={threadId} title={threadTitle}
                                 backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }

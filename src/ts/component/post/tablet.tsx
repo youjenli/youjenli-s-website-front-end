@@ -61,9 +61,9 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 }
 
                 postCtnrElement = 
-                    <div id="postBg" style={styleOfPostBg} className="tb post">
+                    <div id="postBg" style={styleOfPostBg} className="tb">
                         <Gist styleOfContent={styleOfGist} styleOfHint={styleOfGistTitle} content={this.props.post.gist}/>
-                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                        <div className="post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                         { this.props.post.commentPermitted ?
                             <DisquzMessageBoard id={threadId} title={threadTitle}
                                 backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
@@ -74,8 +74,8 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
                 }
 
                 postCtnrElement = 
-                    <div id="postBg" style={styleOfPostBg} className="tb post" >
-                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}></div>
+                    <div id="postBg" style={styleOfPostBg} className="tb" >
+                        <div className="post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}}></div>
                         { this.props.post.commentPermitted ?
                             <DisquzMessageBoard id={threadId} title={threadTitle}
                                 backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }
@@ -132,8 +132,8 @@ export default class TabletPostPage extends React.Component<PropsOfTabletPostPag
             return (
                 <React.Fragment>
                     {postHeaderElement}
-                    <div id="postBg" style={styleOfPostBg} className="tb post" >
-                        <div dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
+                    <div id="postBg" style={styleOfPostBg} className="tb" >
+                        <div className="post" dangerouslySetInnerHTML={{__html:this.props.post.dom.body.innerHTML}} ></div>
                         { this.props.post.commentPermitted ?
                             <DisquzMessageBoard id={threadId} title={threadTitle}
                                 backgroundColorOfDocument={colorOfBackgroundOfPost} /> : null }

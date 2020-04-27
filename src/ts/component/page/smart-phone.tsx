@@ -58,8 +58,8 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
                             {publishInfo}
                         </div>
                     </MobileHeaderOfArticle>
-                    <div id="postBg" className="sp" style={styleOfPostBg} dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}>
-                    </div>
+                    <div id="postBg" className="sp page" style={styleOfPostBg}
+                        dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}></div>
                 </React.Fragment>
             );
         } else {
@@ -79,8 +79,8 @@ export default class SmartPhonePage extends React.Component<PropsOfSmartPhonePag
                             {publishInfo}
                         </div>
                     </MobileHeaderOfArticle> 
-                    <div id="postBg" className="sp" style={styleOfPostBg} dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}>
-                    </div>
+                    <div id="postBg" className="sp page" style={styleOfPostBg} 
+                        dangerouslySetInnerHTML={{__html:this.props.page.dom.body.innerHTML}}></div>
                 </React.Fragment>
             );
         }
