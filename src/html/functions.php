@@ -297,5 +297,17 @@
     	}
         
         return $args;
-    }
+	}
+
+	/*
+	  加入以下這行程式碼的原因是場景程式碼用以取得近期文章摘抄的函式 ── get_the_excerpt 預設會呼叫的函式 wp_trim_excerpt 
+	  會在自動產生的摘抄後面加入用來標記摘抄結尾的 [&hellip;] 符號，導致沒有自訂摘抄的文章在首頁出現這個符號。
+	  因此在參考以下討論的作法後，加入 excerpt_more filter 並令其執行空字串回傳函式 _return_empty_string，
+      這樣畫面上就不會再出現摘抄結尾符號。
+
+      參考資料
+      https://wordpress.stackexchange.com/questions/162109/remove-more-or-text-from-short-post
+      https://developer.wordpress.org/reference/functions/the_excerpt/
+    */
+    add_filter('excerpt_more', '__return_empty_string');
 ?>
