@@ -414,17 +414,24 @@ export default class MobileDeviceTitleBar extends
                 }
             }
         }
-        
+
+        const tocItemClicked = (e) => {
+            if (e.target.nodeName.toUpperCase() === 'A') {
+                this.toggleMenuState();
+                console.log('state toggled');//todo
+            }
+        }
+
         return (
             <React.Fragment>
             { (!isStickyPositionSupported() && this.state.shouldTitleBeSticky) ?
-                <div id="header-plhdr" style={plhdrStyle}></div> 
+                <div id="header-plhdr" style={plhdrStyle}></div>
             : null }
             <div id="header-ctx" style={headerCtxStyle} className={classesOfHeaderCtx}>
                 <header id="header-bar" style={headerStyle}>
                    <SiteName name={terms.siteName} base64EncodedTitle={base64EncodedTitle}
                        fontSize={fontSizeOfSiteName} top={siteNameTopPosition} left={siteNameLeftPosition} />
-                   <span className="menuBtn" style={menuBtnStyle} onClick={this.toggleMenuState} >                  
+                   <span className="menuBtn" style={menuBtnStyle} onClick={this.toggleMenuState}>
                            <div className={"upper bar " + (this.state.isMenuOpened ? "rotate":"")} style={upperBarStyle} ></div>
                            <div className={"lower bar " + (this.state.isMenuOpened ? "rotate":"")}  style={lowerBarStyle} ></div>
                    </span>
@@ -434,7 +441,7 @@ export default class MobileDeviceTitleBar extends
                         <div id="shadow" style={styleOfShadow} onClick={this.toggleMenuState} ></div>
                         <div className="menu" style={styleOfMenu}>
                             <nav className="content" style={styleOfMenuContent}>
-                                {this.props.children}
+                                <div id="toc" onClick={tocItemClicked}>{this.props.children}</div>
                                 <MobileDeviceSearchBar height={searchBarHeight} width={searchBarWidth}
                                      fontSizeOfSearchHint={fontSizeOfSearchHint}
                                      searchIconWidth={searchIconWidth} searchIconHeight={searchIconHeight} />
@@ -450,9 +457,9 @@ export default class MobileDeviceTitleBar extends
                                         <icons.YoutubeIcon style={styleOfSocialMediaBtn} /></a>
                                 </div> 
                             </nav>
-                        </div>    
-                    </React.Fragment>                    
-                : null }                
+                        </div>
+                    </React.Fragment>
+                : null }
             </div>
             </React.Fragment>
         );

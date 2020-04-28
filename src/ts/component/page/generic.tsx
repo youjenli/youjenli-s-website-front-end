@@ -85,22 +85,22 @@ export default class GenericPage extends React.Component<PropsOfGenericPage, Sta
                             fontSize:`${fontSizeOfTocTitle}px`,
                         }
                         tocElement = (
-                            <div id="toc">
+                            <React.Fragment>
                                 <div className="title" style={styleOfTocTitle}>{terms.titleOfToc}</div>
                                 <div className="sap"></div>
                                 <ol className="content" dangerouslySetInnerHTML={{__html:toc.innerHTML}}></ol>
-                            </div>
+                            </React.Fragment>
                         );
                     } else {
                         const styleOfTocItem = {
                             fontSize:`${(1.3 * vw + 60) / 28}px`
                         }
                         tocElement = (
-                            <div id="toc">
+                            <React.Fragment>
                                 <div className="title">{terms.titleOfToc}</div>
                                 <div className="sap"></div>
                                 <ol className="content" style={styleOfTocItem} dangerouslySetInnerHTML={{__html:toc.innerHTML}}></ol>
-                            </div>
+                            </React.Fragment>
                         );
                     }   
                 }
