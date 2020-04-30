@@ -10,7 +10,7 @@
 	function youjenli_create_meta_boxes( $meta_boxes ) {
 		global  $name_of_custom_field_gist, $name_of_custom_field_pathOfIcon,
 				$name_of_custom_field_nameOfLink, $name_of_custom_field_hintOfLink,
-				$name_of_custom_field_estimatedReadingTimes;
+				$name_of_custom_field_estimatedReadingTimes, $name_of_custom_field_colorOfLink;
 
 		$meta_boxes[] = array(
 			/*
@@ -94,12 +94,30 @@
 					'id' => $name_of_custom_field_hintOfLink,
 					'name' => '發表物內容的提示訊息',
 					'label_description' => '當滑鼠游標移到選單上此文章的連結時，畫面上會浮現的內容概要'
-				]
-				,[
-					'type' => 'file_input',
+				],
+				[
+					'type' => 'select',
 					'id' => $name_of_custom_field_pathOfIcon,
 					'name' => '發表物連結的示意圖',
-					'label_description' => '伴隨此文章的連結一起呈現的示意圖'
+					'options' => array(
+						'category' => '有風景圖的紙張旁邊延伸出方格',
+						'curriculumVitae' => '上有頭像，有隻筆在書寫中的文書',
+						'programming' => '內有 xml 標籤的軟體視窗'
+					),
+					'label_description' => '伴隨此文章的連結一起呈現的示意圖',
+					'multiple' => false
+				],
+				[
+					'type' => 'select',
+					'id' => $name_of_custom_field_colorOfLink,
+					'name' => '發表物連結字體、連結圖示的顏色',
+					'options' => array(
+						'#7FB14C' => '蘋果綠 #7FB14C',
+						'#FCBE60' => '橘黃 #FCBE60',
+						'#263242' => '藍黑色 #263242'
+					),
+					'label_description' => '此連結的字體顏色，以及它出現在行動裝置頁面上時，伴隨連結一起出現的圖示之顏色',
+					'multiple' => false
 				]
 			]
 		);

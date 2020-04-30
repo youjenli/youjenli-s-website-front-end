@@ -11,6 +11,7 @@
     $name_of_custom_field_nameOfLink = $prefix_of_custom_field . 'nameOfLink';
     $name_of_custom_field_hintOfLink = $prefix_of_custom_field . 'hintOfLink';
     $name_of_custom_field_pathOfIcon = $prefix_of_custom_field . 'icon';
+    $name_of_custom_field_colorOfLink = $prefix_of_custom_field . 'color';
     //自訂的估計閱讀時間欄位在資料庫 wp_post_meta 表單裡面 meta key 的名稱
     $name_of_custom_field_estimatedReadingTimes = $prefix_of_custom_field . 'estimatedReadingTimes';
 

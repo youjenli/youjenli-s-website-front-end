@@ -17,7 +17,7 @@
 
         function retrieveMenuItem( $post ) {
             global $name_of_custom_field_nameOfLink, $name_of_custom_field_hintOfLink, 
-                   $name_of_custom_field_pathOfIcon;
+                   $name_of_custom_field_pathOfIcon, $name_of_custom_field_colorOfLink;
             
             $name_of_link = get_post_meta($post->ID, $name_of_custom_field_nameOfLink, true);
             if (!$name_of_link) {
@@ -33,7 +33,8 @@
                 'url' => get_permalink($post),
                 'hint' => $hint_of_link,
                 'slug' => get_post_field('post_name', $post),
-                'pathOfIcon' => get_post_meta($post->ID, $name_of_custom_field_pathOfIcon, true)
+                'pathOfIcon' => get_post_meta($post->ID, $name_of_custom_field_pathOfIcon, true),
+                'color' => get_post_meta($post->ID, $name_of_custom_field_colorOfLink, true)
             );
         };
         /*

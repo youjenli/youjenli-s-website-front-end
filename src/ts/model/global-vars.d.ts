@@ -3,13 +3,13 @@ import { Term, Category, Tag } from './terms';
 import { Page } from './posts';
 import { FoundPublication } from './search-results';
 import { SettingsOfPagination, Pagination} from './pagination';
-import { TypeOfContent } from './general-types';
 import { Content } from './posts';
 
 export interface MenuItem extends Content {
     name:string;
     hint:string;
-    pathOfIcon?:string;
+    pathOfIcon:string;
+    color:string;
 }
 
 export interface Archive<T extends Term> {

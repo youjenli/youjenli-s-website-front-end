@@ -1,6 +1,6 @@
 /// <reference path="../../model/global-vars.d.ts"/>
 import * as React from 'react';
-import { isString, isNotBlank } from '../../service/validator';
+import { isNotBlank } from '../../service/validator';
 import { MenuItem } from '../../model/global-vars';
 import SiteName from './site-name';
 import base64EncodedTitle from './site-name-2_5x_base64';
@@ -13,6 +13,9 @@ import * as terms from './terms';
 import * as socialMediaTerms from '../home/slogan/socialMedia/terms';
 import * as icons from '../home/slogan/socialMedia/icons';
 import { reactRoot } from '../../index';
+import { CategoryIcon } from '../svg/category';
+import { CurriculumVitaeIcon } from '../svg/curriculum-vitae';
+import { ProgrammingIcon } from '../svg/programming';
 
 interface MobileDeviceTitleBarProps {
     className:string;
@@ -65,12 +68,12 @@ export default class MobileDeviceTitleBar extends
         let topShiftOfMenuButton, rightShiftOfMenuButton, spaceBetweenTwoBars;
         let topShiftOfMenu, maxHeightOfMenu;
         let searchBarWidth, searchBarHeight, fontSizeOfSearchHint, searchIconWidth, searchIconHeight;
-        let paddingOfMenuItems;
+        let paddingOfMenuItems, marginRightOfLinkIcon, widthOfLinkIcon;
         const borderWidthOfLink = 1;
         let iconWidthOfFeaturedLink, spaceBetweenIconAndLink, fontSizeOfFeaturedLink;
         let commonStyleOfLinkOnMenu = null, menuItemsPerRow = 2, shouldSocialMediaGrpSpanTheWholeRow = false;
         let styleOfSocialMediaGrp = null;
-        let styleOfLinkIcon, styleOfSocialMediaBtn;
+        let styleOfSocialMediaBtn;
 
         const remFontSize = ( this.props.viewportWidth > 432 ? 18 : 16);
         if (this.props.viewportWidth > 640 ) {//平板
@@ -219,12 +222,10 @@ export default class MobileDeviceTitleBar extends
             borderRadius: `${menuButtonBarBorderRadius}px`,
             transformOrigin:`${menuButtonBarTransformOrigin}% 50% 0`
         }
-        
-        styleOfLinkIcon = {
-            marginRight:`${spaceBetweenIconAndLink}px`,
-            width:`${iconWidthOfFeaturedLink}px`
-        };
-      
+
+        marginRightOfLinkIcon = `${spaceBetweenIconAndLink}px`;
+        widthOfLinkIcon = `${iconWidthOfFeaturedLink}px`;
+
         styleOfSocialMediaBtn = {
             width:`${iconWidthOfFeaturedLink}px`
         }
@@ -234,19 +235,34 @@ export default class MobileDeviceTitleBar extends
             const arrowShape = this.props.viewportWidth <= 432 ? <ArrowShape /> : null;
             featuredLinks = [];
 
-            const createMenuItemElement = function(dataOfItem, keyOfItem:number, styleOfItem:React.CSSProperties) {
-                let id = null, additionalClass = '';
-                if (isString(dataOfItem.id)) {
-                    id = dataOfItem.id;
-                } else {
-                    additionalClass = 'others';
+            const createMenuItemElement = function(dataOfItem:MenuItem, keyOfItem:number, styleOfItem:React.CSSProperties) {
+                const pathOfIcon = isNotBlank(dataOfItem.pathOfIcon) ? dataOfItem.pathOfIcon : 'category';
+                const colorOfTextAndIcon = isNotBlank(dataOfItem.color) ? dataOfItem.color : '#7FB14C';
+                styleOfItem.color = colorOfTextAndIcon;
+
+                let iconElement = null;
+                switch (pathOfIcon) {
+                    case 'programming':
+                        iconElement = 
+                            <ProgrammingIcon width={widthOfLinkIcon} marginRight={marginRightOfLinkIcon} 
+                                colorInHexCode={colorOfTextAndIcon} />;
+                        break;
+                    case 'curriculumVitae':
+                        iconElement = 
+                            <CurriculumVitaeIcon width={widthOfLinkIcon} marginRight={marginRightOfLinkIcon} 
+                                colorInHexCode={colorOfTextAndIcon} />;
+                        break;
+                    case 'category':
+                    default:
+                        iconElement = 
+                            <CategoryIcon width={widthOfLinkIcon} marginRight={marginRightOfLinkIcon} 
+                                colorInHexCode={colorOfTextAndIcon} />;
+                        break;
                 }
-                const urlOfIcon = isNotBlank(dataOfItem.pathOfIcon) ? dataOfItem.pathOfIcon : window.wp.themeUrl + 'img/terms-category.svg';
+
                 return (
-                    <a className={`link item ${additionalClass}`} style={styleOfItem} 
-                        key={keyOfItem} href={dataOfItem.url} id={id} data-navigo>
-                        <img className="icon" style={styleOfLinkIcon} src={urlOfIcon} />
-                        <span>{dataOfItem.name}</span>{arrowShape}
+                    <a className='link item' style={styleOfItem} key={keyOfItem} href={dataOfItem.url} data-navigo>
+                        {iconElement}<span>{dataOfItem.name}</span>{arrowShape}
                     </a>
                 );
             }
