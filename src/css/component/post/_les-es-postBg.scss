@@ -1,3 +1,9 @@
+#toc, #postBg {
+    font-family: "AvenirNext-Medium", "Microsoft Sans Serif", "Calibri", "Segoe UI", "Arial", "Lucida Bright", "Calisto MT", 
+                 "Verdana", "Tahoma", "Arial", "Times New Roman", "PingFangTC-Light", "STHeitiTC-Light", "FZLTXHB--B51-0"/* 蘭亭黑-繁 纖黑 */, 
+                 "Helvetica-Light", "Microsoft JhengHei", "新細明體", system-ui;
+}
+
 #toc {
     & > * {
         display:block;
@@ -71,9 +77,6 @@
 /* 橫跨所有螢幕的樣式設定 */
 #postBg {
     box-sizing:border-box;
-    font-family: "AvenirNext-Medium", "Microsoft Sans Serif", "Calibri", "Segoe UI", "Arial", "Lucida Bright", "Calisto MT", 
-                 "Verdana", "Tahoma", "Arial", "Times New Roman", "PingFangTC-Light", "STHeitiTC-Light", "FZLTXHB--B51-0"/* 蘭亭黑-繁 纖黑 */, 
-                 "Helvetica-Light", "Microsoft JhengHei", "新細明體", system-ui;
 
     .gist {
         border-style:solid;
