@@ -56,9 +56,6 @@ body {
 @import './component/category/general.scss';
 @import './service/featureDetection.scss';
 
-/* 載入 prismjs 和 prismjs 的擴充套件 line-numbers */
-/*@import url('../../node_modules/prismjs/themes/prism-tomorrow.css');*/
-/*@import url('../../node_modules/prismjs/plugins/line-numbers/prism-line-numbers.css');*/
 /*
 從這個檔案透過 css import 語法管理 gulp 連接 css 的順序。
 @import url('other css file...');
