@@ -103,6 +103,10 @@ $marginTopBottomOfEmbbedItem: 1.5em;
     box-shadow:0 2px 3px 0 #888888;
     
     #toc {
+        /* 外接螢幕版的目錄必須套用高的 zIndex，否則要是它右邊有清單這種不是靜態定位的元素，
+           那麼使用者將無法點擊與清單同列的目錄項目。
+        */
+        position:relative;
         background:#F9F9F9;
         margin-right:2em;
         margin-bottom:2em;
