@@ -68,10 +68,10 @@ export default class PostBackgroundOnExternalScreen extends React.Component<Prop
             const styleOfToc = {
                 width:`${this.props.toc.width}px`,
                 padding:`0 ${this.props.toc.paddingLeftRight}px`,
-                /* 外接螢幕版的目錄必須套用高的 zIndex，否則要是它右邊有清單這種不是靜態定位的元素，
+                /* 外接螢幕版的目錄必須套用更高的 zIndex，否則要是它右邊有清單這種不是靜態定位的元素，
                    那麼使用者將無法點擊與清單同列的目錄項目。
                 */
-                zIndex:this.props.baseZIndex + 100
+                zIndex:this.props.baseZIndex + 2
             }
             const styleOfTocTitle = {
                 fontSize:`${this.props.toc.title.fontSize}px`,
