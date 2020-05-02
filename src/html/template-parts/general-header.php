@@ -12,6 +12,18 @@
 ?>
 <title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+<?php //generic ?>
+<link rel="icon" href="<?php echo get_theme_file_uri( 'favicon-32.png' ); ?>" sizes="32x32">
+<link rel="icon" href="<?php echo get_theme_file_uri( 'favicon-128.png' ); ?>" sizes="128x128">
+<link rel="icon" href="<?php echo get_theme_file_uri( 'favicon-152.png' ); ?>" sizes="152x152">
+<link rel="icon" href="<?php echo get_theme_file_uri( 'favicon-180.png' ); ?>" sizes="180x180">
+<link rel="icon" href="<?php echo get_theme_file_uri( 'favicon-192.png' ); ?>" sizes="192x192">
+<link rel="icon" href="<?php echo get_theme_file_uri( 'favicon-256.png' ); ?>" sizes="256x256">
+<?php //Android ?>
+<link rel="shortcut icon" sizes="196x196" href="<?php echo get_theme_file_uri( 'favicon-196.png' ); ?>">
+<?php //iOS ?>
+<link rel="apple-touch-icon" href="<?php echo get_theme_file_uri( 'favicon-152.png' ); ?>" sizes="152x152">
+<link rel="apple-touch-icon" href="<?php echo get_theme_file_uri( 'favicon-180.png' ); ?>" sizes="180x180">
 <link rel="stylesheet" type="text/css" href="<?php echo get_theme_file_uri( $pathOfMainCssOutputFile ); ?>">
 <?php
     /*

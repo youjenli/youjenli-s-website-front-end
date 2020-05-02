@@ -42,6 +42,11 @@ const prefixOfArchive = `wp-${themeName}-theme`;
 
 function doNothing(done){ done(); }
 
+function removeFavicons() {
+    return gulp.src(upath.join(distFolder, 'favicon-*.png'))
+               .pipe(clean());
+}
+
 function removeHtmlArtifact() {
     return gulp.src(
                     webPageArtifacts.map(filePattern => upath.join(distFolder, filePattern)), {read:false})
@@ -74,7 +79,8 @@ gulp.task('cleanArchives', function cleanArchives() {
 });
 
 //清空輸出打包成品的資料夾
-gulp.task('clean', gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeImgArtifact, removeJSArtifact));
+gulp.task('clean', 
+        gulp.parallel(removeHtmlArtifact, removeCSSArtifact, removeImgArtifact, removeJSArtifact, removeFavicons));
 
 let transpileTsTask, bundleJsTask, prepareCssTask, prepareHtmlTask;
 if (!_.isObjectLike(buildSettings.build)) {
@@ -489,7 +495,16 @@ const prepareImgTask = gulp.series(removeImgArtifact,
     });
 gulp.task('prepareImg', prepareImgTask);
 
-const buildTask = gulp.parallel(prepareJsTask, prepareCssTask, prepareImgTask, prepareHtmlTask);
+const copyFavicons = () => {
+    const faviconRoot = upath.join(srcFolder, 'favicon');
+    return gulp.src(upath.join(faviconRoot, 'favicon-*.png'), { basedir:faviconRoot })
+               .pipe(gulp.dest(distFolder));
+}
+
+const prepareFaviconTask = gulp.series(removeFavicons, copyFavicons);
+gulp.task('prepareFavicon', prepareFaviconTask);
+
+const buildTask = gulp.parallel(prepareJsTask, prepareCssTask, prepareImgTask, prepareHtmlTask, prepareFaviconTask);
 gulp.task('build', buildTask);
 gulp.task('default', buildTask);
 
