@@ -213,16 +213,18 @@ $marginTopBottomOfEmbbedItem: 1.5em;
 
             ul {
                 left:1.25em;
+                padding-left:0;
             }
 
             ol {
                 left:1.4em;
+                padding-left:0;
             }
 
             li {
                 margin:0.5em 0;
                 /*
-                  這一項的用途是把內容較長的清單項目折到下一列，
+                  以下 margin-right:1px 的用途是把內容較長的清單項目折到下一列，
                   否則在 position:relative, left:1.25em 作用下可能會凸出邊界。
                 */
                 margin-right:1px;
