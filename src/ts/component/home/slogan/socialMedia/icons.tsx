@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as terms from './terms';
 
 interface IconProps {
     style?:React.CSSProperties
@@ -8,7 +9,7 @@ export class FaceBookIcon extends React.Component<IconProps> {
     render() {
         return (
             <svg viewBox="0 0 50 50" version="1.1" style={this.props.style}>
-                <title>facebook連結圖示</title>
+                <title>{terms.facebookIconTitle}</title>
                 <defs>
                     <linearGradient x1="4.59658894%" y1="4.59671458%" x2="98.8737961%" y2="98.8735719%" id="linearGradient-1">
                         <stop stopColor="#3B5998" offset="0%"></stop>
@@ -33,7 +34,7 @@ export class YoutubeIcon extends React.Component<IconProps> {
     render() {
         return (
             <svg style={this.props.style} viewBox="0 0 50 37" version="1.1">
-                <title>Youtube Icon</title>
+                <title>{terms.youtubeIconTitle}</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(-718.000000, -166.000000)" fill="#CE1312">
                         <g transform="translate(384.000000, 158.000000)">
@@ -52,7 +53,7 @@ export class GithubIcon extends React.Component<IconProps> {
     render() {
         return (
             <svg viewBox="0 0 50 49" version="1.1" style={this.props.style}>
-                <title>github連結圖示</title>
+                <title>{terms.githubIconTitle}</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(-495.000000, -158.000000)" fill="#181616">
                         <g transform="translate(384.000000, 158.000000)">
@@ -71,7 +72,7 @@ export class StackOverflowIcon extends React.Component<IconProps> {
     render() {
         return (
             <svg style={this.props.style} viewBox="0 0 41 50" version="1.1">
-                <title>Stack Overflow Icon</title>
+                <title>{terms.stackOverflowIconTitle}</title>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(-612.000000, -158.000000)">
                         <g transform="translate(384.000000, 158.000000)">
