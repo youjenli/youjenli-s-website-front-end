@@ -48,7 +48,7 @@
     "gulp-template": "^5.0.0",
     "gulp-uglify": "^3.0.2",
     "gulp-untar": "0.0.8",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "navigo": "git+https://github.com/youjenli/navigo.git#youjenli-s-website-1.0",
     "node-sass": "^4.13.1",
     "normalize.css": "^8.0.1",
