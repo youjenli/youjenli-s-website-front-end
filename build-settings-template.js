@@ -141,6 +141,11 @@ module.exports = {
     //專案的部署設定
     deploy:{
         /*
+            部署場景的方式，共用 ftp、ssh 和 copy 三種方式可供選擇。
+            填 ftp、ssh 會分別採用這種協定部署場景到特定伺服器；填 copy 會複製場景檔案到此物件 path 屬性設定的路徑。
+        */
+        method:'ssh',
+        /*
             此專案的建置指令稿採用 nodejs 平台 gulp-ssh2 套件建立連線。它會把這裡的參數提供給 gulp-ssh 套件。
             因此若要改變連線的運作方式，那可以參閱 gulp-ssh 或 ssh2 套件以了解可調整的設定。
             https://github.com/teambition/gulp-ssh
